@@ -4,22 +4,23 @@ int main(void)
 {
     GLFWwindow* window;
 
-    /* Initialize the library */
+    /* 初始化glfw */
     if (!glfwInit())
         return -1;
 
-    /* Create a windowed mode window and its OpenGL context */
+    /* 创建一个Window 和 OpenGL上下文 */
     window = glfwCreateWindow(640, 480, "Hello World", NULL, NULL);
     if (!window)
     {
+        //创建失败就退出
         glfwTerminate();
         return -1;
     }
 
-    /* Make the window's context current */
+    /* 激活上面创建的OpenGL上下文 */
     glfwMakeContextCurrent(window);
 
-    /* Loop until the user closes the window */
+    /* 进入游戏引擎主循环 */
     while (!glfwWindowShouldClose(window))
     {
         /* Render here */
@@ -28,7 +29,7 @@ int main(void)
         /* Swap front and back buffers */
         glfwSwapBuffers(window);
 
-        /* Poll for and process events */
+        /* 处理鼠标 键盘事件 */
         glfwPollEvents();
     }
 
