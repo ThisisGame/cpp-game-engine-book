@@ -19,19 +19,30 @@ struct Color
     float r, g, b;
 };
 
-static const Vector2 Positions[4] =
+static const Vector2 Positions[6] =
 {
+        //第一个三角形
         { -0.6f, -0.6f},//左下
         {  0.6f, -0.6f},//右下
         {   0.6f,  0.6f},//右上
-        { -0.6f,0.6f}//左上
+
+        //第二个三角形
+        {   0.6f,  0.6f},//右上
+        { -0.6f, -0.6f},//左上
+        { -0.6f,0.6f}//左下
 };
 
-static const Color Colors[3] =
+static const Color Colors[6] =
 {
-        { 1.f, 0.f, 0.f },
-        { 0.f, 1.f, 0.f },
-        { 0.f, 0.f, 1.f }
+        //第一个三角形颜色
+        { 1.f, 0.f, 0.f },//左下
+        { 0.f, 1.f, 0.f },//右下
+        { 0.f, 0.f, 1.f },//右上
+
+        //第二个三角形颜色
+        { 0.f, 0.f, 1.f },//右上
+        { 1.f, 0.f, 0.f },//左上
+        { 1.f, 0.f, 0.f }//左下
 };
 
 #pragma  endregion 顶点坐标 顶点颜色
@@ -159,7 +170,7 @@ int main(void)
             glUniformMatrix4fv(mvp_location, 1, GL_FALSE, (const GLfloat*) mvp);
 
             //void glDrawArrays(GLenum mode,GLint first,GLsizei count);
-            glDrawArrays(GL_TRIANGLES, 0, 4);//表示从第0个顶点开始画，总共画6个顶点，即2个三角形
+            glDrawArrays(GL_TRIANGLES, 0, 6);//表示从第0个顶点开始画，总共画6个顶点，即2个三角形
 
         glUseProgram(-1);
 
