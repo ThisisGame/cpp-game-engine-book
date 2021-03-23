@@ -74,17 +74,61 @@ static const Vector3 Positions[36] =
         { -1.0f, -1.0f,1.0f},//左下
 };
 
-static const Color Colors[6] =
+static const Color Colors[36] =
 {
-        //第一个三角形颜色
+        //前
         { 1.f, 0.f, 0.f },//左下
+        { 1.f, 0.f, 0.f },//右下
+        { 1.f, 0.f, 0.f },//右上
+
+        { 1.f, 0.f, 0.f },//右上
+        { 1.f, 0.f, 0.f },//左上
+        { 1.f, 0.f, 0.f },//左下
+
+        //后
+        { 0.f, 1.f, 0.f },//左下
         { 0.f, 1.f, 0.f },//右下
+        { 0.f, 1.f, 0.f },//右上
+
+        { 0.f, 1.f, 0.f },//右上
+        { 0.f, 1.f, 0.f },//左上
+        { 0.f, 1.f, 0.f },//左下
+
+        //左
+        { 0.f, 0.f, 1.f },//左下
+        { 0.f, 0.f, 1.f },//右下
         { 0.f, 0.f, 1.f },//右上
 
-        //第二个三角形颜色
         { 0.f, 0.f, 1.f },//右上
-        { 1.f, 0.f, 0.f },//左上
-        { 1.f, 0.f, 0.f }//左下
+        { 0.f, 0.f, 1.f },//左上
+        { 0.f, 0.f, 1.f},//左下
+
+        //右
+        { 1.f, 1.f, 0.f },//左下
+        { 1.f, 1.f, 0.f },//右下
+        { 1.f, 1.f, 0.f },//右上
+
+        { 1.f, 1.f, 0.f },//右上
+        { 1.f, 1.f, 0.f },//左上
+        { 1.f, 1.f, 0.f },//左下
+
+        //上
+        { 0.f, 1.f, 1.f },//左下
+        { 0.f, 1.f, 1.f },//右下
+        { 0.f, 1.f, 1.f },//右上
+
+        { 0.f, 1.f, 1.f },//右上
+        { 0.f, 1.f, 1.f },//左上
+        { 0.f, 1.f, 1.f },//左下
+
+        //下
+        { 1.f, 0.f, 1.f },//左下
+        { 1.f, 0.f, 1.f },//右下
+        { 1.f, 0.f, 1.f },//右上
+
+        { 1.f, 0.f, 1.f },//右上
+        { 1.f, 0.f, 1.f },//左上
+        { 1.f, 0.f, 1.f},//左下
 };
 
 #pragma  endregion 顶点坐标 顶点颜色
@@ -184,26 +228,38 @@ int main(void)
     glEnableVertexAttribArray(vpos_location);
     glEnableVertexAttribArray(vcol_location);
 
+
     while (!glfwWindowShouldClose(window))
     {
         float ratio;
         int width, height;
-        mat4x4 m, p, mvp;
+        mat4x4 m,v, p, mvp;
 
         glfwGetFramebufferSize(window, &width, &height);
         ratio = width / (float) height;
 
         glViewport(0, 0, width, height);
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
         mat4x4_identity(m);
-        mat4x4_rotate_Z(m, m, (float) glfwGetTime());
-        mat4x4_ortho(p, -3, 3, -2.f, 2.f, 1.f, -1.f);
+        mat4x4_rotate_Z(m, m, (float) glfwGetTime());//立方体绕Z轴旋转，导致只有朝向摄像机的一面被看到。
+        mat4x4_rotate_Y(m, m, (float) glfwGetTime());
+        mat4x4_rotate_X(m, m, (float) glfwGetTime());
+
+        vec3 eye={0,0,10};
+        vec3 center={0,0,0};
+        vec3 up={0,1,0};
+        mat4x4_look_at(v,eye,center,up);
+
+        mat4x4_ortho(p, -3, 3, -2.f, 2.f, -10.f, 10.f);
+
         mat4x4_mul(mvp, p, m);
+//        mat4x4_mul(mvp, mvp, v);
+//        mat4x4_mul(mvp, mvp, p);
 
         //指定GPU程序(就是指定顶点着色器、片段着色器)
         glUseProgram(program);
-
+            glEnable(GL_DEPTH_TEST);
             //上传顶点坐标数据
             glVertexAttribPointer(vpos_location, 3, GL_FLOAT, false, sizeof(Vector3), Positions);
             //上传顶点颜色数据
