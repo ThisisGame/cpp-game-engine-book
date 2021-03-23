@@ -9,9 +9,9 @@
 
 #pragma region 顶点坐标 顶点颜色
 
-struct Vector2
+struct Vector3
 {
-    float x,y;
+    float x,y,z;
 };
 
 struct Color
@@ -19,17 +19,17 @@ struct Color
     float r, g, b;
 };
 
-static const Vector2 Positions[6] =
+static const Vector3 Positions[6] =
 {
         //第一个三角形
-        { -0.6f, -0.6f},//左下
-        {  0.6f, -0.6f},//右下
-        {   0.6f,  0.6f},//右上
+        { -1.0f, -1.0f,0.0f},//左下
+        {  1.0f, -1.0f,0.0f},//右下
+        {   1.0f,  1.0f,0.0f},//右上
 
         //第二个三角形
-        {   0.6f,  0.6f},//右上
-        { -0.6f, -0.6f},//左上
-        { -0.6f,0.6f}//左下
+        {   1.0f,  1.0f,0.0f},//右上
+        { -1.0f, -1.0f,0.0f},//左上
+        { -1.0f,1.0f,0.0f}//左下
 };
 
 static const Color Colors[6] =
@@ -91,7 +91,7 @@ void init_opengl()
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
 
-    window = glfwCreateWindow(640, 480, "Simple example", NULL, NULL);
+    window = glfwCreateWindow(960, 640, "Simple example", NULL, NULL);
     if (!window)
     {
         glfwTerminate();
@@ -149,21 +149,20 @@ int main(void)
         mat4x4 m, p, mvp;
 
         glfwGetFramebufferSize(window, &width, &height);
-        ratio = width / (float) height;
 
         glViewport(0, 0, width, height);
         glClear(GL_COLOR_BUFFER_BIT);
 
         mat4x4_identity(m);
         mat4x4_rotate_Z(m, m, (float) glfwGetTime());
-        mat4x4_ortho(p, -ratio, ratio, -1.f, 1.f, 1.f, -1.f);
+        mat4x4_ortho(p, -3, 3, -2.f, 2.f, 1.f, -1.f);
         mat4x4_mul(mvp, p, m);
 
         //指定GPU程序(就是指定顶点着色器、片段着色器)
         glUseProgram(program);
 
             //上传顶点坐标数据
-            glVertexAttribPointer(vpos_location, 2, GL_FLOAT, false, sizeof(Vector2), Positions);
+            glVertexAttribPointer(vpos_location, 3, GL_FLOAT, false, sizeof(Vector3), Positions);
             //上传顶点颜色数据
             glVertexAttribPointer(vcol_location, 3, GL_FLOAT, false, sizeof(Color), Colors);
             //上传mvp矩阵
