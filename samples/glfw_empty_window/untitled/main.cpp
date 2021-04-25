@@ -9,7 +9,7 @@ int main(void)
         return -1;
 
     /* 创建一个Window 和 OpenGL上下文 */
-    window = glfwCreateWindow(640, 480, "Hello World", NULL, NULL);
+    window = glfwCreateWindow(960, 640, "Hello World", NULL, NULL);
     if (!window)
     {
         //创建失败就退出
@@ -24,7 +24,8 @@ int main(void)
     while (!glfwWindowShouldClose(window))
     {
         /* Render here */
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+        glClearColor(49.f/255,77.f/255,121.f/255,1.f);
 
         /* Swap front and back buffers */
         glfwSwapBuffers(window);
