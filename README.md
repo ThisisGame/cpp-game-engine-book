@@ -44,6 +44,3 @@
 
     腾讯工蜂：https://git.code.tencent.com/ThisisGame/makegameengineatnight
 
-**鸣谢**
-
-[![CLion](./imgs/readme/jetbrains-variant-4.png "CLion")](https://jb.gg/OpenSource)
