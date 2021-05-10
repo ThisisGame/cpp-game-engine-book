@@ -40,7 +40,12 @@
 
 **资源下载**
 
-本书Markdown以及章节配套项目托管在Github、腾讯工蜂上，读书过程中有疑问、发现错误都可以提Issues。
+本书Markdown存放在pages目录，已发布在
+
+    http://www.thisisgame.com.cn/book/makegameengineatnight/
+
+
+章节配套项目托管在Github、腾讯工蜂上，读书过程中有疑问、发现错误都可以提Issues。
 
     Github：https://github.com/ThisisGame/makegameengineatnight
 
