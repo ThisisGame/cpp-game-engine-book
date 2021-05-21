@@ -9,10 +9,15 @@
 
 #include <vector>
 #include <algorithm>
+#include <fstream>
 #include <glm/glm.hpp>
 
 using std::vector;
 using std::distance;
+
+using std::ofstream;
+using std::ios;
+using std::string;
 
 //顶点
 struct  Vertex
@@ -105,6 +110,33 @@ static void VertexRemoveDumplicate(){
             kVertexIndexVector.push_back(index);
         }
     }
+}
+
+//Mesh文件头
+struct MeshFileHead{
+    char type_[4];
+    unsigned short vertex_num_;//顶点个数
+    unsigned short vertex_index_num_;//索引个数
+};
+
+//导出Mesh文件
+static void ExportMesh(string save_path){
+    ofstream output_file_stream(save_path,ios::out | ios::binary);
+
+    MeshFileHead mesh_file_head;
+    mesh_file_head.type_[0]='m';
+    mesh_file_head.type_[1]='e';
+    mesh_file_head.type_[2]='s';
+    mesh_file_head.type_[3]='h';
+    mesh_file_head.vertex_num_=kVertexRemoveDumplicateVector.size();
+    mesh_file_head.vertex_index_num_=kVertexIndexVector.size();
+    //写入文件头
+    output_file_stream.write((char*)&mesh_file_head, sizeof(mesh_file_head));
+    //写入顶点数据
+    output_file_stream.write((char*)&kVertexRemoveDumplicateVector[0],kVertexRemoveDumplicateVector.size()*sizeof(Vertex));
+    //写入索引数据
+    output_file_stream.write((char*)&kVertexIndexVector[0],kVertexIndexVector.size()*sizeof(unsigned short));
+    output_file_stream.close();
 }
 
 #endif //UNTITLED_VERTEXDATA_H

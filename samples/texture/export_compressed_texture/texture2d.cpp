@@ -95,17 +95,17 @@ void Texture2D::CompressImageFile(std::string& image_file_path,std::string& save
     //5. 保存为文件
     ofstream output_file_stream(save_image_file_path,ios::out | ios::binary);
 
-    TpcFileHead tcp_file_head;
-    tcp_file_head.type_[0]='c';
-    tcp_file_head.type_[1]='p';
-    tcp_file_head.type_[2]='t';
-    tcp_file_head.mipmap_level_=texture2d->mipmap_level_;
-    tcp_file_head.width_=texture2d->width_;
-    tcp_file_head.height_=texture2d->height_;
-    tcp_file_head.gl_texture_format_=compress_format;
-    tcp_file_head.compress_size_=compress_size;
+    CptFileHead cpt_file_head;
+    cpt_file_head.type_[0]='c';
+    cpt_file_head.type_[1]='p';
+    cpt_file_head.type_[2]='t';
+    cpt_file_head.mipmap_level_=texture2d->mipmap_level_;
+    cpt_file_head.width_=texture2d->width_;
+    cpt_file_head.height_=texture2d->height_;
+    cpt_file_head.gl_texture_format_=compress_format;
+    cpt_file_head.compress_size_=compress_size;
 
-    output_file_stream.write((char*)&tcp_file_head,sizeof(TpcFileHead));
+    output_file_stream.write((char*)&cpt_file_head, sizeof(CptFileHead));
     output_file_stream.write((char*)img,compress_size);
     output_file_stream.close();
 }

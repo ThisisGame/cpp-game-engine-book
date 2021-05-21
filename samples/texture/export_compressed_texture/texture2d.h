@@ -33,7 +33,7 @@ public:
     GLuint gl_texture_id_;//纹理ID
 
     //tcp文件头
-    struct TpcFileHead
+    struct CptFileHead
     {
         char type_[3];
         int mipmap_level_;

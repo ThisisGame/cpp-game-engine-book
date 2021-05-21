@@ -102,6 +102,10 @@ int main(void)
 {
     VertexRemoveDumplicate();
 
+    ExportMesh("../data/model/cube.mesh");
+
+    return 0;
+
     init_opengl();
 
     CreateTexture("../data/images/urban.cpt");

@@ -31,8 +31,8 @@ public:
     GLenum gl_texture_format_;
     GLuint gl_texture_id_;//纹理ID
 
-    //tcp文件头
-    struct TpcFileHead
+    //cpt文件头
+    struct CptFileHead
     {
         char type_[3];
         int mipmap_level_;

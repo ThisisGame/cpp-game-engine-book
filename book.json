@@ -1,0 +1,24 @@
+{
+    "title" : "游戏引擎浅入浅出",
+    "author" : "captainchen",
+    "plugins":[
+        "expandable-chapters",
+        "tbfed-pagefooter",
+        "splitter",
+        "lightbox",
+        "anchor-navigation-ex",
+        "search-pro"],
+    "pluginsConfig":{
+        "theme-default": {
+            "showLevel": false
+        },
+        "tbfed-pagefooter":{
+            "copyright":"Copyright &copy captainchen",
+            "modify_format":"YYYY-MM-DD HH:mm:ss"
+        },
+        "anchor-navigation-ex": {
+            "showLevel": false,
+            "showGoTop": false
+        }
+    }
+}
