@@ -43,3 +43,5 @@
     * [8.2 Blender制作模型](pages/8. 静态模型的制作与导出/8.2 Blender制作模型.md)
     * [8.3 Blender Python设置开发环境](pages/8. 静态模型的制作与导出/8.3 Blender Python设置开发环境.md)
     * [8.4 Blender Python创建物体](pages/8. 静态模型的制作与导出/8.4 Blender Python创建物体.md)
+    * [8.5 Blender Python导出顶点数据](pages/8. 静态模型的制作与导出/8.5 Blender Python导出顶点数据.md)
+    * [8.6 加载导出的Mesh](pages/8. 静态模型的制作与导出/8.6 加载导出的Mesh.md)

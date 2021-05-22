@@ -1,13 +1,3 @@
-##8.5 Blender Python 导出顶点数据
-
-学习Blender Python脚本的最终目的是导出模型为我们引擎的独有格式模型文件。
-
-###1. 编写导出代码
-
-下面这段代码，就实现了导出顶点坐标、索引、UV数据。
-
-```python
-#export_mesh.py
 import bpy
 import bmesh
 import os
@@ -121,47 +111,3 @@ with open(dir_path+"/"+object.name_full+'.mesh', 'wb') as f:
     f.close()
     
 print("----SUCCESS-----------------------------------")
-```
-
-有一点需要注意，在3d制作软件里，默认都是4边形，但是游戏引擎都只支持三角形。
-
-在Blender中，四边形转三角形的方式是：
-
-    在编辑模式下，按 A 全选，然后 Ctrl+T 进行面三角化。
-
-
-###2. 实战导出
-
-简单的立方体已经无感了，需要精美的模型才能让人坚持往下学习。
-
-sketchfab就是一个3d模型交流网站，上面提供了付费、免费的模型下载。
-
-    https://sketchfab.com
-
-
-sketchfab上下载一个 Blender 模型
-
-    https://sketchfab.com/3d-models/fishsoup-pot-5a39e8c683f946b1aeb848dd2e88deb8
-
-
-![](../../imgs/6/blender_python_export_material_texture/download_beautiful_model_from_sketchfab.png)
-
-下载过来，贴图拖一下，修改为透明，我这里已经处理好了，放在下面目录。
-
-    files\blender_export_material_mesh_texture\fishsoup-pot\source
-
-用Blender打开项目文件`FishSoup_Pot.blend`，并执行上面写好的代码导出Mesh，如下面动图：
-
-![](../../imgs/export_blender/export_mesh/export_mesh.gif)
-
-导出完成后，打开下面目录，可以看到导出的Mesh文件。
-
-    files\blender_export_material_mesh_texture\fishsoup-pot\source\export\Plane.008
-
-![](../../imgs/export_blender/export_mesh/export_mesh_success.jpg)
-
-
-
-参考文档：
-
-    https://docs.blender.org/api/current/bpy.types.Mesh.html#bpy.types.Mesh.polygons
