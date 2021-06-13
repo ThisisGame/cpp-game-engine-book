@@ -20,5 +20,8 @@
             "showLevel": false,
             "showGoTop": false
         }
+    },
+	"styles": {
+        "website": "book_style_web.css"
     }
 }

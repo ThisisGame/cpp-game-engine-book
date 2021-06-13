@@ -45,3 +45,6 @@
     * [8.4 Blender Python创建物体](pages/8. 静态模型的制作与导出/8.4 Blender Python创建物体.md)
     * [8.5 Blender Python导出顶点数据](pages/8. 静态模型的制作与导出/8.5 Blender Python导出顶点数据.md)
     * [8.6 加载导出的Mesh](pages/8. 静态模型的制作与导出/8.6 加载导出的Mesh.md)
+* [9. 基于组件开发](pages/9. 基于组件开发/9. 基于组件开发.md)
+    * [9.1 基于RTTR实现反射](pages/9. 基于组件开发/9.1 基于RTTR实现反射.md)
+    * [9.2 实现GameObject-Component](pages/9. 基于组件开发/9.2 实现GameObject-Component.md)
