@@ -23,5 +23,16 @@
     },
 	"styles": {
         "website": "book_style_web.css"
+    },
+    "pdf":{
+        "margin":{        
+            "right":0,        
+            "left":0,        
+            "top":5,        
+            "bottom":0
+        }
+    },
+    "structure": {
+        "readme": "Introduction.md"
     }
 }

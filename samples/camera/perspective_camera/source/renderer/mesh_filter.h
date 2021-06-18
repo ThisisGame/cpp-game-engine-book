@@ -7,11 +7,12 @@
 
 #include <string>
 #include <glm/glm.hpp>
+#include "component/component.h"
 
 using std::string;
 
 
-class MeshFilter {
+class MeshFilter:public Component{
 public:
     MeshFilter();
     ~MeshFilter();

@@ -5,30 +5,30 @@
 #ifndef UNTITLED_MESH_RENDERER_H
 #define UNTITLED_MESH_RENDERER_H
 
+#include <memory>
 #include <glm/glm.hpp>
+#include "component/component.h"
 
 class Material;
 class MeshFilter;
 class Texture2D;
-class MeshRenderer {
+class MeshRenderer:public Component{
 public:
     MeshRenderer();
     ~MeshRenderer();
 
-    void SetMaterial(Material* material);//设置Material
-    Material* material(){return material_;}
+    void SetMaterial(std::shared_ptr<Material> material);//设置Material
+    std::shared_ptr<Material> material(){return material_;}
 
-    void SetMeshFilter(MeshFilter* mesh_filter);
-    MeshFilter* mesh_filter(){return mesh_filter_;}
-
-    void SetMVP(glm::mat4 mvp);
+    void SetView(glm::mat4 view){view_=view;};
+    void SetProjection(glm::mat4 projection){projection_=projection;};
 
     void Render();//渲染
 private:
-    Material* material_;
-    MeshFilter* mesh_filter_;
+    std::shared_ptr<Material> material_;
 
-    glm::mat4 mvp_;
+    glm::mat4 view_;
+    glm::mat4 projection_;
 
     unsigned int vertex_buffer_object;//顶点缓冲区对象
     unsigned int element_buffer_object;//索引缓冲区对象

@@ -11,9 +11,16 @@
 #include <glm/gtx/euler_angles.hpp>
 #include "utils/application.h"
 #include "renderer/mesh_filter.h"
+#include "renderer/shader.h"
 #include "renderer/material.h"
 #include "renderer/mesh_renderer.h"
 #include "renderer/camera.h"
+
+#include "component/component.h"
+#include "component/game_object.h"
+#include "component/transform.h"
+
+using namespace std;
 
 static void error_callback(int error, const char* description)
 {
@@ -50,45 +57,53 @@ int main(void)
     Application::set_data_path("../data/");
     init_opengl();
 
-    MeshFilter* mesh_filter=new MeshFilter();
-    mesh_filter->LoadMesh("model/plane.008.mesh");
+    //创建模型 GameObject
+    std::shared_ptr<GameObject> go=std::make_shared<GameObject>("something");
 
-    Material* material=new Material();
-    material->Parse("material/plane.008.mat");
+    //挂上 Transform 组件
+    auto transform=static_pointer_cast<Transform>(go->AddComponent("Transform"));
 
-    MeshRenderer* mesh_renderer=new MeshRenderer();
-    mesh_renderer->SetMeshFilter(mesh_filter);
+    //挂上 MeshFilter 组件
+    auto mesh_filter=static_pointer_cast<MeshFilter>(go->AddComponent("MeshFilter"));
+    mesh_filter->LoadMesh("model/fishsoup_pot.mesh");
+
+    //挂上 MeshRenderer 组件
+    auto mesh_renderer=static_pointer_cast<MeshRenderer>(go->AddComponent("MeshRenderer"));
+    std::shared_ptr<Material> material=std::make_shared<Material>();//设置材质
+    material->Parse("material/fishsoup_pot.mat");
     mesh_renderer->SetMaterial(material);
 
-    Camera* camera=new Camera();
-    camera->set_clear_color(49.f/255,77.f/255,121.f/255,1.f);
-    camera->set_clear_flag(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+    //创建相机 GameObject
+    auto go_camera=std::make_shared<GameObject>("main_camera");
+    //挂上 Transform 组件
+    auto transform_camera=static_pointer_cast<Transform>(go_camera->AddComponent("Transform"));
+    transform_camera->set_position(glm::vec3(0, 0, 10));
+    //挂上 Camera 组件
+    auto camera=static_pointer_cast<Camera>(go_camera->AddComponent("Camera"));
 
     while (!glfwWindowShouldClose(window))
     {
-        camera->Clear();
-
         float ratio;
         int width, height;
 
         glfwGetFramebufferSize(window, &width, &height);
         glViewport(0, 0, width, height);
-
         ratio = width / (float) height;
 
-        camera->SetView(glm::vec3(0, 0, 10), glm::vec3(0, 0,0), glm::vec3(0, 1, 0));
+        //设置相机
+        camera->SetView(glm::vec3(0, 0,0), glm::vec3(0, 1, 0));
         camera->SetProjection(60.f,ratio,1.f,1000.f);
+        camera->Clear();
 
-        glm::mat4 trans = glm::translate(glm::vec3(0,0,0)); //不移动顶点坐标;
+        //旋转物体
         static float rotate_eulerAngle=0.f;
         rotate_eulerAngle+=0.1f;
-        glm::mat4 rotation = glm::eulerAngleYXZ(glm::radians(rotate_eulerAngle), glm::radians(rotate_eulerAngle), glm::radians(rotate_eulerAngle)); //使用欧拉角旋转;
+        glm::vec3 rotation=transform->rotation();
+        rotation.y=rotate_eulerAngle;
+        transform->set_rotation(rotation);
 
-        glm::mat4 scale = glm::scale(glm::vec3(1.0f, 1.0f, 1.0f)); //缩放;
-        glm::mat4 model = trans*scale*rotation;
-        glm::mat4 mvp=camera->projection_mat4()*camera->view_mat4()*model;
-
-        mesh_renderer->SetMVP(mvp);
+        mesh_renderer->SetView(camera->view_mat4());
+        mesh_renderer->SetProjection(camera->projection_mat4());
         mesh_renderer->Render();
 
 

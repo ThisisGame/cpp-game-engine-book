@@ -11,9 +11,16 @@
 #include <glm/gtx/euler_angles.hpp>
 #include "utils/application.h"
 #include "renderer/mesh_filter.h"
+#include "renderer/shader.h"
 #include "renderer/material.h"
 #include "renderer/mesh_renderer.h"
 #include "renderer/camera.h"
+
+#include "component/component.h"
+#include "component/game_object.h"
+#include "component/transform.h"
+
+using namespace std;
 
 static void error_callback(int error, const char* description)
 {
@@ -50,47 +57,70 @@ int main(void)
     Application::set_data_path("../data/");
     init_opengl();
 
-    MeshFilter* mesh_filter=new MeshFilter();
-    mesh_filter->LoadMesh("model/plane.008.mesh");
+    //创建模型 GameObject
+    std::shared_ptr<GameObject> go=std::make_shared<GameObject>("something");
 
-    Material* material=new Material();
-    material->Parse("material/plane.008.mat");
+    //挂上 Transform 组件
+    auto transform=static_pointer_cast<Transform>(go->AddComponent("Transform"));
 
-    MeshRenderer* mesh_renderer=new MeshRenderer();
-    mesh_renderer->SetMeshFilter(mesh_filter);
+    //挂上 MeshFilter 组件
+    auto mesh_filter=static_pointer_cast<MeshFilter>(go->AddComponent("MeshFilter"));
+    mesh_filter->LoadMesh("model/fishsoup_pot.mesh");
+
+    //挂上 MeshRenderer 组件
+    auto mesh_renderer=static_pointer_cast<MeshRenderer>(go->AddComponent("MeshRenderer"));
+    std::shared_ptr<Material> material=std::make_shared<Material>();//设置材质
+    material->Parse("material/fishsoup_pot.mat");
     mesh_renderer->SetMaterial(material);
 
-    Camera* camera=new Camera();
-    camera->set_clear_color(49.f/255,77.f/255,121.f/255,1.f);
-    camera->set_clear_flag(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+    //创建相机2 GameObject
+    auto go_camera_2=std::make_shared<GameObject>("main_camera");
+    //挂上 Transform 组件
+    auto transform_camera_2=static_pointer_cast<Transform>(go_camera_2->AddComponent("Transform"));
+    transform_camera_2->set_position(glm::vec3(1, 0, 10));
+    //挂上 Camera 组件
+    auto camera_2=static_pointer_cast<Camera>(go_camera_2->AddComponent("Camera"));
+    //第二个相机不能清除之前的颜色。不然用第一个相机矩阵渲染的物体就被清除 没了。
+    camera_2->set_clear_flag(GL_DEPTH_BUFFER_BIT);
+    camera_2->set_depth(1);
+
+    //创建相机1 GameObject
+    auto go_camera_1=std::make_shared<GameObject>("main_camera");
+    //挂上 Transform 组件
+    auto transform_camera_1=static_pointer_cast<Transform>(go_camera_1->AddComponent("Transform"));
+    transform_camera_1->set_position(glm::vec3(0, 0, 10));
+    //挂上 Camera 组件
+    auto camera_1=static_pointer_cast<Camera>(go_camera_1->AddComponent("Camera"));
+    camera_1->set_depth(0);
 
     while (!glfwWindowShouldClose(window))
     {
-        camera->Clear();
-
         float ratio;
         int width, height;
 
         glfwGetFramebufferSize(window, &width, &height);
         glViewport(0, 0, width, height);
-
         ratio = width / (float) height;
 
-        camera->SetView(glm::vec3(0, 0, 10), glm::vec3(0, 0,0), glm::vec3(0, 1, 0));
-        camera->SetProjection(60.f,ratio,1.f,1000.f);
+        //设置相机1
+        camera_1->SetView(glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
+        camera_1->SetProjection(60.f, ratio, 1.f, 1000.f);
 
-        glm::mat4 trans = glm::translate(glm::vec3(0,0,0)); //不移动顶点坐标;
+        //设置相机2
+        camera_2->SetView(glm::vec3(transform_camera_2->position().x, 0, 0), glm::vec3(0, 1, 0));
+        camera_2->SetProjection(60.f, ratio, 1.f, 1000.f);
+
+        //旋转物体
         static float rotate_eulerAngle=0.f;
         rotate_eulerAngle+=0.1f;
-        glm::mat4 rotation = glm::eulerAngleYXZ(glm::radians(rotate_eulerAngle), glm::radians(rotate_eulerAngle), glm::radians(rotate_eulerAngle)); //使用欧拉角旋转;
+        glm::vec3 rotation=transform->rotation();
+        rotation.y=rotate_eulerAngle;
+        transform->set_rotation(rotation);
 
-        glm::mat4 scale = glm::scale(glm::vec3(1.0f, 1.0f, 1.0f)); //缩放;
-        glm::mat4 model = trans*scale*rotation;
-        glm::mat4 mvp=camera->projection_mat4()*camera->view_mat4()*model;
-
-        mesh_renderer->SetMVP(mvp);
-        mesh_renderer->Render();
-
+        //遍历所有相机，每个相机的View Projection，都用来做一次渲染。
+        Camera::Foreach([&](){
+            mesh_renderer->Render();
+        });
 
         glfwSwapBuffers(window);
         glfwPollEvents();
