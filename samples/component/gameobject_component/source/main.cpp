@@ -57,19 +57,19 @@ int main(void)
     init_opengl();
 
     //创建GameObject
-    std::shared_ptr<GameObject> go=std::make_shared<GameObject>("something");
+    GameObject* go=new GameObject("something");
 
     //挂上 Transform 组件
-    auto transform=static_pointer_cast<Transform>(go->AddComponent("Transform"));
+    auto transform=dynamic_cast<Transform*>(go->AddComponent("Transform"));
 
     //挂上 MeshFilter 组件
-    auto mesh_filter=static_pointer_cast<MeshFilter>(go->AddComponent("MeshFilter"));
-    mesh_filter->LoadMesh("model/plane.008.mesh");
+    auto mesh_filter=dynamic_cast<MeshFilter*>(go->AddComponent("MeshFilter"));
+    mesh_filter->LoadMesh("model/fishsoup_pot.mesh");
 
     //挂上MeshRenderer 组件
-    auto mesh_renderer=static_pointer_cast<MeshRenderer>(go->AddComponent("MeshRenderer"));
-    std::shared_ptr<Material> material=std::make_shared<Material>();//设置材质
-    material->Parse("material/plane.008.mat");
+    auto mesh_renderer=dynamic_cast<MeshRenderer*>(go->AddComponent("MeshRenderer"));
+    Material* material=new Material();//设置材质
+    material->Parse("material/fishsoup_pot.mat");
     mesh_renderer->SetMaterial(material);
 
     while (!glfwWindowShouldClose(window))

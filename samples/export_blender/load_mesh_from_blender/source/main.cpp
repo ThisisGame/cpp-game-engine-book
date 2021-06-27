@@ -53,10 +53,10 @@ int main(void)
     init_opengl();
 
     MeshFilter* mesh_filter=new MeshFilter();
-    mesh_filter->LoadMesh("model/plane.008.mesh");
+    mesh_filter->LoadMesh("model/fishsoup_pot.mesh");
 
     Material* material=new Material();
-    material->Parse("material/plane.008.mat");
+    material->Parse("material/fishsoup_pot.mat");
 
     MeshRenderer* mesh_renderer=new MeshRenderer();
     mesh_renderer->SetMeshFilter(mesh_filter);

@@ -17,15 +17,15 @@ public:
     MeshRenderer();
     ~MeshRenderer();
 
-    void SetMaterial(std::shared_ptr<Material> material);//设置Material
-    std::shared_ptr<Material> material(){return material_;}
+    void SetMaterial(Material* material);//设置Material
+    Material* material(){return material_;}
 
     void SetView(glm::mat4 view){view_=view;};
     void SetProjection(glm::mat4 projection){projection_=projection;};
 
     void Render();//渲染
 private:
-    std::shared_ptr<Material> material_;
+    Material* material_;
 
     glm::mat4 view_;
     glm::mat4 projection_;

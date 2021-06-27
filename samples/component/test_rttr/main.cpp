@@ -9,7 +9,7 @@ struct MyStruct { MyStruct() {}; void func(double) {}; int data; };
 RTTR_REGISTRATION
 {
     registration::class_<MyStruct>("MyStruct")
-            .constructor<>()
+            .constructor<>()(rttr::policy::ctor::as_raw_ptr)
             .property("data", &MyStruct::data)
             .method("func", &MyStruct::func);
 }
@@ -36,6 +36,10 @@ int main() {
         constructor ctor = t.get_constructor();  // 调用构造函数创建实例
         var = ctor.invoke();
         std::cout << var.get_type().get_name(); // 输出 std::shared_ptr<MyStruct>
+
+        auto ptr=var.get_value<MyStruct*>();
+        ptr->data=1;
+        ptr->func(1.0);
     }
 
 

@@ -15,7 +15,7 @@ using namespace rttr;
 RTTR_REGISTRATION
 {
     registration::class_<MeshFilter>("MeshFilter")
-            .constructor<>();
+            .constructor<>()(rttr::policy::ctor::as_raw_ptr);
 }
 
 MeshFilter::MeshFilter()

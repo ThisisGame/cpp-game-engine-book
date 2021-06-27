@@ -5,10 +5,18 @@
 
 #include "mesh_filter.h"
 #include <fstream>
+#include <rttr/registration>
 #include "../utils/application.h"
 
 using std::ifstream;
 using std::ios;
+
+using namespace rttr;
+RTTR_REGISTRATION
+{
+    registration::class_<MeshFilter>("MeshFilter")
+            .constructor<>()(rttr::policy::ctor::as_raw_ptr);
+}
 
 MeshFilter::MeshFilter()
     :mesh_(nullptr) {

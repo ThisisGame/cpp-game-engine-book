@@ -21,7 +21,7 @@ using namespace rttr;
 RTTR_REGISTRATION
 {
 registration::class_<MeshRenderer>("MeshRenderer")
-.constructor<>();
+.constructor<>()(rttr::policy::ctor::as_raw_ptr);
 }
 
 MeshRenderer::MeshRenderer():vertex_buffer_object(-1),element_buffer_object(-1) {
@@ -32,15 +32,14 @@ MeshRenderer::~MeshRenderer() {
 
 }
 
-void MeshRenderer::SetMaterial(std::shared_ptr<Material> material) {
+void MeshRenderer::SetMaterial(Material* material) {
     material_=material;
 }
-
 
 void MeshRenderer::Render() {
     //主动获取 Transform 组件，计算mvp。
     auto component_transform=game_object()->GetComponent("Transform");
-    auto transform=std::static_pointer_cast<Transform>(component_transform);
+    auto transform=dynamic_cast<Transform*>(component_transform);
     if(!transform){
         return;
     }
@@ -53,7 +52,7 @@ void MeshRenderer::Render() {
 
     //主动获取 MeshFilter 组件
     auto component_meshfilter=game_object()->GetComponent("MeshFilter");
-    auto mesh_filter=std::static_pointer_cast<MeshFilter>(component_meshfilter);
+    auto mesh_filter=dynamic_cast<MeshFilter*>(component_meshfilter);
     if(!mesh_filter){
         return;
     }
