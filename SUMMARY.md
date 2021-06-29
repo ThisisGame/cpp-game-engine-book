@@ -55,3 +55,8 @@
     * [10.4 CullingMask](pages/10. 相机/10.4 CullingMask.md)
 * [11. 控制系统](pages/11. 控制系统/11. 控制系统.md)
     * [11.1 键盘控制](pages/11. 控制系统/11.1 键盘控制.md)
+* [99. Toolbag 插件开发](pages/99. Toolbag 插件开发/99. Toolbag 插件开发.md)
+    * [99.1 插件开发环境](pages/99. Toolbag 插件开发/99.1 插件开发环境.md)
+    * [99.2 API介绍](pages/99. Toolbag 插件开发/99.2 API介绍.md)
+    * [99.3 命令行调用Toolbag](pages/99. Toolbag 插件开发/99.3 命令行调用Toolbag.md)
+    * [99.4 代码参考](pages/99. Toolbag 插件开发/99.4 代码参考.md)
