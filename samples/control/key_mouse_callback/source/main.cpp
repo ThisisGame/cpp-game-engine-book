@@ -6,6 +6,10 @@
 #include <glad/gl.h>
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/transform2.hpp>
+#include <glm/gtx/euler_angles.hpp>
+#include <glm/ext.hpp>
 #include "utils/application.h"
 #include "renderer/mesh_filter.h"
 #include "renderer/material.h"
@@ -48,6 +52,7 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 /// \param y
 void mouse_move_callback(GLFWwindow* window, double x, double y)
 {
+    Input::set_mousePosition(x,y);
     std::cout<<"mouse_move_callback:"<<x<<","<<y<<std::endl;
 }
 /// 鼠标滚轮回调
@@ -56,7 +61,8 @@ void mouse_move_callback(GLFWwindow* window, double x, double y)
 /// \param y
 void mouse_scroll_callback(GLFWwindow* window, double x, double y)
 {
-    std::cout<<"mouse_move_callback:"<<x<<","<<y<<std::endl;
+    Input::RecordScroll(y);
+    std::cout<<"mouse_scroll_callback:"<<x<<","<<y<<std::endl;
 }
 
 GLFWwindow* window;
@@ -132,6 +138,8 @@ int main(void)
     auto camera_1=dynamic_cast<Camera*>(go_camera_1->AddComponent("Camera"));
     camera_1->set_depth(0);
 
+    //上一帧的鼠标位置
+    vec2_ushort last_frame_mouse_position=Input::mousePosition();
 
     while (!glfwWindowShouldClose(window))
     {
@@ -158,6 +166,26 @@ int main(void)
             rotation.y=rotate_eulerAngle;
             transform->set_rotation(rotation);
         }
+
+        //旋转相机
+        if(Input::GetKeyDown(KEY_CODE_LEFT_ALT) && Input::GetMouseButtonDown(MOUSE_BUTTON_LEFT)){
+            float degrees= Input::mousePosition().x_ - last_frame_mouse_position.x_;
+
+            glm::mat4 old_mat4=glm::mat4(1.0f);
+            std::cout<<glm::to_string(old_mat4)<<std::endl;
+
+            glm::mat4 rotate_mat4=glm::rotate(old_mat4,glm::radians(degrees),glm::vec3(0.0f,1.0f,0.0f));//以相机所在坐标系位置，计算用于旋转的矩阵，这里是零点，所以直接用方阵。
+            glm::vec4 old_pos=glm::vec4(transform_camera_1->position(),1.0f);
+            glm::vec4 new_pos=rotate_mat4*old_pos;//旋转矩阵 * 原来的坐标 = 相机以零点做旋转。
+            std::cout<<glm::to_string(new_pos)<<std::endl;
+
+            transform_camera_1->set_position(glm::vec3(new_pos));
+        }
+        last_frame_mouse_position=Input::mousePosition();
+
+        //鼠标滚轮控制相机远近
+        transform_camera_1->set_position(transform_camera_1->position() *(10 - Input::mouse_scroll())/10.f);
+
         Input::Update();
 
         //遍历所有相机，每个相机的View Projection，都用来做一次渲染。

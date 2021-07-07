@@ -6,39 +6,41 @@
 #include <iostream>
 #include "key_code.h"
 
-std::unordered_map<unsigned short,unsigned char> Input::key_event_map_;
+std::unordered_map<unsigned short,unsigned short> Input::key_event_map_;
+vec2_ushort Input::mouse_position_={0,0};
+short Input::mouse_scroll_=0;
 
-bool Input::GetKey(unsigned char key_code) {
+bool Input::GetKey(unsigned short key_code) {
     return key_event_map_.count(key_code)>0;
 }
 
-bool Input::GetKeyDown(unsigned char key_code) {
+bool Input::GetKeyDown(unsigned short key_code) {
     if(key_event_map_.count(key_code)==0){
         return false;
     }
     return key_event_map_[key_code]!=KEY_ACTION_UP;
 }
 
-bool Input::GetKeyUp(unsigned char key_code) {
+bool Input::GetKeyUp(unsigned short key_code) {
     if(key_event_map_.count(key_code)==0){
         return false;
     }
     return key_event_map_[key_code]==KEY_ACTION_UP;
 }
 
-bool Input::GetMouseButton(unsigned char mouse_button_index) {
+bool Input::GetMouseButton(unsigned short mouse_button_index) {
     return GetKey(mouse_button_index);
 }
 
-bool Input::GetMouseButtonDown(unsigned char mouse_button_index) {
+bool Input::GetMouseButtonDown(unsigned short mouse_button_index) {
     return GetKeyDown(mouse_button_index);
 }
 
-bool Input::GetMouseButtonUp(unsigned char mouse_button_index) {
+bool Input::GetMouseButtonUp(unsigned short mouse_button_index) {
     return GetKeyUp(mouse_button_index);
 }
 
-void Input::RecordKey(unsigned short key_code, unsigned char key_action) {
+void Input::RecordKey(unsigned short key_code, unsigned short key_action) {
     key_event_map_[key_code]=key_action;
 }
 
@@ -50,4 +52,6 @@ void Input::Update() {
             ++iterator;    //指向下一个位置
         }
     }
+
+    mouse_scroll_ = 0;
 }
