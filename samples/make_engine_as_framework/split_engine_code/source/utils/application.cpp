@@ -18,10 +18,43 @@ static void error_callback(int error, const char* description)
     fprintf(stderr, "Error: %s\n", description);
 }
 
+/// 键盘回调
+/// \param window
+/// \param key
+/// \param scancode
+/// \param action
+/// \param mods
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-//    std::cout<<key<<"-"<<scancode<<"-"<<action<<"-"<<mods<<std::endl;
     Input::RecordKey(key,action);
+}
+/// 鼠标按键回调
+/// \param window
+/// \param button
+/// \param action
+/// \param mods
+static void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
+{
+    Input::RecordKey(button,action);
+//    std::cout<<"mouse_button_callback:"<<button<<","<<action<<std::endl;
+}
+/// 鼠标移动回调
+/// \param window
+/// \param x
+/// \param y
+static void mouse_move_callback(GLFWwindow* window, double x, double y)
+{
+    Input::set_mousePosition(x,y);
+//    std::cout<<"mouse_move_callback:"<<x<<","<<y<<std::endl;
+}
+/// 鼠标滚轮回调
+/// \param window
+/// \param x
+/// \param y
+static void mouse_scroll_callback(GLFWwindow* window, double x, double y)
+{
+    Input::RecordScroll(y);
+//    std::cout<<"mouse_scroll_callback:"<<x<<","<<y<<std::endl;
 }
 
 void Application::InitOpengl() {
@@ -46,6 +79,9 @@ void Application::InitOpengl() {
     glfwSwapInterval(1);
 
     glfwSetKeyCallback(glfw_window_, key_callback);
+    glfwSetMouseButtonCallback(glfw_window_,mouse_button_callback);
+    glfwSetScrollCallback(glfw_window_,mouse_scroll_callback);
+    glfwSetCursorPosCallback(glfw_window_,mouse_move_callback);
 }
 
 

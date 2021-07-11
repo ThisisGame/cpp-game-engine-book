@@ -32,20 +32,10 @@ link_directories("depends/rttr/lib")
 #链接lib文件
 link_libraries(opengl32 glfw3dll librttr_core_d)
 
-add_executable(untitled source/main.cpp
-        depends/glfw-3.3.3.bin.WIN64/deps/glad_gl.c
-        source/renderer/texture2d.cpp
-        source/renderer/mesh_filter.cpp
-        source/renderer/shader.cpp
-        source/renderer/material.cpp
-        source/renderer/technique.cpp
-        source/renderer/pass.cpp
-        source/renderer/mesh_renderer.cpp
-        source/renderer/camera.cpp
-        source/utils/application.cpp
-        source/component/game_object.cpp
-        source/component/component.cpp
-        source/component/transform.cpp source/control/input.cpp source/control/input.h source/control/key_code.h source/utils/screen.cpp source/utils/screen.h)
+file(GLOB_RECURSE engine_cpp source/*.cpp)
+add_executable(untitled depends/glfw-3.3.3.bin.WIN64/deps/glad_gl.c ${engine_cpp}
+        example/main.cpp
+        example/login_scene.cpp)
 
 
 #拷贝dll到exe目录
