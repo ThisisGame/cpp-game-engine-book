@@ -7,7 +7,9 @@
 ## Useful links
 
 :blue_book: [在线阅读](http://www.thisisgame.com.cn/book/makegameengineatnight/)
+
 :orange_book: [随书项目实例](https://github.com/ThisisGame/makegameengineatnight/tree/main/samples)
+
 :green_book: [Markdown](https://github.com/ThisisGame/makegameengineatnight/tree/main/pages)
 
 ##
@@ -26,18 +28,26 @@
 对从事游戏性能优化工作的开发者，从本书中或许可以找到以下问题的答案：
 
 :white_check_mark: 为什么要合并DrawCall？
+
 :white_check_mark: 为什么要减少顶点？
+
 :white_check_mark: 为什么要减少骨骼数量？
+
 :white_check_mark: 为什么要将图片压缩为不同的格式？
+
 :white_check_mark: 为什么要烘焙灯光贴图？
+
 :white_check_mark: 为什么要减少阴影？
+
 :white_check_mark: 为什么……？
 
 
 ## 本书不涉及内容
 
 :no_entry: 图形学
+
 :no_entry: 物理学
+
 :no_entry: 硬件知识
 
 
@@ -49,9 +59,13 @@
 个人推荐的学习方式如下：
 
 :arrow_forward: 打开电子书，在文章开头找到项目所在文件夹。
+
 :arrow_forward: CLion打开项目，编译运行，看看效果。
+
 :arrow_forward: 过一遍代码，断点调试一下。
+
 :arrow_forward: 看一遍章节内容。
+
 :arrow_forward: 再过一遍代码。
 
 ## 资源下载
