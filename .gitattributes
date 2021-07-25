@@ -4,3 +4,5 @@
 *.cpp linguist-language=c++
 *.c linguist-language=c++
 *.py linguist-language=c++
+*.css linguist-language=c++
+*.html linguist-language=c++
