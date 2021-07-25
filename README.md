@@ -1,6 +1,6 @@
 ## 游戏引擎 浅入浅出
 
-[![GitHub license](https://img.shields.io/badge/license-CC0-blue.svg?style=for-the-badge)](https://github.com/ThisisGame/makegameengineatnight/blob/main/LICENSE)
+[![GitHub license](https://img.shields.io/badge/license-CC-red.svg?style=for-the-badge)](https://github.com/ThisisGame/makegameengineatnight/blob/main/LICENSE)
 
 | 语言           | - |
 | :------------- | :--- |
