@@ -12,7 +12,7 @@
 
 :green_book: [Markdown](https://github.com/ThisisGame/makegameengineatnight/tree/main/pages)
 
-##
+## Chapter
 
 我们每天与游戏引擎打交道，有时候会心痒痒想了解游戏引擎是怎么做的，但是游戏引擎是如此庞大的一个工程，如虚幻这行业至尊，代码量更是复杂到以千万行计，个人想完成一个游戏引擎似乎是不可能的事情。
 
@@ -20,10 +20,23 @@
 
 本书拆分游戏引擎的多个模块，到书中的每一章进行讲解，最终实现一个简单的游戏引擎。
 
+![](imgs/chapter.svg)
 
-## 本书提供的内容
+## Content
 
-一个简单的游戏引擎，有各种开源库+引擎逻辑组合而成，本书主要介绍各种开源库的使用方法，以及对它们进行组合的过程。
+本书包含内容
+
+:white_check_mark: 各种开源库的使用方式
+
+:white_check_mark: 如何将开源库组装成游戏引擎
+
+本书不包括内容
+
+:no_entry: 图形学
+
+:no_entry: 物理学
+
+:no_entry: 硬件知识
 
 对从事游戏性能优化工作的开发者，从本书中或许可以找到以下问题的答案：
 
@@ -42,25 +55,17 @@
 :white_check_mark: 为什么……？
 
 
-## 本书不涉及内容
-
-:no_entry: 图形学
-
-:no_entry: 物理学
-
-:no_entry: 硬件知识
 
 
 
-## 本书正确的学习方式
+
+## Learning style
 
 图书以实战为主，大部分章节都有CLion实例项目，项目路径在章节开头或结尾给出。
 
 个人推荐的学习方式如下：
 
-:arrow_forward: 打开电子书，在文章开头找到项目所在文件夹。
-
-:arrow_forward: CLion打开项目，编译运行，看看效果。
+:arrow_forward: 打开CLion项目，编译运行，看看效果。
 
 :arrow_forward: 过一遍代码，断点调试一下。
 
@@ -68,11 +73,15 @@
 
 :arrow_forward: 再过一遍代码。
 
-## 资源下载
+## Resource download
 
 本书Markdown以及章节配套项目托管在Github上，读书过程中有疑问、发现错误都可以提Issues。
 
     Github：https://github.com/ThisisGame/makegameengineatnight
+
+本书使用到的其他工具，都在GameDevTools中集成。
+
+    GameDevTools: https://github.com/ThisisGame/GameDevTools
 
 ## Contributors
 
