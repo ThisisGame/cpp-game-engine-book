@@ -3,3 +3,4 @@
 *.hpp linguist-language=cpp
 *.cpp linguist-language=cpp
 *.c linguist-language=cpp
+*.py linguist-language=cpp
