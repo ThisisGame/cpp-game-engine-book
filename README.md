@@ -1,5 +1,7 @@
 ## 游戏引擎 浅入浅出
 
+[![GitHub license](https://img.shields.io/badge/license-CC0-blue.svg?style=for-the-badge)](https://github.com/ThisisGame/makegameengineatnight/blob/main/LICENSE)
+
 | 语言           | - |
 | :------------- | :--- |
 | [简体中文](http://www.thisisgame.com.cn/book/makegameengineatnight/)              | [阅读](http://www.thisisgame.com.cn/book/makegameengineatnight/) |
@@ -12,7 +14,7 @@
 
 - 在线阅读：[thisisgame.com.cn](http://www.thisisgame.com.cn/book/makegameengineatnight/)
 
-**本书提供的内容**
+## 本书提供的内容
 
 一个简单的游戏引擎，有各种开源库+引擎逻辑组合而成，本书主要介绍各种开源库的使用方法，以及对它们进行组合的过程。
 
@@ -27,7 +29,7 @@
 7. 为什么……？
 
 
-**本书不涉及内容**
+## 本书不涉及内容
 
 1. 图形学
 2. 物理学
@@ -35,7 +37,7 @@
 
 
 
-**本书正确的学习方式**
+## 本书正确的学习方式
 
 图书以实战为主，大部分章节都有CLion实例项目，项目路径在章节开头或结尾给出。
 个人推荐的学习方式如下：
@@ -44,7 +46,7 @@
 3. 看一遍章节内容。
 4. 再过一遍代码。
 
-**资源下载**
+## 资源下载
 
 本书Markdown以及章节配套项目托管在Github、腾讯工蜂上，读书过程中有疑问、发现错误都可以提Issues。
 
@@ -52,6 +54,47 @@
 
     腾讯工蜂：https://git.code.tencent.com/ThisisGame/makegameengineatnight
 
-**鸣谢**
+## Contributors
 
-[![CLion](http://www.thisisgame.com.cn/book/makegameengineatnight/imgs/readme/jetbrains-variant-4.png "CLion")](https://jb.gg/OpenSource)
+项目目前由我个人维护更新, you could become one too !
+
+<table>
+  <tr>
+    <td align="center">
+        <a href="https://github.com/ThisisGame">
+            <img src="https://avatars.githubusercontent.com/u/17882033?v=4" width="100px;" alt="ThisisGame" border="1"/>
+            <br />
+            <sub><b>陈鹏</b></sub>
+        </a>
+        <br />
+        <a href="https://github.com/ThisisGame/makegameengineatnight/commits?author=ThisisGame" title="Creator / Code">
+        </a>
+    </td>
+  </tr>
+</table>
+
+## Sponsors
+
+<table>
+  <tr>
+    <td align="center">
+        <a href="https://github.com/">
+            <img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" width="100px;" alt="GitHub" border="1"/>
+            <br />
+            <sub><b>GitHub</b></sub>
+        </a>
+        <br />
+        <a href="https://github.com/" title="Sponsor">
+        </a>
+    </td>
+    <td align="center">
+        <a href="https://jb.gg/OpenSource">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/JetBrains_Logo_2016.svg/1200px-JetBrains_Logo_2016.svg.png" width="100px" height="100px" alt="JetBrains" border="1"/>
+            <br />
+            <sub><b>JetBrains</b></sub>
+        </a>
+        <br />
+        <a href="https://www.jetbrains.com" title="Sponsor"></a>
+    </td>
+  </tr>
+</table>
