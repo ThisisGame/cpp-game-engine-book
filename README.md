@@ -12,6 +12,25 @@
 
 :green_book: [Markdown](https://github.com/ThisisGame/makegameengineatnight/tree/main/pages)
 
+
+## Directory
+
+:file_folder: files
+
+存放 blender、xmind、drawio 等源文件。
+
+:file_folder: imgs
+
+存放 markdown 图片。
+
+:file_folder: pages
+
+存放 markdown 文档。
+
+:file_folder: samples
+
+存放随书实例 CLion 工程。
+
 ## Chapter
 
 我们每天与游戏引擎打交道，有时候会心痒痒想了解游戏引擎是怎么做的，但是游戏引擎是如此庞大的一个工程，如虚幻这行业至尊，代码量更是复杂到以千万行计，个人想完成一个游戏引擎似乎是不可能的事情。
