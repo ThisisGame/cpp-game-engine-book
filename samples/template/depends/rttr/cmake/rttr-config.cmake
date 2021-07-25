@@ -16,7 +16,7 @@ set(CMAKE_IMPORT_FILE_VERSION 1)
 set(_targetsDefined)
 set(_targetsNotDefined)
 set(_expectedTargets)
-foreach(_expectedTarget RTTR::Core)
+foreach(_expectedTarget RTTR::Core_Lib)
   list(APPEND _expectedTargets ${_expectedTarget})
   if(NOT TARGET ${_expectedTarget})
     list(APPEND _targetsNotDefined ${_expectedTarget})
@@ -42,13 +42,12 @@ unset(_expectedTargets)
 
 
 # The installation prefix configured by this project.
-set(_IMPORT_PREFIX "D:/download/rttr-0.9.6-src/cmake-build-debug/install")
+set(_IMPORT_PREFIX "C:/Users/captainchen/Downloads/rttr-0.9.6-src/cmake-build-debug/install")
 
-# Create imported target RTTR::Core
-add_library(RTTR::Core SHARED IMPORTED)
+# Create imported target RTTR::Core_Lib
+add_library(RTTR::Core_Lib STATIC IMPORTED)
 
-set_target_properties(RTTR::Core PROPERTIES
-  INTERFACE_COMPILE_DEFINITIONS "RTTR_DLL"
+set_target_properties(RTTR::Core_Lib PROPERTIES
   INTERFACE_COMPILE_FEATURES "cxx_std_11"
   INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include"
 )

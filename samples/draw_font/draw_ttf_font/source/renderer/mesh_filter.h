@@ -38,6 +38,14 @@ public:
         unsigned short vertex_index_num_;//索引个数
         Vertex* vertex_data_;//顶点数据
         unsigned short* vertex_index_data_;//顶点索引数据
+        ~Mesh(){
+            if(vertex_data_!= nullptr){
+                delete vertex_data_;
+            }
+            if(vertex_index_data_!= nullptr){
+                delete vertex_index_data_;
+            }
+        }
     };
 
     /// 加载Mesh文件

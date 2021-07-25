@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.17)
 project(untitled)
 
 set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_EXE_LINKER_FLAGS "-static")
 
 #拷贝depends目录
 file(COPY "../../template/depends/glfw-3.3.3.bin.WIN64/" DESTINATION "../depends/glfw-3.3.3.bin.WIN64/")

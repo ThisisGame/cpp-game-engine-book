@@ -59,6 +59,8 @@
 * [12. 拆分引擎和项目](pages/12. 拆分引擎和项目/12. 拆分引擎和项目.md)
 * [13. 绘制文字](pages/13. 绘制文字/13. 绘制文字.md)
     * [13.1 绘制TrueType](pages/13. 绘制文字/13.1 绘制TrueType.md)
+* [98. GPU分析工具](pages/98. GPU分析工具/98. GPU分析工具.md)
+    * [98.1 RenderDoc分析不显示bug](pages/98. GPU分析工具/98.1 RenderDoc分析不显示bug.md)
 * [99. Toolbag 插件开发](pages/99. Toolbag 插件开发/99. Toolbag 插件开发.md)
     * [99.1 插件开发环境](pages/99. Toolbag 插件开发/99.1 插件开发环境.md)
     * [99.2 API介绍](pages/99. Toolbag 插件开发/99.2 API介绍.md)

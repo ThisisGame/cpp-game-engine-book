@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.17)
 project(untitled)
 
 set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_EXE_LINKER_FLAGS "-static")
 
 #拷贝depends目录
 file(COPY "../../template/depends/glfw-3.3.3.bin.WIN64/" DESTINATION "../depends/glfw-3.3.3.bin.WIN64/")
@@ -19,6 +20,7 @@ file(COPY "../../template/data/model/fishsoup_pot.mesh" DESTINATION "../data/mod
 file(COPY "../../template/data/shader/unlit.vs" DESTINATION "../data/shader/")
 file(COPY "../../template/data/shader/unlit.fs" DESTINATION "../data/shader/")
 file(COPY "../../template/data/material/fishsoup_pot.mat" DESTINATION "../data/material/")
+file(COPY "../../template/data/material/quad_draw_font.mat" DESTINATION "../data/material/")
 file(COPY "../../template/data/font/" DESTINATION "../data/font/")
 
 #头文件目录
@@ -33,7 +35,7 @@ link_directories("depends/glfw-3.3.3.bin.WIN64/lib-static-ucrt")
 link_directories("depends/rttr/lib")
 
 #链接lib文件
-link_libraries(opengl32 glfw3dll librttr_core_d)
+link_libraries(opengl32 glfw3dll rttr_core_d)
 
 file(GLOB_RECURSE engine_cpp source/*.cpp)
 add_executable(untitled depends/glfw-3.3.3.bin.WIN64/deps/glad_gl.c ${engine_cpp}
@@ -43,6 +45,5 @@ add_executable(untitled depends/glfw-3.3.3.bin.WIN64/deps/glad_gl.c ${engine_cpp
 
 #拷贝dll到exe目录
 file(COPY "depends/glfw-3.3.3.bin.WIN64/lib-static-ucrt/glfw3.dll" DESTINATION "./")
-file(COPY "depends/rttr/dll/librttr_core_d.dll" DESTINATION "./")
 
 
