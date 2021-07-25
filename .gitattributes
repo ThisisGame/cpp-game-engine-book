@@ -1,6 +1,6 @@
 
-*.h linguist-language=cpp
-*.hpp linguist-language=cpp
-*.cpp linguist-language=cpp
-*.c linguist-language=cpp
-*.py linguist-language=cpp
+*.h linguist-language=c++
+*.hpp linguist-language=c++
+*.cpp linguist-language=c++
+*.c linguist-language=c++
+*.py linguist-language=c++
