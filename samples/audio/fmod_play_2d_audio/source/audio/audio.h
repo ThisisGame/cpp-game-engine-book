@@ -10,7 +10,7 @@
 class Audio {
 public:
     /// 初始化fmod
-    static void InitFmod();
+    static void Init();
     /// 创建音效
     /// \param name_or_data
     /// \param mode

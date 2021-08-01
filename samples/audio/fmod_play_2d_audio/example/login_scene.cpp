@@ -46,13 +46,18 @@ void LoginScene::Awake() {
 
     CreateQuad();
 
+    CreateSounds();
+}
+
+void LoginScene::CreateSounds() {
     FMOD_RESULT result;
     // 战斗背景音乐
-    result = Audio::CreateSound((Application::data_path() + "audio/war_bgm.wav").c_str(), FMOD_DEFAULT, 0, &sound1);
+    result = Audio::CreateSound((Application::data_path() + "audio/war_bgm.wav").c_str(), FMOD_2D | FMOD_LOOP_NORMAL,
+                                nullptr, &sound_1);
     // 刀攻击音效
-    result = Audio::CreateSound((Application::data_path() + "audio/knife_attack.wav").c_str(), FMOD_DEFAULT, 0, &sound2);
+    result = Audio::CreateSound((Application::data_path() + "audio/knife_attack.wav").c_str(), FMOD_2D, nullptr, &sound_2);
     // 魔法攻击音效
-    result = Audio::CreateSound((Application::data_path() + "audio/magic_attack.wav").c_str(), FMOD_DEFAULT, 0, &sound3);
+    result = Audio::CreateSound((Application::data_path() + "audio/magic_attack.wav").c_str(), FMOD_2D, nullptr, &sound_3);
 }
 
 void LoginScene::CreateFishSoupPot() {
@@ -91,7 +96,7 @@ void LoginScene::CreateQuad() {
 
     //挂上 Transform 组件
     auto transform=dynamic_cast<Transform*>(go->AddComponent("Transform"));
-    transform->set_position({2.f,0.f,0.f});
+    transform->set_position({2.f,0.f,5.f});
 
     //挂上 MeshFilter 组件
     auto mesh_filter=dynamic_cast<MeshFilter*>(go->AddComponent("MeshFilter"));
@@ -99,7 +104,7 @@ void LoginScene::CreateQuad() {
 
     //创建 Material
     material=new Material();//设置材质
-    material->Parse("material/quad_draw_font.mat");
+    material->Parse("material/fmod_play_2d_sound_tips.mat");
 
     //挂上 MeshRenderer 组件
     auto mesh_renderer=dynamic_cast<MeshRenderer*>(go->AddComponent("MeshRenderer"));
@@ -109,12 +114,6 @@ void LoginScene::CreateQuad() {
 void LoginScene::Update() {
     camera_1_->SetView(glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
     camera_1_->SetProjection(60.f, Screen::aspect_ratio(), 1.f, 1000.f);
-
-    //更换贴图
-    if(Input::GetKeyUp(KEY_CODE_C)){
-        auto texture2D=Texture2D::CreateFromTrueTypeFont("font/hkyuan.ttf","Hello World");
-        material->SetTexture("u_diffuse_texture", texture2D);
-    }
 
     //旋转物体
     if(Input::GetKeyDown(KEY_CODE_R)){
@@ -143,12 +142,31 @@ void LoginScene::Update() {
     //鼠标滚轮控制相机远近
     transform_camera_1_->set_position(transform_camera_1_->position() *(10 - Input::mouse_scroll())/10.f);
 
-    //按 1 2 3 播放3个音效
+    //按 1 2 3 播放/暂停 3个音效
     if(Input::GetKeyUp(KEY_CODE_1)){
-        FMOD_RESULT result = Audio::PlaySound(sound1, 0, false, &channel);
+        PlayPauseSound(sound_1,&channel_1);
     }else if(Input::GetKeyUp(KEY_CODE_2)){
-        FMOD_RESULT result = Audio::PlaySound(sound2, 0, false, &channel);
+        PlayPauseSound(sound_2,&channel_2);
     }else if(Input::GetKeyUp(KEY_CODE_3)){
-        FMOD_RESULT result = Audio::PlaySound(sound3, 0, false, &channel);
+        PlayPauseSound(sound_3,&channel_3);
+    }
+}
+
+void LoginScene::PlayPauseSound(FMOD_SOUND *sound, FMOD_CHANNEL** channel) {
+    FMOD_RESULT result;
+    FMOD_BOOL paused=false;
+    //判断音效是否暂停
+    result = FMOD_Channel_GetPaused(*channel, &paused);//音效播放完毕后，channel被回收，返回 FMOD_ERR_INVALID_HANDLE
+    switch(result){
+        case FMOD_OK:
+            //暂停播放
+            result= FMOD_Channel_SetPaused(*channel, !paused);
+            break;
+        case FMOD_ERR_INVALID_PARAM://channel默认是nullptr，非法参数。
+        case FMOD_ERR_INVALID_HANDLE://音效播放完毕后，channel被回收。
+        case FMOD_ERR_CHANNEL_STOLEN://音效播放完毕后，channel被回收且被分配给其他Sound。
+            //播放音效
+            result = Audio::PlaySound(sound, nullptr, false, channel);
+            break;
     }
 }

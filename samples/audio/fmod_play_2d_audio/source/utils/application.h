@@ -29,9 +29,16 @@ public:
     static void Render();
 
 private:
+    static void InitSpdLog();
+
+    /// 初始化 glfw
+    static void InitGpuDevice();
+
+private:
     static std::string data_path_;//资源目录
 
     static GLFWwindow* glfw_window_;
+
 };
 
 

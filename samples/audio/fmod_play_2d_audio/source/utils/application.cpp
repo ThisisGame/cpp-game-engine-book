@@ -63,30 +63,19 @@ static void mouse_scroll_callback(GLFWwindow* window, double x, double y)
 
 void Application::Init() {
     //初始化spdlog
-    try
-    {
-        auto console_sink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
-        console_sink->set_level(spdlog::level::trace);
-        console_sink->set_pattern("[multi_sink_example] [%^%l%$] %v");
-
-        auto file_sink = std::make_shared<spdlog::sinks::basic_file_sink_mt>("logs/multisink.txt", true);
-        file_sink->set_level(spdlog::level::trace);
-
-        spdlog::sinks_init_list sink_list = { file_sink, console_sink };
-
-        // you can even set multi_sink logger as default logger
-        spdlog::set_default_logger(std::make_shared<spdlog::logger>("multi_sink", spdlog::sinks_init_list({console_sink, file_sink})));
-    }
-    catch (const spdlog::spdlog_ex& ex)
-    {
-        std::cout << "Log initialization failed: " << ex.what() << std::endl;
-    }
+    InitSpdLog();
     spdlog::info("game start");
+    // 初始化 glfw
+    InitGpuDevice();
+    //初始化 fmod
+    Audio::Init();
+}
 
+void Application::InitGpuDevice() {
     glfwSetErrorCallback(error_callback);
     if (!glfwInit())
     {
-        spdlog::error("glfwinit failed!");
+        spdlog::error("glfw init failed!");
         exit(EXIT_FAILURE);
     }
 
@@ -111,9 +100,27 @@ void Application::Init() {
     glfwSetMouseButtonCallback(glfw_window_,mouse_button_callback);
     glfwSetScrollCallback(glfw_window_,mouse_scroll_callback);
     glfwSetCursorPosCallback(glfw_window_,mouse_move_callback);
+}
 
-    //初始化音效库
-    Audio::InitFmod();
+void Application::InitSpdLog() {
+    try
+    {
+        auto console_sink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
+        console_sink->set_level(spdlog::level::trace);
+        console_sink->set_pattern("[multi_sink_example] [%^%l%$] %v");
+
+        auto file_sink = std::make_shared<spdlog::sinks::basic_file_sink_mt>("logs/multisink.txt", true);
+        file_sink->set_level(spdlog::level::trace);
+
+        spdlog::sinks_init_list sink_list = { file_sink, console_sink };
+
+        // you can even set multi_sink logger as default logger
+        spdlog::set_default_logger(std::make_shared<spdlog::logger>("multi_sink", spdlog::sinks_init_list({console_sink, file_sink})));
+    }
+    catch (const spdlog::spdlog_ex& ex)
+    {
+        std::cout << "Log initialization failed: " << ex.what() << std::endl;
+    }
 }
 
 

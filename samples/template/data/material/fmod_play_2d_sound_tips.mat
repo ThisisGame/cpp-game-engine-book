@@ -1,0 +1,12 @@
+<material>
+    <technique lod="0">
+        <pass name="base" shader="shader/unlit">
+            <texture name="u_diffuse_texture" image="images/fmod_play_2d_sound_tips.cpt"/>
+        </pass>
+    </technique>
+    <technique lod="1">
+        <pass name="base" shader="shader/unlit">
+            <texture name="u_diffuse_texture" image="images/urban_128.cpt"/>
+        </pass>
+    </technique>
+</material>
