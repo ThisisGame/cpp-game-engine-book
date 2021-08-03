@@ -6,6 +6,7 @@
 #include <fstream>
 #include "stb/stb_image.h"
 #include "timetool/stopwatch.h"
+#include "spdlog/spdlog.h"
 
 using timetool::StopWatch;
 using std::ofstream;
@@ -24,6 +25,8 @@ Texture2D* Texture2D::LoadFromFile(std::string& image_file_path)
     unsigned char* data = stbi_load(image_file_path.c_str(), &(texture2d->width_), &(texture2d->height_), &channels_in_file, 0);
     stopwatch.stop();
     std::int64_t decompress_jpg_cost = stopwatch.milliseconds();
+
+    spdlog::info("stbi_load {},is null:{}",image_file_path,data== nullptr);
 
     int image_data_format=GL_RGB;
     if (data!= nullptr)

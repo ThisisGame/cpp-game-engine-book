@@ -3,10 +3,12 @@
 #include <GLFW/glfw3.h>
 
 #include <glm/glm.hpp>
-#include<glm/gtc/matrix_transform.hpp>
-#include<glm/gtx/transform2.hpp>
-#include<glm/gtx/euler_angles.hpp>
-
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/transform2.hpp>
+#include <glm/gtx/euler_angles.hpp>
+#include "spdlog/spdlog.h"
+#include "spdlog/sinks/stdout_color_sinks.h"
+#include "spdlog/sinks/basic_file_sink.h"
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -79,16 +81,41 @@ void CreateTexture(std::string image_file_path)
     texture2d=Texture2D::LoadFromFile(image_file_path);
 }
 
+void InitSpdLog() {
+    try
+    {
+        auto console_sink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
+        console_sink->set_level(spdlog::level::trace);
+        console_sink->set_pattern("[multi_sink_example] [%^%l%$] %v");
 
+        auto file_sink = std::make_shared<spdlog::sinks::basic_file_sink_mt>("logs/multisink.txt", true);
+        file_sink->set_level(spdlog::level::trace);
 
-int main(void)
+        spdlog::sinks_init_list sink_list = { file_sink, console_sink };
+
+        // you can even set multi_sink logger as default logger
+        spdlog::set_default_logger(std::make_shared<spdlog::logger>("multi_sink", spdlog::sinks_init_list({console_sink, file_sink})));
+    }
+    catch (const spdlog::spdlog_ex& ex)
+    {
+        std::cout << "Log initialization failed: " << ex.what() << std::endl;
+    }
+}
+
+int main(int argc,char** argv)
 {
+    InitSpdLog();
+
     init_opengl();
 
     //从GPU中，将显存中保存的压缩好的纹理数据，下载到内存，并保存到硬盘。
-    std::string src_image_file_path("../data/images/urban.jpg");
-    std::getline(std::cin,src_image_file_path);
-    std::string cpt_file_path=src_image_file_path.replace(src_image_file_path.find(".jpg"), sizeof(".jpg") - 1, ".cpt");
+//    std::string src_image_file_path("../data/images/urban.jpg");
+    std::string src_image_file_path(argv[1]);
+//    src_image_file_path= ReplaceAll(src_image_file_path,"\\","/");
+    spdlog::info("src_image_file_path:{}",src_image_file_path);
+    std::string cpt_file_path=src_image_file_path;
+    auto last_index_of_point=cpt_file_path.find_last_of('.');
+    cpt_file_path.replace(last_index_of_point, cpt_file_path.size()-last_index_of_point, ".cpt");
     Texture2D::CompressImageFile(src_image_file_path,cpt_file_path);
 
     glfwDestroyWindow(window);

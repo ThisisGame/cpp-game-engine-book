@@ -15,16 +15,13 @@ file(COPY "../../template/depends/spdlog/include/spdlog/" DESTINATION "../depend
 file(COPY "../../template/depends/fmod/" DESTINATION "../depends/fmod/")
 
 #拷贝data文件
-file(COPY "../../template/data/images/diffuse_fishsoup_pot.cpt" DESTINATION "../data/images/")
-file(COPY "../../template/data/images/urban_128.cpt" DESTINATION "../data/images/")
-file(COPY "../../template/data/images/fmod_play_2d_sound_tips.cpt" DESTINATION "../data/images/")
-file(COPY "../../template/data/model/fishsoup_pot.mesh" DESTINATION "../data/model/")
-file(COPY "../../template/data/shader/unlit.vs" DESTINATION "../data/shader/")
-file(COPY "../../template/data/shader/unlit.fs" DESTINATION "../data/shader/")
-file(COPY "../../template/data/material/fishsoup_pot.mat" DESTINATION "../data/material/")
-file(COPY "../../template/data/material/fmod_play_2d_sound_tips.mat" DESTINATION "../data/material/")
-file(COPY "../../template/data/font/" DESTINATION "../data/font/")
 file(COPY "../../template/data/audio/fmod_play_wav/" DESTINATION "../data/audio/")
+file(COPY "../../template/data/images/audio/audio_source_3d/" DESTINATION "../data/images/")
+file(GLOB audio_source_3d_cube_materials "../../template/data/material/audio_source_3d_cube_*")
+file(COPY ${audio_source_3d_cube_materials} DESTINATION "../data/material/")
+file(COPY "../../template/data/model/cube_audio_source.mesh" DESTINATION "../data/model/")
+file(GLOB unlit_shaders "../../template/data/shader/unlit.*")
+file(COPY ${unlit_shaders} DESTINATION "../data/shader/")
 
 #头文件目录
 include_directories("depends/glfw-3.3.3.bin.WIN64/include")
