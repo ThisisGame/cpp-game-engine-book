@@ -19,13 +19,16 @@ AudioSource::AudioSource():Component() {}
 
 void AudioSource::Set3DMode(bool mode_3d) {
     if(mode_3d){
-        fmod_mode_=fmod_mode_ ^ FMOD_2D;
         fmod_mode_=fmod_mode_ | FMOD_3D;
     }else{
-        fmod_mode_=fmod_mode_ | FMOD_2D;
-        fmod_mode_=fmod_mode_ ^ FMOD_3D;
+        if(fmod_mode_&FMOD_3D){
+            fmod_mode_=fmod_mode_ ^ FMOD_3D;
+        }
     }
-    FMOD_Channel_SetMode(fmod_channel_,fmod_mode_);
+    FMOD_RESULT result=FMOD_Channel_SetMode(fmod_channel_,fmod_mode_);
+    if(result!=FMOD_OK){
+        spdlog::error("AudioSource::Set3DMode FMOD_Channel_SetMode result:{}",result);
+    }
 }
 
 void AudioSource::Play() {
@@ -100,7 +103,11 @@ void AudioSource::SetLoop(bool mode_loop) {
             fmod_mode_=fmod_mode_ ^ FMOD_LOOP_NORMAL;
         }
     }
-    FMOD_Channel_SetMode(fmod_channel_,fmod_mode_);
+
+    FMOD_RESULT result=FMOD_Channel_SetMode(fmod_channel_,fmod_mode_);
+    if(result!=FMOD_OK){
+        spdlog::error("AudioSource::SetLoop FMOD_Channel_SetMode result:{}",result);
+    }
 }
 
 void AudioSource::Update() {
