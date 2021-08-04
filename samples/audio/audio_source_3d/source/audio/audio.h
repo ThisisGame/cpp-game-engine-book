@@ -30,6 +30,8 @@ public:
     /// 刷帧
     /// \return
     static FMOD_RESULT Update();
+
+    static FMOD_RESULT Set3DListenerAttributes(int listener, const FMOD_VECTOR *pos, const FMOD_VECTOR *vel, const FMOD_VECTOR *forward, const FMOD_VECTOR *up);
 private:
     static FMOD_SYSTEM * fmod_system_;//fmod音效引擎系统
 };

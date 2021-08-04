@@ -5,6 +5,8 @@
 #include "audio_source.h"
 #include <rttr/registration>
 #include "spdlog/spdlog.h"
+#include "component/game_object.h"
+#include "component/transform.h"
 
 using namespace rttr;
 RTTR_REGISTRATION
@@ -88,4 +90,36 @@ bool AudioSource::Paused() {
     }
     spdlog::error("AudioSource::Paused FMOD_Channel_GetPaused result:{}",result);
     return true;
+}
+
+void AudioSource::SetLoop(bool mode_loop) {
+    if(mode_loop){
+        fmod_mode_=fmod_mode_ | FMOD_LOOP_NORMAL;
+    }else{
+        if(fmod_mode_&FMOD_LOOP_NORMAL){
+            fmod_mode_=fmod_mode_ ^ FMOD_LOOP_NORMAL;
+        }
+    }
+    FMOD_Channel_SetMode(fmod_channel_,fmod_mode_);
+}
+
+void AudioSource::Update() {
+    Component::Update();
+
+    if(fmod_mode_ ^ FMOD_3D){
+        auto component_transform=game_object()->GetComponent("Transform");
+        auto transform=dynamic_cast<Transform*>(component_transform);
+        if(!transform){
+            return;
+        }
+        auto pos=transform->position();
+        FMOD_VECTOR audio_source_pos = {  pos.x, pos.y, pos.z };
+        FMOD_VECTOR vel = {  0.0f, 0.0f, 0.0f };
+        FMOD_Channel_Set3DAttributes(fmod_channel_, &audio_source_pos,  &vel);
+
+        FMOD_VECTOR audio_listener_pos = {  pos.x, pos.y, pos.z };
+        FMOD_VECTOR forward = {  0.0f, 0.0f, 1.0f };
+        FMOD_VECTOR up = {  0.0f, 1.0f, 0.0f };
+        Audio::Set3DListenerAttributes(0,&audio_listener_pos,&vel,&forward,&up);
+    }
 }

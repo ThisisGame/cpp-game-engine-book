@@ -39,3 +39,9 @@ Audio::CreateSound(const char *name_or_data,FMOD_MODE mode,FMOD_CREATESOUNDEXINF
 FMOD_RESULT Audio::PlaySound(FMOD_SOUND *sound,FMOD_CHANNELGROUP *channel_group,bool paused,FMOD_CHANNEL **channel) {
     return FMOD_System_PlaySound(fmod_system_,sound,channel_group,paused,channel);
 }
+
+FMOD_RESULT
+Audio::Set3DListenerAttributes(int listener, const FMOD_VECTOR *pos, const FMOD_VECTOR *vel, const FMOD_VECTOR *forward,
+                               const FMOD_VECTOR *up) {
+    return FMOD_System_Set3DListenerAttributes(fmod_system_,listener,pos,vel,forward,up);
+}

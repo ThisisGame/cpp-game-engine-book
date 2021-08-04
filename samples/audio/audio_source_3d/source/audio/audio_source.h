@@ -19,11 +19,18 @@ public:
     /// \param mode_3d
     void Set3DMode(bool mode_3d);
 
+    /// 设置是否循环
+    /// \param mode_loop
+    void SetLoop(bool mode_loop);
+
     void Play();
     void Pause();
     void Stop();
 
     bool Paused();
+
+private:
+    void Update() override;
 
 private:
     AudioClip* audio_clip_;

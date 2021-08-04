@@ -1,7 +1,7 @@
 <material>
     <technique lod="0">
         <pass name="base" shader="shader/unlit">
-            <texture name="u_diffuse_texture" image="images/urban.cpt"/>
+            <texture name="u_diffuse_texture" image="images/cube_knife.cpt"/>
         </pass>
     </technique>
     <technique lod="1">
