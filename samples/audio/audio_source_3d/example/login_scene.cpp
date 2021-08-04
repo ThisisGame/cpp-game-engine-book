@@ -63,9 +63,9 @@ void LoginScene::CreateSounds() {
     //挂上AudioSource
     auto audio_source=dynamic_cast<AudioSource*>(go->AddComponent("AudioSource"));
     audio_source->set_audio_clip(AudioClip::LoadFromFile("audio/knife_attack.wav"));
+    audio_source->Play();
     audio_source->Set3DMode(true);
     audio_source->SetLoop(true);
-    audio_source->Play();
 }
 
 void LoginScene::Update() {
