@@ -126,7 +126,7 @@ int main(void)
             static float rotate_eulerAngle=0.f;
             rotate_eulerAngle+=0.1f;
             glm::vec3 rotation=transform->rotation();
-            rotation.y=rotate_eulerAngle;
+            rotation.x=rotate_eulerAngle;
             transform->set_rotation(rotation);
         }
 

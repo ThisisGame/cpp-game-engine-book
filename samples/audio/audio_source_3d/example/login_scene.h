@@ -5,6 +5,7 @@
 #ifndef UNTITLED_LOGINSCENE_H
 #define UNTITLED_LOGINSCENE_H
 
+#include <string>
 #include "component/component.h"
 #include "control/input.h"
 
@@ -24,25 +25,25 @@ public:
     void Update();
 
 private:
-    /// 创建鱼缸
-    void CreateFishSoupPot();
-    /// 创建用于渲染文字图像的2个三角形
-    void CreateQuad();
+    /// 创建AudioSource
+    /// \param name
+    /// \param mesh_path
+    /// \param material_path
+    AudioSource *
+    CreateAudioSource(string mesh_path, string material_path, string audio_path, string name, glm::vec3 pos);
     /// 加载wav音频文件
     void CreateSounds();
     /// 播放/暂停
     /// \param audio_source
     void PlayPauseSound(AudioSource* audio_source);
+    /// 创建玩家
+    void CreatePlayer();
 private:
-    Transform* transform_fishsoup_pot_= nullptr;
-    Material* material= nullptr;
-
-    Transform* transform_camera_1_= nullptr;
-    Camera*     camera_1_= nullptr;
-
-    vec2_ushort last_frame_mouse_position_={0,0};//上一帧的鼠标位置
-
-    AudioSource     *audio_source_bgm_= nullptr, *audio_source_knife_= nullptr, *audio_source_magic_= nullptr;
+    Transform*      transform_camera_1_= nullptr;
+    Camera*         camera_1_= nullptr;
+    vec2_ushort     last_frame_mouse_position_={0,0};//上一帧的鼠标位置
+    AudioSource*    audio_source_bgm_= nullptr, *audio_source_knife_= nullptr, *audio_source_magic_= nullptr;
+    Transform*      transform_player_= nullptr;
 };
 
 

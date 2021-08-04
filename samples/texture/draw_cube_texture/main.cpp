@@ -122,8 +122,8 @@ int main(void)
         glm::mat4 trans = glm::translate(glm::vec3(0,0,0)); //不移动顶点坐标;
 
         static float rotate_eulerAngle=0.f;
-        rotate_eulerAngle+=1;
-        glm::mat4 rotation = glm::eulerAngleYXZ(glm::radians(rotate_eulerAngle), glm::radians(rotate_eulerAngle), glm::radians(rotate_eulerAngle)); //使用欧拉角旋转;
+        rotate_eulerAngle+=0.1f;
+        glm::mat4 rotation = glm::eulerAngleYXZ(glm::radians(rotate_eulerAngle), glm::radians(0.f), glm::radians(0.f)); //使用欧拉角旋转;
 
         glm::mat4 scale = glm::scale(glm::vec3(2.0f, 2.0f, 2.0f)); //缩放;
         model = trans*scale*rotation;

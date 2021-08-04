@@ -43,91 +43,50 @@ void LoginScene::Awake() {
 
     last_frame_mouse_position_=Input::mousePosition();
 
-    CreateFishSoupPot();
-
-    CreateQuad();
-
     CreateSounds();
+    CreatePlayer();
+}
+
+AudioSource * LoginScene::CreateAudioSource(string mesh_path, string material_path, string audio_path, string name,
+                                            glm::vec3 pos) {
+    //创建模型 GameObject
+    GameObject* go=new GameObject(name);
+    if(mesh_path.empty()==false){
+        //挂上 Transform 组件
+        auto transform =dynamic_cast<Transform*>(go->AddComponent("Transform"));
+        transform->set_position(pos);
+        //挂上 MeshFilter 组件
+        auto mesh_filter=dynamic_cast<MeshFilter*>(go->AddComponent("MeshFilter"));
+        mesh_filter->LoadMesh(mesh_path);
+        //挂上 MeshRenderer 组件
+        auto mesh_renderer=dynamic_cast<MeshRenderer*>(go->AddComponent("MeshRenderer"));
+        auto material =new Material();//设置材质
+        material->Parse(material_path);
+        mesh_renderer->SetMaterial(material);
+    }
+    //挂上AudioSource
+    auto audio_source=dynamic_cast<AudioSource*>(go->AddComponent("AudioSource"));
+    audio_source->set_audio_clip(AudioClip::LoadFromFile(audio_path));
+    return audio_source;
 }
 
 void LoginScene::CreateSounds() {
     // 战斗背景音乐
-    audio_source_bgm_=dynamic_cast<AudioSource*>((new GameObject("audio_source_bgm"))->AddComponent("AudioSource"));
-    audio_source_bgm_->set_audio_clip(AudioClip::LoadFromFile("audio/war_bgm.wav"));
-    audio_source_bgm_->game_object()->AddComponent("Transform");
+    audio_source_bgm_= CreateAudioSource("",
+                                         "", "audio/war_bgm.wav", "audio_source_bgm", glm::vec3(0,0,0));
     // 刀攻击音效
-    audio_source_knife_=dynamic_cast<AudioSource*>((new GameObject("audio_source_knife"))->AddComponent("AudioSource"));
-    audio_source_knife_->set_audio_clip(AudioClip::LoadFromFile("audio/knife_attack.wav"));
-    audio_source_knife_->game_object()->AddComponent("Transform");
+    audio_source_knife_= CreateAudioSource("model/cube_audio_source.mesh",
+                                           "material/audio_source_3d_cube_knife.mat", "audio/knife_attack.wav",
+                                           "audio_source_knife", glm::vec3(2,0,0));
     // 魔法攻击音效
-    audio_source_magic_=dynamic_cast<AudioSource*>((new GameObject("audio_source_magic"))->AddComponent("AudioSource"));
-    audio_source_magic_->set_audio_clip(AudioClip::LoadFromFile("audio/magic_attack.wav"));
-    audio_source_magic_->game_object()->AddComponent("Transform");
-}
-
-void LoginScene::CreateFishSoupPot() {
-    //创建模型 GameObject
-    GameObject* go=new GameObject("fishsoup_pot");
-    go->set_layer(0x01);
-
-    //挂上 Transform 组件
-    transform_fishsoup_pot_ =dynamic_cast<Transform*>(go->AddComponent("Transform"));
-
-    //挂上 MeshFilter 组件
-    auto mesh_filter=dynamic_cast<MeshFilter*>(go->AddComponent("MeshFilter"));
-    mesh_filter->LoadMesh("model/fishsoup_pot.mesh");
-
-    //挂上 MeshRenderer 组件
-    auto mesh_renderer=dynamic_cast<MeshRenderer*>(go->AddComponent("MeshRenderer"));
-    auto material =new Material();//设置材质
-    material->Parse("material/fishsoup_pot.mat");
-    mesh_renderer->SetMaterial(material);
-}
-
-void LoginScene::CreateQuad() {
-    vector<MeshFilter::Vertex> vertex_vector={
-            {{-1.0f, -1.0f, 1.0f}, {1.0f,1.0f,1.0f,1.0f},   {0.0f, 0.0f}},
-            {{ 1.0f, -1.0f, 1.0f}, {1.0f,1.0f,1.0f,1.0f},   {1.0f, 0.0f}},
-            {{ 1.0f,  1.0f, 1.0f}, {1.0f,1.0f,1.0f,1.0f},   {1.0f, 1.0f}},
-            {{-1.0f,  1.0f, 1.0f}, {1.0f,1.0f,1.0f,1.0f},   {0.0f, 1.0f}}
-    };
-    vector<unsigned short> index_vector={
-            0,1,2,
-            0,2,3
-    };
-    //创建模型 GameObject
-    auto go=new GameObject("quad_draw_font");
-    go->set_layer(0x01);
-
-    //挂上 Transform 组件
-    auto transform=dynamic_cast<Transform*>(go->AddComponent("Transform"));
-    transform->set_position({2.f,0.f,5.f});
-
-    //挂上 MeshFilter 组件
-    auto mesh_filter=dynamic_cast<MeshFilter*>(go->AddComponent("MeshFilter"));
-    mesh_filter->CreateMesh(vertex_vector,index_vector);
-
-    //创建 Material
-    material=new Material();//设置材质
-    material->Parse("material/fmod_play_2d_sound_tips.mat");
-
-    //挂上 MeshRenderer 组件
-    auto mesh_renderer=dynamic_cast<MeshRenderer*>(go->AddComponent("MeshRenderer"));
-    mesh_renderer->SetMaterial(material);
+    audio_source_magic_= CreateAudioSource("model/cube_audio_source.mesh",
+                                           "material/audio_source_3d_cube_magic.mat", "audio/magic_attack.wav",
+                                           "audio_source_magic", glm::vec3(-2,0,0));
 }
 
 void LoginScene::Update() {
     camera_1_->SetView(glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
     camera_1_->SetProjection(60.f, Screen::aspect_ratio(), 1.f, 1000.f);
-
-    //旋转物体
-    if(Input::GetKeyDown(KEY_CODE_R)){
-        static float rotate_eulerAngle=0.f;
-        rotate_eulerAngle+=0.1f;
-        glm::vec3 rotation=transform_fishsoup_pot_->rotation();
-        rotation.y=rotate_eulerAngle;
-        transform_fishsoup_pot_->set_rotation(rotation);
-    }
 
     //旋转相机
     if(Input::GetKeyDown(KEY_CODE_LEFT_ALT) && Input::GetMouseButtonDown(MOUSE_BUTTON_LEFT)){
@@ -164,3 +123,16 @@ void LoginScene::PlayPauseSound(AudioSource* audio_source) {
         audio_source->Pause();
     }
 }
+
+void LoginScene::CreatePlayer() {
+    GameObject* go=new GameObject("Player");
+    transform_player_ =dynamic_cast<Transform*>(go->AddComponent("Transform"));
+    auto mesh_filter=dynamic_cast<MeshFilter*>(go->AddComponent("MeshFilter"));
+    mesh_filter->LoadMesh("model/cube_audio_source.mesh");
+    auto mesh_renderer=dynamic_cast<MeshRenderer*>(go->AddComponent("MeshRenderer"));
+    auto material =new Material();//设置材质
+    material->Parse("material/audio_source_3d_cube_player.mat");
+    mesh_renderer->SetMaterial(material);
+}
+
+
