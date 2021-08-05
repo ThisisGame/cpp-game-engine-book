@@ -20,6 +20,8 @@
 #include "component/transform.h"
 #include "control/key_code.h"
 #include "audio/audio_source.h"
+#include "audio/audio_listener.h"
+#include "utils/time.h"
 
 
 using namespace rttr;
@@ -48,25 +50,41 @@ void LoginScene::Awake() {
 }
 
 void LoginScene::CreateSounds() {
-    GameObject* go=new GameObject("audio_source_knife");
+    GameObject* go=new GameObject("audio_source_bgm");
     //挂上 Transform 组件
     auto transform =dynamic_cast<Transform*>(go->AddComponent("Transform"));
     //挂上 MeshFilter 组件
     auto mesh_filter=dynamic_cast<MeshFilter*>(go->AddComponent("MeshFilter"));
-    mesh_filter->LoadMesh("model/cube_audio_source.mesh");
+    mesh_filter->LoadMesh("model/sphere.mesh");
     //挂上 MeshRenderer 组件
     auto mesh_renderer=dynamic_cast<MeshRenderer*>(go->AddComponent("MeshRenderer"));
     auto material =new Material();//设置材质
-    material->Parse("material/audio_source_3d_cube_knife.mat");
+    material->Parse("material/sphere_audio_source_3d_music.mat");
     mesh_renderer->SetMaterial(material);
 
     //挂上AudioSource
     auto audio_source=dynamic_cast<AudioSource*>(go->AddComponent("AudioSource"));
-    audio_source->set_audio_clip(AudioClip::LoadFromFile("audio/knife_attack.wav"));
+    audio_source->set_audio_clip(AudioClip::LoadFromFile("audio/war_bgm.wav"));
     audio_source->Play();
     audio_source->Set3DMode(true);
     audio_source->SetLoop(true);
 }
+
+void LoginScene::CreatePlayer() {
+    GameObject* go=new GameObject("Player");
+    transform_player_ =dynamic_cast<Transform*>(go->AddComponent("Transform"));
+    transform_player_->set_position({2.0f,0.0,0.0});
+    auto mesh_filter=dynamic_cast<MeshFilter*>(go->AddComponent("MeshFilter"));
+    mesh_filter->LoadMesh("model/sphere.mesh");
+    auto mesh_renderer=dynamic_cast<MeshRenderer*>(go->AddComponent("MeshRenderer"));
+    auto material =new Material();//设置材质
+    material->Parse("material/sphere_audio_source_3d_listener.mat");
+    mesh_renderer->SetMaterial(material);
+
+    //挂上AudioListener
+    go->AddComponent("AudioListener");
+}
+
 
 void LoginScene::Update() {
     camera_1_->SetView(glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
@@ -89,18 +107,14 @@ void LoginScene::Update() {
 
     //鼠标滚轮控制相机远近
     transform_camera_1_->set_position(transform_camera_1_->position() *(10 - Input::mouse_scroll())/10.f);
+
+    //控制Player移动
+    glm::mat4 rotate_mat4=glm::rotate(glm::mat4(1.0f),glm::radians(Time::delta_time()*60),glm::vec3(0.0f,0.0f,1.0f));
+    glm::vec4 old_pos=glm::vec4(transform_player_->position(),1.0f);
+    glm::vec4 new_pos=rotate_mat4*old_pos;//旋转矩阵 * 原来的坐标 = 以零点做旋转。
+    transform_player_->set_position(glm::vec3(new_pos));
 }
 
 
-void LoginScene::CreatePlayer() {
-    GameObject* go=new GameObject("Player");
-    transform_player_ =dynamic_cast<Transform*>(go->AddComponent("Transform"));
-    auto mesh_filter=dynamic_cast<MeshFilter*>(go->AddComponent("MeshFilter"));
-    mesh_filter->LoadMesh("model/cube_audio_source.mesh");
-    auto mesh_renderer=dynamic_cast<MeshRenderer*>(go->AddComponent("MeshRenderer"));
-    auto material =new Material();//设置材质
-    material->Parse("material/audio_source_3d_cube_player.mat");
-    mesh_renderer->SetMaterial(material);
-}
 
 

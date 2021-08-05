@@ -13,6 +13,7 @@
 #include "control/input.h"
 #include "screen.h"
 #include "audio/audio.h"
+#include "time.h"
 
 std::string Application::data_path_;
 GLFWwindow* Application::glfw_window_;
@@ -65,6 +66,7 @@ void Application::Init() {
     //初始化spdlog
     InitSpdLog();
     spdlog::info("game start");
+    Time::Init();
     // 初始化 glfw
     InitGpuDevice();
     //初始化 fmod
@@ -126,6 +128,7 @@ void Application::InitSpdLog() {
 
 void Application::Update(){
 //    std::cout<<"Application::Update"<<std::endl;
+    Time::Update();
     UpdateScreenSize();
 
     GameObject::Foreach([](GameObject* game_object){

@@ -123,10 +123,5 @@ void AudioSource::Update() {
         FMOD_VECTOR audio_source_pos = {  pos.x, pos.y, pos.z };
         FMOD_VECTOR vel = {  0.0f, 0.0f, 0.0f };
         FMOD_Channel_Set3DAttributes(fmod_channel_, &audio_source_pos,  &vel);
-
-        FMOD_VECTOR audio_listener_pos = {  0.0f, pos.y, pos.z };
-        FMOD_VECTOR forward = {  0.0f, 0.0f, 1.0f };
-        FMOD_VECTOR up = {  0.0f, 1.0f, 0.0f };
-        Audio::Set3DListenerAttributes(0,&audio_listener_pos,&vel,&forward,&up);
     }
 }

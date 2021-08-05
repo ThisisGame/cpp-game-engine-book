@@ -5,7 +5,9 @@
 #include "game_object.h"
 #include <assert.h>
 #include <rttr/registration>
+#include "spdlog/spdlog.h"
 #include "component.h"
+
 
 using namespace rttr;
 
@@ -23,7 +25,10 @@ GameObject::~GameObject() {
 
 Component* GameObject::AddComponent(std::string component_type_name) {
     type t = type::get_by_name(component_type_name);
-    assert(t.is_valid());
+    if(t.is_valid()==false){
+        spdlog::error("type::get_by_name({}) failed",component_type_name);
+        return nullptr;
+    }
     variant var = t.create();    // 创建实例
     Component* component=var.get_value<Component*>();
     component->set_game_object(this);

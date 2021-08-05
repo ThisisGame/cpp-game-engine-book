@@ -27,9 +27,6 @@ public:
 private:
     /// 加载wav音频文件
     void CreateSounds();
-    /// 播放/暂停
-    /// \param audio_source
-    void PlayPauseSound(AudioSource* audio_source);
     /// 创建玩家
     void CreatePlayer();
 private:
