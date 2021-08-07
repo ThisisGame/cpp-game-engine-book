@@ -61,6 +61,7 @@
     * [13.1 绘制TrueType](pages/13. 绘制文字/13.1 绘制TrueType.md)
 * [14. 播放音效](pages/14. 播放音效/14. 播放音效.md)
     * [14.1 播放2D音效](pages/14. 播放音效/14.1 播放2D音效.md)
+    * [14.2 播放3D音效](pages/14. 播放音效/14.2 播放3D音效.md)
 * [98. GPU分析工具](pages/98. GPU分析工具/98. GPU分析工具.md)
     * [98.1 RenderDoc分析不显示bug](pages/98. GPU分析工具/98.1 RenderDoc分析不显示bug.md)
 * [99. Toolbag 插件开发](pages/99. Toolbag 插件开发/99. Toolbag 插件开发.md)
@@ -69,3 +70,4 @@
     * [99.3 命令行调用Toolbag](pages/99. Toolbag 插件开发/99.3 命令行调用Toolbag.md)
     * [99.4 更多实现](pages/99. Toolbag 插件开发/99.4 更多实现.md)
     * [99.5 代码参考](pages/99. Toolbag 插件开发/99.5 代码参考.md)
+

@@ -25,10 +25,10 @@ public:
     void Update();
 
 private:
-    /// 加载wav音频文件
-    void CreateSounds();
-    /// 创建玩家
-    void CreatePlayer();
+    /// 创建音源
+    void CreateAudioSource();
+    /// 创建听者
+    void CreateAudioListener();
 private:
     Transform*      transform_camera_1_= nullptr;
     Camera*         camera_1_= nullptr;

@@ -45,11 +45,11 @@ void LoginScene::Awake() {
 
     last_frame_mouse_position_=Input::mousePosition();
 
-    CreateSounds();
-    CreatePlayer();
+    CreateAudioSource();
+    CreateAudioListener();
 }
 
-void LoginScene::CreateSounds() {
+void LoginScene::CreateAudioSource() {
     GameObject* go=new GameObject("audio_source_bgm");
     //挂上 Transform 组件
     auto transform =dynamic_cast<Transform*>(go->AddComponent("Transform"));
@@ -70,7 +70,7 @@ void LoginScene::CreateSounds() {
     audio_source->SetLoop(true);
 }
 
-void LoginScene::CreatePlayer() {
+void LoginScene::CreateAudioListener() {
     GameObject* go=new GameObject("Player");
     transform_player_ =dynamic_cast<Transform*>(go->AddComponent("Transform"));
     transform_player_->set_position({2.0f,0.0,0.0});
