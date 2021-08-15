@@ -121,6 +121,7 @@ int main(void)
         //指定GPU程序(就是指定顶点着色器、片段着色器)
         glUseProgram(program);
             glEnable(GL_DEPTH_TEST);
+            glEnable(GL_CULL_FACE);//开启背面剔除
 
             //上传mvp矩阵
             glUniformMatrix4fv(mvp_location, 1, GL_FALSE, &mvp[0][0]);

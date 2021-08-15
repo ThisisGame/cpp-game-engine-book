@@ -20,13 +20,13 @@ static const glm::vec3 kPositions[36] =
         glm::vec3(-1.0f, 1.0f, 1.0f),
 
         //back
-        glm::vec3(-1.0f, -1.0f, -1.0f),
         glm::vec3(1.0f, -1.0f, -1.0f),
-        glm::vec3(1.0f, 1.0f, -1.0f),
-
         glm::vec3(-1.0f, -1.0f, -1.0f),
-        glm::vec3(1.0f, 1.0f, -1.0f),
         glm::vec3(-1.0f, 1.0f, -1.0f),
+
+        glm::vec3(1.0f, -1.0f, -1.0f),
+        glm::vec3(-1.0f, 1.0f, -1.0f),
+        glm::vec3(1.0f, 1.0f, -1.0f),
 
         //left
         glm::vec3(-1.0f, -1.0f, -1.0f),
@@ -38,13 +38,13 @@ static const glm::vec3 kPositions[36] =
         glm::vec3(-1.0f, 1.0f, -1.0f),
 
         //right
-        glm::vec3(1.0f, -1.0f, -1.0f),
         glm::vec3(1.0f, -1.0f, 1.0f),
-        glm::vec3(1.0f, 1.0f, 1.0f),
-
         glm::vec3(1.0f, -1.0f, -1.0f),
-        glm::vec3(1.0f, 1.0f, 1.0f),
         glm::vec3(1.0f, 1.0f, -1.0f),
+
+        glm::vec3(1.0f, -1.0f, 1.0f),
+        glm::vec3(1.0f, 1.0f, -1.0f),
+        glm::vec3(1.0f, 1.0f, 1.0f),
 
         //up
         glm::vec3(-1.0f, 1.0f, 1.0f),
@@ -56,13 +56,13 @@ static const glm::vec3 kPositions[36] =
         glm::vec3(-1.0f, 1.0f, -1.0f),
 
         //down
-        glm::vec3(-1.0f, -1.0f, 1.0f),
-        glm::vec3(1.0f, -1.0f, 1.0f),
-        glm::vec3(1.0f, -1.0f, -1.0f),
-
-        glm::vec3(-1.0f, -1.0f, 1.0f),
-        glm::vec3(1.0f, -1.0f, -1.0f),
         glm::vec3(-1.0f, -1.0f, -1.0f),
+        glm::vec3(1.0f, -1.0f, -1.0f),
+        glm::vec3(1.0f, -1.0f, 1.0f),
+
+        glm::vec3(-1.0f, -1.0f, -1.0f),
+        glm::vec3(1.0f, -1.0f, 1.0f),
+        glm::vec3(-1.0f, -1.0f, 1.0f),
 };
 
 static const glm::vec4 kColors[36] =
