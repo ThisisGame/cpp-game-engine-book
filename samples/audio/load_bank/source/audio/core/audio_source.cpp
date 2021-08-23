@@ -4,9 +4,9 @@
 
 #include "audio_source.h"
 #include <rttr/registration>
-#include "spdlog/spdlog.h"
 #include "component/game_object.h"
 #include "component/transform.h"
+#include "utils/debug.h"
 
 using namespace rttr;
 RTTR_REGISTRATION
@@ -27,17 +27,17 @@ void AudioSource::Set3DMode(bool mode_3d) {
     }
     FMOD_RESULT result=FMOD_Channel_SetMode(fmod_channel_,fmod_mode_);
     if(result!=FMOD_OK){
-        spdlog::error("AudioSource::Set3DMode FMOD_Channel_SetMode result:{}",result);
+        Debug::LogError("AudioSource::Set3DMode FMOD_Channel_SetMode result:{}",result);
     }
 }
 
 void AudioSource::Play() {
     if(audio_clip_== nullptr){
-        spdlog::error("AudioSource::Play audio_clip_== nullptr");
+        Debug::LogError("AudioSource::Play audio_clip_== nullptr");
         return;
     }
     if(audio_clip_->fmod_sound()==nullptr){
-        spdlog::error("AudioSource::Play audio_clip_->fmod_sound()==nullptr");
+        Debug::LogError("AudioSource::Play audio_clip_->fmod_sound()==nullptr");
         return;
     }
     FMOD_RESULT result;
@@ -54,7 +54,7 @@ void AudioSource::Play() {
         case FMOD_ERR_INVALID_HANDLE://音效播放完毕后，channel被回收。
         case FMOD_ERR_CHANNEL_STOLEN://音效播放完毕后，channel被回收且被分配给其他Sound。
             //播放音效
-            result = Audio::PlaySound(audio_clip_->fmod_sound(), nullptr, false, &fmod_channel_);
+            result = AudioCore::PlaySound(audio_clip_->fmod_sound(), nullptr, false, &fmod_channel_);
             break;
     }
 }
@@ -70,7 +70,7 @@ void AudioSource::Pause() {
         }
         return;
     }
-    spdlog::error("AudioSource::Paused FMOD_Channel_GetPaused result:{}",result);
+    Debug::LogError("AudioSource::Paused FMOD_Channel_GetPaused result:{}",result);
 }
 
 void AudioSource::Stop() {
@@ -80,7 +80,7 @@ void AudioSource::Stop() {
     if(result==FMOD_OK){
         return;
     }
-    spdlog::error("AudioSource::Stop FMOD_Channel_Stop result:{}",result);
+    Debug::LogError("AudioSource::Stop FMOD_Channel_Stop result:{}",result);
 }
 
 bool AudioSource::Paused() {
@@ -91,7 +91,7 @@ bool AudioSource::Paused() {
     if(result==FMOD_OK){
         return paused;
     }
-    spdlog::error("AudioSource::Paused FMOD_Channel_GetPaused result:{}",result);
+    Debug::LogError("AudioSource::Paused FMOD_Channel_GetPaused result:{}",result);
     return true;
 }
 
@@ -106,7 +106,7 @@ void AudioSource::SetLoop(bool mode_loop) {
 
     FMOD_RESULT result=FMOD_Channel_SetMode(fmod_channel_,fmod_mode_);
     if(result!=FMOD_OK){
-        spdlog::error("AudioSource::SetLoop FMOD_Channel_SetMode result:{}",result);
+        Debug::LogError("AudioSource::SetLoop FMOD_Channel_SetMode result:{}",result);
     }
 }
 

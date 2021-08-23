@@ -2,12 +2,11 @@
 // Created by captain on 2021/8/1.
 //
 
-#ifndef UNTITLED_AUDIO_H
-#define UNTITLED_AUDIO_H
+#ifndef UNTITLED_AUDIO_CORE_H
+#define UNTITLED_AUDIO_CORE_H
 #include "fmod/api/core/inc/fmod.h"
-#include "fmod/api/studio/inc/fmod_studio.h"
 
-class Audio {
+class AudioCore {
 public:
     /// 初始化fmod
     static void Init();
@@ -39,11 +38,9 @@ public:
     /// \param up
     /// \return
     static FMOD_RESULT Set3DListenerAttributes(int listener, const FMOD_VECTOR *pos, const FMOD_VECTOR *vel, const FMOD_VECTOR *forward, const FMOD_VECTOR *up);
-
-    static FMOD_RESULT LoadBankFile(const char *filename, FMOD_STUDIO_LOAD_BANK_FLAGS flags, FMOD_STUDIO_BANK **bank);
 private:
     static FMOD_SYSTEM * fmod_system_;//fmod音效引擎系统
 };
 
 
-#endif //UNTITLED_AUDIO_H
+#endif //UNTITLED_AUDIO_CORE_H

@@ -8,7 +8,7 @@
 #include "timetool/stopwatch.h"
 #include "../utils/application.h"
 #include "stb/stb_truetype.h"
-#include "spdlog/spdlog.h"
+#include "utils/debug.h"
 
 
 using std::ifstream;
@@ -86,7 +86,7 @@ Texture2D *Texture2D::CreateFromTrueTypeFont(std::string ttf_file_path, const ch
     stbtt_fontinfo font_info;
     if (!stbtt_InitFont(&font_info, font_buffer, 0))
     {
-        spdlog::error("Texture2D::CreateFromTrueTypeFont stbtt_InitFont failed\n");
+        Debug::LogError("Texture2D::CreateFromTrueTypeFont stbtt_InitFont failed\n");
         delete (font_buffer);
         return nullptr;
     }

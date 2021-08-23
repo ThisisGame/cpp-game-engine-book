@@ -5,14 +5,15 @@
 #ifndef UNTITLED_AUDIO_STUDIO_H
 #define UNTITLED_AUDIO_STUDIO_H
 
+#include <iostream>
 #include "fmod/api/core/inc/fmod.h"
 #include "fmod/api/studio/inc/fmod_studio.h"
 
+using namespace std;
+
 class AudioStudio {
 public:
-    static FMOD_RESULT Create(FMOD_STUDIO_SYSTEM **system, unsigned int header_version = FMOD_VERSION);
-
-    static FMOD_RESULT Initialize(int max_channels, FMOD_STUDIO_INITFLAGS fmod_studio_init_flags, FMOD_INITFLAGS fmod_init_flags, void *extra_driver_data);
+    static FMOD_RESULT Init();
 
     /// 刷帧
     /// \return
@@ -20,15 +21,29 @@ public:
 
     /// 加载 bank 文件
     /// \param file_name
-    /// \param fmod_studio_load_bank_flags
-    /// \param bank
     /// \return
-    static FMOD_RESULT LoadBankFile(const char *file_name, FMOD_STUDIO_LOAD_BANK_FLAGS fmod_studio_load_bank_flags, FMOD_STUDIO_BANK **bank);
+    static FMOD_RESULT LoadBankFile(string file_name);
 
-    /// 创建AudioStudioEvent
-    /// \param path
+    /// 设置Event参数
+    /// \param name
+    /// \param value
+    /// \param ignore_seek_speed
     /// \return
-    static FMOD_RESULT CreateEvent(const char *path);
+    static FMOD_RESULT SetParameterByName(const char *event_path,const char *name, float value, bool ignore_seek_speed = false);
+
+    /// 设置Event 3D属性
+    /// \param event_path
+    /// \param x
+    /// \param y
+    /// \param z
+    /// \return
+    static FMOD_RESULT SetEventInstance3DAttribute(const char *event_path,float x,float y,float z);
+
+    /// 获取Event实例，如果没有就创建。
+    /// \param event_path
+    /// \return
+    static FMOD_RESULT GetEventInstance(const char *event_path,FMOD_STUDIO_EVENTINSTANCE** event_instance);
+
 private:
     static FMOD_STUDIO_SYSTEM* system_;
 };

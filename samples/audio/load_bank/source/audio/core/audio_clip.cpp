@@ -4,7 +4,7 @@
 
 #include "audio_clip.h"
 #include "utils/application.h"
-#include "spdlog/spdlog.h"
+#include "utils/debug.h"
 
 AudioClip::AudioClip() {}
 
@@ -17,10 +17,10 @@ AudioClip::~AudioClip() {
 
 AudioClip * AudioClip::LoadFromFile(std::string audio_file_path) {
     FMOD_SOUND* fmod_sound;
-    FMOD_RESULT result = Audio::CreateSound((Application::data_path() + audio_file_path).c_str(), FMOD_DEFAULT,
-                                nullptr, &fmod_sound);
+    FMOD_RESULT result = AudioCore::CreateSound((Application::data_path() + audio_file_path).c_str(), FMOD_DEFAULT,
+                                                nullptr, &fmod_sound);
     if(result!=FMOD_OK){
-        spdlog::error("");
+        Debug::LogError("AudioCore::CreateSound failed");
         return nullptr;
     }
 

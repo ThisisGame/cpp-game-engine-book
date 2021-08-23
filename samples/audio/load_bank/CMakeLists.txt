@@ -2,6 +2,9 @@ cmake_minimum_required(VERSION 3.17)
 project(untitled)
 
 set(CMAKE_CXX_STANDARD 17)
+
+add_definitions(-D USE_FMOD_STUDIO)#是否使用fmod studio，加载bank文件的形式。
+
 #set(CMAKE_EXE_LINKER_FLAGS "-static")
 message("CMAKE_EXE_LINKER_FLAGS:" ${CMAKE_EXE_LINKER_FLAGS})
 IF(CMAKE_EXE_LINKER_FLAGS STREQUAL "-static")
@@ -37,6 +40,7 @@ file(COPY ${unlit_shaders} DESTINATION "../data/shader/")
 include_directories("depends/glfw-3.3.3.bin.WIN64/include")
 include_directories("depends/glfw-3.3.3.bin.WIN64/deps")
 include_directories("depends/${RTTR_DIR}/include")
+include_directories("depends/fmod/api/core/inc")
 include_directories("depends")
 include_directories("source")
 
@@ -44,21 +48,23 @@ include_directories("source")
 link_directories("depends/glfw-3.3.3.bin.WIN64/lib-static-ucrt")
 link_directories("depends/${RTTR_DIR}/lib")
 link_directories("depends/fmod/api/core/lib/x64")
+link_directories("depends/fmod/api/studio/lib/x64")
 
 #链接lib文件
-link_libraries(opengl32 glfw3dll ${RTTR_LIB} fmod_vc)
+link_libraries(opengl32 glfw3dll ${RTTR_LIB} fmod_vc fmodstudio_vc)
 
 file(GLOB_RECURSE engine_cpp source/*.cpp)
 file(GLOB_RECURSE fmod_cpp depends/fmod/api/*.cpp)
 file(GLOB_RECURSE glfw_c depends/glfw-3.3.3.bin.WIN64/deps/glad_gl.c)
 
 file(GLOB_RECURSE example_cpp example/*.cpp)
-add_executable(untitled ${glfw_c} ${engine_cpp} ${example_cpp} source/audio/studio/audio_studio.cpp source/audio/studio/audio_studio.h source/audio/studio/audio_studio_event.cpp source/audio/studio/audio_studio_event.h)
+add_executable(untitled ${glfw_c} ${engine_cpp} ${example_cpp})
 
 
 #拷贝dll到exe目录
 file(COPY "depends/glfw-3.3.3.bin.WIN64/lib-static-ucrt/glfw3.dll" DESTINATION "./")
 file(COPY "depends/fmod/api/core/lib/x64/fmod.dll" DESTINATION "./")
+file(COPY "depends/fmod/api/studio/lib/x64/fmodstudio.dll" DESTINATION "./")
 IF(CMAKE_EXE_LINKER_FLAGS STREQUAL "")
     file(COPY "depends/${RTTR_DIR}/bin/librttr_core_d.dll" DESTINATION "./")
 ENDIF()

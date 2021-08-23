@@ -5,7 +5,7 @@
 #ifndef UNTITLED_AUDIOCLIP_H
 #define UNTITLED_AUDIOCLIP_H
 
-#include "audio.h"
+#include "audio_core.h"
 #include <string>
 
 /// AudioClip hosts fmod sound

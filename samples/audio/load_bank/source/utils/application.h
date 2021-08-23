@@ -29,7 +29,6 @@ public:
     static void Render();
 
 private:
-    static void InitSpdLog();
 
     /// 初始化 glfw
     static void InitGpuDevice();

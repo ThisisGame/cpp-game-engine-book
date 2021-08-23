@@ -19,8 +19,7 @@
 #include "component/game_object.h"
 #include "component/transform.h"
 #include "control/key_code.h"
-#include "audio/core/audio_source.h"
-#include "audio/core/audio_listener.h"
+#include "audio/studio/audio_studio.h"
 #include "utils/time.h"
 
 
@@ -62,12 +61,9 @@ void LoginScene::CreateAudioSource() {
     material->Parse("material/sphere_audio_source_3d_music.mat");
     mesh_renderer->SetMaterial(material);
 
-    //挂上AudioSource
-    auto audio_source=dynamic_cast<AudioSource*>(go->AddComponent("AudioSource"));
-    audio_source->set_audio_clip(AudioClip::LoadFromFile("audio/war_bgm.wav"));
-    audio_source->Play();
-    audio_source->Set3DMode(true);
-    audio_source->SetLoop(true);
+    //加载bank
+    AudioStudio::LoadBankFile("audio/test.bank");
+    AudioStudio::LoadBankFile("audio/test.strings.bank");
 }
 
 void LoginScene::CreateAudioListener() {
@@ -107,12 +103,6 @@ void LoginScene::Update() {
 
     //鼠标滚轮控制相机远近
     transform_camera_1_->set_position(transform_camera_1_->position() *(10 - Input::mouse_scroll())/10.f);
-
-    //控制Player移动
-    glm::mat4 rotate_mat4=glm::rotate(glm::mat4(1.0f),glm::radians(Time::delta_time()*60),glm::vec3(0.0f,0.0f,1.0f));
-    glm::vec4 old_pos=glm::vec4(transform_player_->position(),1.0f);
-    glm::vec4 new_pos=rotate_mat4*old_pos;//旋转矩阵 * 原来的坐标 = 以零点做旋转。
-    transform_player_->set_position(glm::vec3(new_pos));
 }
 
 
