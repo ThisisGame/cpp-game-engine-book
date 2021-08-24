@@ -63,7 +63,7 @@ static void mouse_scroll_callback(GLFWwindow* window, double x, double y)
 void Application::Init() {
     //初始化spdlog
     Debug::Init();
-    Debug::Log("game start");
+    DEBUG_LOG_INFO("game start");
     Time::Init();
     // 初始化 glfw
     InitGpuDevice();
@@ -75,7 +75,7 @@ void Application::InitGpuDevice() {
     glfwSetErrorCallback(error_callback);
     if (!glfwInit())
     {
-        Debug::LogError("glfw init failed!");
+        DEBUG_LOG_ERROR("glfw init failed!");
         exit(EXIT_FAILURE);
     }
 
@@ -85,7 +85,7 @@ void Application::InitGpuDevice() {
     glfw_window_ = glfwCreateWindow(960, 640, "Simple example", NULL, NULL);
     if (!glfw_window_)
     {
-        Debug::LogError("glfwCreateWindow error!");
+        DEBUG_LOG_ERROR("glfwCreateWindow error!");
         glfwTerminate();
         exit(EXIT_FAILURE);
     }

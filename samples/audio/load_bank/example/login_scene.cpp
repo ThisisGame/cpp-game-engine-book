@@ -4,10 +4,7 @@
 
 #include "login_scene.h"
 #include <rttr/registration>
-#include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtx/transform2.hpp>
-#include <glm/gtx/euler_angles.hpp>
 #include <glm/ext.hpp>
 #include "utils/application.h"
 #include "utils/screen.h"
@@ -20,7 +17,6 @@
 #include "component/transform.h"
 #include "control/key_code.h"
 #include "audio/studio/audio_studio.h"
-#include "utils/time.h"
 
 
 using namespace rttr;
@@ -64,6 +60,7 @@ void LoginScene::CreateAudioSource() {
     //加载bank
     AudioStudio::LoadBankFile("audio/test.bank");
     AudioStudio::LoadBankFile("audio/test.strings.bank");
+    audio_studio_event_=AudioStudio::CreateEventInstance("");
 }
 
 void LoginScene::CreateAudioListener() {
@@ -101,7 +98,7 @@ void LoginScene::Update() {
     }
 
     if(Input::GetKeyUp(KEY_CODE_1)){
-        AudioStudio::SetParameterByName()
+
     }
 
 

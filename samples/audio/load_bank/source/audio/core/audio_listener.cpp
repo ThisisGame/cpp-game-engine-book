@@ -4,7 +4,6 @@
 
 #include "audio_listener.h"
 #include <rttr/registration>
-#include "spdlog/spdlog.h"
 #include "component/game_object.h"
 #include "component/transform.h"
 

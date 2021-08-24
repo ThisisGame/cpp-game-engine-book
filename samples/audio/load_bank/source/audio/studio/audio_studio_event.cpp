@@ -3,7 +3,6 @@
 //
 
 #include "audio_studio_event.h"
-#include "spdlog/spdlog.h"
 #include "component/game_object.h"
 #include "component/transform.h"
 

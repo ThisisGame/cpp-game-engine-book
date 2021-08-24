@@ -20,7 +20,7 @@ AudioClip * AudioClip::LoadFromFile(std::string audio_file_path) {
     FMOD_RESULT result = AudioCore::CreateSound((Application::data_path() + audio_file_path).c_str(), FMOD_DEFAULT,
                                                 nullptr, &fmod_sound);
     if(result!=FMOD_OK){
-        Debug::LogError("AudioCore::CreateSound failed");
+        DEBUG_LOG_ERROR("AudioCore::CreateSound failed");
         return nullptr;
     }
 

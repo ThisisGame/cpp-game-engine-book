@@ -26,7 +26,7 @@ GameObject::~GameObject() {
 Component* GameObject::AddComponent(std::string component_type_name) {
     type t = type::get_by_name(component_type_name);
     if(t.is_valid()==false){
-        Debug::LogError("type::get_by_name({}) failed",component_type_name);
+        DEBUG_LOG_ERROR("type::get_by_name({}) failed",component_type_name);
         return nullptr;
     }
     variant var = t.create();    // 创建实例

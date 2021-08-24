@@ -27,17 +27,17 @@ void AudioSource::Set3DMode(bool mode_3d) {
     }
     FMOD_RESULT result=FMOD_Channel_SetMode(fmod_channel_,fmod_mode_);
     if(result!=FMOD_OK){
-        Debug::LogError("AudioSource::Set3DMode FMOD_Channel_SetMode result:{}",result);
+        DEBUG_LOG_ERROR("AudioSource::Set3DMode FMOD_Channel_SetMode result:{}",result);
     }
 }
 
 void AudioSource::Play() {
     if(audio_clip_== nullptr){
-        Debug::LogError("AudioSource::Play audio_clip_== nullptr");
+        DEBUG_LOG_ERROR("AudioSource::Play audio_clip_== nullptr");
         return;
     }
     if(audio_clip_->fmod_sound()==nullptr){
-        Debug::LogError("AudioSource::Play audio_clip_->fmod_sound()==nullptr");
+        DEBUG_LOG_ERROR("AudioSource::Play audio_clip_->fmod_sound()==nullptr");
         return;
     }
     FMOD_RESULT result;
@@ -70,7 +70,7 @@ void AudioSource::Pause() {
         }
         return;
     }
-    Debug::LogError("AudioSource::Paused FMOD_Channel_GetPaused result:{}",result);
+    DEBUG_LOG_ERROR("AudioSource::Paused FMOD_Channel_GetPaused result:{}",result);
 }
 
 void AudioSource::Stop() {
@@ -80,7 +80,7 @@ void AudioSource::Stop() {
     if(result==FMOD_OK){
         return;
     }
-    Debug::LogError("AudioSource::Stop FMOD_Channel_Stop result:{}",result);
+    DEBUG_LOG_ERROR("AudioSource::Stop FMOD_Channel_Stop result:{}",result);
 }
 
 bool AudioSource::Paused() {
@@ -91,7 +91,7 @@ bool AudioSource::Paused() {
     if(result==FMOD_OK){
         return paused;
     }
-    Debug::LogError("AudioSource::Paused FMOD_Channel_GetPaused result:{}",result);
+    DEBUG_LOG_ERROR("AudioSource::Paused FMOD_Channel_GetPaused result:{}",result);
     return true;
 }
 
@@ -106,7 +106,7 @@ void AudioSource::SetLoop(bool mode_loop) {
 
     FMOD_RESULT result=FMOD_Channel_SetMode(fmod_channel_,fmod_mode_);
     if(result!=FMOD_OK){
-        Debug::LogError("AudioSource::SetLoop FMOD_Channel_SetMode result:{}",result);
+        DEBUG_LOG_ERROR("AudioSource::SetLoop FMOD_Channel_SetMode result:{}",result);
     }
 }
 

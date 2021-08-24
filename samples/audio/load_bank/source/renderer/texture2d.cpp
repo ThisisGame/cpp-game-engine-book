@@ -86,7 +86,7 @@ Texture2D *Texture2D::CreateFromTrueTypeFont(std::string ttf_file_path, const ch
     stbtt_fontinfo font_info;
     if (!stbtt_InitFont(&font_info, font_buffer, 0))
     {
-        Debug::LogError("Texture2D::CreateFromTrueTypeFont stbtt_InitFont failed\n");
+        DEBUG_LOG_ERROR("Texture2D::CreateFromTrueTypeFont stbtt_InitFont failed\n");
         delete (font_buffer);
         return nullptr;
     }

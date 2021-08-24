@@ -4,41 +4,21 @@
 
 #ifndef UNTITLED_DEBUG_H
 #define UNTITLED_DEBUG_H
+
+#define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE
 #include "spdlog/spdlog.h"
+
+/// 输出文件名
+#define DEBUG_LOG_INFO SPDLOG_INFO
+#define DEBUG_LOG_WARN SPDLOG_WARN
+#define DEBUG_LOG_ERROR SPDLOG_ERROR
+
+//#define DEBUG_LOG_INFO(msg, ...) SPDLOG_INFO(msg,__FILE__, __LINE__,SPDLOG_FUNCTION,__VA_ARGS__)
+//#define DEBUG_LOG_INFO(msg, ...) spdlog::log(spdlog::source_loc{__FILE__, __LINE__, SPDLOG_FUNCTION},spdlog::level::info,__VA_ARGS__)
 
 class Debug {
 public:
     static void Init();
-
-    template<typename T>
-    static void Log(const T &msg){
-        spdlog::info(msg);
-    };
-
-    template<typename T>
-    static void LogError(const T &msg){
-        spdlog::error(msg);
-    };
-
-    template<typename T>
-    static void LogWarning(const T &msg){
-        spdlog::warn(msg);
-    };
-
-    template<typename FormatString, typename... Args>
-    static void Log(const FormatString &fmt, Args&& ...args){
-        spdlog::info(fmt,std::forward<Args>(args)...);
-    };
-
-    template<typename FormatString, typename... Args>
-    static void LogError(const FormatString &fmt, Args&&...args){
-        spdlog::error(fmt,std::forward<Args>(args)...);
-    };
-
-    template<typename FormatString, typename... Args>
-    static void LogWarning(const FormatString &fmt, Args&&...args){
-        spdlog::warn(fmt,std::forward<Args>(args)...);
-    };
 };
 
 

@@ -57,7 +57,7 @@ file(GLOB_RECURSE fmod_cpp depends/fmod/api/*.cpp)
 file(GLOB_RECURSE glfw_c depends/glfw-3.3.3.bin.WIN64/deps/glad_gl.c)
 
 file(GLOB_RECURSE example_cpp example/*.cpp)
-add_executable(untitled ${glfw_c} ${engine_cpp} ${example_cpp} source/audio/studio/audio_event.cpp source/audio/studio/audio_event.h)
+add_executable(untitled ${glfw_c} ${engine_cpp} ${example_cpp})
 
 
 #拷贝dll到exe目录

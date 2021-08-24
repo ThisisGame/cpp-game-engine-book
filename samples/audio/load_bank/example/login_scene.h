@@ -15,7 +15,7 @@ using namespace std;
 class Transform;
 class Camera;
 class Material;
-class AudioSource;
+class AudioStudioEvent;
 class LoginScene:public Component{
 public:
     LoginScene();
@@ -35,6 +35,8 @@ private:
     vec2_ushort     last_frame_mouse_position_={0,0};//上一帧的鼠标位置
 
     Transform*      transform_player_= nullptr;
+
+    AudioStudioEvent* audio_studio_event_;
 };
 
 

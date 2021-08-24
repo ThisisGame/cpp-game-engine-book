@@ -11,19 +11,19 @@ void AudioCore::Init(){
     FMOD_RESULT       result;
     // 创建FMOD System实例
     result=FMOD_System_Create(&fmod_system_);
-    Debug::Log("FMOD::System_Create ret code {}",result);
+    DEBUG_LOG_INFO("FMOD::System_Create ret code {}",result);
     spdlog::info("FMOD::System_Create ret code {}",result);
     //获取版本号
     unsigned int      version;
     result = FMOD_System_GetVersion(fmod_system_,&version);
-    Debug::Log("FMOD_System_GetVersion ret code {}",result);
+    DEBUG_LOG_INFO("FMOD_System_GetVersion ret code {}",result);
     if (version < FMOD_VERSION){
         spdlog::critical("FMOD lib version {} doesn't match header version {}", version, FMOD_VERSION);
         return;
     }
     //初始化 系统
     result=FMOD_System_Init(fmod_system_,32,FMOD_INIT_NORMAL,0);
-    Debug::Log("FMOD_System_Init ret code {}",result);
+    DEBUG_LOG_INFO("FMOD_System_Init ret code {}",result);
 }
 
 
