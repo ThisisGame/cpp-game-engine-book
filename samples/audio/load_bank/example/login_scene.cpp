@@ -99,6 +99,12 @@ void LoginScene::Update() {
 
         transform_camera_1_->set_position(glm::vec3(new_pos));
     }
+
+    if(Input::GetKeyUp(KEY_CODE_1)){
+        AudioStudio::SetParameterByName()
+    }
+
+
     last_frame_mouse_position_=Input::mousePosition();
 
     //鼠标滚轮控制相机远近
