@@ -8,7 +8,6 @@
 #include "spdlog/sinks/stdout_color_sinks.h"
 #include "spdlog/sinks/basic_file_sink.h"
 
-
 void Debug::Init() {
     try
     {
@@ -30,32 +29,32 @@ void Debug::Init() {
     }
 }
 
-template<typename T>
-void Debug::Log(const T &msg){
-    spdlog::info(msg);
-}
+//template<typename T>
+//void Debug::Log(const T &msg){
+//    spdlog::info(msg);
+//}
 
-template<typename T>
-void Debug::LogError(const T &msg) {
-    spdlog::error(msg);
-}
-
-template<typename T>
-void Debug::LogWarning(const T &msg) {
-    spdlog::warn(msg);
-}
-
-template<typename FormatString, typename... Args>
-void Debug::Log(const FormatString &fmt, Args &&... args) {
-    spdlog::log(fmt,std::forward<Args>(args)...);
-}
-
-template<typename FormatString, typename... Args>
-void Debug::LogError(const FormatString &fmt, Args &&... args) {
-    spdlog::error(fmt,std::forward<Args>(args)...);
-}
-
-template<typename FormatString, typename... Args>
-void Debug::LogWarning(const FormatString &fmt, Args &&... args) {
-    spdlog::warn(fmt,std::forward<Args>(args)...);
-}
+//template<typename T>
+//void Debug::LogError(const T &msg) {
+//    spdlog::error(msg);
+//}
+//
+//template<typename T>
+//void Debug::LogWarning(const T &msg) {
+//    spdlog::warn(msg);
+//}
+//
+//template<typename FormatString, typename... Args>
+//void Debug::Log(const FormatString &fmt, Args &&... args) {
+//    spdlog::log(fmt,std::forward<Args>(args)...);
+//}
+//
+//template<typename FormatString, typename... Args>
+//void Debug::LogError(const FormatString &fmt, Args &&... args) {
+//    spdlog::error(fmt,std::forward<Args>(args)...);
+//}
+//
+//template<typename FormatString, typename... Args>
+//void Debug::LogWarning(const FormatString &fmt, Args &&... args) {
+//    spdlog::warn(fmt,std::forward<Args>(args)...);
+//}
