@@ -30,6 +30,12 @@ public:
     /// \return
     static AudioStudioEvent* CreateEventInstance(const char *event_path);
 
+    /// 设置听者属性
+    /// \param x
+    /// \param y
+    /// \param z
+    static void setListenerAttributes(float x,float y,float z);
+
 private:
     static FMOD_STUDIO_SYSTEM* system_;
 };

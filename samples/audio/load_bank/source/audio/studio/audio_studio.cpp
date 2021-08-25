@@ -54,6 +54,13 @@ AudioStudioEvent* AudioStudio::CreateEventInstance(const char *event_path) {
     return audio_studio_event;
 }
 
+void AudioStudio::setListenerAttributes(float x, float y, float z) {
+    FMOD_3D_ATTRIBUTES attributes = { { x,y,z } };
+    attributes.forward.z = 1.0f;
+    attributes.up.y = 1.0f;
+    FMOD_Studio_System_SetListenerAttributes(system_,0,&attributes,0);
+}
+
 
 
 

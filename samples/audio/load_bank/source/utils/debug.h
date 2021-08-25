@@ -13,9 +13,6 @@
 #define DEBUG_LOG_WARN SPDLOG_WARN
 #define DEBUG_LOG_ERROR SPDLOG_ERROR
 
-//#define DEBUG_LOG_INFO(msg, ...) SPDLOG_INFO(msg,__FILE__, __LINE__,SPDLOG_FUNCTION,__VA_ARGS__)
-//#define DEBUG_LOG_INFO(msg, ...) spdlog::log(spdlog::source_loc{__FILE__, __LINE__, SPDLOG_FUNCTION},spdlog::level::info,__VA_ARGS__)
-
 class Debug {
 public:
     static void Init();

@@ -29,6 +29,12 @@ public:
     /// \param z
     /// \return
     FMOD_RESULT Set3DAttribute(float x,float y,float z);
+
+    void Start();
+
+    void Stop();
+
+    void Pause();
 private:
     FMOD_STUDIO_EVENTINSTANCE* event_instance_;
 };

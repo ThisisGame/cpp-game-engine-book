@@ -17,6 +17,7 @@
 #include "component/transform.h"
 #include "control/key_code.h"
 #include "audio/studio/audio_studio.h"
+#include "utils/time.h"
 
 
 using namespace rttr;
@@ -60,7 +61,7 @@ void LoginScene::CreateAudioSource() {
     //加载bank
     AudioStudio::LoadBankFile("audio/test.bank");
     AudioStudio::LoadBankFile("audio/test.strings.bank");
-    audio_studio_event_=AudioStudio::CreateEventInstance("");
+    audio_studio_event_=AudioStudio::CreateEventInstance("event:/footstep");
 }
 
 void LoginScene::CreateAudioListener() {
@@ -74,8 +75,8 @@ void LoginScene::CreateAudioListener() {
     material->Parse("material/sphere_audio_source_3d_listener.mat");
     mesh_renderer->SetMaterial(material);
 
-    //挂上AudioListener
-    go->AddComponent("AudioListener");
+    //设置听者位置
+    AudioStudio::setListenerAttributes(0,0,0);
 }
 
 
@@ -97,15 +98,31 @@ void LoginScene::Update() {
         transform_camera_1_->set_position(glm::vec3(new_pos));
     }
 
-    if(Input::GetKeyUp(KEY_CODE_1)){
-
+    if(Input::GetKeyUp(KEY_CODE_S)){
+        audio_studio_event_->Start();
     }
 
+    if(Input::GetKeyUp(KEY_CODE_1)){
+        audio_studio_event_->SetParameterByName("groundtype",0.0f);
+    }else if(Input::GetKeyUp(KEY_CODE_2)){
+        audio_studio_event_->SetParameterByName("groundtype",1.0f);
+    }else if(Input::GetKeyUp(KEY_CODE_3)){
+        audio_studio_event_->SetParameterByName("groundtype",2.0f);
+    }
 
     last_frame_mouse_position_=Input::mousePosition();
 
     //鼠标滚轮控制相机远近
     transform_camera_1_->set_position(transform_camera_1_->position() *(10 - Input::mouse_scroll())/10.f);
+
+    //控制Player移动
+    glm::mat4 rotate_mat4=glm::rotate(glm::mat4(1.0f),glm::radians(Time::delta_time()*60),glm::vec3(0.0f,0.0f,1.0f));
+    glm::vec4 old_pos=glm::vec4(transform_player_->position(),1.0f);
+    glm::vec4 new_pos=rotate_mat4*old_pos;//旋转矩阵 * 原来的坐标 = 以零点做旋转。
+    transform_player_->set_position(glm::vec3(new_pos));
+    //设置听者位置
+    auto player_pos=transform_player_->position();
+    AudioStudio::setListenerAttributes(player_pos.x,player_pos.y,player_pos.z);
 }
 
 
