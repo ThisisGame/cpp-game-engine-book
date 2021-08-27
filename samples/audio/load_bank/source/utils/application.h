@@ -12,6 +12,8 @@
 
 class Application {
 public:
+    static void set_title(std::string title){title_=title;}
+
     static const std::string& data_path(){return data_path_;}
     static void set_data_path(std::string data_path){data_path_=data_path;}
 
@@ -34,6 +36,8 @@ private:
     static void InitGpuDevice();
 
 private:
+    static std::string title_;//标题栏显示
+
     static std::string data_path_;//资源目录
 
     static GLFWwindow* glfw_window_;

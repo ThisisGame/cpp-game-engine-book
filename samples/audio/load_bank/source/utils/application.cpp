@@ -13,6 +13,7 @@
 #include "audio/audio.h"
 #include "time.h"
 
+std::string Application::title_;
 std::string Application::data_path_;
 GLFWwindow* Application::glfw_window_;
 
@@ -61,7 +62,6 @@ static void mouse_scroll_callback(GLFWwindow* window, double x, double y)
 }
 
 void Application::Init() {
-    //初始化spdlog
     Debug::Init();
     DEBUG_LOG_INFO("game start");
     Time::Init();
@@ -82,7 +82,7 @@ void Application::InitGpuDevice() {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
 
-    glfw_window_ = glfwCreateWindow(960, 640, "Simple example", NULL, NULL);
+    glfw_window_ = glfwCreateWindow(960, 640, title_.c_str(), NULL, NULL);
     if (!glfw_window_)
     {
         DEBUG_LOG_ERROR("glfwCreateWindow error!");

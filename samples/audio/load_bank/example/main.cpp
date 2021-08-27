@@ -4,6 +4,7 @@
 #include "utils/application.h"
 
 int main(void){
+    Application::set_title("[loadbank] press s play event,press 1 2 3 set param");
     Application::set_data_path("../data/");//设置资源目录
     Application::Init();//初始化引擎
 
