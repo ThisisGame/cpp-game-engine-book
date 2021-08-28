@@ -5,6 +5,7 @@
 #include "application.h"
 #include <memory>
 #include <easy/profiler.h>
+#include <timetool/stopwatch.h>
 #include "debug.h"
 #include "component/game_object.h"
 #include "renderer/camera.h"
@@ -82,6 +83,7 @@ void Application::InitGpuDevice() {
 
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+    glfwWindowHint(GLFW_REFRESH_RATE, GLFW_DONT_CARE);
 
     glfw_window_ = glfwCreateWindow(960, 640, title_.c_str(), NULL, NULL);
     if (!glfw_window_)
@@ -140,15 +142,25 @@ void Application::Render(){
 }
 
 void Application::Run() {
-    while (!glfwWindowShouldClose(glfw_window_))
+    while (true)
     {
-        Update();
+        EASY_BLOCK("Frame"){
+            if(glfwWindowShouldClose(glfw_window_)){
+                break;
+            }
+            Update();
+            Render();
 
-        Render();
+            EASY_BLOCK("glfwSwapBuffers"){
+                glfwSwapBuffers(glfw_window_);
+            }
+            EASY_END_BLOCK;
 
-        glfwSwapBuffers(glfw_window_);
-
-        glfwPollEvents();
+            EASY_BLOCK("glfwPollEvents"){
+                glfwPollEvents();
+            }
+            EASY_END_BLOCK;
+        }EASY_END_BLOCK;
     }
 
     glfwDestroyWindow(glfw_window_);
