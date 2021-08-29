@@ -62,6 +62,7 @@
 * [14. 播放音效](pages/14. 播放音效/14. 播放音效.md)
     * [14.1 播放2D音效](pages/14. 播放音效/14.1 播放2D音效.md)
     * [14.2 播放3D音效](pages/14. 播放音效/14.2 播放3D音效.md)
+    * [14.3 使用FMOD Studio音频引擎](pages/14. 播放音效/14.3 使用FMOD Studio音频引擎.md)
 * [90. GPU分析工具](pages/90. GPU分析工具/90. GPU分析工具.md)
     * [90.1 RenderDoc分析不显示bug](pages/90. GPU分析工具/90.1 RenderDoc分析不显示bug.md)
 * [98. SubstancePainter插件开发](pages/98. SubstancePainter插件开发/98. SubstancePainter插件开发.md)
