@@ -30,10 +30,12 @@ public:
     /// \return
     FMOD_RESULT Set3DAttribute(float x,float y,float z);
 
+    /// 播放Event实例
     void Start();
 
     void Stop();
 
+    /// 暂停
     void Pause();
 private:
     FMOD_STUDIO_EVENTINSTANCE* event_instance_;

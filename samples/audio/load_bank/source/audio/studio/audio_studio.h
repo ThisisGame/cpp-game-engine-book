@@ -14,6 +14,8 @@ using namespace std;
 
 class AudioStudio {
 public:
+    /// 初始化FMOD Studio
+    /// \return
     static FMOD_RESULT Init();
 
     /// 刷帧
