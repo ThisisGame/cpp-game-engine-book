@@ -6,6 +6,7 @@
 #include <memory>
 #include <easy/profiler.h>
 #include <timetool/stopwatch.h>
+#include <easy/profiler.h>
 #include "debug.h"
 #include "component/game_object.h"
 #include "renderer/camera.h"
@@ -64,6 +65,9 @@ static void mouse_scroll_callback(GLFWwindow* window, double x, double y)
 }
 
 void Application::Init() {
+    EASY_MAIN_THREAD;
+    profiler::startListen();// 启动profiler服务器，等待gui连接。
+
     Debug::Init();
     DEBUG_LOG_INFO("game start");
     Time::Init();
