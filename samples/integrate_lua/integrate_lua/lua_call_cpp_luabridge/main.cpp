@@ -5,15 +5,12 @@ extern "C"
 #include "lualib.h"
 }
 #include "LuaBridge\LuaBridge.h"
-#include "LuaBridge/detail/LuaException.h"
-#include "LuaBridge/detail/LuaRef.h"
 #include<string>
 
 #include <stdio.h>
 #include <string.h>
 
 using namespace std;
-using namespace luabridge;
 
 class Player
 {
@@ -40,14 +37,6 @@ int main(int argc, char * argv[])
             .endClass();
 
     luaL_dofile(lua_state, "../a.lua");
-
-    LuaRef mainFunction = luabridge::getGlobal(lua_state,"fail");
-
-    try {
-        mainFunction();
-    } catch (const luabridge::LuaException& e) {
-        std::cout << e.what();
-    }
 
     lua_close(lua_state);
 
