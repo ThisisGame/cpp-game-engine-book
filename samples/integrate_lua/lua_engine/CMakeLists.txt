@@ -61,7 +61,7 @@ file(GLOB_RECURSE lua_c depends/lua/src/*.c)
 file(GLOB_RECURSE glfw_c depends/glfw-3.3.3.bin.WIN64/deps/glad_gl.c)
 
 file(GLOB_RECURSE example_cpp example/*.cpp)
-add_executable(untitled ${glfw_c} ${engine_cpp} ${example_cpp} $(lua_c))
+add_executable(untitled ${glfw_c} ${engine_cpp} ${example_cpp} ${lua_c})
 
 
 #拷贝dll到exe目录
