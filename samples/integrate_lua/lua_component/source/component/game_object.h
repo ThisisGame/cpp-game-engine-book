@@ -27,6 +27,8 @@ public:
     /// \return
     Component* AddComponent(std::string component_type_name);
 
+    Component* AddComponent(std::string component_table_name);
+
     /// 获取组件
     /// \param component_type_name 组件类名
     /// \return
