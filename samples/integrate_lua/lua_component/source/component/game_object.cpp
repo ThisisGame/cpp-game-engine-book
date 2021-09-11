@@ -29,6 +29,7 @@ Component* GameObject::AddComponent(std::string component_type_name) {
         DEBUG_LOG_ERROR("type::get_by_name({}) failed",component_type_name);
         return nullptr;
     }
+
     variant var = t.create();    // 创建实例
     Component* component=var.get_value<Component*>();
     component->set_game_object(this);
@@ -98,3 +99,19 @@ luabridge::LuaRef GameObject::AddComponent(luabridge::LuaRef component_type) {
 //只有lua端才会需要get lua 的component。
 //rttr可以废弃了。
 //又少了一个依赖。
+
+//有一个问题没法解决，GameObject用什么形式去存储cpp class类型以及多个实例的对英国厝。
+//cpp class并不是一个变量。
+
+//不过，lua的AddComponent直接传入字符串是最简单的。
+
+//使用typeid可以解决这个问题，不管是cpp的类，cpp类的实例，注册到lua的cpp类的实例，都是相同的typeid，用typeid.hash作为key。
+//cpp AddComponent的时候，对T获取typeid，然后new T，然后存入unorder_map。
+//lua AddComponent的时候，对....传入过来的是LuaRef……获取的typeid并不是和cpp class一样的……
+//这下AddComponent没法做了，和cpp的放不到一个map里面去。
+
+//另外一种做法是，lua的Component单独存放为list，GetComponent的时候，再对这个list遍历一次，用isInstance<T>来检查是否是指定的T类型，然后返回符合T的数组。
+
+//或者说在AddComponent的时候，对所有的cpp class都判断一遍，然后放到对应的map里面，感觉这个好一些吧，问题是要写很多if else，不过这样在get的时候就很方便了。
+
+//另外是修改LuaBridge，在注册cpp class到lua的时候，将typeid().hashid写入到table中，这样AddComponent的时候只要获取出来就醒了。
