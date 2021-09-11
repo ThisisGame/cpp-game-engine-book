@@ -20,12 +20,16 @@ int main(void)
 
     luaL_dofile(lua_state, "../example/main.lua");
 
-    luabridge::LuaRef main_function = luabridge::getGlobal(lua_state, "main");
-    try {
-        main_function();
-    } catch (const luabridge::LuaException& e) {
-        DEBUG_LOG_ERROR(e.what());
+    //加上大括号，为了LuaRef在lua_close之前自动析构。
+    {
+        luabridge::LuaRef main_function = luabridge::getGlobal(lua_state, "main");
+        try {
+            main_function();
+        } catch (const luabridge::LuaException& e) {
+            DEBUG_LOG_ERROR(e.what());
+        }
     }
+
 
     lua_close(lua_state);
 

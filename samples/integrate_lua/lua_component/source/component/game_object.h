@@ -12,6 +12,7 @@
 #include <memory>
 #include <list>
 #include <functional>
+#include "LuaBridge/LuaBridge.h"
 
 class Component;
 class GameObject {
@@ -26,8 +27,6 @@ public:
     /// \param component_type_name 组件类名
     /// \return
     Component* AddComponent(std::string component_type_name);
-
-    Component* AddComponent(std::string component_table_name);
 
     /// 获取组件
     /// \param component_type_name 组件类名
@@ -49,6 +48,12 @@ public:
     /// 遍历所有Camera
     /// \param func
     static void Foreach(std::function<void(GameObject* game_object)> func);
+
+public:
+    /// 添加组件
+    /// \param component_type 传入Lua的Component类型，其实就是一个table。
+    /// \return
+    luabridge::LuaRef AddComponent(luabridge::LuaRef component_type);
 private:
     std::string name_;
     std::unordered_map<std::string,std::vector<Component*>> component_type_instance_map_;

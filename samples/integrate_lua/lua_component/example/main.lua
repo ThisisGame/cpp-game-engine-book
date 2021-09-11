@@ -4,8 +4,8 @@ function main()
     Cpp.Application.Init()--初始化引擎
 
     local go=Cpp.GameObject("LoginSceneGo")
-    go:AddComponent("Transform")
-    go:AddComponent("LoginScene")
+    go:AddComponent(Transform)
+    go:AddComponent(LoginScene)
 
     Cpp.Application.Run()--开始引擎主循环
 end

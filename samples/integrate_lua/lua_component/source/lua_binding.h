@@ -31,7 +31,7 @@ void BindLua(lua_State* lua_state){
             .beginNamespace(BIND_CPP_TO_LUA_NAMESPACE)
             .beginClass<GameObject>("GameObject")
             .addConstructor<void (*) (std::string)>()
-            .addFunction("AddComponent",&GameObject::AddComponent)
+            .addFunction("AddComponent", (luabridge::LuaRef (GameObject::*)(luabridge::LuaRef))&GameObject::AddComponent)
             .endClass();
 
     luabridge::getGlobalNamespace(lua_state)

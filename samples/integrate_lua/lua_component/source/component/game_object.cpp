@@ -75,3 +75,8 @@ void GameObject::Foreach(std::function<void(GameObject* game_object)> func) {
     }
 }
 
+luabridge::LuaRef GameObject::AddComponent(luabridge::LuaRef component_type) {
+    auto new_table=component_type();//luabridge对c++的class注册为table，并实现了__call，所以可以直接带括号。
+    return new_table;
+}
+
