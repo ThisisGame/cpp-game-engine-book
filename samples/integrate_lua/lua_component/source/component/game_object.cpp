@@ -80,3 +80,21 @@ luabridge::LuaRef GameObject::AddComponent(luabridge::LuaRef component_type) {
     return new_table;
 }
 
+//按理说，cpp这边是不会去getcomponent lua 的 componet的。
+//但是现在从将cpp class注册到lua，lua调用addcomponent，例如Camera，存到gameobject里的是lua的table，不是Component了。
+//从c++端就getcomponenet不到了这个Camera。
+//除非是说，上面的AddComponent，返回的new_table，仍然可以转换为cpp的Component，这样就可以兼容到cpp端去getComponent。
+//居然真的可以Cast过来
+//luabridge::LuaRef player_table=luabridge::getGlobal(lua_state,"player");
+//if(player_table.isInstance<Player>()){
+//Player* player=player_table.cast<Player*>();
+//player->AddHp(4);
+//}
+//if(player_table.isInstance<Object>()){
+//Object* object=player_table.cast<Object*>();
+//object->OnDestroy();
+//}
+//这样的话，cpp端用模板做AddComponent GetComponent即可，既可以支持cpp的class，也可以支持注册到lua端的cpp class。当然，是不支持lua端的class的，不过完全没有这个需求。
+//只有lua端才会需要get lua 的component。
+//rttr可以废弃了。
+//又少了一个依赖。
