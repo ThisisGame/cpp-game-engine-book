@@ -4,8 +4,11 @@ function main()
     Cpp.Application.Init()--初始化引擎
 
     local go=Cpp.GameObject("LoginSceneGo")
-    go:AddComponent(Transform)
-    go:AddComponent(LoginScene)
+    local transform=go:AddComponent("Transform")
+    print("transform:" .. tostring(transform))
+    local pos=transform:position()
+    print("pos:" .. tostring(pos))
+    --go:AddComponent(LoginScene)
 
     Cpp.Application.Run()--开始引擎主循环
 end

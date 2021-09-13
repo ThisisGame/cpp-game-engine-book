@@ -1,14 +1,20 @@
 print("-------run lua--------")
 
-LoginScene=setmeta
+LoginScene={}
 function LoginScene:Awake()
     print("LoginScene Awake")
 end
 
-go = GameObject()
--- go:AddComponent(Animator)
--- go:AddComponent(Camera)
--- print(go)
+function LoginScene:Update()
+    print("LoginScene Update")
+end
 
-local loginScene=go:AddComponent(LoginScene)
-print(loginScene)
+function main()
+    go = GameObject()
+    go:AddComponent(Animator)
+    --go:AddComponent(Camera)
+    -- print(go)
+
+    local loginScene=go:AddComponent(LoginScene)
+    print(loginScene)
+end

@@ -10,34 +10,23 @@
 extern "C"
 {
 #include "lua.h"
+#include "lauxlib.h"
+#include "lualib.h"
 }
 #include "LuaBridge/LuaBridge.h"
-#include "component/game_object.h"
-#include "utils/application.h"
 
-/// 绑定引擎所有类到Lua
-/// \param lua_state
-void BindLua(lua_State* lua_state){
-    luabridge::getGlobalNamespace(lua_state)
-            .beginNamespace(BIND_CPP_TO_LUA_NAMESPACE)
-            .beginClass<Application>("Application")
-            .addStaticFunction("set_title",&Application::set_title)
-            .addStaticFunction("set_data_path",&Application::set_data_path)
-            .addStaticFunction("Init",&Application::Init)
-            .addStaticFunction("Run",&Application::Run)
-            .endClass();
+class LuaBinding{
+public:
+    /// 绑定引擎所有类到Lua
+    /// \param lua_state
+    static void BindLua(lua_State* lua_state);
 
-    luabridge::getGlobalNamespace(lua_state)
-            .beginNamespace(BIND_CPP_TO_LUA_NAMESPACE)
-            .beginClass<GameObject>("GameObject")
-            .addConstructor<void (*) (std::string)>()
-            .addFunction("AddComponent", (luabridge::LuaRef (GameObject::*)(luabridge::LuaRef))&GameObject::AddComponent)
-            .endClass();
+    static lua_State* lua_state(){return lua_state_;}
 
-    luabridge::getGlobalNamespace(lua_state)
-            .beginNamespace(BIND_CPP_TO_LUA_NAMESPACE)
-            .beginClass<Component>("Component")
-            .endClass();
-}
+private:
+    static lua_State* lua_state_;
+};
+
+
 
 #endif //UNTITLED_LUA_BINDING_H

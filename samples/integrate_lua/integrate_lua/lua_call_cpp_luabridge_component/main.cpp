@@ -12,6 +12,9 @@ extern "C"
 #include <list>
 
 using namespace std;
+using namespace luabridge;
+
+lua_State* lua_state;
 
 class GameObject;
 class Component {
@@ -38,7 +41,11 @@ public:
     void Update() override{
         std::cout<<"Camera Update"<<std::endl;
     }
+
+public:
+    static std::string cpp_type_name;
 };
+std::string Camera::cpp_type_name="Camera";
 
 class Animator:public Component
 {
@@ -50,6 +57,8 @@ public:
     void Update() override{
         std::cout<<"Animator Update"<<std::endl;
     }
+public:
+    std::string cpp_type_name="Animator";
 };
 
 class GameObject{
@@ -111,12 +120,15 @@ public:
         }
     }
 public:
-    luabridge::LuaRef AddComponent(luabridge::LuaRef component_type) {
+    luabridge::LuaRef AddComponent(std::string component_type_name) {
+        luabridge::LuaRef component_type=luabridge::getGlobal(lua_state,component_type_name.c_str());
         auto new_table=component_type();//luabridge对c++的class注册为table，并实现了__call，所以可以直接带括号。
-        std::cout << typeid(new_table).name() << std::endl;// N9luabridge6LuaRefE
-        if(new_table.isInstance<Animator>()) {
-            Animator *lua_go = new_table.cast<Animator *>();
+
+        if(new_table.isInstance<Component>()){
+            Component* component=new_table.cast<Component*>();
+
         }
+
 
         return new_table;
     }
@@ -132,19 +144,23 @@ std::list<GameObject*> GameObject::game_object_list_;
 
 int main(int argc, char * argv[])
 {
-//    GameObject* go=new GameObject();
+    GameObject* go=new GameObject();
 //    go->AddComponent<Animator>();
 //    go->AddComponent<Camera>();
 
 
-//    std::cout<<typeid(GameObject).name()<<std::endl;// 10GameObject
-    std::cout<<typeid(GameObject).hash_code()<<std::endl;
+//    std::cout<<typeid(GameObject).raw_name()<<std::endl;// 10GameObject
+//    std::cout<<typeid(GameObject).hash_code()<<std::endl;
+//    std::cout<<typeid(go).raw_name()<<std::endl;
+
+    GameObject* go1=new GameObject();
+//    std::cout<<typeid(go1).raw_name()<<std::endl;
 //    std::cout<<typeid(go).name()<<std::endl;// P10GameObject
 //    std::cout<<typeid(Animator).name()<<std::endl;// 8Animator
-    std::cout<<typeid(Animator).hash_code()<<std::endl;// 8Animator
+//    std::cout<<typeid(Animator).hash_code()<<std::endl;// 8Animator
 //    std::cout<<typeid(animator).name()<<std::endl;// P8Animator
 
-    lua_State* lua_state = luaL_newstate();
+    lua_state = luaL_newstate();
     luaL_openlibs(lua_state);
 
     luabridge::getGlobalNamespace(lua_state)
@@ -159,21 +175,29 @@ int main(int argc, char * argv[])
     luabridge::getGlobalNamespace(lua_state)
             .deriveClass<Animator,Component>("Animator")
             .addConstructor<void (*) ()>()
+            .addData("cpp_type_name",&Animator::cpp_type_name)
             .endClass();
     luabridge::getGlobalNamespace(lua_state)
             .deriveClass<Camera,Component>("Camera")
             .addConstructor<void (*) ()>()
+            .addStaticData("cpp_type_name",&Camera::cpp_type_name)
             .endClass();
 
     luaL_dofile(lua_state, "../a.lua");
+    //加上大括号，为了LuaRef在lua_close之前自动析构。
+    {
+        luabridge::LuaRef main_function = luabridge::getGlobal(lua_state, "main");
+        try {
+            main_function();
+        } catch (const luabridge::LuaException& e) {
+            std::cout<<e.what()<<std::endl;
+        }
+    }
 
     GameObject::Foreach([](GameObject* game_object){
-        auto camera=game_object->GetComponent<Camera>();
-        if (!camera){
-            return;
-        }
-
-        camera->Update();
+        game_object->ForeachComponent([](Component* component){
+            component->Update();
+        });
     });
 
 //

@@ -8,7 +8,6 @@
 #include "component.h"
 #include "utils/debug.h"
 
-
 using namespace rttr;
 
 std::list<GameObject*> GameObject::game_object_list_;
@@ -77,7 +76,32 @@ void GameObject::Foreach(std::function<void(GameObject* game_object)> func) {
 }
 
 luabridge::LuaRef GameObject::AddComponent(luabridge::LuaRef component_type) {
-    auto new_table=component_type();//luabridge对c++的class注册为table，并实现了__call，所以可以直接带括号。
+
+    luabridge::LuaRef component_type_table=luabridge::getGlobal(LuaBinding::lua_state(),component_type_name.c_str());
+    luabridge::LuaRef new_table=component_type_table();
+
+    type t = type::get_by_name(component_type_name);
+    if(t.is_valid()){
+        Component* component=new_table.cast<Component*>();
+        if(component== nullptr){
+            DEBUG_LOG_ERROR("invalid component_type_name:{}",component_type_name);
+            return luabridge::LuaRef(LuaBinding::lua_state());
+        }
+
+        return luabridge::LuaRef(LuaBinding::lua_state(),component);
+    }
+
+    if(lua_component_type_instance_map_.find(component_type_name)==lua_component_type_instance_map_.end()){
+        std::vector<luabridge::LuaRef> component_vec;
+        component_vec.push_back(new_table);
+        lua_component_type_instance_map_[component_type_name]=component_vec;
+    }else{
+        lua_component_type_instance_map_[component_type_name].push_back(new_table);
+    }
+
+    luabridge::LuaRef awake_function=new_table["Awake"];
+    awake_function();
+
     return new_table;
 }
 

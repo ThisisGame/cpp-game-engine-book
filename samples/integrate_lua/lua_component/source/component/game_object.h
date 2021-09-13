@@ -12,7 +12,7 @@
 #include <memory>
 #include <list>
 #include <functional>
-#include "LuaBridge/LuaBridge.h"
+#include "lua_binding.h"
 
 class Component;
 class GameObject {
@@ -61,6 +61,9 @@ private:
     unsigned char layer_;//将物体分不同的层，用于相机分层、物理碰撞分层等。
 
     static std::list<GameObject*> game_object_list_;//存储所有的GameObject。
+
+private:
+    std::unordered_map<std::string,std::vector<luabridge::LuaRef>> lua_component_type_instance_map_;
 };
 
 
