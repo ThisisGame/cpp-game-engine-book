@@ -126,7 +126,18 @@ public:
 
         if(new_table.isInstance<Component>()){
             Component* component=new_table.cast<Component*>();
-
+            component->set_game_object(this);
+            if(cpp_component_type_instance_map_.find(component_type_name)==cpp_component_type_instance_map_.end()){
+                std::vector<Component*> component_vec;
+                component_vec.push_back(component);
+                cpp_component_type_instance_map_[component_type_name]=component_vec;
+            }else{
+                cpp_component_type_instance_map_[component_type_name].push_back(component);
+            }
+            component->Awake();
+        }else{
+            new_table["Awake"]();
+            new_table["set_game_object"](this);
         }
 
 
@@ -135,6 +146,9 @@ public:
 
 private:
     std::unordered_map<size_t,std::vector<Component*>> component_type_instance_map_;
+
+    std::unordered_map<std::string,std::vector<Component*>> cpp_component_type_instance_map_;
+    std::unordered_map<std::string,std::vector<luabridge::LuaRef>> lua_component_type_instance_map_;
 
     static std::list<GameObject*> game_object_list_;//存储所有的GameObject。
 };
