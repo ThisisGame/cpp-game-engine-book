@@ -71,7 +71,6 @@ public:
         return component;
     }
 
-
     std::vector<Component*>& GetComponents(std::string component_type_name) {
         return component_type_instance_map_[component_type_name];
     }
@@ -97,12 +96,18 @@ public:
     }
 
 
+
     static void Foreach(std::function<void(GameObject* game_object)> func) {
         for (auto iter=game_object_list_.begin();iter!=game_object_list_.end();iter++){
             auto game_object=*iter;
             func(game_object);
         }
     }
+
+private:
+    std::unordered_map<std::string,std::vector<Component*>> component_type_instance_map_;
+    static std::list<GameObject*> game_object_list_;//存储所有的GameObject。
+
 public:
     luabridge::LuaRef AddComponentFromLua(std::string component_type_name) {
         luabridge::LuaRef component_type=luabridge::getGlobal(lua_state,component_type_name.c_str());
@@ -134,17 +139,23 @@ public:
         return new_table;
     }
 
+    void ForeachLuaComponent(std::function<void(LuaRef)> func) {
+        for (auto& v : lua_component_type_instance_map_){
+            for (auto& iter : v.second){
+                LuaRef lua_ref=iter;
+                func(lua_ref);
+            }
+        }
+    }
 private:
-
-    std::unordered_map<std::string,std::vector<Component*>> component_type_instance_map_;
-
     std::unordered_map<std::string,std::vector<luabridge::LuaRef>> lua_component_type_instance_map_;
-
-    static std::list<GameObject*> game_object_list_;//存储所有的GameObject。
 };
 std::list<GameObject*> GameObject::game_object_list_;
 
-
+// 怎么去对比两个LuaRef原始数据相等?
+bool compare_lua_ref(LuaRef a,LuaRef b){
+    return a.rawequal(b);
+}
 
 int main(int argc, char * argv[])
 {
@@ -178,7 +189,7 @@ int main(int argc, char * argv[])
     luabridge::getGlobalNamespace(lua_state)
             .beginClass<GameObject>("GameObject")
             .addConstructor<void (*) ()>()
-            .addFunction("AddComponent", (luabridge::LuaRef (GameObject::*)(std::string))&GameObject::AddComponent)
+            .addFunction("AddComponent", (luabridge::LuaRef (GameObject::*)(std::string))&GameObject::AddComponentFromLua)
             .endClass();
     luabridge::getGlobalNamespace(lua_state)
             .deriveClass<Animator,Component>("Animator")
@@ -188,23 +199,32 @@ int main(int argc, char * argv[])
             .deriveClass<Camera,Component>("Camera")
             .addConstructor<void (*) ()>()
             .endClass();
+    luabridge::getGlobalNamespace(lua_state)
+            .addFunction("compare_lua_ref",&compare_lua_ref);
 
     luaL_dofile(lua_state, "../a.lua");
     //加上大括号，为了LuaRef在lua_close之前自动析构。
-    {
-        luabridge::LuaRef main_function = luabridge::getGlobal(lua_state, "main");
-        try {
-            main_function();
-        } catch (const luabridge::LuaException& e) {
-            std::cout<<e.what()<<std::endl;
-        }
-    }
-
-    GameObject::Foreach([](GameObject* game_object){
-        game_object->ForeachComponent([](Component* component){
-            component->Update();
-        });
-    });
+//    {
+//        luabridge::LuaRef main_function = luabridge::getGlobal(lua_state, "main");
+//        try {
+//            main_function();
+//        } catch (const luabridge::LuaException& e) {
+//            std::cout<<e.what()<<std::endl;
+//        }
+//    }
+//
+//    GameObject::Foreach([](GameObject* game_object){
+//        game_object->ForeachComponent([](Component* component){
+//            component->Update();
+//        });
+//
+//        game_object->ForeachLuaComponent([](LuaRef lua_ref){
+//            LuaRef update_ref=lua_ref["Update"];
+//            if(update_ref.isFunction()){
+//                update_ref();
+//            }
+//        });
+//    });
 
 //
 //    {
@@ -217,6 +237,15 @@ int main(int argc, char * argv[])
 //        }
 //    }
 //
+
+    {
+        LuaRef function_ref=luabridge::getGlobal(lua_state,"set_game_object");
+        if(function_ref.isFunction()){
+            auto game_object=new GameObject();
+            function_ref(game_object);
+        }
+    }
+
     lua_close(lua_state);
 
     return 0;
