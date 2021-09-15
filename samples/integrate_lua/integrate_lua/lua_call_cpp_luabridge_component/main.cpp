@@ -157,6 +157,10 @@ bool compare_lua_ref(LuaRef a,LuaRef b){
     return a.rawequal(b);
 }
 
+bool compare_game_object(GameObject* a,GameObject* b){
+    return a==b;
+}
+
 int main(int argc, char * argv[])
 {
 //    GameObject* go=new GameObject();
@@ -200,7 +204,8 @@ int main(int argc, char * argv[])
             .addConstructor<void (*) ()>()
             .endClass();
     luabridge::getGlobalNamespace(lua_state)
-            .addFunction("compare_lua_ref",&compare_lua_ref);
+            .addFunction("compare_lua_ref",&compare_lua_ref)
+            .addFunction("compare_game_object",&compare_game_object);
 
     luaL_dofile(lua_state, "../a.lua");
     //加上大括号，为了LuaRef在lua_close之前自动析构。
@@ -243,6 +248,12 @@ int main(int argc, char * argv[])
         if(function_ref.isFunction()){
             auto game_object=new GameObject();
             function_ref(game_object);
+        }
+
+        LuaRef a=luabridge::getGlobal(lua_state,"game_object1");
+        LuaRef b=luabridge::getGlobal(lua_state,"game_object1");
+        if(a==b){
+
         }
     }
 

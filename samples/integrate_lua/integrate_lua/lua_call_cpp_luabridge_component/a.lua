@@ -73,8 +73,10 @@ function set_game_object(game_object)
     print("animator:" .. tostring(animator))
     animator:Awake()
 
-    local game_object1=animator:game_object()
+    game_object1=animator:game_object()
     print("animator:game_object():" .. tostring(game_object1))
 
+    print(game_object==game_object1)
     print(compare_lua_ref(game_object,game_object1))--这里不相等…… 传递到cpp那边看看为什么不相等，看LuaRef有没有相关接口判定。
+    print(compare_game_object(game_object,game_object1))
 end
