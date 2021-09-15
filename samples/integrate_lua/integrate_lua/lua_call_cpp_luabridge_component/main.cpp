@@ -64,6 +64,10 @@ public:
     ~GameObject() {
     }
 
+    bool operator==(GameObject* rhs) const {
+        return rhs == this;
+    }
+
     Component* AddComponent(std::string component_type_name){
         std::cout<<"GameObject AddComponent:"<<component_type_name<<std::endl;
         LuaRef lua_ref=AddComponentFromLua(component_type_name);
@@ -125,7 +129,11 @@ public:
             }
             component->Awake();
         }else{
-            new_table["set_game_object"](this);
+            LuaRef function_ref=new_table["set_game_object"];
+            if(function_ref.isFunction()){
+                function_ref(new_table,this);
+            }
+
             if(lua_component_type_instance_map_.find(component_type_name)==lua_component_type_instance_map_.end()){
                 std::vector<luabridge::LuaRef> component_vec;
                 component_vec.push_back(new_table);
@@ -133,7 +141,7 @@ public:
             }else{
                 lua_component_type_instance_map_[component_type_name].push_back(new_table);
             }
-            new_table["Awake"]();
+            new_table["Awake"](new_table);
         }
 
         return new_table;
@@ -152,33 +160,8 @@ private:
 };
 std::list<GameObject*> GameObject::game_object_list_;
 
-// 怎么去对比两个LuaRef原始数据相等?
-bool compare_lua_ref(LuaRef a,LuaRef b){
-    return a.rawequal(b);
-}
-
-bool compare_game_object(GameObject* a,GameObject* b){
-    return a==b;
-}
-
 int main(int argc, char * argv[])
 {
-//    GameObject* go=new GameObject();
-//    go->AddComponent<Animator>();
-//    go->AddComponent<Camera>();
-
-
-//    std::cout<<typeid(GameObject).raw_name()<<std::endl;// 10GameObject
-//    std::cout<<typeid(GameObject).hash_code()<<std::endl;
-//    std::cout<<typeid(go).raw_name()<<std::endl;
-
-//    GameObject* go1=new GameObject();
-//    std::cout<<typeid(go1).raw_name()<<std::endl;
-//    std::cout<<typeid(go).name()<<std::endl;// P10GameObject
-//    std::cout<<typeid(Animator).name()<<std::endl;// 8Animator
-//    std::cout<<typeid(Animator).hash_code()<<std::endl;// 8Animator
-//    std::cout<<typeid(animator).name()<<std::endl;// P8Animator
-
     lua_state = luaL_newstate();
     luaL_openlibs(lua_state);
 
@@ -193,6 +176,7 @@ int main(int argc, char * argv[])
     luabridge::getGlobalNamespace(lua_state)
             .beginClass<GameObject>("GameObject")
             .addConstructor<void (*) ()>()
+            .addFunction("__eq", &GameObject::operator==)
             .addFunction("AddComponent", (luabridge::LuaRef (GameObject::*)(std::string))&GameObject::AddComponentFromLua)
             .endClass();
     luabridge::getGlobalNamespace(lua_state)
@@ -203,59 +187,31 @@ int main(int argc, char * argv[])
             .deriveClass<Camera,Component>("Camera")
             .addConstructor<void (*) ()>()
             .endClass();
-    luabridge::getGlobalNamespace(lua_state)
-            .addFunction("compare_lua_ref",&compare_lua_ref)
-            .addFunction("compare_game_object",&compare_game_object);
 
     luaL_dofile(lua_state, "../a.lua");
+
     //加上大括号，为了LuaRef在lua_close之前自动析构。
-//    {
-//        luabridge::LuaRef main_function = luabridge::getGlobal(lua_state, "main");
-//        try {
-//            main_function();
-//        } catch (const luabridge::LuaException& e) {
-//            std::cout<<e.what()<<std::endl;
-//        }
-//    }
-//
-//    GameObject::Foreach([](GameObject* game_object){
-//        game_object->ForeachComponent([](Component* component){
-//            component->Update();
-//        });
-//
-//        game_object->ForeachLuaComponent([](LuaRef lua_ref){
-//            LuaRef update_ref=lua_ref["Update"];
-//            if(update_ref.isFunction()){
-//                update_ref();
-//            }
-//        });
-//    });
-
-//
-//    {
-//        luabridge::LuaRef player_table=luabridge::getGlobal(lua_state,"GameObject");
-//        std::cout<<typeid(player_table).name()<<std::endl;// N9luabridge6LuaRefE
-//
-//        if(player_table.isInstance<GameObject>()){
-//            GameObject* lua_go=player_table.cast<GameObject*>();
-//            std::cout<<typeid(lua_go).name()<<std::endl;// P10GameObject
-//        }
-//    }
-//
-
     {
-        LuaRef function_ref=luabridge::getGlobal(lua_state,"set_game_object");
-        if(function_ref.isFunction()){
-            auto game_object=new GameObject();
-            function_ref(game_object);
-        }
-
-        LuaRef a=luabridge::getGlobal(lua_state,"game_object1");
-        LuaRef b=luabridge::getGlobal(lua_state,"game_object1");
-        if(a==b){
-
+        luabridge::LuaRef main_function = luabridge::getGlobal(lua_state, "main");
+        try {
+            main_function();
+        } catch (const luabridge::LuaException& e) {
+            std::cout<<e.what()<<std::endl;
         }
     }
+
+    GameObject::Foreach([](GameObject* game_object){
+        game_object->ForeachComponent([](Component* component){
+            component->Update();
+        });
+
+        game_object->ForeachLuaComponent([](LuaRef lua_ref){
+            LuaRef update_function_ref=lua_ref["Update"];
+            if(update_function_ref.isFunction()){
+                update_function_ref();
+            }
+        });
+    });
 
     lua_close(lua_state);
 
