@@ -6,6 +6,11 @@ LoginScene={
     AudioStudioEvent* audio_studio_event_
 }
 
+setmetatable(LoginScene,{["__call"]=function(table,param)
+    local instance=setmetatable({},{__index=table})
+    return instance
+end})
+
 -- public:
 function LoginScene:Awake()
     --创建相机1 GameObject
