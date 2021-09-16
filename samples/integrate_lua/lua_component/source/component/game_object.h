@@ -12,7 +12,7 @@
 #include <memory>
 #include <list>
 #include <functional>
-#include "lua_binding.h"
+#include "lua_binding/lua_binding.h"
 
 class Component;
 class GameObject {
@@ -49,11 +49,6 @@ public:
     /// \param func
     static void Foreach(std::function<void(GameObject* game_object)> func);
 
-public:
-    /// 添加组件
-    /// \param component_type 传入Lua的Component类型，其实就是一个table。
-    /// \return
-    luabridge::LuaRef AddComponent(luabridge::LuaRef component_type);
 private:
     std::string name_;
     std::unordered_map<std::string,std::vector<Component*>> component_type_instance_map_;
@@ -62,8 +57,30 @@ private:
 
     static std::list<GameObject*> game_object_list_;//存储所有的GameObject。
 
+/******************** BEGIN LUA COMPONENT ******************/
+
+public:
+    /// 重载==，用于LuaRef对象做比较
+    /// \param rhs
+    /// \return
+    bool operator==(GameObject* rhs) const;
+
+    /// 在Lua中添加组件
+    /// \param component_type_name cpp、lua的组件名称
+    /// \return
+    luabridge::LuaRef AddComponentFromLua(std::string component_type_name);
+
+    /// 获取组件
+    /// \param component_type_name
+    /// \return
+    luabridge::LuaRef GetComponentFromLua(std::string component_type_name);
+
+    /// 遍历组件 一般在Update中使用
+    /// \param func
+    void ForeachLuaComponent(std::function<void(luabridge::LuaRef)> func);
+
 private:
-    std::unordered_map<std::string,std::vector<luabridge::LuaRef>> lua_component_type_instance_map_;
+    std::unordered_map<std::string,std::vector<luabridge::LuaRef>> lua_component_type_instance_map_;//所有lua component
 };
 
 

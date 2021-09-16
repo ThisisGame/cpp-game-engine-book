@@ -5,8 +5,6 @@
 #ifndef UNTITLED_LUA_BINDING_H
 #define UNTITLED_LUA_BINDING_H
 
-#define BIND_CPP_TO_LUA_NAMESPACE "Cpp"
-
 extern "C"
 {
 #include "lua.h"

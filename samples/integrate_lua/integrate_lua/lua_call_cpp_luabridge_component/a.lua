@@ -30,18 +30,30 @@ function main()
 
     print("----------- Add Cpp.Component.Animator --------------")
 
-    animator=game_object:AddComponent("Animator")
-    print("animator:" .. tostring(animator))
+    local animator=game_object:AddComponent("Animator")
+    print("add animator:" .. tostring(animator))
 
     print("----------- Add Cpp.Component.Camera ----------------")
 
     local camera=game_object:AddComponent("Camera")
-    print("camera:" .. tostring(camera))
+    print("add camera:" .. tostring(camera))
 
     print("----------- Add Lua.Component.LoginScene ------------")
 
     local loginScene=game_object:AddComponent("LoginScene")
-    print("loginScene:" .. tostring(loginScene))
+    print("add loginScene:" .. tostring(loginScene))
+
+    print("----------- Get Lua.Component.LoginScene ------------")
+    local loginScene=game_object:GetComponent("LoginScene")
+    print("get loginScene:" .. tostring(loginScene))
+
+    print("----------- Get Cpp.Component.Camera ------------")
+    local camera=loginScene:game_object():GetComponent("Camera")
+    print("get camera:" .. tostring(camera))
+
+    print("----------- Get Cpp.Component.Animator ------------")
+    local camera=camera:game_object():GetComponent("Animator")
+    print("get animator:" .. tostring(animator))
 
     print("-----------------------")
 end

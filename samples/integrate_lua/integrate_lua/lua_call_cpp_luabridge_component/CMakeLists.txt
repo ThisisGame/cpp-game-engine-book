@@ -3,14 +3,36 @@ project(test)
 
 set(CMAKE_CXX_STANDARD 14)
 
+#set(CMAKE_EXE_LINKER_FLAGS "-static")
+message("CMAKE_EXE_LINKER_FLAGS:" ${CMAKE_EXE_LINKER_FLAGS})
+IF(CMAKE_EXE_LINKER_FLAGS STREQUAL "-static")
+    set(RTTR_DIR "rttr")
+    set(RTTR_LIB "rttr_core_d")
+ELSE()
+    set(RTTR_DIR "rttr_dll")
+    set(RTTR_LIB "rttr_core_d.dll")
+ENDIF()
+
 #拷贝depends目录
 file(COPY "../../../template/depends/lua/" DESTINATION "../depends/lua/")
 file(COPY "../../../template/depends/LuaBridge/" DESTINATION "../depends/LuaBridge/")
+file(COPY "../../../template/depends/${RTTR_DIR}/" DESTINATION "../depends/${RTTR_DIR}/")
 
 #头文件目录
 include_directories("depends/lua/src")
+include_directories("depends/${RTTR_DIR}/include")
 include_directories("depends")
+
+#链接目录
+link_directories("depends/${RTTR_DIR}/lib")
+
+#链接lib文件
+link_libraries(${RTTR_LIB})
 
 file(GLOB_RECURSE SOURCES "depends/lua/src/*.c")
 
-add_executable(test ${SOURCES} "main.cpp")
+add_executable(test ${SOURCES} "main.cpp" component.cpp game_object.cpp)
+
+IF(CMAKE_EXE_LINKER_FLAGS STREQUAL "")
+    file(COPY "depends/${RTTR_DIR}/bin/librttr_core_d.dll" DESTINATION "./")
+ENDIF()
