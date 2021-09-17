@@ -17,6 +17,7 @@ ENDIF()
 file(COPY "../../../template/depends/lua/" DESTINATION "../depends/lua/")
 file(COPY "../../../template/depends/LuaBridge/" DESTINATION "../depends/LuaBridge/")
 file(COPY "../../../template/depends/${RTTR_DIR}/" DESTINATION "../depends/${RTTR_DIR}/")
+file(COPY "../../../template/depends/glm/" DESTINATION "../depends/glm/")
 
 #头文件目录
 include_directories("depends/lua/src")

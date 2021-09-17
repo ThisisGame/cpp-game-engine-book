@@ -52,8 +52,19 @@ function main()
     print("get camera:" .. tostring(camera))
 
     print("----------- Get Cpp.Component.Animator ------------")
-    local camera=camera:game_object():GetComponent("Animator")
+    local animator=camera:game_object():GetComponent("Animator")
     print("get animator:" .. tostring(animator))
 
+    print("----------- Cpp.glm.vec3 ------------")
+    --local position=vec3(1,2,3)
+    --print(position)
+    camera:game_object():test_set(111)
+    camera:test_set(111)
+    --print(camera:position())
+    --camera:set_position(position)
+
+    --local camera=Camera()
+    --camera:test_set(111)
     print("-----------------------")
+
 end
