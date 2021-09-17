@@ -23,7 +23,7 @@ public:
     /// 设置纹理
     /// \param property
     /// \param texture2D
-    void SetTexture(std::string &property, Texture2D* texture2D);
+    void SetTexture(const std::string &property, Texture2D* texture2D);
 private:
     std::vector<Pass*> pass_vec_;//存储多个pass
 };

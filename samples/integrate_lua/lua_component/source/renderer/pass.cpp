@@ -47,7 +47,7 @@ void Pass::Parse(rapidxml::xml_node<>* pass_node) {
     }
 }
 
-void Pass::SetTexture(string &property, Texture2D *texture2D) {
+void Pass::SetTexture(const string &property, Texture2D *texture2D) {
     for (auto& pair : textures_){
         if(pair.first==property){
             delete(pair.second);

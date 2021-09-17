@@ -35,7 +35,7 @@ void Technique::Parse(rapidxml::xml_node<>* technique_node) {
     }
 }
 
-void Technique::SetTexture(std::string &property, Texture2D *texture2D) {
+void Technique::SetTexture(const std::string &property, Texture2D *texture2D) {
     for (auto& pass : pass_vec_){
         pass->SetTexture(property,texture2D);
     }
