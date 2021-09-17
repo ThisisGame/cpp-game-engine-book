@@ -15,10 +15,6 @@ public:
         std::cout<<"Camera Update"<<std::endl;
     }
 
-    void test_set(int a){
-        std::cout<<a<<std::endl;
-    }
-
     void set_position(glm::vec3 position){
         std::cout<<"Camera set_position:"<<glm::to_string(position)<<std::endl;
         position_=position;
@@ -58,6 +54,7 @@ int main(int argc, char * argv[])
     luaL_openlibs(lua_state);
 
     luabridge::getGlobalNamespace(lua_state)
+            .beginNamespace("glm")
             .beginClass<glm::vec3>("vec3")
             .addConstructor<void(*)(const float&, const float&, const float&)>()
             .addData("x", &glm::vec3::x)
@@ -66,6 +63,7 @@ int main(int argc, char * argv[])
             .addData("r", &glm::vec3::r)
             .addData("g", &glm::vec3::g)
             .addData("b", &glm::vec3::b)
+            .addFunction ("__tostring", std::function <std::string (const glm::vec3*)> ([] (const glm::vec3* vec) {return glm::to_string(*vec);}))
             .endClass();
     luabridge::getGlobalNamespace(lua_state)
             .beginClass<GameObject>("GameObject")
@@ -82,13 +80,14 @@ int main(int argc, char * argv[])
             .addFunction("Update",&Component::Update)
             .addFunction("game_object",&Component::game_object)
             .addFunction("set_game_object",&Component::set_game_object)
-            .endClass()
+            .endClass();
+    luabridge::getGlobalNamespace(lua_state)
             .deriveClass<Animator,Component>("Animator")
             .addConstructor<void (*) ()>()
-            .endClass()
+            .endClass();
+    luabridge::getGlobalNamespace(lua_state)
             .deriveClass<Camera,Component>("Camera")
             .addConstructor<void (*) ()>()
-            .addFunction("test_set",&Camera::test_set)
             .addFunction("position",&Camera::position)
             .addFunction("set_position",&Camera::set_position)
             .endClass();

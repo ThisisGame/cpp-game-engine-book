@@ -56,15 +56,13 @@ function main()
     print("get animator:" .. tostring(animator))
 
     print("----------- Cpp.glm.vec3 ------------")
-    --local position=vec3(1,2,3)
-    --print(position)
-    camera:game_object():test_set(111)
-    camera:test_set(111)
-    --print(camera:position())
-    --camera:set_position(position)
-
-    --local camera=Camera()
-    --camera:test_set(111)
+    local position=glm.vec3(1,2,3)
+    position.x=11
+    position.y=22
+    position.z=33
+    print(tostring(position))
+    camera:set_position(glm.vec3(4,5,6))
+    print(camera:position())
     print("-----------------------")
 
 end
