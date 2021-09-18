@@ -48,10 +48,57 @@ RTTR_REGISTRATION
             .constructor<>()(rttr::policy::ctor::as_raw_ptr);
 }
 
+const int const_value=12;
+
+typedef enum KeyAction{
+    UP=0,
+    DOWN=1,
+    REPEAT=2
+}KeyAction;
+
+KeyAction GetKeyActionUp(){
+    return KeyAction::UP;
+}
+
+KeyAction GetKeyActionDown(){
+    return KeyAction::DOWN;
+}
+
+// 注册枚举
+template <typename T>
+struct EnumWrapper {
+    static typename std::enable_if<std::is_enum<T>::value, void>::type push(lua_State* L, T value){
+        lua_pushnumber (L, static_cast<std::size_t> (value));
+    }
+    static typename std::enable_if<std::is_enum<T>::value, T>::type get(lua_State* L, int index){
+        return static_cast <T> (lua_tointeger (L, index));
+    }
+};
+
+namespace luabridge {
+    template <>
+    struct Stack<KeyAction> : EnumWrapper<KeyAction>{};
+} // namespace luabridge
+
 int main(int argc, char * argv[])
 {
     lua_state = luaL_newstate();
     luaL_openlibs(lua_state);
+
+    luabridge::getGlobalNamespace(lua_state)
+            .beginNamespace("Test")
+            .addConstant("const_value",const_value)
+            .endNamespace();
+
+    luabridge::getGlobalNamespace(lua_state)
+            .beginNamespace("KeyAction")
+            .addConstant<std::size_t>("UP",KeyAction::UP)
+            .addConstant<std::size_t>("DOWN",KeyAction::DOWN)
+            .endNamespace();
+
+    luabridge::getGlobalNamespace(lua_state)
+            .addFunction("GetKeyActionUp",&GetKeyActionUp)
+            .addFunction("GetKeyActionDown",&GetKeyActionDown);
 
     luabridge::getGlobalNamespace(lua_state)
             .beginNamespace("glm")
@@ -92,6 +139,15 @@ int main(int argc, char * argv[])
             .addFunction("set_position",&Camera::set_position)
             .endClass();
 
+    //设置lua搜索目录
+    {
+        luabridge::LuaRef package_ref = luabridge::getGlobal(lua_state,"package");
+        luabridge::LuaRef path_ref=package_ref["path"];
+        std::string path=path_ref.tostring();
+        path.append(";..\\?.lua;");
+        package_ref["path"]=path;
+    }
+
     luaL_dofile(lua_state, "../a.lua");
 
     //加上大括号，为了LuaRef在lua_close之前自动析构。
@@ -100,7 +156,7 @@ int main(int argc, char * argv[])
         try {
             main_function();
         } catch (const luabridge::LuaException& e) {
-            std::cout<<e.what()<<std::endl;
+            std::cout<<"lua error: "<<e.what()<<std::endl;
         }
     }
 

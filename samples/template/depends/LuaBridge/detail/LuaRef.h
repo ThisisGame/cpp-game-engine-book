@@ -355,7 +355,7 @@ public:
         @returns True if the referred value is equal to the specified one.
     */
     template<class T>
-    bool operator==(T rhs) const
+    bool operator==(T const& rhs) const
     {
         StackPop p(m_L, 2);
         impl().push();
@@ -371,7 +371,7 @@ public:
         @returns True if the referred value is less than the specified one.
     */
     template<class T>
-    bool operator<(T rhs) const
+    bool operator<(T const& rhs) const
     {
         StackPop p(m_L, 2);
         impl().push();
@@ -394,7 +394,7 @@ public:
         @returns True if the referred value is less than or equal to the specified one.
     */
     template<class T>
-    bool operator<=(T rhs) const
+    bool operator<=(T const& rhs) const
     {
         StackPop p(m_L, 2);
         impl().push();
@@ -417,7 +417,7 @@ public:
         @returns True if the referred value is greater than the specified one.
     */
     template<class T>
-    bool operator>(T rhs) const
+    bool operator>(T const& rhs) const
     {
         StackPop p(m_L, 2);
         impl().push();
@@ -463,7 +463,7 @@ public:
         @returns True if the referred value is equal to the specified one.
     */
     template<class T>
-    bool rawequal(T rhs) const
+    bool rawequal(T const& rhs) const
     {
         StackPop p(m_L, 2);
         impl().push();
@@ -481,7 +481,7 @@ public:
         @param v A value to append to the table.
     */
     template<class T>
-    void append(T v) const
+    void append(T const& v) const
     {
         impl().push();
         ;
@@ -524,7 +524,7 @@ public:
     }
 
     template<class P1>
-    LuaRef operator()(P1 p1) const
+    LuaRef operator()(P1 const& p1) const
     {
         impl().push();
         ;
@@ -534,7 +534,7 @@ public:
     }
 
     template<class P1, class P2>
-    LuaRef operator()(P1 p1, P2 p2) const
+    LuaRef operator()(P1 const& p1, P2 const& p2) const
     {
         impl().push();
         ;
@@ -545,7 +545,7 @@ public:
     }
 
     template<class P1, class P2, class P3>
-    LuaRef operator()(P1 p1, P2 p2, P3 p3) const
+    LuaRef operator()(P1 const& p1, P2 const& p2, P3 const& p3) const
     {
         impl().push();
         ;
@@ -557,7 +557,7 @@ public:
     }
 
     template<class P1, class P2, class P3, class P4>
-    LuaRef operator()(P1 p1, P2 p2, P3 p3, P4 p4) const
+    LuaRef operator()(P1 const& p1, P2 const& p2, P3 const& p3, P4 const& p4) const
     {
         impl().push();
         ;
@@ -570,7 +570,7 @@ public:
     }
 
     template<class P1, class P2, class P3, class P4, class P5>
-    LuaRef operator()(P1 p1, P2 p2, P3 p3, P4 p4, P5 p5) const
+    LuaRef operator()(P1 const& p1, P2 const& p2, P3 const& p3, P4 const& p4, P5 const& p5) const
     {
         impl().push();
         ;
@@ -584,7 +584,8 @@ public:
     }
 
     template<class P1, class P2, class P3, class P4, class P5, class P6>
-    LuaRef operator()(P1 p1, P2 p2, P3 p3, P4 p4, P5 p5, P6 p6) const
+    LuaRef operator()(
+        P1 const& p1, P2 const& p2, P3 const& p3, P4 const& p4, P5 const& p5, P6 const& p6) const
     {
         impl().push();
         ;
@@ -599,7 +600,13 @@ public:
     }
 
     template<class P1, class P2, class P3, class P4, class P5, class P6, class P7>
-    LuaRef operator()(P1 p1, P2 p2, P3 p3, P4 p4, P5 p5, P6 p6, P7 p7) const
+    LuaRef operator()(P1 const& p1,
+                      P2 const& p2,
+                      P3 const& p3,
+                      P4 const& p4,
+                      P5 const& p5,
+                      P6 const& p6,
+                      P7 const& p7) const
     {
         impl().push();
         ;
@@ -615,7 +622,14 @@ public:
     }
 
     template<class P1, class P2, class P3, class P4, class P5, class P6, class P7, class P8>
-    LuaRef operator()(P1 p1, P2 p2, P3 p3, P4 p4, P5 p5, P6 p6, P7 p7, P8 p8) const
+    LuaRef operator()(P1 const& p1,
+                      P2 const& p2,
+                      P3 const& p3,
+                      P4 const& p4,
+                      P5 const& p5,
+                      P6 const& p6,
+                      P7 const& p7,
+                      P8 const& p8) const
     {
         impl().push();
         Stack<P1>::push(m_L, p1);
@@ -715,7 +729,7 @@ class LuaRef : public LuaRefBase<LuaRef, LuaRef>
             @returns This reference.
         */
         template<class T>
-        TableItem& operator=(T v)
+        TableItem& operator=(T const& v)
         {
             StackPop p(m_L, 1);
             lua_rawgeti(m_L, LUA_REGISTRYINDEX, m_tableRef);
@@ -735,7 +749,7 @@ class LuaRef : public LuaRefBase<LuaRef, LuaRef>
             @returns This reference.
         */
         template<class T>
-        TableItem& rawset(T v)
+        TableItem& rawset(T const& v)
         {
             StackPop p(m_L, 1);
             lua_rawgeti(m_L, LUA_REGISTRYINDEX, m_tableRef);
@@ -769,7 +783,7 @@ class LuaRef : public LuaRefBase<LuaRef, LuaRef>
             @returns A Lua table item reference.
         */
         template<class T>
-        TableItem operator[](T key) const
+        TableItem operator[](T const& key) const
         {
             return LuaRef(*this)[key];
         }
@@ -785,7 +799,7 @@ class LuaRef : public LuaRefBase<LuaRef, LuaRef>
             @returns A Lua value reference.
         */
         template<class T>
-        LuaRef rawget(T key) const
+        LuaRef rawget(T const& key) const
         {
             return LuaRef(*this).rawget(key);
         }
@@ -981,7 +995,7 @@ public:
         @returns This reference.
     */
     template<class T>
-    LuaRef& operator=(T rhs)
+    LuaRef& operator=(T const& rhs)
     {
         LuaRef ref(m_L, rhs);
         swap(ref);
@@ -1031,7 +1045,7 @@ public:
         @returns A reference to the table item.
     */
     template<class T>
-    LuaRef rawget(T key) const
+    LuaRef rawget(T const& key) const
     {
         StackPop(m_L, 1);
         push(m_L);

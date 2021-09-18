@@ -30,9 +30,11 @@ struct Stack<std::array<T, s>>
         if (!lua_istable(L, index))
         {
             luaL_error(L, "#%d argments must be table", index);
-            throw std::runtime_error("Array get () must receive a table");
         }
-        if (index != s)
+
+        std::size_t const tableSize = static_cast<std::size_t>(get_length(L, index));
+
+        if (tableSize != s)
         {
             luaL_error(L, "array size should be %d ", s);
         }
@@ -41,12 +43,12 @@ struct Stack<std::array<T, s>>
 
         int const absindex = lua_absindex(L, index);
         lua_pushnil(L);
-        int arr_index = 0;
+        int arrayIndex = 0;
         while (lua_next(L, absindex) != 0)
         {
-            array[arr_index] = Stack<T>::get(L, -1);
+            array[arrayIndex] = Stack<T>::get(L, -1);
             lua_pop(L, 1);
-            arr_index++;
+            ++arrayIndex;
         }
         return array;
     }

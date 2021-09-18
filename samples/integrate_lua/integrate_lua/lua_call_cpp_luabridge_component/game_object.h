@@ -119,7 +119,7 @@ public:
         }
     }
 
-    void test_set(int a){
+    void test_set(const std::string& a){
         std::cout<<a<<std::endl;
     }
 private:

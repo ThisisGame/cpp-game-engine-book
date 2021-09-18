@@ -9,6 +9,13 @@ int main(void)
     lua_State* lua_state = luaL_newstate();
     luaL_openlibs(lua_state);
 
+    //设置lua搜索目录
+    luabridge::LuaRef package_ref = luabridge::getGlobal(lua_state,"package");
+    luabridge::LuaRef path_ref=package_ref["path"];
+    std::string path=path_ref.tostring();
+    path.append(";..\\example\\?.lua;");
+    package_ref["path"]=path;
+
     LuaBinding::BindLua(lua_state);//绑定引擎所有类到Lua
 
     luaL_dofile(lua_state, "../example/main.lua");

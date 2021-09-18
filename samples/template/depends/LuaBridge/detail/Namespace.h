@@ -856,22 +856,6 @@ class Namespace : public detail::Registrar
             return *this;
         }
 
-        template<class ReturnType, class S, class... Params>
-        Class<T>& addFunctionBase(char const* name, ReturnType (S::*mf)(Params...) const)
-        {
-            using MemFn = ReturnType (T::*)(Params...) const;
-
-            assertStackState(); // Stack: const table (co), class table (cl), static table (st)
-
-            static const std::string GC = "__gc";
-            if (name == GC)
-            {
-                throw std::logic_error(GC + " metamethod registration is forbidden");
-            }
-            CFunc::CallMemberFunctionHelper<MemFn, true>::add(L, name, mf);
-            return *this;
-        }
-
         //--------------------------------------------------------------------------
         /**
             Add or replace a proxy function.
@@ -1178,6 +1162,21 @@ public:
             lua_pushcclosure(L, &CFunc::readOnlyError, 1); // Stack: ns, error_fn
         }
         CFunc::addSetter(L, name, -2); // Stack: ns
+
+        return *this;
+    }
+    template<class T>
+    Namespace& addConstant(char const* name, T value)
+    {
+        if (m_stackSize == 1)
+        {
+            throw std::logic_error("addConstant () called on global namespace");
+        }
+
+        assert(lua_istable(L, -1)); // Stack: namespace table (ns)
+
+        Stack<T>::push(L,value); // Stack: ns, value
+        rawsetfield(L, -2, name); // Stack: ns
 
         return *this;
     }
