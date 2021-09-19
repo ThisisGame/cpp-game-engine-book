@@ -41,6 +41,11 @@ function main()
     print(tostring(position))
     camera:set_position(glm.vec3(4,5,6))
     print(camera:position())
+
+    print("glm.vec3(4,5,6)+glm.vec3(4,5,6): " .. tostring(glm.vec3(4,5,6)+glm.vec3(4,5,6)))
+    print("glm.vec3(4,5,6)-glm.vec3(4,5,6): " .. tostring(glm.vec3(4,5,6)-glm.vec3(4,5,6)))
+    print("glm.vec3(4,5,6)*3: " .. tostring(glm.vec3(4,5,6)*3))
+    print("glm.vec3(4,5,6)/3: " .. tostring(glm.vec3(4,5,6)/3))
     print("-----------------------")
 
     game_object:test_set("hello")

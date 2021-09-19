@@ -68,10 +68,6 @@ function LoginScene:Update()
     self.camera_1_:SetView(glm.vec3(0, 0, 0), glm.vec3(0, 1, 0))
     self.camera_1_:SetProjection(60, Screen.aspect_ratio(), 1, 1000)
 
-    print("sssssssssssssss")
-    print(FMOD_RESULT.FMOD_OK)
-    print(KeyCode)
-
     --旋转相机
     if Input.GetKeyDown(KeyCode.KEY_CODE_LEFT_ALT) and Input.GetMouseButtonDown(KeyCode.MOUSE_BUTTON_LEFT) then
         local degrees= Input.mousePosition().x_ - last_frame_mouse_position_.x_
@@ -85,16 +81,16 @@ function LoginScene:Update()
     end
 
     --播放Event实例
-    if Input.GetKeyUp(KEY_CODE_S) then
+    if Input.GetKeyUp(KeyCode.KEY_CODE_S) then
         self.audio_studio_event_:Start()
     end
 
     --按键盘1、2、3设置参数值，切换不同的地面类型，播放不同的脚步声
-    if Input.GetKeyUp(KEY_CODE_1) then
+    if Input.GetKeyUp(KeyCode.KEY_CODE_1) then
         self.audio_studio_event_:SetParameterByName("groundtype",0.0)
-    elseif Input.GetKeyUp(KEY_CODE_2) then
+    elseif Input.GetKeyUp(KeyCode.KEY_CODE_2) then
         self.audio_studio_event_:SetParameterByName("groundtype",1.0)
-    elseif Input.GetKeyUp(KEY_CODE_3) then
+    elseif Input.GetKeyUp(KeyCode.KEY_CODE_3) then
         self.audio_studio_event_:SetParameterByName("groundtype",2.0)
     end
     self.last_frame_mouse_position_=Input.mousePosition()
