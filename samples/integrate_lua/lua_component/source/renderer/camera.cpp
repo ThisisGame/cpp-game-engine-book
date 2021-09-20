@@ -38,9 +38,9 @@ Camera::~Camera() {
     }
 }
 
-void Camera::SetView(const glm::vec3 &cameraForward,const glm::vec3 &cameraUp) {
+void Camera::SetView(glm::vec3 cameraFowrad,glm::vec3 cameraUp) {
     auto transform=dynamic_cast<Transform*>(game_object()->GetComponent("Transform"));
-    view_mat4_=glm::lookAt(transform->position(), cameraForward, cameraUp);
+    view_mat4_=glm::lookAt(transform->position(), cameraFowrad, cameraUp);
 }
 
 void Camera::SetProjection(float fovDegrees, float aspectRatio, float nearClip, float farClip) {

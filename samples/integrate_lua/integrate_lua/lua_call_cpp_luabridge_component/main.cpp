@@ -80,6 +80,12 @@ namespace luabridge {
     struct Stack<KeyAction> : EnumWrapper<KeyAction>{};
 } // namespace luabridge
 
+// Lua CFunction wrapper for StartWith.
+int Lua_StartWith(lua_State* L) {
+
+    return 2;  // 返回值有两个
+}
+
 int main(int argc, char * argv[])
 {
     lua_state = luaL_newstate();
@@ -120,19 +126,43 @@ int main(int argc, char * argv[])
             .endClass();
     luabridge::getGlobalNamespace(lua_state)
             .beginNamespace("glm")
+            .beginClass<glm::vec4>("vec4")
+            .addConstructor<void(*)(const float&, const float&, const float&, const float&)>()
+            .addData("x", &glm::vec4::x)
+            .addData("y", &glm::vec4::y)
+            .addData("z", &glm::vec4::z)
+            .addData("w", &glm::vec4::w)
+            .addData("r", &glm::vec4::r)
+            .addData("g", &glm::vec4::g)
+            .addData("b", &glm::vec4::b)
+            .addData("a", &glm::vec4::a)
+            .addFunction ("__tostring", std::function <std::string (const glm::vec4*)> ([] (const glm::vec4* vec) {return glm::to_string(*vec);}))
+            .addFunction ("__add", std::function <glm::vec4 (const glm::vec4*,const glm::vec4*)> ([] (const glm::vec4* vec_a,const  glm::vec4* vec_b) {return (*vec_a)+(*vec_b);}))
+            .addFunction ("__sub", std::function <glm::vec4 (const glm::vec4*,const glm::vec4*)> ([] (const glm::vec4* vec_a,const  glm::vec4* vec_b) {return (*vec_a)-(*vec_b);}))
+            .addFunction ("__mul", std::function <glm::vec4 (const glm::vec4*,const float)> ([] (const glm::vec4* vec,const float a) {return (*vec)*a;}))
+            .addFunction ("__div", std::function <glm::vec4 (const glm::vec4*,const float)> ([] (const glm::vec4* vec,const float a) {return (*vec)/a;}))
+            .addFunction ("__unm", std::function <glm::vec4 (const glm::vec4*)> ([] (const glm::vec4* vec) {return (*vec)*-1;}))
+            .addFunction ("__eq", std::function <bool (const glm::vec4*,const glm::vec4*)> ([] (const glm::vec4* vec_a,const  glm::vec4* vec_b) {return (*vec_a)==(*vec_b);}))
+            .endClass();
+
+    luabridge::getGlobalNamespace(lua_state)
+            .beginNamespace("glm")
             .beginClass<glm::mat4>("mat4")
             .addConstructor<void(*)(const float&)>()
             .addFunction ("__tostring", std::function <std::string (const glm::mat4*)> ([] (const glm::mat4* m) {return glm::to_string(*m);}))
             .addFunction ("__add", std::function <glm::mat4 (const glm::mat4*,const glm::mat4*)> ([] (const glm::mat4* m_a,const  glm::mat4* m_b) {return (*m_a)+(*m_b);}))
             .addFunction ("__sub", std::function <glm::mat4 (const glm::mat4*,const glm::mat4*)> ([] (const glm::mat4* m_a,const  glm::mat4* m_b) {return (*m_a)-(*m_b);}))
-            .addFunction ("__mul", std::function <glm::mat4 (const glm::mat4*,const float)> ([] (const glm::mat4* m,const float a) {return (*m)*a;}))
+            .addFunction ("__mul", std::function <glm::vec4 (const glm::mat4*,const glm::vec4*)> ([] (const glm::mat4* m,const glm::vec4* v) {return (*m)*(*v);}))
             .addFunction ("__div", std::function <glm::mat4 (const glm::mat4*,const float)> ([] (const glm::mat4* m,const float a) {return (*m)/a;}))
             .addFunction ("__unm", std::function <glm::mat4 (const glm::mat4*)> ([] (const glm::mat4* m) {return (*m)*-1;}))
             .addFunction ("__eq", std::function <bool (const glm::mat4*,const glm::mat4*)> ([] (const glm::mat4* m_a,const  glm::mat4* m_b) {return (*m_a)==(*m_b);}))
             .endClass();
     luabridge::getGlobalNamespace(lua_state)
             .beginNamespace("glm")
-            .addCFunction("radians",std::function <float (const float)> ([] (const float m) {return glm::radians(m);}));
+//            .addFunction("to_string",std::function <std::string (const glm::mat4*)> ([] (const glm::mat4* m) {return glm::to_string((*m));}))
+//            .addFunction("to_string",std::function <std::string (const glm::vec3*)> ([] (const glm::vec3* v) {return glm::to_string((*v));}))//同名覆盖，不支持函数重载。应该使用 __tostring注册。
+            .addFunction("rotate",std::function <glm::mat4 (const glm::mat4*,const float,const glm::vec3*)> ([] (const glm::mat4* m,const float f,const glm::vec3* v) {return glm::rotate(*m,f,*v);}))
+            .addFunction("radians",std::function <float (const float)> ([] (const float f) {return glm::radians(f);}));
 
     luabridge::getGlobalNamespace(lua_state)
             .beginClass<GameObject>("GameObject")

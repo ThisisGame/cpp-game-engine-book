@@ -47,6 +47,9 @@ std::vector<Component*> GameObject::GetComponents(std::string component_type_nam
 
 Component* GameObject::GetComponent(std::string component_type_name) {
     luabridge::LuaRef component_table=GetComponentFromLua(component_type_name);
+    if(component_table.isNil()){
+        return nullptr;
+    }
     Component* component=component_table.cast<Component*>();
     return component;
 }
@@ -68,10 +71,15 @@ luabridge::LuaRef GameObject::AddComponentFromLua(std::string component_type_nam
     luabridge::LuaRef component_type=luabridge::getGlobal(LuaBinding::lua_state(),component_type_name.c_str());
     auto new_table=component_type();//luabridge对c++的class注册为table，并实现了__call，所以可以直接带括号。
 
-    luabridge::LuaRef function_ref=new_table["set_game_object"];
-    if(function_ref.isFunction()){
-        function_ref(new_table,this);
+    {
+        luabridge::LuaRef function_ref=new_table["set_game_object"];
+        if(function_ref.isFunction()==false){
+            DEBUG_LOG_ERROR("{} has no function {}",component_type_name,"set_game_object");
+            return luabridge::LuaRef(LuaBinding::lua_state());
+        }
+        luabridge::LuaRef function_return_ref= function_ref(new_table,this);
     }
+
 
     if(lua_component_type_instance_map_.find(component_type_name)==lua_component_type_instance_map_.end()){
         std::vector<luabridge::LuaRef> component_vec;
@@ -80,17 +88,25 @@ luabridge::LuaRef GameObject::AddComponentFromLua(std::string component_type_nam
     }else{
         lua_component_type_instance_map_[component_type_name].push_back(new_table);
     }
-    new_table["Awake"](new_table);
+
+    {
+        luabridge::LuaRef function_ref=new_table["Awake"](new_table);
+        if(function_ref.isFunction()==false){
+            DEBUG_LOG_ERROR("{} has no function {}",component_type_name,"Awake");
+            return luabridge::LuaRef(LuaBinding::lua_state());
+        }
+        luabridge::LuaRef function_return_ref= function_ref(new_table,this);
+    }
 
     return new_table;
 }
 
 luabridge::LuaRef GameObject::GetComponentFromLua(std::string component_type_name) {
     if(lua_component_type_instance_map_.find(component_type_name)==lua_component_type_instance_map_.end()){
-        return nullptr;
+        return luabridge::LuaRef(LuaBinding::lua_state());
     }
     if(lua_component_type_instance_map_[component_type_name].size()==0){
-        return nullptr;
+        return luabridge::LuaRef(LuaBinding::lua_state());
     }
     return lua_component_type_instance_map_[component_type_name][0];
 }

@@ -33,7 +33,7 @@ function main()
     local animator=camera:game_object():GetComponent("Animator")
     print("get animator:" .. tostring(animator))
 
-    print("----------- Cpp.glm.vec3 ------------")
+    print("----------- Cpp.glm ------------")
     local position=glm.vec3(1,2,3)
     position.x=11
     position.y=22
@@ -46,7 +46,20 @@ function main()
     print("glm.vec3(4,5,6)-glm.vec3(4,5,6): " .. tostring(glm.vec3(4,5,6)-glm.vec3(4,5,6)))
     print("glm.vec3(4,5,6)*3: " .. tostring(glm.vec3(4,5,6)*3))
     print("glm.vec3(4,5,6)/3: " .. tostring(glm.vec3(4,5,6)/3))
+
+    print("glm.radians(60): " .. glm.radians(60))
+    print("glm.mat4(1.0)): " .. tostring(glm.mat4(1.0)))
+    print("glm.vec4(1.0)): " .. tostring(glm.vec4(1.0,1.0,1.0,1.0)))
+    print("glm.mat4(2.0) * glm.vec4(3.0,3.0,3.0,3.0)): " .. tostring(glm.mat4(2.0) * glm.vec4(3.0,3.0,3.0,3.0)))
+
+    local rotate_mat4=glm.rotate(glm.mat4(1.0),glm.radians(60),glm.vec3(0.0,0.0,1.0))
+    print("glm.rotate(glm.mat4(1.0),glm.radians(60),glm.vec3(0.0,0.0,1.0)): " .. tostring(rotate_mat4))
+    print("rotate_mat4*glm.vec4(1,2,3,1.0): " .. tostring(rotate_mat4*glm.vec4(1,2,3,1.0)))
+
     print("-----------------------")
+
+
+
 
     game_object:test_set("hello")
 

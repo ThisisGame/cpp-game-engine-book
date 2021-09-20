@@ -1,4 +1,5 @@
 LoginScene={
+    game_object_,
     transform_camera_1_,
     camera_1_,
     last_frame_mouse_position_,--上一帧的鼠标位置
@@ -19,13 +20,23 @@ function LoginScene:Awake()
     self.transform_camera_1_=go_camera_1:AddComponent("Transform")
     self.transform_camera_1_:set_position(glm.vec3(0, 0, 10))
     --挂上 Camera 组件
-    self.camera_1_=go_camera_1:AddComponent("Camera")
-    self.camera_1_:set_depth(0)
+    --self.camera_1_=go_camera_1:AddComponent("Camera")
+    --self.camera_1_:set_depth(0)
+    --
+    --self.last_frame_mouse_position_=Input.mousePosition()
 
-    self.last_frame_mouse_position_=Input.mousePosition()
+    --self:CreateAudioSource()
+    --self:CreateAudioListener()
+end
 
-    self:CreateAudioSource()
-    self:CreateAudioListener()
+function LoginScene:game_object()
+    print("LoginScene:game_object")
+    return self.game_object_
+end
+
+function LoginScene:set_game_object(game_object)
+    print("LoginScene:set_game_object " .. tostring(game_object))
+    self.game_object_=game_object
 end
 
 function LoginScene:CreateAudioSource()
@@ -65,44 +76,47 @@ end
 
 
 function LoginScene:Update()
-    self.camera_1_:SetView(glm.vec3(0, 0, 0), glm.vec3(0, 1, 0))
-    self.camera_1_:SetProjection(60, Screen.aspect_ratio(), 1, 1000)
+    print("LoginScene:Update " .. tostring(self.game_object_))
+    --self.camera_1_:set_depth(0)
+    --self.camera_1_:SetView(glm.vec3(2.0,0.0,0.0), glm.vec3(2.0,0.0,0.0))
+    --self.camera_1_:SetProjection(60, Screen.aspect_ratio(), 1, 1000)
 
     --旋转相机
-    if Input.GetKeyDown(KeyCode.KEY_CODE_LEFT_ALT) and Input.GetMouseButtonDown(KeyCode.MOUSE_BUTTON_LEFT) then
-        local degrees= Input.mousePosition().x_ - last_frame_mouse_position_.x_
-
-        local old_mat4=glm.mat4(1.0)
-        local rotate_mat4=glm.rotate(old_mat4,glm.radians(degrees),glm.vec3(0.0,1.0,0.0))--以相机所在坐标系位置，计算用于旋转的矩阵，这里是零点，所以直接用方阵。
-        local old_pos=glm.vec4(transform_camera_1_:position(),1.0)
-        local new_pos=rotate_mat4*old_pos--旋转矩阵 * 原来的坐标 = 相机以零点做旋转。
-        print(new_pos)
-        self.transform_camera_1_:set_position(glm.vec3(new_pos))
-    end
-
-    --播放Event实例
-    if Input.GetKeyUp(KeyCode.KEY_CODE_S) then
-        self.audio_studio_event_:Start()
-    end
+    --if Input.GetKeyDown(KeyCode.KEY_CODE_LEFT_ALT) and Input.GetMouseButtonDown(KeyCode.MOUSE_BUTTON_LEFT) then
+    --    local degrees= Input.mousePosition().x_ - last_frame_mouse_position_.x_
+    --
+    --    local old_mat4=glm.mat4(1.0)
+    --    local rotate_mat4=glm.rotate(old_mat4,glm.radians(degrees),glm.vec3(0.0,1.0,0.0))--以相机所在坐标系位置，计算用于旋转的矩阵，这里是零点，所以直接用方阵。
+    --    local old_pos=glm.vec4(transform_camera_1_:position(),1.0)
+    --    local new_pos=rotate_mat4*old_pos--旋转矩阵 * 原来的坐标 = 相机以零点做旋转。
+    --    print(new_pos)
+    --    self.transform_camera_1_:set_position(glm.vec3(new_pos))
+    --end
+    --
+    ----播放Event实例
+    --if Input.GetKeyUp(KeyCode.KEY_CODE_S) then
+    --    self.audio_studio_event_:Start()
+    --end
 
     --按键盘1、2、3设置参数值，切换不同的地面类型，播放不同的脚步声
-    if Input.GetKeyUp(KeyCode.KEY_CODE_1) then
-        self.audio_studio_event_:SetParameterByName("groundtype",0.0)
-    elseif Input.GetKeyUp(KeyCode.KEY_CODE_2) then
-        self.audio_studio_event_:SetParameterByName("groundtype",1.0)
-    elseif Input.GetKeyUp(KeyCode.KEY_CODE_3) then
-        self.audio_studio_event_:SetParameterByName("groundtype",2.0)
-    end
-    self.last_frame_mouse_position_=Input.mousePosition()
+    --if Input.GetKeyUp(KeyCode.KEY_CODE_1) then
+    --    self.audio_studio_event_:SetParameterByName("groundtype",0.0)
+    --elseif Input.GetKeyUp(KeyCode.KEY_CODE_2) then
+    --    self.audio_studio_event_:SetParameterByName("groundtype",1.0)
+    --elseif Input.GetKeyUp(KeyCode.KEY_CODE_3) then
+    --    self.audio_studio_event_:SetParameterByName("groundtype",2.0)
+    --end
+    --self.last_frame_mouse_position_=Input.mousePosition()
 
     --鼠标滚轮控制相机远近
-    self.transform_camera_1_:set_position(self.transform_camera_1_:position() *(10 - Input.mouse_scroll())/10)
+    --self.transform_camera_1_:set_position(self.transform_camera_1_:position() *(10 - Input.mouse_scroll())/10)
 
-    --设置听者位置
-    local rotate_mat4=glm.rotate(glm.mat4(1.0),glm.radians(Time.delta_time()*60),glm.vec3(0.0,0.0,1.0))
-    local old_pos=glm.vec4(transform_player_:position(),1.0)
-    local new_pos=rotate_mat4*old_pos--旋转矩阵 * 原来的坐标 = 以零点做旋转。
-    self.transform_player_:set_position(glm.vec3(new_pos))
-    local player_pos=transform_player_:position()
-    AudioStudio.setListenerAttributes(player_pos.x,player_pos.y,player_pos.z)
+    ----设置听者位置
+    --local rotate_mat4=glm.rotate(glm.mat4(1.0),glm.radians(Time.delta_time()*60),glm.vec3(0.0,0.0,1.0))
+    --local old_player_pos_vec3=self.transform_player_:position()
+    --local old_player_pos_vec4=glm.vec4(old_player_pos_vec3.x,old_player_pos_vec3.y,old_player_pos_vec3.z,1.0)
+    --
+    --local new_pos_vec4=rotate_mat4 * old_player_pos_vec4--旋转矩阵 * 原来的坐标 = 以零点做旋转。
+    --self.transform_player_:set_position(glm.vec3(new_pos_vec4.x,new_pos_vec4.y,new_pos_vec4.z))
+    --AudioStudio.setListenerAttributes(new_pos_vec4.x,new_pos_vec4.y,new_pos_vec4.z)
 end

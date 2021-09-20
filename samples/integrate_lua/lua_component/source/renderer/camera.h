@@ -19,7 +19,7 @@ public:
     /// 设置相机位置 朝向
     /// \param cameraFowrad 相机朝前方向
     /// \param cameraUp 相机朝上方向
-    void SetView(const glm::vec3& cameraFowrad,const glm::vec3& cameraUp);
+    void SetView(glm::vec3 cameraFowrad, glm::vec3 cameraUp);
     /// 设置相机视野
     /// \param fovDegrees   相机视野 可视角度
     /// \param aspectRatio  宽高比

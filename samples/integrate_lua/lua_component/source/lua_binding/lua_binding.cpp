@@ -49,24 +49,65 @@ void LuaBinding::BindLua(lua_State *lua_state) {
 
     // depends
     {
-        luabridge::getGlobalNamespace(lua_state)
-                .beginNamespace("glm")
-                .beginClass<glm::vec3>("vec3")
-                .addConstructor<void(*)(const float&, const float&, const float&)>()
-                .addData("x", &glm::vec3::x)
-                .addData("y", &glm::vec3::y)
-                .addData("z", &glm::vec3::z)
-                .addData("r", &glm::vec3::r)
-                .addData("g", &glm::vec3::g)
-                .addData("b", &glm::vec3::b)
-                .addFunction ("__tostring", std::function <std::string (const glm::vec3*)> ([] (const glm::vec3* vec) {return glm::to_string(*vec);}))
-                .addFunction ("__add", std::function <glm::vec3 (const glm::vec3*,const glm::vec3*)> ([] (const glm::vec3* vec_a,const  glm::vec3* vec_b) {return (*vec_a)+(*vec_b);}))
-                .addFunction ("__sub", std::function <glm::vec3 (const glm::vec3*,const glm::vec3*)> ([] (const glm::vec3* vec_a,const  glm::vec3* vec_b) {return (*vec_a)-(*vec_b);}))
-                .addFunction ("__mul", std::function <glm::vec3 (const glm::vec3*,const float)> ([] (const glm::vec3* vec,const float a) {return (*vec)*a;}))
-                .addFunction ("__div", std::function <glm::vec3 (const glm::vec3*,const float)> ([] (const glm::vec3* vec,const float a) {return (*vec)/a;}))
-                .addFunction ("__unm", std::function <glm::vec3 (const glm::vec3*)> ([] (const glm::vec3* vec) {return (*vec)*-1;}))
-                .addFunction ("__eq", std::function <bool (const glm::vec3*,const glm::vec3*)> ([] (const glm::vec3* vec_a,const  glm::vec3* vec_b) {return (*vec_a)==(*vec_b);}))
-                .endClass();
+        // glm
+        {
+            luabridge::getGlobalNamespace(lua_state)
+                    .beginNamespace("glm")
+                    .beginClass<glm::vec3>("vec3")
+                    .addConstructor<void(*)(const float&, const float&, const float&)>()
+                    .addData("x", &glm::vec3::x)
+                    .addData("y", &glm::vec3::y)
+                    .addData("z", &glm::vec3::z)
+                    .addData("r", &glm::vec3::r)
+                    .addData("g", &glm::vec3::g)
+                    .addData("b", &glm::vec3::b)
+                    .addFunction ("__tostring", std::function <std::string (const glm::vec3*)> ([] (const glm::vec3* vec) {return glm::to_string(*vec);}))
+                    .addFunction ("__add", std::function <glm::vec3 (const glm::vec3*,const glm::vec3*)> ([] (const glm::vec3* vec_a,const  glm::vec3* vec_b) {return (*vec_a)+(*vec_b);}))
+                    .addFunction ("__sub", std::function <glm::vec3 (const glm::vec3*,const glm::vec3*)> ([] (const glm::vec3* vec_a,const  glm::vec3* vec_b) {return (*vec_a)-(*vec_b);}))
+                    .addFunction ("__mul", std::function <glm::vec3 (const glm::vec3*,const float)> ([] (const glm::vec3* vec,const float a) {return (*vec)*a;}))
+                    .addFunction ("__div", std::function <glm::vec3 (const glm::vec3*,const float)> ([] (const glm::vec3* vec,const float a) {return (*vec)/a;}))
+                    .addFunction ("__unm", std::function <glm::vec3 (const glm::vec3*)> ([] (const glm::vec3* vec) {return (*vec)*-1;}))
+                    .addFunction ("__eq", std::function <bool (const glm::vec3*,const glm::vec3*)> ([] (const glm::vec3* vec_a,const  glm::vec3* vec_b) {return (*vec_a)==(*vec_b);}))
+                    .endClass();
+
+            luabridge::getGlobalNamespace(lua_state)
+                    .beginNamespace("glm")
+                    .beginClass<glm::vec4>("vec4")
+                    .addConstructor<void(*)(const float&, const float&, const float&, const float&)>()
+                    .addData("x", &glm::vec4::x)
+                    .addData("y", &glm::vec4::y)
+                    .addData("z", &glm::vec4::z)
+                    .addData("w", &glm::vec4::w)
+                    .addData("r", &glm::vec4::r)
+                    .addData("g", &glm::vec4::g)
+                    .addData("b", &glm::vec4::b)
+                    .addData("a", &glm::vec4::a)
+                    .addFunction ("__tostring", std::function <std::string (const glm::vec4*)> ([] (const glm::vec4* vec) {return glm::to_string(*vec);}))
+                    .addFunction ("__add", std::function <glm::vec4 (const glm::vec4*,const glm::vec4*)> ([] (const glm::vec4* vec_a,const  glm::vec4* vec_b) {return (*vec_a)+(*vec_b);}))
+                    .addFunction ("__sub", std::function <glm::vec4 (const glm::vec4*,const glm::vec4*)> ([] (const glm::vec4* vec_a,const  glm::vec4* vec_b) {return (*vec_a)-(*vec_b);}))
+                    .addFunction ("__mul", std::function <glm::vec4 (const glm::vec4*,const float)> ([] (const glm::vec4* vec,const float a) {return (*vec)*a;}))
+                    .addFunction ("__div", std::function <glm::vec4 (const glm::vec4*,const float)> ([] (const glm::vec4* vec,const float a) {return (*vec)/a;}))
+                    .addFunction ("__unm", std::function <glm::vec4 (const glm::vec4*)> ([] (const glm::vec4* vec) {return (*vec)*-1;}))
+                    .addFunction ("__eq", std::function <bool (const glm::vec4*,const glm::vec4*)> ([] (const glm::vec4* vec_a,const  glm::vec4* vec_b) {return (*vec_a)==(*vec_b);}))
+                    .endClass();
+
+            luabridge::getGlobalNamespace(lua_state)
+                    .beginNamespace("glm")
+                    .beginClass<glm::mat4>("mat4")
+                    .addConstructor<void(*)(const float&)>()
+                    .addFunction ("__tostring", std::function <std::string (const glm::mat4*)> ([] (const glm::mat4* m) {return glm::to_string(*m);}))
+                    .addFunction ("__add", std::function <glm::mat4 (const glm::mat4*,const glm::mat4*)> ([] (const glm::mat4* m_a,const  glm::mat4* m_b) {return (*m_a)+(*m_b);}))
+                    .addFunction ("__sub", std::function <glm::mat4 (const glm::mat4*,const glm::mat4*)> ([] (const glm::mat4* m_a,const  glm::mat4* m_b) {return (*m_a)-(*m_b);}))
+                    .addFunction ("__mul", std::function <glm::vec4 (const glm::mat4*,const glm::vec4*)> ([] (const glm::mat4* m,const glm::vec4* v) {return (*m)*(*v);}))
+                    .addFunction ("__div", std::function <glm::mat4 (const glm::mat4*,const float)> ([] (const glm::mat4* m,const float a) {return (*m)/a;}))
+                    .addFunction ("__unm", std::function <glm::mat4 (const glm::mat4*)> ([] (const glm::mat4* m) {return (*m)*-1;}))
+                    .addFunction ("__eq", std::function <bool (const glm::mat4*,const glm::mat4*)> ([] (const glm::mat4* m_a,const  glm::mat4* m_b) {return (*m_a)==(*m_b);}))
+                    .endClass();
+            luabridge::getGlobalNamespace(lua_state)
+                    .beginNamespace("glm")
+                    .addFunction("rotate",std::function <glm::mat4 (const glm::mat4*,const float,const glm::vec3*)> ([] (const glm::mat4* m,const float f,const glm::vec3* v) {return glm::rotate(*m,f,*v);}))
+                    .addFunction("radians",std::function <float (const float)> ([] (const float f) {return glm::radians(f);}));
+        }
     }
 
     // audio
