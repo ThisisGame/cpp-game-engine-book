@@ -1,0 +1,143 @@
+####################################################################################
+#                                                                                  #
+#  Copyright (c) 2014 - 2018 Axel Menzel <info@rttr.org>                           #
+#                                                                                  #
+#  This file is part of RTTR (Run Time Type Reflection)                            #
+#  License: MIT License                                                            #
+#                                                                                  #
+#  Permission is hereby granted, free of charge, to any person obtaining           #
+#  a copy of this software and associated documentation files (the "Software"),    #
+#  to deal in the Software without restriction, including without limitation       #
+#  the rights to use, copy, modify, merge, publish, distribute, sublicense,        #
+#  and/or sell copies of the Software, and to permit persons to whom the           #
+#  Software is furnished to do so, subject to the following conditions:            #
+#                                                                                  #
+#  The above copyright notice and this permission notice shall be included in      #
+#  all copies or substantial portions of the Software.                             #
+#                                                                                  #
+#  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR      #
+#  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,        #
+#  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE     #
+#  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER          #
+#  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,   #
+#  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE   #
+#  SOFTWARE.                                                                       #
+#                                                                                  #
+####################################################################################
+
+shallow_clone: true
+
+environment:
+  FTP_USER:
+    secure: NkQyMysYo/FDWRbnKqLMsg==
+  FTP_PASSWORD:
+    secure: sXMB2ufJJ3rxpSjo71XidGje9XPCg0oQIpNRGpH4Gv0=
+  matrix:
+  - COMPILER: MSVC_15
+    ARCHITECTURE: x86
+    TESTS_ONLY: true
+    APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+  - COMPILER: MSVC_15
+    ARCHITECTURE: x64
+    TESTS_ONLY: true
+    APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+  - COMPILER: MSVC_14
+    ARCHITECTURE: x86
+    TESTS_ONLY: true
+    APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
+  - COMPILER: MSVC_14
+    ARCHITECTURE: x64
+    TESTS_ONLY: true
+    APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
+  - COMPILER: MSVC_12
+    ARCHITECTURE: x86
+    TESTS_ONLY: true
+    APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2013
+  - COMPILER: MSVC_12
+    ARCHITECTURE: x64
+    TESTS_ONLY: true
+    APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2013
+  - COMPILER: MINGW_492
+    ARCHITECTURE: x86
+    TESTS_ONLY: true
+  - COMPILER: MINGW_W64
+    ARCHITECTURE: x64
+    TESTS_ONLY: true
+  - COMPILER: MSVC_14
+    ARCHITECTURE: x64
+    BUILD_EXAMPLES: true
+    BUILD_BENCHMARKS: true
+    APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
+  - COMPILER: MSVC_14
+    ARCHITECTURE: x64
+    BUILD_DOCU: true
+    APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
+
+build:
+  verbosity: detailed
+  parallel: true
+
+install:
+  #######################################################################################
+  # All external dependencies are installed in C:\projects\deps
+  #######################################################################################
+  - mkdir C:\projects\deps
+  - cd C:\projects\deps
+
+  #######################################################################################
+  # Install Ninja
+  #######################################################################################
+  - set NINJA_URL="https://github.com/ninja-build/ninja/releases/download/v1.8.2/ninja-win.zip"
+  - appveyor DownloadFile %NINJA_URL% -FileName ninja.zip
+  - 7z x ninja.zip -oC:\projects\deps\ninja > nul
+  - set PATH=C:\projects\deps\ninja;%PATH%
+  - ninja --version
+  
+  #######################################################################################
+  # Install doxygen
+  #######################################################################################
+  - ps: >-
+      If ($env:BUILD_DOCU -Match "true") {
+        $env:DOXYGEN_URL="http://ftp.stack.nl/pub/users/dimitri/doxygen-1.8.10.windows.bin.zip"
+        appveyor DownloadFile $env:DOXYGEN_URL -FileName doxygen.zip
+        7z x doxygen.zip -oC:/projects/deps/doxygen-1.8.10 > $null
+        $env:PATH="C:/projects/deps/doxygen-1.8.10;$env:PATH"
+        doxygen --version
+      }
+
+  #######################################################################################
+  # CMake
+  #######################################################################################
+  - cmake --version
+  
+  #######################################################################################
+  # setup boost
+  #######################################################################################
+  - set BOOST_ROOT=C:\Libraries\boost_1_63_0
+  - set BOOST_LIBRARYDIR=C:\Libraries\boost_1_63_0\lib64-msvc-14.0
+
+before_build:
+  - cmd: cd C:\projects\rttr
+  - IF "%ARCHITECTURE%" == "x86" IF "%COMPILER%" == "MSVC_15" call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\Tools\vsdevcmd.bat" -arch=x86 -host_arch=x64
+  - IF "%ARCHITECTURE%" == "x64" IF "%COMPILER%" == "MSVC_15" call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\Tools\vsdevcmd.bat" -arch=x64 -host_arch=x64
+  - IF "%ARCHITECTURE%" == "x86" IF "%COMPILER%" == "MSVC_14" call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\Tools\vsvars32.bat"
+  - IF "%ARCHITECTURE%" == "x64" IF "%COMPILER%" == "MSVC_14" call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\x86_amd64\vcvarsx86_amd64.bat"
+  - IF "%ARCHITECTURE%" == "x86" IF "%COMPILER%" == "MSVC_12" call "C:\Program Files (x86)\Microsoft Visual Studio 12.0\Common7\Tools\vsvars32.bat"
+  - IF "%ARCHITECTURE%" == "x64" IF "%COMPILER%" == "MSVC_12" call "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\vcvarsx86_amd64.bat"
+  - IF "%ARCHITECTURE%" == "x86" IF "%COMPILER%" == "MINGW_482" set PATH=C:\Qt\Tools\mingw482_32\bin;%PATH%
+  - IF "%ARCHITECTURE%" == "x86" IF "%COMPILER%" == "MINGW_492" set PATH=C:\Qt\Tools\mingw492_32\bin;%PATH%
+  - IF "%ARCHITECTURE%" == "x64" IF "%COMPILER%" == "MINGW_W64" set PATH=C:\mingw-w64\x86_64-6.3.0-posix-seh-rt_v5-rev1\mingw64\bin;%PATH%
+  - IF "%BUILD_DOCU%" == "true" choco install lftp --version 4.7.5
+  
+#######################################################################################
+# we can use Ninja for all configurations
+#######################################################################################
+build_script:
+  - mkdir build
+  - cd build
+  - cmake .. -G "Ninja" -DCMAKE_BUILD_TYPE=Release -DBUILD_EXAMPLES=%BUILD_EXAMPLES% -DBUILD_BENCHMARKS=%BUILD_BENCHMARKS% -DBUILD_WEBSITE_DOCU=%BUILD_DOCU%
+  - if "%TESTS_ONLY%" == "true" (ninja run_tests)
+  - if "%BUILD_EXAMPLES%" == "true" (ninja json_example && ninja library_loader_example)
+  - if "%BUILD_BENCHMARKS%" == "true" (ninja bench_method && ninja bench_rttr_cast && ninja bench_variant)
+# when APPVEYOR_PULL_REQUEST_HEAD_REPO_BRANCH is empty, we knew, we are on master branch
+  - if "%BUILD_DOCU%" == "true" ( if "%APPVEYOR_PULL_REQUEST_HEAD_REPO_BRANCH%" == "" (ninja doc_website && echo "Upload documentation..." && lftp -c "set ssl:verify-certificate no; open -u %FTP_USER%,%FTP_PASSWORD% ftp://server3.febas.net:21/; mirror -R doc_website/master doc_tmp" && lftp -c "set ssl:verify-certificate no; open -u %FTP_USER%,%FTP_PASSWORD% ftp://server3.febas.net:21/; rm -r doc" && lftp -c "set ssl:verify-certificate no; open -u %FTP_USER%,%FTP_PASSWORD% ftp://server3.febas.net:21/; mv doc_tmp doc") )

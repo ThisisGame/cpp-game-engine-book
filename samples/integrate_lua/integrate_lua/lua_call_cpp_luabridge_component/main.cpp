@@ -196,7 +196,7 @@ int main(int argc, char * argv[])
         luabridge::LuaRef package_ref = luabridge::getGlobal(lua_state,"package");
         luabridge::LuaRef path_ref=package_ref["path"];
         std::string path=path_ref.tostring();
-        path.append(";..\\?.lua;");
+        path.append(";../?.lua;");
         package_ref["path"]=path;
     }
 
@@ -212,14 +212,21 @@ int main(int argc, char * argv[])
         }
     }
 
-    GameObject::Foreach([](GameObject* game_object){
-        game_object->ForeachLuaComponent([](LuaRef lua_ref){
-            LuaRef update_function_ref=lua_ref["Update"];
-            if(update_function_ref.isFunction()){
-                update_function_ref(lua_ref);
-            }
+    while (true){
+        GameObject::Foreach([](GameObject* game_object){
+            game_object->ForeachLuaComponent([](LuaRef lua_ref){
+                LuaRef update_function_ref=lua_ref["Update"];
+                if(update_function_ref.isFunction()){
+                    update_function_ref(lua_ref);
+                }
+            });
         });
-    });
+    }
+
+
+
+//    auto game_object=new GameObject();
+//    auto component=game_object->AddComponent("Animator");
 
     lua_close(lua_state);
 

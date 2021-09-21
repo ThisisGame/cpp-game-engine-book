@@ -23,13 +23,11 @@ GameObject::~GameObject() {
 }
 
 Component* GameObject::AddComponent(std::string component_type_name) {
-    type t = type::get_by_name(component_type_name);
-    if(t.is_valid()==false){
-        std::cout<<"type::get_by_name({}) failed:"<<component_type_name<<std::endl;
+    luabridge::LuaRef component_table=AddComponentFromLua(component_type_name);
+    if(component_table.isNil()){
+        DEBUG_LOG_ERROR("{} not register to lua",component_type_name);
         return nullptr;
     }
-
-    luabridge::LuaRef component_table=AddComponentFromLua(component_type_name);
     Component* component=component_table.cast<Component*>();
     return component;
 }
@@ -48,6 +46,7 @@ std::vector<Component*> GameObject::GetComponents(std::string component_type_nam
 Component* GameObject::GetComponent(std::string component_type_name) {
     luabridge::LuaRef component_table=GetComponentFromLua(component_type_name);
     if(component_table.isNil()){
+        DEBUG_LOG_ERROR("{} not register to lua",component_type_name);
         return nullptr;
     }
     Component* component=component_table.cast<Component*>();
@@ -69,6 +68,10 @@ bool GameObject::operator==(GameObject* rhs) const {
 
 luabridge::LuaRef GameObject::AddComponentFromLua(std::string component_type_name) {
     luabridge::LuaRef component_type=luabridge::getGlobal(LuaBinding::lua_state(),component_type_name.c_str());
+    if(component_type.isNil()){
+        DEBUG_LOG_ERROR("{} not register to lua",component_type_name);
+        return luabridge::LuaRef(LuaBinding::lua_state());
+    }
     auto new_table=component_type();//luabridge对c++的class注册为table，并实现了__call，所以可以直接带括号。
 
     {

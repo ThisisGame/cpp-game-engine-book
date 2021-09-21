@@ -1,0 +1,124 @@
+/*********************************************/
+/*    CUSTOMIZED css style from doxygen      */
+/*********************************************/
+
+body, table, div, p, dl {
+  font-family: inherit;
+  font-size: 100%;
+  letter-spacing: normal;
+}
+
+#doxy-content  h2{
+    font-family: "PTSansRegular",Arial,Helvetica,sans-serif;
+    font-size: 150%
+}
+
+#doxy-content  h3{
+    font-family: "PTSansRegular",Arial,Helvetica,sans-serif;
+    font-size: 130%;
+    font-weight:700;
+}
+
+.memItemLeft, .memTemplItemLeft{
+  word-wrap: break-word;
+}
+
+.memTemplItemLeft {
+  white-space: nowrap;
+}
+
+.mdescLeft, .mdescRight,
+.memItemLeft, .memItemRight,
+.memTemplItemLeft, .memTemplItemRight,
+.memTemplParams {
+    background-color: #f5f5f5;
+}
+
+/* @group Heading Levels */
+
+body {
+    background-color: white;
+    color: black;
+  margin: 0;
+}
+
+/* FONTS */
+.title {
+    font: 400 14px/28px "PTSansBold",arial,sans-serif;
+    font-size: 150%;
+    margin: 10px 2px;
+}
+
+pre.fragment {
+    border: 1px solid #C4CFE5;
+    background-color: #FBFCFD;
+    padding: 4px 6px;
+    margin: 4px 8px 4px 2px;
+    overflow: auto;
+    word-wrap: break-word;
+    font-size:  9pt;
+    line-height: 125%;
+    font-family: "SourceCodeProRegular", fixed;
+    font-size: 0.8125rem;
+}
+
+
+div.line {
+    font-family: "SourceCodeProRegular", fixed;
+    font-size: 0.8125rem;
+    min-height: 13px;
+    line-height: 1.0;
+    text-wrap: unrestricted;
+    white-space: -moz-pre-wrap; /* Moz */
+    white-space: -pre-wrap;     /* Opera 4-6 */
+    white-space: -o-pre-wrap;   /* Opera 7 */
+    white-space: pre-wrap;      /* CSS3  */
+    word-wrap: break-word;      /* IE 5.5+ */
+    text-indent: -53px;
+    padding-left: 53px;
+    padding-bottom: 0px;
+    margin: 0px;
+    -webkit-transition-property: background-color, box-shadow;
+    -webkit-transition-duration: 0.5s;
+    -moz-transition-property: background-color, box-shadow;
+    -moz-transition-duration: 0.5s;
+    -ms-transition-property: background-color, box-shadow;
+    -ms-transition-duration: 0.5s;
+    -o-transition-property: background-color, box-shadow;
+    -o-transition-duration: 0.5s;
+    transition-property: background-color, box-shadow;
+    transition-duration: 0.5s;
+}
+
+address.footer {
+    text-align: center;
+    font-size:0.8em;
+}
+
+table.directory {
+    font: 400 1rem "PTSansRegular",arial,sans-serif;
+}
+
+div.toc li {
+    background: url("bdwn.png") no-repeat scroll 0 5px transparent;
+    font: 10px/1.2 "PTSansRegular", Verdana,DejaVu Sans,Geneva,sans-serif;
+    margin-top: 5px;
+    padding-left: 10px;
+    padding-top: 2px;
+}
+
+div.toc h3 {
+    font: bold 12px/1.2 "PTSansRegular", Arial,FreeSans,sans-serif;
+    color: #4665A2;
+    border-bottom: 0 none;
+    margin: 0;
+}
+
+#powerTip div {
+    margin: 0px;
+    padding: 0px;
+    font: 12px/16px "PTSansRegular",arial,sans-serif;
+}
+h2.groupheader {
+    border-bottom: 1px solid #eee;
+}

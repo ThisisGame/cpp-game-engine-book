@@ -1,0 +1,322 @@
+####################################################################################
+#                                                                                  #
+#  Copyright (c) 2014 - 2018 Axel Menzel <info@rttr.org>                           #
+#                                                                                  #
+#  This file is part of RTTR (Run Time Type Reflection)                            #
+#  License: MIT License                                                            #
+#                                                                                  #
+#  Permission is hereby granted, free of charge, to any person obtaining           #
+#  a copy of this software and associated documentation files (the "Software"),    #
+#  to deal in the Software without restriction, including without limitation       #
+#  the rights to use, copy, modify, merge, publish, distribute, sublicense,        #
+#  and/or sell copies of the Software, and to permit persons to whom the           #
+#  Software is furnished to do so, subject to the following conditions:            #
+#                                                                                  #
+#  The above copyright notice and this permission notice shall be included in      #
+#  all copies or substantial portions of the Software.                             #
+#                                                                                  #
+#  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR      #
+#  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,        #
+#  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE     #
+#  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER          #
+#  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,   #
+#  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE   #
+#  SOFTWARE.                                                                       #
+#                                                                                  #
+####################################################################################
+
+language: cpp
+dist: trusty
+sudo: false
+
+env:
+  global:
+    - ARCH_FLAGS_x86='-m32'
+    - ARCH_FLAGS_x86_64=''
+    - BUILD_DOCU=false
+    - secure: "k1o939GwFc0AJY8cCprAeF9OYUs00Ad+ggrhzxtw4GLdjn0CYGnqrftHtkJ5WySDXj7rnEL4qur1oO19OeVGufhLQTV0+yian8meYppk7rlPIOOl6ygltTxMxNgvmkqCsHC1J1l+7vMEJUm1MunWedCnORWySoK2pZ89nAiMmzY/fjpsOKR8vpXQw5BTZPR775lYZyzbm8/ZY8eATd4EJGH+4YH/sTzYFa9SL2J/ieWR+SvALNLos7x6Civ0Nl6LXx5hXMenpSUpAbu7wBm6KDoL6vGHYa7oKrnJ5BAqOP4poNXF000riy3TENSO1sf+dGQJO8O2IQwe352VKw+paQ4s0SGe5lWAmn2hexU+dZ7rNO0LwA+bdt8XGIXZo2lvdHgsO2Ymj/wPLrqYHGwBgGceBilyD7ZAcKQ/OvHmvkHCytMSVhftcllsOZFwDen/5FliNTRI+Cs68pZUiT2PgT44t/8i5X3F1o8FlV9T+wDsPdH909g/pOFt4U3N8aGxst9bmrQvYAhVmPKtuxjz7ycBfsOTxON9HfTQFEGv3KCREdN8lzi/J9FBCFTtIwHbBKvEeaXrZ3oHSa9UoVG5VQtw14aBdzs7K2MrEYMxg4LCfSHe8ecYbRg1LM9uSdK5dcn/A9wLKEdFmU/pvbl3ryaF4KpL7w0fvNMC/k6o5tc="
+    - secure: "1ogFHnhUroT3nA1HxyXN5/Hoek6LcTazRPTGpYjKAge8To/x614D6R9j2yu0EDOZalolq0VeOONnHLnss6aPGeMvvHH1rvoKTDQsFjsm1fB6qLRr/qpZXs+G4mxStarxrXr5487hEkPP10fEi/PSOx8Gme6Kny+tXHxDzP04ljcZYVvxWfkb+cQBCnYupbHk4hzfKRmPYcUn6lCPyOGIzwsHQQI/LubmkiU+wQ0zcLLsTZSThk+zt6FlxYWykZGL24yrqmoXRszx8dR14cWPzvkxVeEOe3OY9mNix1Z7ki2eVeEk8m7d70yPmV5p8F2/nPGC7kUXTvPrAL62CcE5moHubijJwKXJM6nBQJYCPGygnvRnWxnoqO/9JpDuds4Cv+tbJMgo2ViLPsYk3BgMnYo4z+p4JViN9P4/jzbhsVtWd4rnXmPt9j4FkED+Eyt8BUzXFdTAPpuzwZSvmYzzR8MdZE/telCAcWUoiS35IQcWJ0UmPpNZfR1Lll0cWQ+dTmjNETJvwognuaTAexL7m0uMhX6KQIZfap2H0w+CIua7+jl6eb9iyvXv9vZZEUCH2kTWnYXqBmDGRHG3tEp97o5+yWQm1qjweLvKAMRirdkSaZEL0lrsJ8mBS6Y+PQwAQxlu+P3pFEJ6uU3fJrKyciuWnVDZKyddIrJEZorXjOA="
+
+matrix:
+  include:
+    
+     # check code formatting
+    - os: linux
+      compiler: gcc
+      env: NAME="check code formatting" CHECK_FORMATTING=true
+      addons:
+        apt:
+          packages: ['vera++']
+      
+    # valgrind memory check
+    - os: linux
+      compiler: gcc
+      addons:
+        apt:
+          sources: ['ubuntu-toolchain-r-test']
+          packages: ['g++-4.9', 'valgrind', 'ninja-build']
+      env: NAME="valgrind" COMPILER=g++-4.9 ARCH=x64 CONF=Debug VALGRIND=true UNIT_TESTS=true
+
+    # check code coverage x86 => result https://coveralls.io/github/rttrorg/rttr
+    - os: linux
+      compiler: gcc
+      addons:
+        apt:
+          sources: ['ubuntu-toolchain-r-test']
+          packages: ['g++-4.8-multilib', 'linux-libc-dev:i386']
+      after_success:
+        - pip install --user urllib3[secure] cpp-coveralls
+        - coveralls -e 3rd_party -e src/benchmarks -e src/unit_tests -i src/rttr --gcov-options '\-lp' --gcov 'gcov-4.8'
+      env: NAME="code coverage x86" COMPILER=g++-4.8 ARCH=x86 CONF=Debug GCOV_FLAGS='--coverage' UNIT_TESTS=true
+    
+    # check code coverage x64 => result https://coveralls.io/github/rttrorg/rttr
+    - os: linux
+      compiler: gcc
+      addons:
+        apt:
+          sources: ['ubuntu-toolchain-r-test']
+          packages: ['g++-4.8-multilib']
+      after_success:
+        - pip install --user urllib3[secure] cpp-coveralls
+        - coveralls -e 3rd_party -e src/benchmarks -e src/unit_tests -i src/rttr --gcov-options '\-lp' --gcov 'gcov-4.8'
+      env: NAME="code coverage x64" COMPILER=g++-4.8 ARCH=x86_64 CONF=Debug GCOV_FLAGS='--coverage' UNIT_TESTS=true
+    
+    # build docu and upload to server
+    - os: linux
+      compiler: gcc
+      addons:
+        apt:
+          sources: ['ubuntu-toolchain-r-test']
+          packages: ['g++-4.8-multilib', 'linux-libc-dev:i386', 'lftp']
+      after_success:
+        - |
+          echo "current branch: ${TRAVIS_BRANCH}"
+          if [[ "${TRAVIS_BRANCH}" == "master" ]]; then
+            echo "Upload documentation..."
+            lftp -c "set ssl:verify-certificate no; open -u ${FTP_USER},${FTP_PASSWORD} ftp://server3.febas.net:21/; mirror -R ${TRAVIS_BUILD_DIR}/build/doc_website/master doc_tmp"
+            lftp -c "set ssl:verify-certificate no; open -u ${FTP_USER},${FTP_PASSWORD} ftp://server3.febas.net:21/; rm -r doc"
+            lftp -c "set ssl:verify-certificate no; open -u ${FTP_USER},${FTP_PASSWORD} ftp://server3.febas.net:21/; mv doc_tmp doc"
+          fi
+      env: NAME="documentation build" BUILD_DOCU=true COMPILER=g++-4.8 ARCH=x86 CONF=Release UNIT_TESTS=false
+
+    # Linux / GCC
+    - os: linux
+      compiler: gcc
+      addons:
+        apt:
+          sources: ['ubuntu-toolchain-r-test']
+          packages: ['g++-4.9-multilib', 'linux-libc-dev:i386', 'ninja-build']
+      env: NAME="g++-4.9 x86" COMPILER=g++-4.9 ARCH=x86 CONF=Release UNIT_TESTS=true
+
+    - os: linux
+      compiler: gcc
+      addons:
+        apt:
+          sources: ['ubuntu-toolchain-r-test']
+          packages: ['g++-4.9', 'ninja-build']
+      env: NAME="g++-4.9 x64" COMPILER=g++-4.9 ARCH=x86_64 CONF=Release UNIT_TESTS=true
+      
+    - os: linux
+      compiler: gcc
+      addons:
+        apt:
+          sources: ['ubuntu-toolchain-r-test']
+          packages: ['g++-4.9', 'libboost-all-dev']
+      env: NAME="g++-4.9 x64 - Build benchmarks & examples" COMPILER=g++-4.9 ARCH=x86_64 CONF=Release UNIT_TESTS=false BUILD_EXAMPLES=true BUILD_BENCHMARKS=true
+      
+    - os: linux
+      compiler: gcc
+      addons:
+        apt:
+          sources: ['ubuntu-toolchain-r-test']
+          packages: ['g++-5', 'ninja-build']
+      env: NAME="g++-5" COMPILER=g++-5 ARCH=x86_64 CONF=Release UNIT_TESTS=true
+      
+    - os: linux
+      compiler: gcc
+      addons:
+        apt:
+          sources: ['ubuntu-toolchain-r-test']
+          packages: ['g++-6', 'ninja-build']
+      env: NAME="g++-6" COMPILER=g++-6 ARCH=x86_64 CONF=Release UNIT_TESTS=true
+       
+    - os: linux
+      compiler: gcc
+      addons:
+        apt:
+          sources: ['ubuntu-toolchain-r-test']
+          packages: ['g++-7', 'libboost-all-dev', 'ninja-build']
+      env: NAME="g++-7" COMPILER=g++-7 ARCH=x86_64 CONF=Release UNIT_TESTS=true BUILD_BENCHMARKS=true
+    
+    # Linux / CLang
+    - os: linux
+      compiler: clang
+      addons:
+        apt:
+          sources: ['ubuntu-toolchain-r-test', 'llvm-toolchain-precise-3.7']
+          packages: ['libstdc++-5-dev', 'clang-3.7', 'ninja-build']
+      env: COMPILER=clang++-3.7 ARCH=x86_64 CONF=Release UNIT_TESTS=true
+      
+    - os: linux
+      compiler: clang
+      addons:
+        apt:
+          sources: ['ubuntu-toolchain-r-test', 'llvm-toolchain-trusty-4.0']
+          packages: ['libstdc++-6-dev', 'clang-4.0', 'libboost-all-dev', 'ninja-build']
+      env: NAME="clang++-4.0 - build benchmarks & examples" COMPILER=clang++-4.0 ARCH=x86_64 CONF=Release UNIT_TESTS=false BUILD_EXAMPLES=true BUILD_BENCHMARKS=true
+      
+    - os: linux
+      compiler: clang
+      addons:
+        apt:
+          sources: ['ubuntu-toolchain-r-test']
+          packages: ['libstdc++-5-dev', 'clang-3.8', 'ninja-build']
+      env: COMPILER=clang++-3.8 ARCH=x86_64 CONF=Release UNIT_TESTS=true
+      
+    - os: linux
+      compiler: clang
+      addons:
+        apt:
+          sources: ['ubuntu-toolchain-r-test']
+          packages: ['libstdc++-6-dev', 'clang-3.9', 'ninja-build']
+      env: COMPILER=clang++-3.9 ARCH=x86_64 CONF=Release UNIT_TESTS=true
+      
+    - os: linux
+      compiler: clang
+      addons:
+        apt:
+          sources: ['ubuntu-toolchain-r-test', 'llvm-toolchain-trusty-4.0']
+          packages: ['libstdc++-6-dev', 'clang-4.0', 'ninja-build']
+      env: COMPILER=clang++-4.0 ARCH=x86_64 CONF=Release UNIT_TESTS=true
+     
+    - os: linux
+      compiler: clang
+      addons:
+        apt:
+          sources: ['ubuntu-toolchain-r-test', 'llvm-toolchain-trusty-5.0']
+          packages: ['libstdc++-7-dev', 'clang-5.0',]
+      env: COMPILER=clang++-5.0 ARCH=x86_64 CONF=Release UNIT_TESTS=true
+
+    # OSX/Clang
+    - os: osx
+      osx_image: xcode9.2
+      compiler: clang
+      env: COMPILER=clang++ ARCH=x86 CONF=Release UNIT_TESTS=true BUILD_BENCHMARKS=true
+      
+    - os: osx
+      osx_image: xcode9.2
+      compiler: clang
+      env: COMPILER=clang++ ARCH=x86_64 CONF=Release UNIT_TESTS=true
+
+    - os: osx
+      osx_image: xcode9
+      compiler: clang
+      env: COMPILER=clang++ ARCH=x86_64 CONF=Release UNIT_TESTS=true
+
+    - os: osx
+      osx_image: xcode8.3
+      compiler: clang
+      env: COMPILER=clang++ ARCH=x86 CONF=Release UNIT_TESTS=true
+      
+    - os: osx
+      osx_image: xcode8.3
+      compiler: clang
+      env: COMPILER=clang++ ARCH=x86_64 CONF=Release UNIT_TESTS=true
+
+  allow_failures:
+    - env: NAME="documentation build" BUILD_DOCU=true COMPILER=g++-4.8 ARCH=x86 CONF=Release UNIT_TESTS=false
+   
+before_install:
+  - export CIT_ROOT=`pwd`
+  - cd $CIT_ROOT
+
+install:
+  - DEPS_DIR="${TRAVIS_BUILD_DIR}/3rd_party"
+  - cd ${DEPS_DIR}
+  #######################################################################################
+  # Setup default versions
+  #######################################################################################
+  - if [[ "${LLVM_VERSION}" == "default" ]]; then LLVM_VERSION=3.7.0; fi
+  - if [[ "${COMPILER}" != "" ]]; then export CXX=${COMPILER}; fi
+  - if [[ "${COMPILER}" == "g++-4.8" ]]; then export CC=gcc-4.8; fi
+  - if [[ "${ARCH}" == "x86" ]]; then export CMAKE_ARCH_FLAGS=-m32; fi
+  #######################################################################################
+  # Install a recent CMake (unless already installed on OS X)
+  #######################################################################################
+  - |
+    if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
+      CMAKE_URL="http://www.cmake.org/files/v3.10/cmake-3.10.2-Linux-x86_64.tar.gz"
+      mkdir cmake && travis_retry wget --no-check-certificate --quiet -O - ${CMAKE_URL} | tar --strip-components=1 -xz -C cmake
+      export PATH=${DEPS_DIR}/cmake/bin:${PATH}
+    else
+      brew upgrade cmake || brew install cmake ninja || brew link --overwrite cmake
+    fi
+  - cmake --version
+  #######################################################################################
+  # Install recent Doxygen
+  #######################################################################################
+  - |
+    if [[ "${BUILD_DOCU}" == "true" ]]; then
+      DOXYGEN_URL="http://ftp.stack.nl/pub/users/dimitri/doxygen-1.8.10.linux.bin.tar.gz"
+      mkdir doxygen && travis_retry wget --quiet -O - ${DOXYGEN_URL} | tar --strip-components=1 -xz -C doxygen
+      export PATH=${DEPS_DIR}/doxygen/bin:${PATH}
+    fi
+    
+before_script:
+  - cd ${TRAVIS_BUILD_DIR}
+  - mkdir build
+  - >
+      eval "ARCH_FLAGS=\${ARCH_FLAGS_${ARCH}}" ;
+      (cd build && cmake
+      -DCMAKE_CXX_COMPILER=${COMPILER}
+      -DCMAKE_BUILD_TYPE=${CONF}
+      -DCMAKE_CXX_FLAGS="$ARCH_FLAGS $CMAKE_ADDITIONAL_FLAGS $GCOV_FLAGS"
+      -DBUILD_WEBSITE_DOCU=$BUILD_DOCU
+      -DBUILD_EXAMPLES=$BUILD_EXAMPLES
+      -DBUILD_BENCHMARKS=$BUILD_BENCHMARKS
+      ..)
+
+script:
+  # show OS/compiler version
+  - uname -a
+  - $CXX --version
+  - |
+    if [[ "${CHECK_FORMATTING}" == "true" ]]; then
+      # F001: Source files should not use the '\r' (CR) character
+      # L001: No trailing whitespace at the end of lines
+      # L002: Don't use tab characters
+      # T001: One-line comments should not have forced continuation
+      # T002: Reserved names should not be used for preprocessor macros
+      # T009: Comma should not be preceded by whitespace, but should be followed by one
+      # T013: Source files should contain the copyright notice
+      find src/rttr src/unit_tests -name \*\.h -print -o -name \*\.cpp -print | vera++ --rule F001 --rule L001 --rule L002 --rule T001 --rule T002 --rule T009 --rule T013 --error
+    fi
+  - |
+    if [[ "${UNIT_TESTS}" == "true" ]]; then
+      # Run unit tests on two cores
+      (cd build && make run_tests -j2)
+    fi
+  - |
+    if [[ "${BUILD_DOCU}" == "true" ]]; then
+      # Run unit tests on two cores
+      (cd build && make doc_website -j2)
+    fi
+  - |
+    if [[ "${BUILD_BENCHMARKS}" == "true" ]]; then
+      # Run unit tests on two cores
+      (cd build && make bench_method -j2 && make bench_rttr_cast -j2 && make bench_variant -j2)
+    fi
+  - |
+    if [[ "${BUILD_EXAMPLES}" == "true" ]]; then
+      # Run unit tests on two cores
+      (cd build && make json_example -j2 && make library_loader_example -j2)
+    fi
+  - |
+    if [[ "${VALGRIND}" == "true" ]]; then
+      # Run unit tests on two cores
+      (valgrind --leak-check=full --error-exitcode=1 ${TRAVIS_BUILD_DIR}/build/bin/unit_tests_d)
+    fi
+
+notifications:
+  email:
+    - info@rttr.org

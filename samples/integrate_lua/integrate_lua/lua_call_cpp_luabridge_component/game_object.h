@@ -10,7 +10,7 @@ extern "C"
 #include "lauxlib.h"
 #include "lualib.h"
 }
-#include "LuaBridge\LuaBridge.h"
+#include "LuaBridge/LuaBridge.h"
 #include<string>
 #include<unordered_map>
 #include <stdio.h>
