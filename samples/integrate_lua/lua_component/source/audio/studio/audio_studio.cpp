@@ -30,7 +30,11 @@ FMOD_RESULT AudioStudio::Update() {
 FMOD_RESULT AudioStudio::LoadBankFile(string file_name) {
     string bank_path=Application::data_path()+file_name;
     FMOD_STUDIO_BANK* bank= nullptr;
-    return FMOD_Studio_System_LoadBankFile(system_, bank_path.c_str(), FMOD_STUDIO_LOAD_BANK_NORMAL, &bank);
+    FMOD_RESULT result= FMOD_Studio_System_LoadBankFile(system_, bank_path.c_str(), FMOD_STUDIO_LOAD_BANK_NORMAL, &bank);
+    if(result!=FMOD_OK){
+        DEBUG_LOG_ERROR("FMOD_Studio_System_LoadBankFile result:{},file_name:{}",result,file_name);
+    }
+    return result;
 }
 
 

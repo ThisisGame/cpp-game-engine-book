@@ -32,6 +32,7 @@ public:
     }
 
     ~GameObject() {
+        std::cout<<"~GameObject"<<std::endl;
     }
 
 

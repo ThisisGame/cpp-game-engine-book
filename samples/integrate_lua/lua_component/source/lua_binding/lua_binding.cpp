@@ -2,6 +2,8 @@
 // Created by captainchen on 2021/9/13.
 //
 
+#if USE_LUA_SCRIPT
+
 #include "lua_binding.h"
 #include <glm/ext.hpp>
 #include "audio/audio.h"
@@ -23,6 +25,7 @@
 #include "utils/debug.h"
 #include "utils/screen.h"
 #include "utils/time.h"
+
 
 
 lua_State* LuaBinding::lua_state_;
@@ -554,8 +557,6 @@ void LuaBinding::BindLua(lua_State *lua_state) {
                 .addStaticFunction("delta_time",&Time::delta_time)
                 .endClass();
     }
-
-
-
-
 }
+
+#endif

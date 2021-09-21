@@ -33,10 +33,7 @@ public:
     /// \return
     Component* GetComponent(std::string component_type_name);
 
-    /// 获取所有同名组件
-    /// \param component_type_name 组件类名
-    /// \return
-    std::vector<Component*> GetComponents(std::string component_type_name);
+
 
     unsigned char layer(){return layer_;}
     void set_layer(unsigned char layer){layer_=layer;}
@@ -52,8 +49,12 @@ private:
 
     static std::list<GameObject*> game_object_list_;//存储所有的GameObject。
 
-/******************** BEGIN LUA COMPONENT ******************/
-
+#ifdef USE_LUA_SCRIPT
+public:
+    /// 获取所有同名组件
+    /// \param component_type_name 组件类名
+    /// \return
+    std::vector<Component*> GetComponents(std::string component_type_name);
 public:
     /// 重载==，用于LuaRef对象做比较
     /// \param rhs
@@ -76,6 +77,19 @@ public:
 
 private:
     std::unordered_map<std::string,std::vector<luabridge::LuaRef>> lua_component_type_instance_map_;//所有lua component
+#else
+public:
+    /// 获取所有同名组件
+    /// \param component_type_name 组件类名
+    /// \return
+    std::vector<Component*>& GetComponents(std::string component_type_name);
+
+    /// 遍历所有Component
+    /// \param func
+    void ForeachComponent(std::function<void(Component* component)> func);
+private:
+    std::unordered_map<std::string,std::vector<Component*>> component_type_instance_map_;
+#endif
 };
 
 

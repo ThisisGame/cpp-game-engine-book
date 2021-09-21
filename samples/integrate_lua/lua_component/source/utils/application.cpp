@@ -107,6 +107,7 @@ void Application::Update(){
     Time::Update();
     UpdateScreenSize();
 
+#ifdef USE_LUA_SCRIPT
     GameObject::Foreach([](GameObject* game_object){
         game_object->ForeachLuaComponent([](luabridge::LuaRef lua_ref){
             luabridge::LuaRef update_function_ref=lua_ref["Update"];
@@ -115,6 +116,13 @@ void Application::Update(){
             }
         });
     });
+#else
+    GameObject::Foreach([](GameObject* game_object){
+        game_object->ForeachComponent([](Component* component){
+            component->Update();
+        });
+    });
+#endif
 
     Input::Update();
 

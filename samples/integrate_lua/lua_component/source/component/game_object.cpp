@@ -22,6 +22,7 @@ GameObject::~GameObject() {
 
 }
 
+#ifdef USE_LUA_SCRIPT
 Component* GameObject::AddComponent(std::string component_type_name) {
     luabridge::LuaRef component_table=AddComponentFromLua(component_type_name);
     if(component_table.isNil()){
@@ -41,26 +42,14 @@ std::vector<Component*> GameObject::GetComponents(std::string component_type_nam
     return component_table_vec;
 }
 
-
-
 Component* GameObject::GetComponent(std::string component_type_name) {
     luabridge::LuaRef component_table=GetComponentFromLua(component_type_name);
     if(component_table.isNil()){
-        DEBUG_LOG_ERROR("{} not register to lua",component_type_name);
         return nullptr;
     }
     Component* component=component_table.cast<Component*>();
     return component;
 }
-
-void GameObject::Foreach(std::function<void(GameObject*)> func) {
-    for (auto iter=game_object_list_.begin();iter!=game_object_list_.end();iter++){
-        auto game_object=*iter;
-        func(game_object);
-    }
-}
-
-/******************** BEGIN LUA COMPONENT ******************/
 
 bool GameObject::operator==(GameObject* rhs) const {
     return rhs == this;
@@ -120,5 +109,59 @@ void GameObject::ForeachLuaComponent(std::function<void(luabridge::LuaRef)> func
             luabridge::LuaRef lua_ref=iter;
             func(lua_ref);
         }
+    }
+}
+#else
+Component* GameObject::AddComponent(std::string component_type_name) {
+    type t = type::get_by_name(component_type_name);
+    if(t.is_valid()==false){
+        DEBUG_LOG_ERROR("type::get_by_name({}) failed",component_type_name);
+        return nullptr;
+    }
+    variant var = t.create();    // 创建实例
+    Component* component=var.get_value<Component*>();
+    component->set_game_object(this);
+
+    if(component_type_instance_map_.find(component_type_name)==component_type_instance_map_.end()){
+        std::vector<Component*> component_vec;
+        component_vec.push_back(component);
+        component_type_instance_map_[component_type_name]=component_vec;
+    }else{
+        component_type_instance_map_[component_type_name].push_back(component);
+    }
+
+    component->Awake();
+    return component;
+}
+
+std::vector<Component*> &GameObject::GetComponents(std::string component_type_name) {
+    return component_type_instance_map_[component_type_name];
+}
+
+Component* GameObject::GetComponent(std::string component_type_name) {
+    if(component_type_instance_map_.find(component_type_name)==component_type_instance_map_.end()){
+        return nullptr;
+    }
+    if(component_type_instance_map_[component_type_name].size()==0){
+        return nullptr;
+    }
+    return component_type_instance_map_[component_type_name][0];
+}
+
+void GameObject::ForeachComponent(std::function<void(Component *)> func) {
+    for (auto& v : component_type_instance_map_){
+        for (auto& iter : v.second){
+            Component* component=iter;
+            func(component);
+        }
+    }
+}
+
+#endif
+
+void GameObject::Foreach(std::function<void(GameObject*)> func) {
+    for (auto iter=game_object_list_.begin();iter!=game_object_list_.end();iter++){
+        auto game_object=*iter;
+        func(game_object);
     }
 }

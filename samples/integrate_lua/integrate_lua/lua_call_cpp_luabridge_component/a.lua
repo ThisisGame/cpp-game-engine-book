@@ -70,4 +70,8 @@ function main()
     print(GetKeyActionDown())
     print(KeyAction.DOWN)
     print(GetKeyActionDown()==KeyAction.DOWN)
+
+    print("----------- life time ------------")
+    local go=GameObject()
+    SetGameObject(go)
 end

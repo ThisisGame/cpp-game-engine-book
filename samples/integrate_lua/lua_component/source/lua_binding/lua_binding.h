@@ -5,6 +5,7 @@
 #ifndef UNTITLED_LUA_BINDING_H
 #define UNTITLED_LUA_BINDING_H
 
+#if USE_LUA_SCRIPT
 extern "C"
 {
 #include "lua.h"
@@ -25,6 +26,6 @@ private:
     static lua_State* lua_state_;
 };
 
-
+#endif
 
 #endif //UNTITLED_LUA_BINDING_H
