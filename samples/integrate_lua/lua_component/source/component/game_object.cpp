@@ -93,7 +93,7 @@ luabridge::LuaRef GameObject::AddComponentFromLua(std::string component_type_nam
     }
 
     {
-        luabridge::LuaRef function_ref=new_table["Awake"](new_table);
+        luabridge::LuaRef function_ref=new_table["Awake"];
         if(function_ref.isFunction()==false){
             DEBUG_LOG_ERROR("{} has no function {}",component_type_name,"Awake");
             return luabridge::LuaRef(LuaBinding::lua_state());

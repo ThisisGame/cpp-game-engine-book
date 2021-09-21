@@ -16,6 +16,7 @@ file(COPY "../../template/depends/spdlog/include/spdlog/" DESTINATION "../depend
 file(COPY "../../template/depends/fmod/" DESTINATION "../depends/fmod/")
 file(COPY "../../template/depends/lua/" DESTINATION "../depends/lua/")
 file(COPY "../../template/depends/LuaBridge/" DESTINATION "../depends/LuaBridge/")
+file(COPY "../../template/depends/rttr-0.9.6/src/rttr/" DESTINATION "../depends/rttr/")
 
 
 #拷贝data文件
@@ -48,9 +49,10 @@ file(GLOB_RECURSE engine_cpp source/*.cpp)
 file(GLOB_RECURSE fmod_cpp depends/fmod/api/*.cpp)
 file(GLOB_RECURSE lua_c depends/lua/src/*.c)
 file(GLOB_RECURSE glfw_c depends/glfw-3.3.3.bin.WIN64/deps/glad_gl.c)
+file(GLOB_RECURSE rttr_cpp "depends/rttr/*.cpp")
 
 file(GLOB_RECURSE example_cpp example/*.cpp)
-add_executable(untitled ${glfw_c} ${engine_cpp} ${example_cpp} ${lua_c})
+add_executable(untitled ${glfw_c} ${engine_cpp} ${example_cpp} ${lua_c} ${rttr_cpp})
 
 
 #拷贝dll到exe目录
