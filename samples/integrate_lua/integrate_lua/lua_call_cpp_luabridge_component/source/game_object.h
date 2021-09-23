@@ -120,9 +120,6 @@ public:
         }
     }
 
-    void test_set(const std::string& a){
-        std::cout<<a<<std::endl;
-    }
 private:
     std::unordered_map<std::string,std::vector<luabridge::LuaRef>> lua_component_type_instance_map_;
 };

@@ -58,11 +58,6 @@ function main()
 
     print("-----------------------")
 
-
-
-
-    game_object:test_set("hello")
-
     print(GetKeyActionUp())
     print(KeyAction.UP)
     print(GetKeyActionUp()==KeyAction.UP)

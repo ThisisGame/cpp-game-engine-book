@@ -15,7 +15,7 @@ function LoginScene:Awake()
 end
 
 function LoginScene:Update()
-    --print("LoginScene Update")
+    print("LoginScene Update")
 end
 
 setmetatable(LoginScene,{["__call"]=function(table,param)

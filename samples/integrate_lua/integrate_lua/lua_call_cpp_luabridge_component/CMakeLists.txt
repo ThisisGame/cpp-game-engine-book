@@ -34,7 +34,7 @@ link_libraries(${RTTR_LIB})
 file(GLOB_RECURSE lua_c "depends/lua/src/*.c")
 file(GLOB_RECURSE rttr_cpp "depends/rttr/*.cpp")
 
-add_executable(test ${lua_c} ${rttr_cpp} "main.cpp" component.cpp game_object.cpp)
+add_executable(test ${lua_c} ${rttr_cpp} "example/main.cpp" source/component.cpp source/game_object.cpp)
 
 #IF(CMAKE_EXE_LINKER_FLAGS STREQUAL "")
 #    file(COPY "depends/${RTTR_DIR}/bin/librttr_core_d.dll" DESTINATION "./")
