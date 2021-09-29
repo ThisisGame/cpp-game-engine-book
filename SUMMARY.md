@@ -66,6 +66,8 @@
 * [15. Profiler](pages/15. Profiler/15. Profiler.md)
     * [15.1 初识easy_profiler](pages/15. Profiler/15.1 初识easy_profiler.md)
     * [15.2 集成easy_profiler](pages/15. Profiler/15.2 集成easy_profiler.md)
+* [16. 嵌入Lua](pages/16. 嵌入Lua/16. 嵌入Lua.md)
+    * [16.1 LuaBridge与C++交互](pages/16. 嵌入Lua/16.1 LuaBridge与C++交互.md)
 * [90. GPU分析工具](pages/90. GPU分析工具/90. GPU分析工具.md)
     * [90.1 RenderDoc分析不显示bug](pages/90. GPU分析工具/90.1 RenderDoc分析不显示bug.md)
 * [98. SubstancePainter插件开发](pages/98. SubstancePainter插件开发/98. SubstancePainter插件开发.md)

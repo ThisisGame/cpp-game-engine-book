@@ -7,7 +7,7 @@
 
 lua_State* lua_state;
 
-const int const_value=12;
+
 
 // 注册枚举
 template <typename T>
@@ -25,10 +25,9 @@ namespace luabridge {
     struct Stack<KeyAction> : EnumWrapper<KeyAction>{};
 } // namespace luabridge
 
-GameObject* game_object_;
-void CompareGameObject(GameObject* game_object){
-    std::cout<<"CompareGameObject: "<<std::endl;
-    game_object_=game_object;
+
+void CompareGameObject(GameObject* a,GameObject* b){
+    std::cout<<"CompareGameObject a==b: "<<(a==b)<<std::endl;
 }
 
 int main(int argc, char * argv[])
@@ -149,35 +148,47 @@ int main(int argc, char * argv[])
     }
 
 
-    // binding
-    luabridge::getGlobalNamespace(lua_state)
-            .addFunction("CompareGameObject", &CompareGameObject);
+    //绑定普通函数
+    {
+        luabridge::getGlobalNamespace(lua_state)
+                .addFunction("CompareGameObject", &CompareGameObject);
+    }
 
-    luabridge::getGlobalNamespace(lua_state)
-            .beginNamespace("Test")
-            .addConstant("const_value",const_value)
-            .endNamespace();
+    //绑定常量
+    {
+        const int const_value=12;
 
-    luabridge::getGlobalNamespace(lua_state)
-            .beginNamespace("KeyAction")
-            .addConstant<std::size_t>("UP",KeyAction::UP)
-            .addConstant<std::size_t>("DOWN",KeyAction::DOWN)
-            .endNamespace();
+        luabridge::getGlobalNamespace(lua_state)
+                .beginNamespace("Test")
+                .addConstant("const_value",const_value)
+                .endNamespace();
+    }
 
-    luabridge::getGlobalNamespace(lua_state)
-            .addFunction("GetKeyActionUp",&GetKeyActionUp)
-            .addFunction("GetKeyActionDown",&GetKeyActionDown);
+    //绑定枚举
+    {
+        luabridge::getGlobalNamespace(lua_state)
+                .beginNamespace("KeyAction")
+                .addConstant<std::size_t>("UP",KeyAction::UP)
+                .addConstant<std::size_t>("DOWN",KeyAction::DOWN)
+                .endNamespace();
+
+        luabridge::getGlobalNamespace(lua_state)
+                .addFunction("GetKeyActionUp",&GetKeyActionUp)
+                .addFunction("GetKeyActionDown",&GetKeyActionDown);
+    }
+
+
 
     //设置lua搜索目录
     {
         luabridge::LuaRef package_ref = luabridge::getGlobal(lua_state,"package");
         luabridge::LuaRef path_ref=package_ref["path"];
         std::string path=path_ref.tostring();
-        path.append(";../?.lua;");
+        path.append(";../example/?.lua;");
         package_ref["path"]=path;
     }
 
-    luaL_dofile(lua_state, "../main.lua");
+    luaL_dofile(lua_state, "../example/main.lua");
 
     //加上大括号，为了LuaRef在lua_close之前自动析构。
     {
@@ -189,7 +200,7 @@ int main(int argc, char * argv[])
         }
     }
 
-    while (true){
+    for(int i=0;i<3;i++){
         GameObject::Foreach([](GameObject* game_object){
             game_object->ForeachLuaComponent([](LuaRef lua_ref){
                 LuaRef update_function_ref=lua_ref["Update"];
@@ -198,10 +209,6 @@ int main(int argc, char * argv[])
                 }
             });
         });
-
-        if(game_object_== nullptr){
-            std::cout<<"game_object_ gc"<<std::endl;
-        }
     }
 
     lua_close(lua_state);

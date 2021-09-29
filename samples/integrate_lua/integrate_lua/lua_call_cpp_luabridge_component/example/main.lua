@@ -56,7 +56,10 @@ function main()
     print("glm.rotate(glm.mat4(1.0),glm.radians(60),glm.vec3(0.0,0.0,1.0)): " .. tostring(rotate_mat4))
     print("rotate_mat4*glm.vec4(1,2,3,1.0): " .. tostring(rotate_mat4*glm.vec4(1,2,3,1.0)))
 
-    print("-----------------------")
+    print("--------- cpp const --------------")
+    print("Test.const_value:" .. Test.const_value)
+
+    print("--------- cpp enum --------------")
 
     print(GetKeyActionUp())
     print(KeyAction.UP)
@@ -66,7 +69,7 @@ function main()
     print(KeyAction.DOWN)
     print(GetKeyActionDown()==KeyAction.DOWN)
 
-    print("----------- life time ------------")
+    print("----------- simple function ------------")
     local go=GameObject()
-    SetGameObject(go)
+    CompareGameObject(go,go)
 end

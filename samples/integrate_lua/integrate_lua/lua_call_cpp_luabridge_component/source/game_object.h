@@ -80,6 +80,9 @@ public:
         return rhs == this;
     }
 
+    /// 根据传入的组件名，创建组件实例
+    /// \param component_type_name
+    /// \return
     luabridge::LuaRef AddComponentFromLua(std::string component_type_name) {
         luabridge::LuaRef component_type=luabridge::getGlobal(lua_state,component_type_name.c_str());
         auto new_table=component_type();//luabridge对c++的class注册为table，并实现了__call，所以可以直接带括号。
