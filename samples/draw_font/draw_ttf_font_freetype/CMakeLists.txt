@@ -12,6 +12,7 @@ file(COPY "../../template/depends/rapidxml/" DESTINATION "../depends/rapidxml/")
 file(COPY "../../template/depends/rttr/" DESTINATION "../depends/rttr/")
 file(COPY "../../template/depends/stb/" DESTINATION "../depends/stb/")
 file(COPY "../../template/depends/spdlog/include/spdlog/" DESTINATION "../depends/spdlog/")
+file(COPY "../../template/depends/freetype-2.11.0/" DESTINATION "../depends/freetype/")
 
 #拷贝data文件
 file(COPY "../../template/data/images/diffuse_fishsoup_pot.cpt" DESTINATION "../data/images/")
