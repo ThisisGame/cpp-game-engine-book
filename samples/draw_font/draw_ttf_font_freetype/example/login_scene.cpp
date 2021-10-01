@@ -102,12 +102,6 @@ void LoginScene::Update() {
     camera_1_->SetView(glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
     camera_1_->SetProjection(60.f, Screen::aspect_ratio(), 1.f, 1000.f);
 
-    //更换贴图
-    if(Input::GetKeyUp(KEY_CODE_C)){
-        auto texture2D=Texture2D::CreateFromTrueTypeFont("font/hkyuan.ttf","Hello World");
-        material->SetTexture("u_diffuse_texture", texture2D);
-    }
-
     //旋转物体
     if(Input::GetKeyDown(KEY_CODE_R)){
         static float rotate_eulerAngle=0.f;

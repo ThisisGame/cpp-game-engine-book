@@ -23,11 +23,15 @@ public:
     /// \param image_file_path
     /// \return
     static Texture2D* LoadFromFile(std::string image_file_path);
-    /// 从ttf字体创建贴图
-    /// \param ttf_file_path
-    /// \param word
+
+    /// 创建Texture(不压缩)
+    /// \param width
+    /// \param height
+    /// \param internal_format 在显卡中储存的格式
+    /// \param data
     /// \return
-    static Texture2D* CreateFromTrueTypeFont(std::string ttf_file_path, const char* word);
+    static Texture2D* Create(unsigned short width,unsigned short height,unsigned int internal_format,unsigned int data_type,unsigned char* data);
+
 public:
     //cpt文件头
     struct CptFileHead
