@@ -2,14 +2,13 @@ cmake_minimum_required(VERSION 3.17)
 project(untitled)
 
 set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_EXE_LINKER_FLAGS "-static")
 
 #拷贝depends目录
 file(COPY "../../template/depends/glfw-3.3.3.bin.WIN64/" DESTINATION "../depends/glfw-3.3.3.bin.WIN64/")
 file(COPY "../../template/depends/glm/" DESTINATION "../depends/glm/")
 file(COPY "../../template/depends/timetool/" DESTINATION "../depends/timetool/")
 file(COPY "../../template/depends/rapidxml/" DESTINATION "../depends/rapidxml/")
-file(COPY "../../template/depends/rttr/" DESTINATION "../depends/rttr/")
+file(COPY "../../template/depends/rttr-0.9.6/src/rttr/" DESTINATION "../depends/rttr/")
 
 #拷贝data文件
 file(COPY "../../template/data/images/diffuse_fishsoup_pot.cpt" DESTINATION "../data/images/")
@@ -22,18 +21,19 @@ file(COPY "../../template/data/material/fishsoup_pot.mat" DESTINATION "../data/m
 #头文件目录
 include_directories("depends/glfw-3.3.3.bin.WIN64/include")
 include_directories("depends/glfw-3.3.3.bin.WIN64/deps")
-include_directories("depends/rttr/include")
 include_directories("depends")
 include_directories("source")
 
 #链接目录
 link_directories("depends/glfw-3.3.3.bin.WIN64/lib-static-ucrt")
-link_directories("depends/rttr/lib")
 
 #链接lib文件
-link_libraries(opengl32 glfw3dll rttr_core_d)
+link_libraries(opengl32 glfw3dll)
 
-add_executable(untitled source/main.cpp depends/glfw-3.3.3.bin.WIN64/deps/glad_gl.c source/renderer/texture2d.h source/renderer/texture2d.cpp source/renderer/mesh_filter.cpp source/renderer/mesh_filter.h source/renderer/shader.cpp source/renderer/shader.h source/renderer/material.cpp source/renderer/material.h source/renderer/technique.cpp source/renderer/technique.h source/renderer/pass.cpp source/renderer/pass.h source/renderer/mesh_renderer.cpp source/renderer/mesh_renderer.h source/utils/application.cpp source/utils/application.h source/component/game_object.cpp source/component/game_object.h source/component/component.cpp source/component/component.h source/component/transform.cpp source/component/transform.h)
+file(GLOB_RECURSE rttr_cpp "depends/rttr/*.cpp")
+file(GLOB_RECURSE source_src "source/*.cpp")
+
+add_executable(untitled depends/glfw-3.3.3.bin.WIN64/deps/glad_gl.c ${source_src} ${rttr_cpp})
 
 
 #拷贝dll到exe目录
