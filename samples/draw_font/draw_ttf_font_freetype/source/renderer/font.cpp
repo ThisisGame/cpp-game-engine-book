@@ -4,12 +4,31 @@
 
 #include "font.h"
 #include <fstream>
+#include "freetype/ftbitmap.h"
 #include "../utils/application.h"
 #include "spdlog/spdlog.h"
 #include "texture2d.h"
 
 using std::ifstream;
 using std::ios;
+
+void Font::LoadCharacter(char ch) {
+    //加载这个字的字形,加载到 m_FTFace上面去;Glyph：字形，图形字符 [glif];
+    FT_Load_Glyph(ft_face_, FT_Get_Char_Index(ft_face_, ch), FT_LOAD_DEFAULT);
+
+    //从 FTFace上面读取这个字形  到 ft_glyph 变量;
+    FT_Glyph ft_glyph;
+    FT_Get_Glyph(ft_face_->glyph, &ft_glyph);
+    //启用反锯齿
+    FT_Glyph_To_Bitmap(&ft_glyph, ft_render_mode_mono, 0, 1);
+
+    FT_BitmapGlyph ft_bitmap_glyph = (FT_BitmapGlyph)ft_glyph;
+    FT_Bitmap& ft_bitmap_src = ft_bitmap_glyph->bitmap;
+
+    font_texture_->UpdateSubImage(0,0,ft_bitmap_src.width,ft_bitmap_src.rows,GL_ALPHA,GL_UNSIGNED_BYTE,ft_bitmap_src.buffer);
+
+    FT_Bitmap_Done(ft_library_, &ft_bitmap_src);
+}
 
 Font* Font::LoadFromFile(std::string font_file_path,unsigned short font_size){
     Font* font=GetFont(font_file_path);
@@ -44,7 +63,7 @@ Font* Font::LoadFromFile(std::string font_file_path,unsigned short font_size){
         spdlog::error("FT_Set_Char_Size error!");
         return nullptr;
     }
-    
+
     font=new Font();
     font->font_size_=font_size;
     font->font_file_buffer_=font_file_buffer;
@@ -52,7 +71,8 @@ Font* Font::LoadFromFile(std::string font_file_path,unsigned short font_size){
     //创建空白的、仅Alpha通道纹理，用于生成文字。
     unsigned char * pixels = (unsigned char *)malloc(1024 * 1024);
     memset(pixels, 0,1024*1024);
-    font->font_texture_=Texture2D::Create(1024,1024,GL_ALPHA,GL_UNSIGNED_BYTE,pixels);
+    font->font_texture_=Texture2D::Create(1024,1024,GL_ALPHA,GL_ALPHA,GL_UNSIGNED_BYTE,pixels);
+    delete pixels;
 
     return font;
 }

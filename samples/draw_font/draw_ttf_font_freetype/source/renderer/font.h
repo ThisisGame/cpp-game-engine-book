@@ -11,8 +11,10 @@
 
 class Texture2D;
 class Font {
-
 public:
+    /// 从freetype加载一个字符
+    /// \param c
+    void LoadCharacter(char ch);
 
 private:
     unsigned short font_size_=20;//默认字体大小
