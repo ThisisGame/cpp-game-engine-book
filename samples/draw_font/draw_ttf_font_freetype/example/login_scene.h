@@ -27,6 +27,8 @@ private:
 
     /// 创建用于渲染文字图像的2个三角形
     void CreateQuad();
+
+    void CreateFont();
 private:
     Transform* transform_fishsoup_pot_;
     Material* material;

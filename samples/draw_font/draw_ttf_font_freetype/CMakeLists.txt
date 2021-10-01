@@ -41,7 +41,7 @@ file(GLOB_RECURSE rttr_cpp "depends/rttr/*.cpp")
 file(GLOB_RECURSE engine_cpp source/*.cpp)
 file(GLOB_RECURSE example_cpp example/*.cpp)
 
-add_executable(untitled depends/glfw-3.3.3.bin.WIN64/deps/glad_gl.c ${rttr_cpp} ${freetype_src} ${engine_cpp} ${example_cpp})
+add_executable(untitled ${glfw_c} ${rttr_cpp} ${freetype_src} ${engine_cpp} ${example_cpp})
 
 #拷贝dll到exe目录
 file(COPY "depends/glfw-3.3.3.bin.WIN64/lib-static-ucrt/glfw3.dll" DESTINATION "./")

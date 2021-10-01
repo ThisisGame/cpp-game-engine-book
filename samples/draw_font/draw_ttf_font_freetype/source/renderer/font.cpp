@@ -12,6 +12,8 @@
 using std::ifstream;
 using std::ios;
 
+std::unordered_map<std::string,Font*> Font::font_map_;
+
 void Font::LoadCharacter(char ch) {
     //加载这个字的字形,加载到 m_FTFace上面去;Glyph：字形，图形字符 [glif];
     FT_Load_Glyph(ft_face_, FT_Get_Char_Index(ft_face_, ch), FT_LOAD_DEFAULT);

@@ -19,6 +19,7 @@
 #include "component/game_object.h"
 #include "component/transform.h"
 #include "control/key_code.h"
+#include "renderer/font.h"
 
 
 using namespace rttr;
@@ -45,6 +46,8 @@ void LoginScene::Awake() {
     CreateFishSoupPot();
 
     CreateQuad();
+
+    CreateFont();
 }
 
 void LoginScene::CreateFishSoupPot() {
@@ -96,6 +99,11 @@ void LoginScene::CreateQuad() {
     //挂上 MeshRenderer 组件
     auto mesh_renderer=dynamic_cast<MeshRenderer*>(go->AddComponent("MeshRenderer"));
     mesh_renderer->SetMaterial(material);
+}
+
+void LoginScene::CreateFont() {
+    Font* font=Font::LoadFromFile("font/hkyuan.ttf",24);
+    font->LoadCharacter('A');
 }
 
 void LoginScene::Update() {
