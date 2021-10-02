@@ -14,28 +14,6 @@ using std::ios;
 
 std::unordered_map<std::string,Font*> Font::font_map_;
 
-void Font::LoadCharacter(char ch) {
-    //加载这个字的字形,加载到 m_FTFace上面去;Glyph：字形，图形字符 [glif];
-    FT_Load_Glyph(ft_face_, FT_Get_Char_Index(ft_face_, ch), FT_LOAD_DEFAULT);
-
-    //从 FTFace上面读取这个字形  到 ft_glyph 变量;
-    FT_Glyph ft_glyph;
-    FT_Get_Glyph(ft_face_->glyph, &ft_glyph);
-    //渲染为256级灰度图
-    FT_Glyph_To_Bitmap(&ft_glyph, ft_render_mode_normal, 0, 1);
-
-    FT_BitmapGlyph ft_bitmap_glyph = (FT_BitmapGlyph)ft_glyph;
-    FT_Bitmap& ft_bitmap_src = ft_bitmap_glyph->bitmap;
-    font_texture_->UpdateSubImage(0,0,ft_bitmap_src.width,ft_bitmap_src.rows,GL_ALPHA,GL_UNSIGNED_BYTE,ft_bitmap_src.buffer);
-
-//    std::ofstream o("./update.bin");
-//    if(o){
-//        o.write(reinterpret_cast<const char *>(ft_bitmap_src.buffer), ft_bitmap_src.width * ft_bitmap_src.rows);
-//        o.flush();
-//        o.close();
-//    }
-}
-
 Font* Font::LoadFromFile(std::string font_file_path,unsigned short font_size){
     Font* font=GetFont(font_file_path);
     if(font!= nullptr){
@@ -71,6 +49,7 @@ Font* Font::LoadFromFile(std::string font_file_path,unsigned short font_size){
         return nullptr;
     }
 
+    //创建Font实例，保存Freetype解析字体结果。
     font=new Font();
     font->font_size_=font_size;
     font->font_file_buffer_=font_file_buffer;
@@ -86,6 +65,23 @@ Font* Font::LoadFromFile(std::string font_file_path,unsigned short font_size){
 
     return font;
 }
+
+
+void Font::LoadCharacter(char ch) {
+    //加载这个字的字形,加载到 m_FTFace上面去;Glyph：字形，图形字符 [glif];
+    FT_Load_Glyph(ft_face_, FT_Get_Char_Index(ft_face_, ch), FT_LOAD_DEFAULT);
+
+    //从 FTFace上面读取这个字形  到 ft_glyph 变量;
+    FT_Glyph ft_glyph;
+    FT_Get_Glyph(ft_face_->glyph, &ft_glyph);
+    //渲染为256级灰度图
+    FT_Glyph_To_Bitmap(&ft_glyph, ft_render_mode_normal, 0, 1);
+
+    FT_BitmapGlyph ft_bitmap_glyph = (FT_BitmapGlyph)ft_glyph;
+    FT_Bitmap& ft_bitmap = ft_bitmap_glyph->bitmap;
+    font_texture_->UpdateSubImage(0, 0, ft_bitmap.width, ft_bitmap.rows, GL_ALPHA, GL_UNSIGNED_BYTE, ft_bitmap.buffer);
+}
+
 
 Font* Font::GetFont(std::string font_file_path) {
     return font_map_[font_file_path];

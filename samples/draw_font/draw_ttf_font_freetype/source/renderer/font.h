@@ -12,7 +12,7 @@
 class Texture2D;
 class Font {
 public:
-    /// 从freetype加载一个字符
+    /// freetype为字符生成bitmap
     /// \param c
     void LoadCharacter(char ch);
 
@@ -28,7 +28,8 @@ private:
 
 public:
     /// 加载一个字体文件并解析
-    /// \param image_file_path ttf路径
+    /// \param image_file_path ttf字体文件路径
+    /// \param font_size 默认文字尺寸
     /// \return
     static Font* LoadFromFile(std::string font_file_path,unsigned short font_size);
 

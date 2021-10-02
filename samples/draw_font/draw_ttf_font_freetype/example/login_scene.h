@@ -25,7 +25,7 @@ private:
     /// 创建鱼缸
     void CreateFishSoupPot();
 
-    /// 创建用于渲染文字图像
+    /// 创建文字
     void CreateFont();
 private:
     Transform* transform_fishsoup_pot_;
