@@ -31,16 +31,19 @@ void Pass::Parse(rapidxml::xml_node<>* pass_node) {
     while (pass_texture_node!= nullptr){
         rapidxml::xml_attribute<>* pass_texture_name_attribute=pass_texture_node->first_attribute("name");
         if(pass_texture_name_attribute== nullptr){
-            return;
+            break;
         }
 
         rapidxml::xml_attribute<>* pass_texture_image_attribute=pass_texture_node->first_attribute("image");
         if(pass_texture_image_attribute== nullptr){
-            return;
+            break;
         }
 
         std::string shader_property_name=pass_texture_name_attribute->value();
         std::string image_path=pass_texture_image_attribute->value();
+        if(image_path.empty()){//texture可以在代码中指定。
+            break;
+        }
         textures_.push_back(std::make_pair(pass_texture_name_attribute->value(),Texture2D::LoadFromFile(image_path)));
 
         pass_texture_node=pass_texture_node->next_sibling("texture");

@@ -45,8 +45,6 @@ void LoginScene::Awake() {
 
     CreateFishSoupPot();
 
-    CreateQuad();
-
     CreateFont();
 }
 
@@ -69,7 +67,7 @@ void LoginScene::CreateFishSoupPot() {
     mesh_renderer->SetMaterial(material);
 }
 
-void LoginScene::CreateQuad() {
+void LoginScene::CreateFont() {
     vector<MeshFilter::Vertex> vertex_vector={
             {{-1.0f, -1.0f, 1.0f}, {1.0f,1.0f,1.0f,1.0f},   {0.0f, 0.0f}},
             {{ 1.0f, -1.0f, 1.0f}, {1.0f,1.0f,1.0f,1.0f},   {1.0f, 0.0f}},
@@ -99,22 +97,18 @@ void LoginScene::CreateQuad() {
     //挂上 MeshRenderer 组件
     auto mesh_renderer=dynamic_cast<MeshRenderer*>(go->AddComponent("MeshRenderer"));
     mesh_renderer->SetMaterial(material);
-}
 
-void LoginScene::CreateFont() {
+    //生成文字贴图
     Font* font=Font::LoadFromFile("font/hkyuan.ttf",500);
     font->LoadCharacter('A');
+
+    //使用文字贴图
+    material->SetTexture("u_diffuse_texture", font->font_texture());
 }
 
 void LoginScene::Update() {
     camera_1_->SetView(glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
     camera_1_->SetProjection(60.f, Screen::aspect_ratio(), 1.f, 1000.f);
-
-    //更换贴图
-    if(Input::GetKeyUp(KEY_CODE_C)){
-        Font* font=Font::GetFont("font/hkyuan.ttf");
-        material->SetTexture("u_diffuse_texture", font->font_texture());
-    }
 
     //旋转物体
     if(Input::GetKeyDown(KEY_CODE_R)){
