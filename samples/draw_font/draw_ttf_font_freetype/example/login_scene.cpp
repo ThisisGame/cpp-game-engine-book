@@ -102,13 +102,19 @@ void LoginScene::CreateQuad() {
 }
 
 void LoginScene::CreateFont() {
-    Font* font=Font::LoadFromFile("font/hkyuan.ttf",24);
+    Font* font=Font::LoadFromFile("font/hkyuan.ttf",500);
     font->LoadCharacter('A');
 }
 
 void LoginScene::Update() {
     camera_1_->SetView(glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
     camera_1_->SetProjection(60.f, Screen::aspect_ratio(), 1.f, 1000.f);
+
+    //更换贴图
+    if(Input::GetKeyUp(KEY_CODE_C)){
+        Font* font=Font::GetFont("font/hkyuan.ttf");
+        material->SetTexture("u_diffuse_texture", font->font_texture());
+    }
 
     //旋转物体
     if(Input::GetKeyDown(KEY_CODE_R)){

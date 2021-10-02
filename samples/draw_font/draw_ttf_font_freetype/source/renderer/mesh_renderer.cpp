@@ -103,6 +103,8 @@ void MeshRenderer::Render() {
         GLuint gl_program_id=pass->shader()->gl_program_id();
         glUseProgram(gl_program_id);
         glEnable(GL_DEPTH_TEST);
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
         GLint mvp_location = glGetUniformLocation(gl_program_id, "u_mvp");
         GLint vpos_location = glGetAttribLocation(gl_program_id, "a_pos");

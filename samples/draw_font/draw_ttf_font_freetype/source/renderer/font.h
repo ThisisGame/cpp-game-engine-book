@@ -16,12 +16,15 @@ public:
     /// \param c
     void LoadCharacter(char ch);
 
+    Texture2D* font_texture(){return font_texture_;}
+
 private:
     unsigned short font_size_=20;//默认字体大小
     char* font_file_buffer_= nullptr;//ttf字体文件加载到内存
     FT_Library ft_library_;
     FT_Face ft_face_;
     Texture2D* font_texture_;
+    unsigned short font_texture_size_=1024;
 
 public:
     /// 加载一个字体文件并解析

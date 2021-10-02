@@ -21,15 +21,19 @@ void Font::LoadCharacter(char ch) {
     //从 FTFace上面读取这个字形  到 ft_glyph 变量;
     FT_Glyph ft_glyph;
     FT_Get_Glyph(ft_face_->glyph, &ft_glyph);
-    //启用反锯齿
-    FT_Glyph_To_Bitmap(&ft_glyph, ft_render_mode_mono, 0, 1);
+    //渲染为256级灰度图
+    FT_Glyph_To_Bitmap(&ft_glyph, ft_render_mode_normal, 0, 1);
 
     FT_BitmapGlyph ft_bitmap_glyph = (FT_BitmapGlyph)ft_glyph;
     FT_Bitmap& ft_bitmap_src = ft_bitmap_glyph->bitmap;
-
     font_texture_->UpdateSubImage(0,0,ft_bitmap_src.width,ft_bitmap_src.rows,GL_ALPHA,GL_UNSIGNED_BYTE,ft_bitmap_src.buffer);
 
-    FT_Bitmap_Done(ft_library_, &ft_bitmap_src);
+//    std::ofstream o("./update.bin");
+//    if(o){
+//        o.write(reinterpret_cast<const char *>(ft_bitmap_src.buffer), ft_bitmap_src.width * ft_bitmap_src.rows);
+//        o.flush();
+//        o.close();
+//    }
 }
 
 Font* Font::LoadFromFile(std::string font_file_path,unsigned short font_size){
@@ -49,6 +53,7 @@ Font* Font::LoadFromFile(std::string font_file_path,unsigned short font_size){
     //将ttf 传入FreeType解析
     FT_Library ft_library= nullptr;
     FT_Face ft_face= nullptr;
+    FT_Init_FreeType(&ft_library);//FreeType初始化;
     FT_Error error = FT_New_Memory_Face(ft_library, (const FT_Byte*)font_file_buffer, len, 0, &ft_face);
     if (error != 0){
         spdlog::error("FT_New_Memory_Face return error {}!",error);
@@ -69,11 +74,14 @@ Font* Font::LoadFromFile(std::string font_file_path,unsigned short font_size){
     font=new Font();
     font->font_size_=font_size;
     font->font_file_buffer_=font_file_buffer;
+    font->ft_library_=ft_library;
+    font->ft_face_=ft_face;
+    font_map_[font_file_path]=font;
 
     //创建空白的、仅Alpha通道纹理，用于生成文字。
-    unsigned char * pixels = (unsigned char *)malloc(1024 * 1024);
-    memset(pixels, 0,1024*1024);
-    font->font_texture_=Texture2D::Create(1024,1024,GL_ALPHA,GL_ALPHA,GL_UNSIGNED_BYTE,pixels);
+    unsigned char * pixels = (unsigned char *)malloc(font->font_texture_size_ * font->font_texture_size_);
+    memset(pixels, 0,font->font_texture_size_*font->font_texture_size_);
+    font->font_texture_=Texture2D::Create(font->font_texture_size_,font->font_texture_size_,GL_ALPHA,GL_ALPHA,GL_UNSIGNED_BYTE,pixels);
     delete pixels;
 
     return font;
