@@ -41,9 +41,6 @@ void Pass::Parse(rapidxml::xml_node<>* pass_node) {
 
         std::string shader_property_name=pass_texture_name_attribute->value();
         std::string image_path=pass_texture_image_attribute->value();
-        if(image_path.empty()){//texture可以在代码中指定。
-            break;
-        }
         textures_.push_back(std::make_pair(pass_texture_name_attribute->value(),Texture2D::LoadFromFile(image_path)));
 
         pass_texture_node=pass_texture_node->next_sibling("texture");
