@@ -26,4 +26,4 @@ link_libraries(${glfw_LIBRARIES})
 message(${glfw_SOURCES})
 
 #源代码文件
-add_executable(untitled main.cpp ${glfw_SOURCES} ${glfw_HEADERS} ${TINYCTHREAD} ${GLAD_GL})
+add_executable(untitled main.cpp ${glfw_SOURCES} ${TINYCTHREAD} ${GLAD_GL})
