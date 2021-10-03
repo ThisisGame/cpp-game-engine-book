@@ -1,3 +1,5 @@
+# 设置glfw所在目录
+set(GLFW_SOURCE_DIR depends/glfw-3.3-3.4)
 
 #--------------------------------------------------------------------
 # Detect and select backend APIs
@@ -10,6 +12,8 @@ elseif (GLFW_USE_OSMESA)
     message(STATUS "Using OSMesa for headless context creation")
 elseif (WIN32)
     set(_GLFW_WIN32 1)
+    add_definitions(-D _GLFW_WIN32)
+    link_libraries(opengl32)
     message(STATUS "Using Win32 for window creation")
 elseif (APPLE)
     set(_GLFW_COCOA 1)
@@ -35,8 +39,6 @@ if (_GLFW_COCOA)
     set(glfw_PKG_DEPS "")
     set(glfw_PKG_LIBS "-framework Cocoa -framework IOKit -framework CoreFoundation")
 endif()
-
-set(GLFW_SOURCE_DIR depends/glfw-3.3-3.4)
 
 
 set(common_HEADERS ${GLFW_SOURCE_DIR}/src/internal.h ${GLFW_SOURCE_DIR}/src/mappings.h
@@ -65,11 +67,11 @@ if (_GLFW_COCOA)
             ${GLFW_SOURCE_DIR}/src/cocoa_monitor.m ${GLFW_SOURCE_DIR}/src/cocoa_window.m ${GLFW_SOURCE_DIR}/src/cocoa_time.c ${GLFW_SOURCE_DIR}/src/posix_thread.c
             ${GLFW_SOURCE_DIR}/src/nsgl_context.m ${GLFW_SOURCE_DIR}/src/egl_context.c ${GLFW_SOURCE_DIR}/src/osmesa_context.c)
 elseif (_GLFW_WIN32)
-    set(glfw_HEADERS ${common_HEADERS} win32_platform.h win32_joystick.h
-            wgl_context.h egl_context.h osmesa_context.h)
-    set(glfw_SOURCES ${common_SOURCES} win32_init.c win32_joystick.c
-            win32_monitor.c win32_time.c win32_thread.c win32_window.c
-            wgl_context.c egl_context.c osmesa_context.c)
+    set(glfw_HEADERS ${common_HEADERS} ${GLFW_SOURCE_DIR}/src/win32_platform.h ${GLFW_SOURCE_DIR}/src/win32_joystick.h
+            ${GLFW_SOURCE_DIR}/src/wgl_context.h ${GLFW_SOURCE_DIR}/src/egl_context.h ${GLFW_SOURCE_DIR}/src/osmesa_context.h)
+    set(glfw_SOURCES ${common_SOURCES} ${GLFW_SOURCE_DIR}/src/win32_init.c ${GLFW_SOURCE_DIR}/src/win32_joystick.c
+            ${GLFW_SOURCE_DIR}/src/win32_monitor.c ${GLFW_SOURCE_DIR}/src/win32_time.c ${GLFW_SOURCE_DIR}/src/win32_thread.c ${GLFW_SOURCE_DIR}/src/win32_window.c
+            ${GLFW_SOURCE_DIR}/src/wgl_context.c ${GLFW_SOURCE_DIR}/src/egl_context.c ${GLFW_SOURCE_DIR}/src/osmesa_context.c)
 elseif (_GLFW_X11)
     set(glfw_HEADERS ${common_HEADERS} x11_platform.h xkb_unicode.h posix_time.h
             posix_thread.h glx_context.h egl_context.h osmesa_context.h)
