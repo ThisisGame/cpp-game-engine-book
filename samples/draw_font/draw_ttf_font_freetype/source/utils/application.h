@@ -6,9 +6,9 @@
 #define UNTITLED_APPLICATION_H
 
 #include <string>
-#include <glad/gl.h>
-#include <GLFW/glfw3.h>
 
+
+class GLFWwindow;
 class Application {
 public:
     static const std::string& data_path(){return data_path_;}

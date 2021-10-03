@@ -3,6 +3,8 @@ project(untitled)
 
 set(CMAKE_CXX_STANDARD 17)
 
+add_compile_options(/wd4819)#忽略保存为unicode警告
+
 include(CMakeLists.txt.FreeType)
 
 #拷贝depends目录

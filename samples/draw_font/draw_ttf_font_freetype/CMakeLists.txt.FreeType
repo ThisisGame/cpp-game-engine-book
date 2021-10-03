@@ -4,6 +4,8 @@ file(COPY "../../template/depends/freetype-2.11.0/" DESTINATION "../depends/free
 add_definitions(-D FT2_BUILD_LIBRARY)
 #add_definitions(-D FT_DEBUG_LEVEL_TRACE)
 
+add_compile_options(/wd4312)#忽略类型转换错误警告
+
 include_directories("depends/freetype")
 include_directories("depends/freetype/include")
 
