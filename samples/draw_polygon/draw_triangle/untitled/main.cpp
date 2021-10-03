@@ -1,3 +1,4 @@
+#include <iostream>
 #include <glad/gl.h>
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
@@ -12,6 +13,8 @@
 
 #include "VertexData.h"
 #include "ShaderSource.h"
+
+using namespace std;
 
 static void error_callback(int error, const char* description)
 {
@@ -31,8 +34,10 @@ void init_opengl()
     if (!glfwInit())
         exit(EXIT_FAILURE);
 
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
 
     //创建窗口
     window = glfwCreateWindow(960, 640, "Simple example", NULL, NULL);
@@ -45,6 +50,12 @@ void init_opengl()
     glfwMakeContextCurrent(window);
     gladLoadGL(glfwGetProcAddress);
     glfwSwapInterval(1);
+
+    // get version info
+    const GLubyte* renderer = glGetString (GL_RENDERER); // get renderer string
+    const GLubyte* version = glGetString (GL_VERSION); // version as a string
+    std::cout<<"Renderer: "<<renderer<<std::endl;
+    std::cout<<"OpenGL version supported "<<version<<std::endl;
 }
 
 //编译、链接Shader
@@ -56,6 +67,15 @@ void compile_shader()
     glShaderSource(vertex_shader, 1, &vertex_shader_text, NULL);
     //编译Shader
     glCompileShader(vertex_shader);
+    //获取编译结果
+    GLint compile_status=GL_FALSE;
+    glGetShaderiv(vertex_shader, GL_COMPILE_STATUS, &compile_status);
+    if (compile_status == GL_FALSE)
+    {
+        GLchar message[256];
+        glGetShaderInfoLog(vertex_shader, sizeof(message), 0, message);
+        cout<<"compile vs error:"<<message<<endl;
+    }
 
     //创建片段Shader
     fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
@@ -63,6 +83,16 @@ void compile_shader()
     glShaderSource(fragment_shader, 1, &fragment_shader_text, NULL);
     //编译Shader
     glCompileShader(fragment_shader);
+    //获取编译结果
+    compile_status=GL_FALSE;
+    glGetShaderiv(fragment_shader, GL_COMPILE_STATUS, &compile_status);
+    if (compile_status == GL_FALSE)
+    {
+        GLchar message[256];
+        glGetShaderInfoLog(fragment_shader, sizeof(message), 0, message);
+        cout<<"compile fs error:"<<message<<endl;
+    }
+
 
     //创建GPU程序
     program = glCreateProgram();
@@ -71,6 +101,15 @@ void compile_shader()
     glAttachShader(program, fragment_shader);
     //Link
     glLinkProgram(program);
+    //获取编译结果
+    GLint link_status=GL_FALSE;
+    glGetProgramiv(program, GL_LINK_STATUS, &link_status);
+    if (link_status == GL_FALSE)
+    {
+        GLchar message[256];
+        glGetProgramInfoLog(program, sizeof(message), 0, message);
+        cout<<"link error:"<<message<<endl;
+    }
 }
 
 int main(void)
@@ -103,8 +142,7 @@ int main(void)
         ratio = width / (float) height;
 
         glViewport(0, 0, width, height);
-        glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-        glClearColor(49.f/255,77.f/255,121.f/255,1.f);
+        glClear(GL_DEPTH_BUFFER_BIT);
 
         //坐标系变换
         glm::mat4 trans = glm::translate(glm::vec3(0,0,0)); //不移动顶点坐标;
