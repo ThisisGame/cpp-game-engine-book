@@ -1,3 +1,5 @@
+#include <glad/gl.h>
+#define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 
 int main(void)
@@ -19,6 +21,7 @@ int main(void)
 
     /* 激活上面创建的OpenGL上下文 */
     glfwMakeContextCurrent(window);
+    gladLoadGL(glfwGetProcAddress);
 
     /* 进入游戏引擎主循环 */
     while (!glfwWindowShouldClose(window))

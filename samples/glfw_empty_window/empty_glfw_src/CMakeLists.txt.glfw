@@ -63,14 +63,14 @@ set(TINYCTHREAD "${GLFW_SOURCE_DIR}/deps/tinycthread.h"
 if (_GLFW_COCOA)
     set(glfw_HEADERS ${common_HEADERS} ${GLFW_SOURCE_DIR}/src/cocoa_platform.h ${GLFW_SOURCE_DIR}/src/cocoa_joystick.h
             ${GLFW_SOURCE_DIR}/src/posix_thread.h ${GLFW_SOURCE_DIR}/src/nsgl_context.h ${GLFW_SOURCE_DIR}/src/egl_context.h ${GLFW_SOURCE_DIR}/src/osmesa_context.h)
-    set(glfw_SOURCES ${common_SOURCES} ${GLFW_SOURCE_DIR}/src/cocoa_init.m ${GLFW_SOURCE_DIR}/src/cocoa_joystick.m
+    set(glfw_SOURCES ${common_SOURCES} ${GLAD_GL} ${GLFW_SOURCE_DIR}/src/cocoa_init.m ${GLFW_SOURCE_DIR}/src/cocoa_joystick.m
             ${GLFW_SOURCE_DIR}/src/cocoa_monitor.m ${GLFW_SOURCE_DIR}/src/cocoa_window.m ${GLFW_SOURCE_DIR}/src/cocoa_time.c ${GLFW_SOURCE_DIR}/src/posix_thread.c
             ${GLFW_SOURCE_DIR}/src/nsgl_context.m ${GLFW_SOURCE_DIR}/src/egl_context.c ${GLFW_SOURCE_DIR}/src/osmesa_context.c)
     link_libraries(${glfw_LIBRARIES})
 elseif (_GLFW_WIN32)
     set(glfw_HEADERS ${common_HEADERS} ${GLFW_SOURCE_DIR}/src/win32_platform.h ${GLFW_SOURCE_DIR}/src/win32_joystick.h
             ${GLFW_SOURCE_DIR}/src/wgl_context.h ${GLFW_SOURCE_DIR}/src/egl_context.h ${GLFW_SOURCE_DIR}/src/osmesa_context.h)
-    set(glfw_SOURCES ${common_SOURCES} ${GLFW_SOURCE_DIR}/src/win32_init.c ${GLFW_SOURCE_DIR}/src/win32_joystick.c
+    set(glfw_SOURCES ${common_SOURCES} ${GLAD_GL} ${GLFW_SOURCE_DIR}/src/win32_init.c ${GLFW_SOURCE_DIR}/src/win32_joystick.c
             ${GLFW_SOURCE_DIR}/src/win32_monitor.c ${GLFW_SOURCE_DIR}/src/win32_time.c ${GLFW_SOURCE_DIR}/src/win32_thread.c ${GLFW_SOURCE_DIR}/src/win32_window.c
             ${GLFW_SOURCE_DIR}/src/wgl_context.c ${GLFW_SOURCE_DIR}/src/egl_context.c ${GLFW_SOURCE_DIR}/src/osmesa_context.c)
 elseif (_GLFW_X11)
