@@ -13,8 +13,5 @@ file(COPY "../../template/depends/glfw-3.3-3.4/" DESTINATION "../depends/glfw-3.
 
 include(CMakeLists.txt.glfw)
 
-#头文件目录
-include_directories("depends/glfw-3.3-3.4/include")
-
 #源代码文件
-add_executable(untitled main.cpp ${glfw_SOURCES})
+add_executable(untitled main.cpp ${glfw_sources})
