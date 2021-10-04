@@ -28,14 +28,16 @@ GLint mvp_location, vpos_location, vcol_location;
 //初始化OpenGL
 void init_opengl()
 {
+    cout<<"init opengl"<<endl;
+
     //设置错误回调
     glfwSetErrorCallback(error_callback);
 
     if (!glfwInit())
         exit(EXIT_FAILURE);
 
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
 
@@ -51,11 +53,7 @@ void init_opengl()
     gladLoadGL(glfwGetProcAddress);
     glfwSwapInterval(1);
 
-    // get version info
-    const GLubyte* renderer = glGetString (GL_RENDERER); // get renderer string
-    const GLubyte* version = glGetString (GL_VERSION); // version as a string
-    std::cout<<"Renderer: "<<renderer<<std::endl;
-    std::cout<<"OpenGL version supported "<<version<<std::endl;
+
 }
 
 //编译、链接Shader
@@ -130,6 +128,8 @@ int main(void)
     //启用顶点Shader属性(a_color)，指定与顶点颜色数据进行关联
     glEnableVertexAttribArray(vcol_location);
     glVertexAttribPointer(vcol_location, 3, GL_FLOAT, false, sizeof(glm::vec4), kColors);
+
+    cout<<"mvp:"<<mvp_location<<" vpos:"<<vpos_location<<" vcol:"<<vcol_location<<" program:"<<program<<endl;
 
     while (!glfwWindowShouldClose(window))
     {

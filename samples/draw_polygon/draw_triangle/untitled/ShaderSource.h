@@ -7,7 +7,7 @@
 
 //顶点着色器代码
 static const char* vertex_shader_text =
-        "#version 410\n"
+        "#version 330\n"
 
         "uniform mat4 u_mvp;\n"
 
@@ -23,7 +23,7 @@ static const char* vertex_shader_text =
         "}\n";
 //片段着色器代码
 static const char* fragment_shader_text =
-        "#version 410\n"
+        "#version 330\n"
         "in vec4 v_color;\n"
         "layout(location = 0) out vec4 o_fragColor;\n"
         "void main()\n"
