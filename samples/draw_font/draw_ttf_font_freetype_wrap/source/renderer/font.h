@@ -8,6 +8,7 @@
 #include <iostream>
 #include <unordered_map>
 #include "freetype/ftglyph.h"
+#include "glm/glm.hpp"
 
 class Texture2D;
 class Font {
@@ -18,9 +19,24 @@ public:
     /// \param c
     void LoadCharacter(char ch);
 
-    /// 为字符串生成bitmap
+    /// 记录单个字符在图集上的坐标、宽高，用于生成同尺寸的顶点数据，1：1渲染。
+    struct Character{
+        unsigned short x_;
+        unsigned short y_;
+        unsigned short width_;
+        unsigned short height_;
+        Character(unsigned short x,unsigned short y,unsigned short width,unsigned short height){
+            x_=x;
+            y_=y;
+            width_=width;
+            height_=height;
+        }
+    };
+
+    /// 为字符串生成bitmap，返回字符串每个字符的Character数据。
     /// \param str
-    void LoadStr(std::string str);
+    /// \return
+    std::vector<Character*> LoadStr(std::string str);
 
 private:
     unsigned short font_size_=20;//默认字体大小
@@ -31,6 +47,7 @@ private:
     unsigned short font_texture_size_=1024;
     unsigned short font_texture_fill_x=0;//
     unsigned short font_texture_fill_y=0;
+    std::unordered_map<char,Character*> character_map_;//已经生成bitmap的字符
 
 public:
     /// 加载一个字体文件并解析

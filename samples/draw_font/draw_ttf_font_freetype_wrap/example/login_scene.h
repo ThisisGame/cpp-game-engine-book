@@ -29,7 +29,7 @@ private:
     void CreateFont();
 private:
     Transform* transform_fishsoup_pot_;
-    Material* material;
+//    Material* material;
 
     Transform* transform_camera_1_;
     Camera*     camera_1_;

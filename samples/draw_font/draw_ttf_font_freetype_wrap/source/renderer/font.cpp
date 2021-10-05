@@ -66,7 +66,14 @@ Font* Font::LoadFromFile(std::string font_file_path,unsigned short font_size){
     return font;
 }
 
+Font* Font::GetFont(std::string font_file_path) {
+    return font_map_[font_file_path];
+}
+
 void Font::LoadCharacter(char ch) {
+    if(character_map_[ch]!= nullptr){
+        return;
+    }
     //加载这个字的字形,加载到 m_FTFace上面去;Glyph：字形，图形字符 [glif];
     FT_Load_Glyph(ft_face_, FT_Get_Char_Index(ft_face_, ch), FT_LOAD_DEFAULT);
 
@@ -90,15 +97,29 @@ void Font::LoadCharacter(char ch) {
     }
     font_texture_->UpdateSubImage(font_texture_fill_x, font_texture_fill_y, ft_bitmap.width, ft_bitmap.rows, GL_ALPHA, GL_UNSIGNED_BYTE, ft_bitmap.buffer);
     font_texture_fill_x+=ft_bitmap.width;
+
+    //存储字符信息
+    Character* character=new Character(font_texture_fill_x,font_texture_fill_y,ft_bitmap.width,ft_bitmap.rows);
+    character_map_[ch]=character;
 }
 
-void Font::LoadStr(std::string str) {
+std::vector<Font::Character*> Font::LoadStr(std::string str) {
+    //生成所有的字符 bitmap
     for(auto ch : str){
         LoadCharacter(ch);
     }
+    //返回所有字符信息
+    std::vector<Character*> character_vec;
+    for(auto ch : str){
+        auto character=character_map_[ch];
+        if(character==nullptr){
+            spdlog::error("LoadStr error,no bitmap,ch:{}",ch);
+            continue;
+        }
+        character_vec.push_back(character);
+    }
+    return character_vec;
 }
 
-Font* Font::GetFont(std::string font_file_path) {
-    return font_map_[font_file_path];
-}
+
 

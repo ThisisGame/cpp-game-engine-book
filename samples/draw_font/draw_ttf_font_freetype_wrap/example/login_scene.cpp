@@ -68,42 +68,45 @@ void LoginScene::CreateFishSoupPot() {
 }
 
 void LoginScene::CreateFont() {
-    vector<MeshFilter::Vertex> vertex_vector={
-            {{-1.0f, -1.0f, 1.0f}, {1.0f,1.0f,1.0f,1.0f},   {0.0f, 0.0f}},
-            {{ 1.0f, -1.0f, 1.0f}, {1.0f,1.0f,1.0f,1.0f},   {1.0f, 0.0f}},
-            {{ 1.0f,  1.0f, 1.0f}, {1.0f,1.0f,1.0f,1.0f},   {1.0f, 1.0f}},
-            {{-1.0f,  1.0f, 1.0f}, {1.0f,1.0f,1.0f,1.0f},   {0.0f, 1.0f}}
-    };
-    vector<unsigned short> index_vector={
-            0,1,2,
-            0,2,3
-    };
-    //创建模型 GameObject
-    auto go=new GameObject("quad_draw_font");
-    go->set_layer(0x01);
-
-    //挂上 Transform 组件
-    auto transform=dynamic_cast<Transform*>(go->AddComponent("Transform"));
-    transform->set_position({2.f,0.f,0.f});
-
-    //挂上 MeshFilter 组件
-    auto mesh_filter=dynamic_cast<MeshFilter*>(go->AddComponent("MeshFilter"));
-    mesh_filter->CreateMesh(vertex_vector,index_vector);
-
-    //创建 Material
-    material=new Material();//设置材质
-    material->Parse("material/quad_draw_font.mat");
-
-    //挂上 MeshRenderer 组件
-    auto mesh_renderer=dynamic_cast<MeshRenderer*>(go->AddComponent("MeshRenderer"));
-    mesh_renderer->SetMaterial(material);
-
+    std::string str="CaptainChen";
     //生成文字贴图
     Font* font=Font::LoadFromFile("font/hkyuan.ttf",300);
-//    font->LoadCharacter('A');
-    font->LoadStr("hi CaptainChen");
-    //使用文字贴图
-    material->SetTexture("u_diffuse_texture", font->font_texture());
+    std::vector<Font::Character*> character_vec=font->LoadStr(str);
+
+    for(auto character : character_vec){
+        vector<MeshFilter::Vertex> vertex_vector={
+                {{-1.0f, -1.0f, 1.0f}, {1.0f,1.0f,1.0f,1.0f},   {0.0f, 0.0f}},
+                {{ 1.0f, -1.0f, 1.0f}, {1.0f,1.0f,1.0f,1.0f},   {1.0f, 0.0f}},
+                {{ 1.0f,  1.0f, 1.0f}, {1.0f,1.0f,1.0f,1.0f},   {1.0f, 1.0f}},
+                {{-1.0f,  1.0f, 1.0f}, {1.0f,1.0f,1.0f,1.0f},   {0.0f, 1.0f}}
+        };
+        vector<unsigned short> index_vector={
+                0,1,2,
+                0,2,3
+        };
+        //创建模型 GameObject
+        auto go=new GameObject("quad_draw_font");
+        go->set_layer(0x01);
+
+        //挂上 Transform 组件
+        auto transform=dynamic_cast<Transform*>(go->AddComponent("Transform"));
+        transform->set_position({2.f,0.f,0.f});
+
+        //挂上 MeshFilter 组件
+        auto mesh_filter=dynamic_cast<MeshFilter*>(go->AddComponent("MeshFilter"));
+        mesh_filter->CreateMesh(vertex_vector,index_vector);
+
+        //创建 Material
+        auto material=new Material();//设置材质
+        material->Parse("material/quad_draw_font.mat");
+
+        //挂上 MeshRenderer 组件
+        auto mesh_renderer=dynamic_cast<MeshRenderer*>(go->AddComponent("MeshRenderer"));
+        mesh_renderer->SetMaterial(material);
+
+        //使用文字贴图
+        material->SetTexture("u_diffuse_texture", font->font_texture());
+    }
 }
 
 void LoginScene::Update() {
