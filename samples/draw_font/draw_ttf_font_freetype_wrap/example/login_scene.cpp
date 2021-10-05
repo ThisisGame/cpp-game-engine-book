@@ -43,7 +43,7 @@ void LoginScene::Awake() {
 
     last_frame_mouse_position_=Input::mousePosition();
 
-//    CreateFishSoupPot();
+    CreateFishSoupPot();
 
     CreateFont();
 }
@@ -68,17 +68,21 @@ void LoginScene::CreateFishSoupPot() {
 }
 
 void LoginScene::CreateFont() {
-    std::string str="CaptainChen";
+    std::string str="Captain";
     //生成文字贴图
-    Font* font=Font::LoadFromFile("font/hkyuan.ttf",300);
+    Font* font=Font::LoadFromFile("font/hkyuan.ttf",100);
     std::vector<Font::Character*> character_vec=font->LoadStr(str);
 
+    //遍历每个字符进行绘制
+    int offset_x=0;
     for(auto character : character_vec){
+        offset_x+=2;
+        //因为FreeType生成的bitmap是上下颠倒的，所以这里UV坐标也要做对应翻转，将左上角作为零点。
         vector<MeshFilter::Vertex> vertex_vector={
-                {{-1.0f, -1.0f, 1.0f}, {1.0f,1.0f,1.0f,1.0f},   {0.0f, 0.0f}},
-                {{ 1.0f, -1.0f, 1.0f}, {1.0f,1.0f,1.0f,1.0f},   {1.0f, 0.0f}},
-                {{ 1.0f,  1.0f, 1.0f}, {1.0f,1.0f,1.0f,1.0f},   {1.0f, 1.0f}},
-                {{-1.0f,  1.0f, 1.0f}, {1.0f,1.0f,1.0f,1.0f},   {0.0f, 1.0f}}
+                {{-1.0f+offset_x, 2.0f, 1.0f}, {1.0f,1.0f,1.0f,1.0f},   {character->left_top_x_, character->right_bottom_y_}},
+                {{ 1.0f+offset_x, 2.0f, 1.0f}, {1.0f,1.0f,1.0f,1.0f},   {character->right_bottom_x_, character->right_bottom_y_}},
+                {{ 1.0f+offset_x,  4.0f, 1.0f}, {1.0f,1.0f,1.0f,1.0f},   {character->right_bottom_x_, character->left_top_y_}},
+                {{-1.0f+offset_x,  4.0f, 1.0f}, {1.0f,1.0f,1.0f,1.0f},   {character->left_top_x_, character->left_top_y_}}
         };
         vector<unsigned short> index_vector={
                 0,1,2,
@@ -90,7 +94,7 @@ void LoginScene::CreateFont() {
 
         //挂上 Transform 组件
         auto transform=dynamic_cast<Transform*>(go->AddComponent("Transform"));
-        transform->set_position({2.f,0.f,0.f});
+        transform->set_position({-8.f,0.f,0.f});
 
         //挂上 MeshFilter 组件
         auto mesh_filter=dynamic_cast<MeshFilter*>(go->AddComponent("MeshFilter"));
@@ -113,14 +117,14 @@ void LoginScene::Update() {
     camera_1_->SetView(glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
     camera_1_->SetProjection(60.f, Screen::aspect_ratio(), 1.f, 1000.f);
 
-//    //旋转物体
-//    if(Input::GetKeyDown(KEY_CODE_R)){
-//        static float rotate_eulerAngle=0.f;
-//        rotate_eulerAngle+=0.1f;
-//        glm::vec3 rotation=transform_fishsoup_pot_->rotation();
-//        rotation.y=rotate_eulerAngle;
-//        transform_fishsoup_pot_->set_rotation(rotation);
-//    }
+    //旋转物体
+    if(Input::GetKeyDown(KEY_CODE_R)){
+        static float rotate_eulerAngle=0.f;
+        rotate_eulerAngle+=0.1f;
+        glm::vec3 rotation=transform_fishsoup_pot_->rotation();
+        rotation.y=rotate_eulerAngle;
+        transform_fishsoup_pot_->set_rotation(rotation);
+    }
 
     //旋转相机
     if(Input::GetKeyDown(KEY_CODE_LEFT_ALT) && Input::GetMouseButtonDown(MOUSE_BUTTON_LEFT)){

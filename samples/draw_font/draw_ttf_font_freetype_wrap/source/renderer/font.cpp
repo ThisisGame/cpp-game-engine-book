@@ -85,7 +85,7 @@ void Font::LoadCharacter(char ch) {
 
     FT_BitmapGlyph ft_bitmap_glyph = (FT_BitmapGlyph)ft_glyph;
     FT_Bitmap& ft_bitmap = ft_bitmap_glyph->bitmap;
-    spdlog::error("{}",ch);
+
     //计算新生成的字符，在图集中的排列。
     if(font_texture_fill_x+ft_bitmap.width>=font_texture_size_){//从左上角往右上角填充，满了就换一行。
         font_texture_fill_x=0;
@@ -96,11 +96,12 @@ void Font::LoadCharacter(char ch) {
         return;
     }
     font_texture_->UpdateSubImage(font_texture_fill_x, font_texture_fill_y, ft_bitmap.width, ft_bitmap.rows, GL_ALPHA, GL_UNSIGNED_BYTE, ft_bitmap.buffer);
-    font_texture_fill_x+=ft_bitmap.width;
 
     //存储字符信息
-    Character* character=new Character(font_texture_fill_x,font_texture_fill_y,ft_bitmap.width,ft_bitmap.rows);
+    Character* character=new Character(font_texture_fill_x*1.0f/font_texture_size_,font_texture_fill_y*1.0f/font_texture_size_,(font_texture_fill_x+ft_bitmap.width)*1.0f/font_texture_size_,(font_texture_fill_y+ft_bitmap.rows)*1.0f/font_texture_size_);
     character_map_[ch]=character;
+
+    font_texture_fill_x+=ft_bitmap.width;
 }
 
 std::vector<Font::Character*> Font::LoadStr(std::string str) {

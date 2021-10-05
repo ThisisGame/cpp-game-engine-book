@@ -21,15 +21,15 @@ public:
 
     /// 记录单个字符在图集上的坐标、宽高，用于生成同尺寸的顶点数据，1：1渲染。
     struct Character{
-        unsigned short x_;
-        unsigned short y_;
-        unsigned short width_;
-        unsigned short height_;
-        Character(unsigned short x,unsigned short y,unsigned short width,unsigned short height){
-            x_=x;
-            y_=y;
-            width_=width;
-            height_=height;
+        float left_top_x_;
+        float left_top_y_;
+        float right_bottom_x_;
+        float right_bottom_y_;
+        Character(float left_top_x,float left_top_y,float right_bottom_x,float right_bottom_y){
+            left_top_x_=left_top_x;
+            left_top_y_=left_top_y;
+            right_bottom_x_=right_bottom_x;
+            right_bottom_y_=right_bottom_y;
         }
     };
 
