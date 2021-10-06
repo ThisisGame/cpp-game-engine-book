@@ -14,4 +14,4 @@ void main()
     gl_Position = u_mvp * vec4(a_pos, 1.0);
     v_color = a_color;
     v_uv = a_uv;
-};
+}
