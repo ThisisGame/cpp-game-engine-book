@@ -36,10 +36,10 @@ void init_opengl()
     if (!glfwInit())
         exit(EXIT_FAILURE);
 
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+//    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+//    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
 
     //创建窗口
     window = glfwCreateWindow(960, 640, "Simple example", NULL, NULL);
@@ -129,8 +129,6 @@ int main(void)
     glEnableVertexAttribArray(vcol_location);
     glVertexAttribPointer(vcol_location, 3, GL_FLOAT, false, sizeof(glm::vec4), kColors);
 
-    cout<<"mvp:"<<mvp_location<<" vpos:"<<vpos_location<<" vcol:"<<vcol_location<<" program:"<<program<<endl;
-
     while (!glfwWindowShouldClose(window))
     {
         float ratio;
@@ -142,7 +140,9 @@ int main(void)
         ratio = width / (float) height;
 
         glViewport(0, 0, width, height);
-        glClear(GL_DEPTH_BUFFER_BIT);
+
+        glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+        glClearColor(49.f/255,77.f/255,121.f/255,1.f);
 
         //坐标系变换
         glm::mat4 trans = glm::translate(glm::vec3(0,0,0)); //不移动顶点坐标;
