@@ -3,13 +3,16 @@ project(untitled)
 
 set(CMAKE_CXX_STANDARD 17)
 
+if (WIN32)
+    add_compile_options(/wd4819)#忽略保存为unicode警告
+endif ()
 
-include_directories("depends/glfw-3.3.3.bin.WIN64/include")
-include_directories("depends/glfw-3.3.3.bin.WIN64/deps")
+include(CMakeLists.txt.glfw)
+
+#拷贝depends目录
+file(COPY "../../../template/depends/glfw-3.3-3.4/" DESTINATION "../depends/glfw-3.3-3.4/")
+file(COPY "../../../template/depends/glm/" DESTINATION "../depends/glm/")
+
 include_directories("depends")
 
-link_directories("depends/glfw-3.3.3.bin.WIN64/lib-static-ucrt")
-
-link_libraries(opengl32 glfw3dll)
-
-add_executable(untitled main.cpp depends/glfw-3.3.3.bin.WIN64/deps/glad_gl.c VertexData.h ShaderSource.h)
+add_executable(untitled ${glfw_sources} main.cpp)
