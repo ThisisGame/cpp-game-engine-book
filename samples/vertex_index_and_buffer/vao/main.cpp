@@ -86,31 +86,36 @@ void GeneratorBufferObject()
 {
     //在GPU上创建缓冲区对象
     glGenBuffers(1,&kVBO);
-
-    //在GPU上创建缓冲区对象
-    glGenBuffers(1,&kEBO);
-
-    glBindVertexArray(kVAO);
-
     //将缓冲区对象指定为顶点缓冲区对象
     glBindBuffer(GL_ARRAY_BUFFER, kVBO);
     //上传顶点数据到缓冲区对象
     glBufferData(GL_ARRAY_BUFFER, kVertexRemoveDumplicateVector.size() * sizeof(Vertex), &kVertexRemoveDumplicateVector[0], GL_STATIC_DRAW);
 
-
+    //在GPU上创建缓冲区对象
+    glGenBuffers(1,&kEBO);
     //将缓冲区对象指定为顶点索引缓冲区对象
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, kEBO);
     //上传顶点索引数据到缓冲区对象
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, kVertexIndexVector.size() * sizeof(unsigned short), &kVertexIndexVector[0], GL_STATIC_DRAW);
 
-    //指定当前使用的VBO
-    glBindBuffer(GL_ARRAY_BUFFER, kVBO);
-    //将Shader变量(a_pos)和顶点坐标VBO句柄进行关联，最后的0表示数据偏移量。
-    glVertexAttribPointer(vpos_location, 3, GL_FLOAT, false, sizeof(Vertex), 0);
-    //启用顶点Shader属性(a_color)，指定与顶点颜色数据进行关联
-    glVertexAttribPointer(vcol_location, 4, GL_FLOAT, false, sizeof(Vertex), (void*)(sizeof(float)*3));
-    //将Shader变量(a_uv)和顶点UV坐标VBO句柄进行关联，最后的0表示数据偏移量。
-    glVertexAttribPointer(a_uv_location, 2, GL_FLOAT, false, sizeof(Vertex), (void*)(sizeof(float)*(3+4)));
+    glBindVertexArray(kVAO);
+    {
+        //指定当前使用的VBO
+        glBindBuffer(GL_ARRAY_BUFFER, kVBO);
+        //将Shader变量(a_pos)和顶点坐标VBO句柄进行关联，最后的0表示数据偏移量。
+        glVertexAttribPointer(vpos_location, 3, GL_FLOAT, false, sizeof(Vertex), 0);
+        //启用顶点Shader属性(a_color)，指定与顶点颜色数据进行关联
+        glVertexAttribPointer(vcol_location, 4, GL_FLOAT, false, sizeof(Vertex), (void*)(sizeof(float)*3));
+        //将Shader变量(a_uv)和顶点UV坐标VBO句柄进行关联，最后的0表示数据偏移量。
+        glVertexAttribPointer(a_uv_location, 2, GL_FLOAT, false, sizeof(Vertex), (void*)(sizeof(float)*(3+4)));
+
+        glEnableVertexAttribArray(vpos_location);
+        glEnableVertexAttribArray(vcol_location);
+        glEnableVertexAttribArray(a_uv_location);
+
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, kEBO);
+    }
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 //https://learnopengl-cn.github.io/01%20Getting%20started/04%20Hello%20Triangle/
@@ -142,9 +147,7 @@ int main(void)
 
     GeneratorBufferObject();
 
-    glEnableVertexAttribArray(vpos_location);
-    glEnableVertexAttribArray(vcol_location);
-    glEnableVertexAttribArray(a_uv_location);
+
 
     while (!glfwWindowShouldClose(window))
     {
@@ -176,8 +179,9 @@ int main(void)
 
         //指定GPU程序(就是指定顶点着色器、片段着色器)
         glUseProgram(program);
+        {
             glEnable(GL_DEPTH_TEST);
-            
+
             //上传mvp矩阵
             glUniformMatrix4fv(mvp_location, 1, GL_FALSE, &mvp[0][0]);
 
@@ -190,9 +194,11 @@ int main(void)
             glUniform1i(u_diffuse_texture_location,GL_TEXTURE0);
 
             glBindVertexArray(kVAO);
-            glDrawElements(GL_TRIANGLES,36,GL_UNSIGNED_SHORT,0);//使用顶点索引进行绘制，最后的0表示数据偏移量。
+            {
+                glDrawElements(GL_TRIANGLES,36,GL_UNSIGNED_SHORT,0);//使用顶点索引进行绘制，最后的0表示数据偏移量。
+            }
             glBindVertexArray(0);
-
+        }
         glUseProgram(-1);
 
         glfwSwapBuffers(window);
