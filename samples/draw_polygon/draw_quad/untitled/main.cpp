@@ -38,8 +38,6 @@ void init_opengl()
 
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
-//    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-//    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
 
     //创建窗口
     window = glfwCreateWindow(960, 640, "Simple example", NULL, NULL);
@@ -52,7 +50,6 @@ void init_opengl()
     glfwMakeContextCurrent(window);
     gladLoadGL(glfwGetProcAddress);
     glfwSwapInterval(1);
-
 
 }
 
@@ -91,7 +88,6 @@ void compile_shader()
         cout<<"compile fs error:"<<message<<endl;
     }
 
-
     //创建GPU程序
     program = glCreateProgram();
     //附加Shader
@@ -120,14 +116,6 @@ int main(void)
     mvp_location = glGetUniformLocation(program, "u_mvp");
     vpos_location = glGetAttribLocation(program, "a_pos");
     vcol_location = glGetAttribLocation(program, "a_color");
-
-    //启用顶点Shader属性(a_pos)，指定与顶点坐标数据进行关联
-    glEnableVertexAttribArray(vpos_location);
-    glVertexAttribPointer(vpos_location, 3, GL_FLOAT, false, sizeof(glm::vec3), kPositions);
-
-    //启用顶点Shader属性(a_color)，指定与顶点颜色数据进行关联
-    glEnableVertexAttribArray(vcol_location);
-    glVertexAttribPointer(vcol_location, 3, GL_FLOAT, false, sizeof(glm::vec4), kColors);
 
     while (!glfwWindowShouldClose(window))
     {
@@ -158,6 +146,15 @@ int main(void)
 
         //指定GPU程序(就是指定顶点着色器、片段着色器)
         glUseProgram(program);
+
+        //启用顶点Shader属性(a_pos)，指定与顶点坐标数据进行关联
+        glEnableVertexAttribArray(vpos_location);
+        glVertexAttribPointer(vpos_location, 3, GL_FLOAT, false, sizeof(glm::vec3), kPositions);
+
+        //启用顶点Shader属性(a_color)，指定与顶点颜色数据进行关联
+        glEnableVertexAttribArray(vcol_location);
+        glVertexAttribPointer(vcol_location, 3, GL_FLOAT, false, sizeof(glm::vec4), kColors);
+
         //上传mvp矩阵
         glUniformMatrix4fv(mvp_location, 1, GL_FALSE, &mvp[0][0]);
         //上传顶点数据并进行绘制
