@@ -90,9 +90,6 @@ int main(void)
     vpos_location = glGetAttribLocation(program, "a_pos");
     vcol_location = glGetAttribLocation(program, "a_color");
 
-    glEnableVertexAttribArray(vpos_location);
-    glEnableVertexAttribArray(vcol_location);
-
     while (!glfwWindowShouldClose(window))
     {
         float ratio;
@@ -123,9 +120,14 @@ int main(void)
 
         //指定GPU程序(就是指定顶点着色器、片段着色器)
         glUseProgram(program);
+        {
             glEnable(GL_DEPTH_TEST);
+            glEnable(GL_CULL_FACE);//开启背面剔除
+
+            glEnableVertexAttribArray(vpos_location);
             //上传顶点坐标数据
             glVertexAttribPointer(vpos_location, 3, GL_FLOAT, false, sizeof(glm::vec3), kPositions);
+            glEnableVertexAttribArray(vcol_location);
             //上传顶点颜色数据
             glVertexAttribPointer(vcol_location, 3, GL_FLOAT, false, sizeof(glm::vec4), kColors);
             //上传mvp矩阵
@@ -133,7 +135,7 @@ int main(void)
 
             //void glDrawArrays(GLenum mode,GLint first,GLsizei count);
             glDrawArrays(GL_TRIANGLES, 0, 6*6);//表示从第0个顶点开始画，总共画6个面，每个面6个顶点。
-
+        }
         glUseProgram(-1);
 
         glfwSwapBuffers(window);

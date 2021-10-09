@@ -7,16 +7,16 @@
 #pragma region 顶点Shader和片段Shader
 
 static const char* vertex_shader_text =
-        "#version 330\n"
+        "#version 110\n"
 
         "uniform mat4 u_mvp;\n"
 
-        "layout(location = 0) in  vec3 a_pos;\n"
-        "layout(location = 1) in  vec4 a_color;\n"
-        "layout(location = 2) in  vec2 a_uv;\n"
+        "attribute  vec3 a_pos;\n"
+        "attribute  vec4 a_color;\n"
+        "attribute  vec2 a_uv;\n"
 
-        "out vec4 v_color;\n"
-        "out vec2 v_uv;\n"
+        "varying vec4 v_color;\n"
+        "varying vec2 v_uv;\n"
 
         "void main()\n"
         "{\n"
@@ -26,14 +26,13 @@ static const char* vertex_shader_text =
         "}\n";
 
 static const char* fragment_shader_text =
-        "#version 330\n"
+        "#version 110\n"
         "uniform sampler2D u_diffuse_texture;"
-        "in vec4 v_color;\n"
-        "in vec2 v_uv;\n"
-        "layout(location = 0) out vec4 o_fragColor;\n"
+        "varying vec4 v_color;\n"
+        "varying vec2 v_uv;\n"
         "void main()\n"
         "{\n"
-        "    o_fragColor = texture(u_diffuse_texture,v_uv);\n"
+        "    gl_FragColor = texture2D(u_diffuse_texture,v_uv);\n"
         "}\n";
 
 #pragma endregion
