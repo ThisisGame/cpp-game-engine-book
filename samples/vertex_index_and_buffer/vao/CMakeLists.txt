@@ -20,5 +20,5 @@ file(COPY "../../template/data/images/urban.cpt" DESTINATION "../data/images/")
 
 include_directories("depends")
 
-add_executable(untitled ${glfw_sources} main.cpp texture2d.cpp)
+add_executable(vao ${glfw_sources} main.cpp texture2d.cpp)
 

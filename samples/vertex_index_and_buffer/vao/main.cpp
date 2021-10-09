@@ -34,8 +34,12 @@ void init_opengl()
     if (!glfwInit())
         exit(EXIT_FAILURE);
 
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+#ifdef __APPLE__
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+#endif
 
     window = glfwCreateWindow(960, 640, "Simple example", NULL, NULL);
     if (!window)
@@ -81,7 +85,12 @@ void CreateTexture(std::string image_file_path)
     texture2d=Texture2D::LoadFromFile(image_file_path);
 }
 
-//创建VBO和EBO
+/// 创建VAO
+void GeneratorVertexArrayObject(){
+    glGenVertexArrays(1,&kVAO);
+}
+
+/// 创建VBO和EBO，设置VAO
 void GeneratorBufferObject()
 {
     //在GPU上创建缓冲区对象
@@ -97,7 +106,7 @@ void GeneratorBufferObject()
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, kEBO);
     //上传顶点索引数据到缓冲区对象
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, kVertexIndexVector.size() * sizeof(unsigned short), &kVertexIndexVector[0], GL_STATIC_DRAW);
-
+    //设置VAO
     glBindVertexArray(kVAO);
     {
         //指定当前使用的VBO
@@ -118,10 +127,6 @@ void GeneratorBufferObject()
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
-//https://learnopengl-cn.github.io/01%20Getting%20started/04%20Hello%20Triangle/
-void GeneratorVertexArrayObject(){
-    glGenVertexArrays(1,&kVAO);
-}
 
 int main(void)
 {
