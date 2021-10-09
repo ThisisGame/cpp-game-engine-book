@@ -93,19 +93,6 @@ int main(void)
     a_uv_location = glGetAttribLocation(program, "a_uv");
     u_diffuse_texture_location= glGetUniformLocation(program, "u_diffuse_texture");
 
-
-    //启用顶点Shader属性(a_pos)，指定与顶点坐标数据进行关联
-    glEnableVertexAttribArray(vpos_location);
-    glVertexAttribPointer(vpos_location, 3, GL_FLOAT, false, sizeof(Vertex), kVertexs);
-
-    //启用顶点Shader属性(a_color)，指定与顶点颜色数据进行关联
-    glEnableVertexAttribArray(vcol_location);
-    glVertexAttribPointer(vcol_location, 4, GL_FLOAT, false, sizeof(Vertex), ((float*)kVertexs) + 3);
-
-    //启用顶点Shader属性(a_uv)，指定与顶点UV数据进行关联
-    glEnableVertexAttribArray(a_uv_location);
-    glVertexAttribPointer(a_uv_location, 2, GL_FLOAT, false, sizeof(Vertex), ((float*)kVertexs) + 3 + 4);
-
     while (!glfwWindowShouldClose(window))
     {
         float ratio;
@@ -136,7 +123,21 @@ int main(void)
 
         //指定GPU程序(就是指定顶点着色器、片段着色器)
         glUseProgram(program);
+        {
             glEnable(GL_DEPTH_TEST);
+            glEnable(GL_CULL_FACE);//开启背面剔除
+
+            //启用顶点Shader属性(a_pos)，指定与顶点坐标数据进行关联
+            glEnableVertexAttribArray(vpos_location);
+            glVertexAttribPointer(vpos_location, 3, GL_FLOAT, false, sizeof(Vertex), kVertexs);
+
+            //启用顶点Shader属性(a_color)，指定与顶点颜色数据进行关联
+            glEnableVertexAttribArray(vcol_location);
+            glVertexAttribPointer(vcol_location, 4, GL_FLOAT, false, sizeof(Vertex), ((float*)kVertexs) + 3);
+
+            //启用顶点Shader属性(a_uv)，指定与顶点UV数据进行关联
+            glEnableVertexAttribArray(a_uv_location);
+            glVertexAttribPointer(a_uv_location, 2, GL_FLOAT, false, sizeof(Vertex), ((float*)kVertexs) + 3 + 4);
 
             //上传mvp矩阵
             glUniformMatrix4fv(mvp_location, 1, GL_FALSE, &mvp[0][0]);
@@ -151,7 +152,7 @@ int main(void)
 
             //void glDrawArrays(GLenum mode,GLint first,GLsizei count);
             glDrawArrays(GL_TRIANGLES, 0, 6*6);//表示从第0个顶点开始画，总共画6个面，每个面6个顶点。
-
+        }
         glUseProgram(-1);
 
         glfwSwapBuffers(window);

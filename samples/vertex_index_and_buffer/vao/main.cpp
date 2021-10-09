@@ -140,14 +140,8 @@ int main(void)
     a_uv_location = glGetAttribLocation(program, "a_uv");
     u_diffuse_texture_location= glGetUniformLocation(program, "u_diffuse_texture");
 
-
-
     GeneratorVertexArrayObject();
-
-
     GeneratorBufferObject();
-
-
 
     while (!glfwWindowShouldClose(window))
     {
@@ -181,7 +175,7 @@ int main(void)
         glUseProgram(program);
         {
             glEnable(GL_DEPTH_TEST);
-
+            glEnable(GL_CULL_FACE);//开启背面剔除
             //上传mvp矩阵
             glUniformMatrix4fv(mvp_location, 1, GL_FALSE, &mvp[0][0]);
 

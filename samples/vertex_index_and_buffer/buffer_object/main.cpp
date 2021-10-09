@@ -116,11 +116,6 @@ int main(void)
     a_uv_location = glGetAttribLocation(program, "a_uv");
     u_diffuse_texture_location= glGetUniformLocation(program, "u_diffuse_texture");
 
-
-    glEnableVertexAttribArray(vpos_location);
-    glEnableVertexAttribArray(vcol_location);
-    glEnableVertexAttribArray(a_uv_location);
-
     while (!glfwWindowShouldClose(window))
     {
         float ratio;
@@ -151,17 +146,22 @@ int main(void)
 
         //指定GPU程序(就是指定顶点着色器、片段着色器)
         glUseProgram(program);
+        {
             glEnable(GL_DEPTH_TEST);
+            glEnable(GL_CULL_FACE);//开启背面剔除
 
             //指定当前使用的VBO
             glBindBuffer(GL_ARRAY_BUFFER, kVBO);
             //将Shader变量(a_pos)和顶点坐标VBO句柄进行关联，最后的0表示数据偏移量。
+            glEnableVertexAttribArray(vpos_location);
             glVertexAttribPointer(vpos_location, 3, GL_FLOAT, false, sizeof(Vertex), 0);
             //启用顶点Shader属性(a_color)，指定与顶点颜色数据进行关联
+            glEnableVertexAttribArray(vcol_location);
             glVertexAttribPointer(vcol_location, 4, GL_FLOAT, false, sizeof(Vertex), (void*)(sizeof(float)*3));
             //将Shader变量(a_uv)和顶点UV坐标VBO句柄进行关联，最后的0表示数据偏移量。
+            glEnableVertexAttribArray(a_uv_location);
             glVertexAttribPointer(a_uv_location, 2, GL_FLOAT, false, sizeof(Vertex), (void*)(sizeof(float)*(3+4)));
-            
+
             //上传mvp矩阵
             glUniformMatrix4fv(mvp_location, 1, GL_FALSE, &mvp[0][0]);
 
@@ -176,7 +176,7 @@ int main(void)
             //指定当前使用的顶点索引缓冲区对象
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, kEBO);
             glDrawElements(GL_TRIANGLES,36,GL_UNSIGNED_SHORT,0);//使用顶点索引进行绘制，最后的0表示数据偏移量。
-
+        }
         glUseProgram(-1);
 
         glfwSwapBuffers(window);
