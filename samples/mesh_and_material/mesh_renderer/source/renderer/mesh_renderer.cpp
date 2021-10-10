@@ -11,7 +11,7 @@
 #include "pass.h"
 #include "shader.h"
 
-MeshRenderer::MeshRenderer():vertex_buffer_object(-1),element_buffer_object(-1) {
+MeshRenderer::MeshRenderer() {
 
 }
 
@@ -32,7 +32,7 @@ void MeshRenderer::SetMVP(glm::mat4 mvp) {
 }
 
 void MeshRenderer::Render() {
-    if (vertex_buffer_object==-1){
+    if (vertex_buffer_object==0){
         //在GPU上创建缓冲区对象
         glGenBuffers(1,&vertex_buffer_object);
         //将缓冲区对象指定为顶点缓冲区对象
@@ -40,7 +40,7 @@ void MeshRenderer::Render() {
         //上传顶点数据到缓冲区对象
         glBufferData(GL_ARRAY_BUFFER, mesh_filter_->mesh()->vertex_num_ * sizeof(MeshFilter::Vertex), mesh_filter_->mesh()->vertex_data_, GL_STATIC_DRAW);
     }
-    if(element_buffer_object==-1){
+    if(element_buffer_object==0){
         //在GPU上创建缓冲区对象
         glGenBuffers(1,&element_buffer_object);
         //将缓冲区对象指定为顶点索引缓冲区对象
