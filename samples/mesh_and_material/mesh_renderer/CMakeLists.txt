@@ -28,4 +28,4 @@ include_directories("depends")
 include_directories("source")
 
 file(GLOB_RECURSE engine_cpp source/*.cpp)
-add_executable(untitled ${glfw_c} ${engine_cpp})
+add_executable(untitled ${glfw_sources} ${engine_cpp})
