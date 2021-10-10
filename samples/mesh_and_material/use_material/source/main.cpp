@@ -106,8 +106,6 @@ int main(void)
     mesh_filter=new MeshFilter();
     mesh_filter->LoadMesh("model/cube.mesh");
 
-    GeneratorBufferObject();
-
     Material* material=new Material();
     material->Parse("material/cube.mat");
     //获取`Shader`的`gl_program_id`，指定为目标Shader程序。
