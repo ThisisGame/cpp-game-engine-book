@@ -3,24 +3,22 @@ project(untitled)
 
 set(CMAKE_CXX_STANDARD 17)
 
+if (WIN32)
+    add_compile_options(/wd4819)#忽略保存为unicode警告
+endif ()
+
+include(CMakeLists.txt.glfw)
+
 #拷贝depends目录
-file(COPY "../../template/depends/glfw-3.3.3.bin.WIN64/" DESTINATION "../depends/glfw-3.3.3.bin.WIN64/")
+file(COPY "../../template/depends/glfw-3.3-3.4/" DESTINATION "../depends/glfw-3.3-3.4/")
 file(COPY "../../template/depends/glm/" DESTINATION "../depends/glm/")
 file(COPY "../../template/depends/timetool/" DESTINATION "../depends/timetool/")
 
-#拷贝dll到exe目录
-file(COPY "depends/glfw-3.3.3.bin.WIN64/lib-static-ucrt/glfw3.dll" DESTINATION "./")
 
 #拷贝data文件
 file(COPY "../../template/data/images/urban.cpt" DESTINATION "../data/images/")
 
-include_directories("depends/glfw-3.3.3.bin.WIN64/include")
-include_directories("depends/glfw-3.3.3.bin.WIN64/deps")
 include_directories("depends")
 
-link_directories("depends/glfw-3.3.3.bin.WIN64/lib-static-ucrt")
-
-link_libraries(opengl32 glfw3dll)
-
-add_executable(untitled main.cpp depends/glfw-3.3.3.bin.WIN64/deps/glad_gl.c vertex_data.h shader_source.h texture2d.h texture2d.cpp)
+add_executable(export_mesh_file ${glfw_sources} main.cpp texture2d.cpp)
 

@@ -24,6 +24,7 @@ GLuint vertex_shader, fragment_shader, program;
 GLint mvp_location, vpos_location, vcol_location,u_diffuse_texture_location,a_uv_location;
 Texture2D* texture2d= nullptr;
 GLuint kVBO,kEBO;
+GLuint kVAO;
 
 //初始化OpenGL
 void init_opengl()
@@ -33,8 +34,12 @@ void init_opengl()
     if (!glfwInit())
         exit(EXIT_FAILURE);
 
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+#ifdef __APPLE__
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+#endif
 
     window = glfwCreateWindow(960, 640, "Simple example", NULL, NULL);
     if (!window)
@@ -80,7 +85,12 @@ void CreateTexture(std::string image_file_path)
     texture2d=Texture2D::LoadFromFile(image_file_path);
 }
 
-//创建VBO和EBO
+/// 创建VAO
+void GeneratorVertexArrayObject(){
+    glGenVertexArrays(1,&kVAO);
+}
+
+/// 创建VBO和EBO，设置VAO
 void GeneratorBufferObject()
 {
     //在GPU上创建缓冲区对象
@@ -96,12 +106,31 @@ void GeneratorBufferObject()
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, kEBO);
     //上传顶点索引数据到缓冲区对象
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, kVertexIndexVector.size() * sizeof(unsigned short), &kVertexIndexVector[0], GL_STATIC_DRAW);
+    //设置VAO
+    glBindVertexArray(kVAO);
+    {
+        //指定当前使用的VBO
+        glBindBuffer(GL_ARRAY_BUFFER, kVBO);
+        //将Shader变量(a_pos)和顶点坐标VBO句柄进行关联，最后的0表示数据偏移量。
+        glVertexAttribPointer(vpos_location, 3, GL_FLOAT, false, sizeof(Vertex), 0);
+        //启用顶点Shader属性(a_color)，指定与顶点颜色数据进行关联
+        glVertexAttribPointer(vcol_location, 4, GL_FLOAT, false, sizeof(Vertex), (void*)(sizeof(float)*3));
+        //将Shader变量(a_uv)和顶点UV坐标VBO句柄进行关联，最后的0表示数据偏移量。
+        glVertexAttribPointer(a_uv_location, 2, GL_FLOAT, false, sizeof(Vertex), (void*)(sizeof(float)*(3+4)));
+
+        glEnableVertexAttribArray(vpos_location);
+        glEnableVertexAttribArray(vcol_location);
+        glEnableVertexAttribArray(a_uv_location);
+
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, kEBO);
+    }
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 int main(void)
 {
     VertexRemoveDumplicate();
-
+    //需要手动创建 model 文件夹。
     ExportMesh("../data/model/cube.mesh");
 
     return 0;
@@ -109,8 +138,6 @@ int main(void)
     init_opengl();
 
     CreateTexture("../data/images/urban.cpt");
-
-    GeneratorBufferObject();
 
     compile_shader();
 
@@ -120,10 +147,8 @@ int main(void)
     a_uv_location = glGetAttribLocation(program, "a_uv");
     u_diffuse_texture_location= glGetUniformLocation(program, "u_diffuse_texture");
 
-
-    glEnableVertexAttribArray(vpos_location);
-    glEnableVertexAttribArray(vcol_location);
-    glEnableVertexAttribArray(a_uv_location);
+    GeneratorVertexArrayObject();
+    GeneratorBufferObject();
 
     while (!glfwWindowShouldClose(window))
     {
@@ -155,17 +180,9 @@ int main(void)
 
         //指定GPU程序(就是指定顶点着色器、片段着色器)
         glUseProgram(program);
+        {
             glEnable(GL_DEPTH_TEST);
-
-            //指定当前使用的VBO
-            glBindBuffer(GL_ARRAY_BUFFER, kVBO);
-            //将Shader变量(a_pos)和顶点坐标VBO句柄进行关联，最后的0表示数据偏移量。
-            glVertexAttribPointer(vpos_location, 3, GL_FLOAT, false, sizeof(Vertex), 0);
-            //启用顶点Shader属性(a_color)，指定与顶点颜色数据进行关联
-            glVertexAttribPointer(vcol_location, 4, GL_FLOAT, false, sizeof(Vertex), (void*)(sizeof(float)*3));
-            //将Shader变量(a_uv)和顶点UV坐标VBO句柄进行关联，最后的0表示数据偏移量。
-            glVertexAttribPointer(a_uv_location, 2, GL_FLOAT, false, sizeof(Vertex), (void*)(sizeof(float)*(3+4)));
-            
+            glEnable(GL_CULL_FACE);//开启背面剔除
             //上传mvp矩阵
             glUniformMatrix4fv(mvp_location, 1, GL_FALSE, &mvp[0][0]);
 
@@ -175,12 +192,14 @@ int main(void)
             //将加载的图片纹理句柄，绑定到纹理单元0的Texture2D上。
             glBindTexture(GL_TEXTURE_2D,texture2d->gl_texture_id_);
             //设置Shader程序从纹理单元0读取颜色数据
-            glUniform1i(u_diffuse_texture_location,GL_TEXTURE0);
+            glUniform1i(u_diffuse_texture_location,0);
 
-            //指定当前使用的顶点索引缓冲区对象
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, kEBO);
-            glDrawElements(GL_TRIANGLES,36,GL_UNSIGNED_SHORT,0);//使用顶点索引进行绘制，最后的0表示数据偏移量。
-
+            glBindVertexArray(kVAO);
+            {
+                glDrawElements(GL_TRIANGLES,36,GL_UNSIGNED_SHORT,0);//使用顶点索引进行绘制，最后的0表示数据偏移量。
+            }
+            glBindVertexArray(0);
+        }
         glUseProgram(-1);
 
         glfwSwapBuffers(window);

@@ -7,7 +7,7 @@
 #pragma region 顶点Shader和片段Shader
 
 static const char* vertex_shader_text =
-        "#version 330\n"
+        "#version 330 core\n"
 
         "uniform mat4 u_mvp;\n"
 
@@ -26,7 +26,7 @@ static const char* vertex_shader_text =
         "}\n";
 
 static const char* fragment_shader_text =
-        "#version 330\n"
+        "#version 330 core\n"
         "uniform sampler2D u_diffuse_texture;"
         "in vec4 v_color;\n"
         "in vec2 v_uv;\n"
