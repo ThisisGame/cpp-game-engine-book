@@ -190,7 +190,7 @@ int main(void)
             //将加载的图片纹理句柄，绑定到纹理单元0的Texture2D上。
             glBindTexture(GL_TEXTURE_2D,texture2d->gl_texture_id_);
             //设置Shader程序从纹理单元0读取颜色数据
-            glUniform1i(u_diffuse_texture_location,GL_TEXTURE0);
+            glUniform1i(u_diffuse_texture_location,0);
 
             glBindVertexArray(kVAO);
             {

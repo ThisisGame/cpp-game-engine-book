@@ -14,6 +14,7 @@ file(COPY "../../template/depends/glfw-3.3-3.4/" DESTINATION "../depends/glfw-3.
 file(COPY "../../template/depends/glm/" DESTINATION "../depends/glm/")
 file(COPY "../../template/depends/stb/" DESTINATION "../depends/stb/")
 file(COPY "../../template/depends/spdlog/include/spdlog/" DESTINATION "../depends/spdlog/")
+file(COPY "../../template/depends/timetool/" DESTINATION "../depends/timetool/")
 
 #拷贝data文件
 file(COPY "../../template/data/images/urban.jpg" DESTINATION "../data/images/")
