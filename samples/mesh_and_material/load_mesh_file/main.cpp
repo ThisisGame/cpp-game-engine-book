@@ -139,8 +139,6 @@ int main(void)
 
     CreateTexture("../data/images/urban.cpt");
 
-    GeneratorBufferObject();
-
     compile_shader();
 
     mvp_location = glGetUniformLocation(program, "u_mvp");

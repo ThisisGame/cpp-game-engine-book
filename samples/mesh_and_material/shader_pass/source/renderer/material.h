@@ -12,7 +12,6 @@
 
 class Shader;
 class Texture2D;
-class Technique;
 class Material {
 public:
     Material();
@@ -20,11 +19,17 @@ public:
 
     void Parse(std::string material_path);//加载Material文件并解析
 
-    Technique* technique_active(){return technique_active_;}
+
+    void SetUniformMatrix4fv(std::string shader_property_name,float* pointer);
+    void SetUniform1i(std::string shader_property_name,int value);
+
+    Shader* shader(){return shader_;}
+
+    std::vector<std::pair<std::string,Texture2D*>>& textures(){return textures_;}
 
 private:
-    std::vector<Technique*> technique_vec_;
-    Technique* technique_active_;
+    Shader* shader_;
+    std::vector<std::pair<std::string,Texture2D*>> textures_;
 
     std::vector<std::pair<std::string,float*>> uniform_matrix4fv_vec;
     std::vector<std::pair<std::string,int>> uniform_1i_vec;
