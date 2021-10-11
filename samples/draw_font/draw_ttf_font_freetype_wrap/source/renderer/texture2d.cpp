@@ -36,6 +36,7 @@ void Texture2D::UpdateSubImage(int x, int y, int width, int height, unsigned int
     glBindTexture(GL_TEXTURE_2D, gl_texture_id_);
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
     glTexSubImage2D(GL_TEXTURE_2D,0,x,y,width,height,client_format,data_type,data);
+    spdlog::error("glTexSubImage2D {}",glGetError());
 }
 
 Texture2D* Texture2D::LoadFromFile(std::string image_file_path)
@@ -97,7 +98,7 @@ Texture2D *Texture2D::Create(unsigned short width, unsigned short height, unsign
 
     //3. 将图片rgb数据上传到GPU;
     glTexImage2D(GL_TEXTURE_2D, 0, texture2d->gl_texture_format_, texture2d->width_, texture2d->height_, 0, client_format, data_type, data);
-
+    spdlog::error("glTexImage2D {}",glGetError());
     //4. 指定放大，缩小滤波方式，线性滤波，即放大缩小的插值方式;
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
