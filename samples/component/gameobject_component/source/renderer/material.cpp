@@ -12,8 +12,6 @@
 #include "shader.h"
 #include "texture2d.h"
 #include "../utils/application.h"
-#include "technique.h"
-#include "pass.h"
 
 using std::ifstream;
 using std::ios;
@@ -35,23 +33,36 @@ void Material::Parse(string material_path) {
     document.parse<0>(xml_file.data());
 
     //根节点
-    rapidxml::xml_node<>* root_node=document.first_node("material");
-    if(root_node== nullptr){
+    rapidxml::xml_node<>* material_node=document.first_node("material");
+    if(material_node == nullptr){
         return;
     }
 
-    //获取 technique 节点
-    rapidxml::xml_node<>* technique_node=root_node->first_node("technique");
-    while (technique_node!= nullptr){
-        Technique* technique=new Technique();
-        technique->Parse(technique_node);
-        technique_vec_.push_back(technique);
-
-        technique_node=technique_node->next_sibling("technique");
+    rapidxml::xml_attribute<>* material_shader_attribute=material_node->first_attribute("shader");
+    if(material_shader_attribute == nullptr){
+        return;
     }
+    shader_=Shader::Find(material_shader_attribute->value());
 
-    //LOD系统没有实现，就先设定第1个为默认Technique
-    technique_active_=technique_vec_[0];
+    //解析Texture
+    rapidxml::xml_node<>* material_texture_node=material_node->first_node("texture");
+    while (material_texture_node != nullptr){
+        rapidxml::xml_attribute<>* texture_name_attribute=material_texture_node->first_attribute("name");
+        if(texture_name_attribute == nullptr){
+            return;
+        }
+
+        rapidxml::xml_attribute<>* texture_image_attribute=material_texture_node->first_attribute("image");
+        if(texture_image_attribute == nullptr){
+            return;
+        }
+
+        std::string shader_property_name=texture_name_attribute->value();
+        std::string image_path=texture_image_attribute->value();
+        textures_.push_back(std::make_pair(texture_name_attribute->value(), Texture2D::LoadFromFile(image_path)));
+
+        material_texture_node=material_texture_node->next_sibling("texture");
+    }
 }
 
 

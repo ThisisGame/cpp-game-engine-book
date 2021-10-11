@@ -2,15 +2,12 @@ cmake_minimum_required(VERSION 3.17)
 project(testrttr)
 
 set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_EXE_LINKER_FLAGS "-static")
 
 #拷贝depends目录
-file(COPY "../../template/depends/rttr/" DESTINATION "../depends/rttr/")
+file(COPY "../../template/depends/rttr-0.9.6/src/rttr/" DESTINATION "../depends/rttr/")
 
-include_directories(depends/rttr/include)
+include_directories("depends")
 
-link_directories(depends/rttr/lib)
+file(GLOB_RECURSE rttr_cpp "depends/rttr/*.cpp")
 
-link_libraries(rttr_core_d)
-
-add_executable(testrttr main.cpp)
+add_executable(testrttr main.cpp ${rttr_cpp})
