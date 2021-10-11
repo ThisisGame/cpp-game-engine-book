@@ -3,8 +3,14 @@ project(untitled)
 
 set(CMAKE_CXX_STANDARD 17)
 
+if (WIN32)
+    add_compile_options(/wd4819)#忽略保存为unicode警告
+endif ()
+
+include(CMakeLists.txt.glfw)
+
 #拷贝depends目录
-file(COPY "../../template/depends/glfw-3.3.3.bin.WIN64/" DESTINATION "../depends/glfw-3.3.3.bin.WIN64/")
+file(COPY "../../template/depends/glfw-3.3-3.4/" DESTINATION "../depends/glfw-3.3-3.4/")
 file(COPY "../../template/depends/glm/" DESTINATION "../depends/glm/")
 file(COPY "../../template/depends/timetool/" DESTINATION "../depends/timetool/")
 file(COPY "../../template/depends/rapidxml/" DESTINATION "../depends/rapidxml/")
@@ -19,22 +25,11 @@ file(COPY "../../template/data/shader/unlit.fs" DESTINATION "../data/shader/")
 file(COPY "../../template/data/material/fishsoup_pot.mat" DESTINATION "../data/material/")
 
 #头文件目录
-include_directories("depends/glfw-3.3.3.bin.WIN64/include")
-include_directories("depends/glfw-3.3.3.bin.WIN64/deps")
 include_directories("depends")
 include_directories("source")
 
-#链接目录
-link_directories("depends/glfw-3.3.3.bin.WIN64/lib-static-ucrt")
-
-#链接lib文件
-link_libraries(opengl32 glfw3dll)
 
 file(GLOB_RECURSE rttr_cpp "depends/rttr/*.cpp")
 file(GLOB_RECURSE source_src "source/*.cpp")
 
-add_executable(untitled depends/glfw-3.3.3.bin.WIN64/deps/glad_gl.c ${source_src} ${rttr_cpp})
-
-
-#拷贝dll到exe目录
-file(COPY "depends/glfw-3.3.3.bin.WIN64/lib-static-ucrt/glfw3.dll" DESTINATION "./")
+add_executable(untitled ${glfw_sources} ${rttr_cpp} ${source_src})
