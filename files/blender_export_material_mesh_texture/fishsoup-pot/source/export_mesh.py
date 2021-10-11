@@ -105,7 +105,8 @@ with open(dir_path+"/"+object.name_full+'.mesh', 'wb') as f:
         f.write(struct.pack('f',engine_vertex.v))
 
     #写入索引数据
-    for engine_vertex_index in kVertexIndexVector:
+    kVertexIndexVectorInverse=kVertexIndexVector[::-1]
+    for engine_vertex_index in kVertexIndexVectorInverse:
         f.write(struct.pack('H',engine_vertex_index))
     
     f.close()
