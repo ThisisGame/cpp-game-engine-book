@@ -14,7 +14,6 @@ using std::ios;
 Texture2D* Texture2D::LoadFromFile(std::string& image_file_path)
 {
     Texture2D* texture2d=new Texture2D();
-    texture2d->gl_texture_format_=GL_COMPRESSED_RGB;
 
     stbi_set_flip_vertically_on_load(true);//翻转图片，解析出来的图片数据从左下角开始，这是因为OpenGL的纹理坐标起始点为左下角。
     int channels_in_file;//通道数
@@ -38,11 +37,13 @@ Texture2D* Texture2D::LoadFromFile(std::string& image_file_path)
             case 3:
             {
                 image_data_format = GL_RGB;
+                texture2d->gl_texture_format_=GL_COMPRESSED_RGB;
                 break;
             }
             case 4:
             {
                 image_data_format = GL_RGBA;
+                texture2d->gl_texture_format_=GL_COMPRESSED_RGBA;
                 break;
             }
         }

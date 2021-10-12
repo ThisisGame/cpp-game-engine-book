@@ -11,21 +11,20 @@
 #include "material.h"
 #include "mesh_filter.h"
 #include "texture2d.h"
-#include "technique.h"
-#include "pass.h"
 #include "shader.h"
 #include "camera.h"
 #include "component/game_object.h"
 #include "component/transform.h"
+#include "../utils/debug.h"
 
 using namespace rttr;
 RTTR_REGISTRATION
 {
-registration::class_<MeshRenderer>("MeshRenderer")
-.constructor<>()(rttr::policy::ctor::as_raw_ptr);
+    registration::class_<MeshRenderer>("MeshRenderer")
+            .constructor<>()(rttr::policy::ctor::as_raw_ptr);
 }
 
-MeshRenderer::MeshRenderer():vertex_buffer_object(-1),element_buffer_object(-1) {
+MeshRenderer::MeshRenderer() {
 
 }
 
@@ -39,7 +38,7 @@ void MeshRenderer::SetMaterial(Material* material) {
 
 
 void MeshRenderer::Render() {
-
+    //从当前Camera获取View Projection
     auto current_camera=Camera::current_camera();
     if (current_camera== nullptr){
         return;
@@ -49,7 +48,6 @@ void MeshRenderer::Render() {
         return;
     }
 
-    //从当前Camera获取View Projection
     glm::mat4 view=current_camera->view_mat4();
     glm::mat4 projection=current_camera->projection_mat4();
 
@@ -73,76 +71,81 @@ void MeshRenderer::Render() {
     if(!mesh_filter){
         return;
     }
-    if (vertex_buffer_object==-1){
+
+    //获取`Shader`的`gl_program_id`，指定为目标Shader程序。
+    GLuint gl_program_id=material_->shader()->gl_program_id();
+
+    if(vertex_array_object_ == 0){
+        GLint vpos_location = glGetAttribLocation(gl_program_id, "a_pos");__CHECK_GL_ERROR__
+        GLint vcol_location = glGetAttribLocation(gl_program_id, "a_color");__CHECK_GL_ERROR__
+        GLint a_uv_location = glGetAttribLocation(gl_program_id, "a_uv");__CHECK_GL_ERROR__
+
         //在GPU上创建缓冲区对象
-        glGenBuffers(1,&vertex_buffer_object);
+        glGenBuffers(1,&vertex_buffer_object_);__CHECK_GL_ERROR__
         //将缓冲区对象指定为顶点缓冲区对象
-        glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer_object);
+        glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer_object_);__CHECK_GL_ERROR__
         //上传顶点数据到缓冲区对象
         glBufferData(GL_ARRAY_BUFFER, mesh_filter->mesh()->vertex_num_ * sizeof(MeshFilter::Vertex), mesh_filter->mesh()->vertex_data_, GL_STATIC_DRAW);
-    }
-    if (vertex_buffer_object==-1){
-        return;
-    }
-    if(element_buffer_object==-1){
+        __CHECK_GL_ERROR__
         //在GPU上创建缓冲区对象
-        glGenBuffers(1,&element_buffer_object);
+        glGenBuffers(1,&element_buffer_object_);__CHECK_GL_ERROR__
         //将缓冲区对象指定为顶点索引缓冲区对象
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_buffer_object);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_buffer_object_);__CHECK_GL_ERROR__
         //上传顶点索引数据到缓冲区对象
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, mesh_filter->mesh()->vertex_index_num_ * sizeof(unsigned short), mesh_filter->mesh()->vertex_index_data_, GL_STATIC_DRAW);
+        __CHECK_GL_ERROR__
+        glGenVertexArrays(1,&vertex_array_object_);__CHECK_GL_ERROR__
+
+        //设置VAO
+        glBindVertexArray(vertex_array_object_);__CHECK_GL_ERROR__
+        {
+            //指定当前使用的VBO
+            glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer_object_);__CHECK_GL_ERROR__
+            //将Shader变量(a_pos)和顶点坐标VBO句柄进行关联，最后的0表示数据偏移量。
+            glVertexAttribPointer(vpos_location, 3, GL_FLOAT, false, sizeof(MeshFilter::Vertex), 0);__CHECK_GL_ERROR__
+            //启用顶点Shader属性(a_color)，指定与顶点颜色数据进行关联
+            glVertexAttribPointer(vcol_location, 4, GL_FLOAT, false, sizeof(MeshFilter::Vertex), (void*)(sizeof(float)*3));__CHECK_GL_ERROR__
+            //将Shader变量(a_uv)和顶点UV坐标VBO句柄进行关联，最后的0表示数据偏移量。
+            glVertexAttribPointer(a_uv_location, 2, GL_FLOAT, false, sizeof(MeshFilter::Vertex), (void*)(sizeof(float)*(3+4)));__CHECK_GL_ERROR__
+
+            glEnableVertexAttribArray(vpos_location);__CHECK_GL_ERROR__
+            glEnableVertexAttribArray(vcol_location);__CHECK_GL_ERROR__
+            glEnableVertexAttribArray(a_uv_location);__CHECK_GL_ERROR__
+
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_buffer_object_);__CHECK_GL_ERROR__
+        }
+        glBindBuffer(GL_ARRAY_BUFFER, 0);__CHECK_GL_ERROR__
     }
-    if(element_buffer_object==-1){
-        return;
-    }
 
-    //遍历Pass节点，获取`Shader`的`gl_program_id`，指定为目标Shader程序。
-    std::vector<Pass*>& pass_vec=material_->technique_active()->pass_vec();
-    for (int i = 0; i < pass_vec.size(); ++i) {
-        Pass* pass=pass_vec[i];
-        GLuint gl_program_id=pass->shader()->gl_program_id();
-        glUseProgram(gl_program_id);
-        glEnable(GL_DEPTH_TEST);
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-        GLint mvp_location = glGetUniformLocation(gl_program_id, "u_mvp");
-        GLint vpos_location = glGetAttribLocation(gl_program_id, "a_pos");
-        GLint vcol_location = glGetAttribLocation(gl_program_id, "a_color");
-        GLint a_uv_location = glGetAttribLocation(gl_program_id, "a_uv");
-
-        glEnableVertexAttribArray(vpos_location);
-        glEnableVertexAttribArray(vcol_location);
-        glEnableVertexAttribArray(a_uv_location);
-
-        //指定当前使用的VBO
-        glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer_object);
-        //将Shader变量(a_pos)和顶点坐标VBO句柄进行关联，最后的0表示数据偏移量。
-        glVertexAttribPointer(vpos_location, 3, GL_FLOAT, false, sizeof(MeshFilter::Vertex), 0);
-        //启用顶点Shader属性(a_color)，指定与顶点颜色数据进行关联
-        glVertexAttribPointer(vcol_location, 4, GL_FLOAT, false, sizeof(MeshFilter::Vertex), (void*)(sizeof(float)*3));
-        //将Shader变量(a_uv)和顶点UV坐标VBO句柄进行关联，最后的0表示数据偏移量。
-        glVertexAttribPointer(a_uv_location, 2, GL_FLOAT, false, sizeof(MeshFilter::Vertex), (void*)(sizeof(float)*(3+4)));
+    glUseProgram(gl_program_id);__CHECK_GL_ERROR__
+    {
+        glEnable(GL_DEPTH_TEST);__CHECK_GL_ERROR__
+        glEnable(GL_CULL_FACE);__CHECK_GL_ERROR__
+        glEnable(GL_BLEND);__CHECK_GL_ERROR__
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);__CHECK_GL_ERROR__
 
         //上传mvp矩阵
-        glUniformMatrix4fv(mvp_location, 1, GL_FALSE, &mvp[0][0]);
+        glUniformMatrix4fv(glGetUniformLocation(gl_program_id, "u_mvp"), 1, GL_FALSE, &mvp[0][0]);__CHECK_GL_ERROR__
 
         //从Pass节点拿到保存的Texture
-        std::vector<std::pair<std::string,Texture2D*>> textures=pass->textures();
+        std::vector<std::pair<std::string,Texture2D*>> textures=material_->textures();
         for (int texture_index = 0; texture_index < textures.size(); ++texture_index) {
-            GLint u_texture_location= glGetUniformLocation(gl_program_id, textures[texture_index].first.c_str());
+            GLint u_texture_location= glGetUniformLocation(gl_program_id, textures[texture_index].first.c_str());__CHECK_GL_ERROR__
             //激活纹理单元0
-            glActiveTexture(GL_TEXTURE0+texture_index);
+            glActiveTexture(GL_TEXTURE0+texture_index);__CHECK_GL_ERROR__
             //将加载的图片纹理句柄，绑定到纹理单元0的Texture2D上。
-            glBindTexture(GL_TEXTURE_2D,textures[texture_index].second->gl_texture_id());
+            glBindTexture(GL_TEXTURE_2D,textures[texture_index].second->gl_texture_id());__CHECK_GL_ERROR__
             //设置Shader程序从纹理单元0读取颜色数据
-            glUniform1i(u_texture_location,GL_TEXTURE0);
+            glUniform1i(u_texture_location,texture_index);__CHECK_GL_ERROR__
         }
 
-        //指定当前使用的顶点索引缓冲区对象
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_buffer_object);
-        glDrawElements(GL_TRIANGLES, mesh_filter->mesh()->vertex_index_num_, GL_UNSIGNED_SHORT, 0);//使用顶点索引进行绘制，最后的0表示数据偏移量。
-        glUseProgram(-1);
+        glBindVertexArray(vertex_array_object_);__CHECK_GL_ERROR__
+        {
+            glDrawElements(GL_TRIANGLES,mesh_filter->mesh()->vertex_index_num_,GL_UNSIGNED_SHORT,0);//使用顶点索引进行绘制，最后的0表示数据偏移量。
+            __CHECK_GL_ERROR__
+        }
+        glBindVertexArray(0);__CHECK_GL_ERROR__
     }
+    glUseProgram(GL_NONE);__CHECK_GL_ERROR__
 }
 

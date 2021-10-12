@@ -82,14 +82,17 @@ void Texture2D::CompressImageFile(std::string& image_file_path,std::string& save
     //1. 获取压缩是否成功
     GLint compress_success=0;
     glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_COMPRESSED, &compress_success);
+    SPDLOG_INFO("compress_success:{}",compress_success);
 
     //2. 获取压缩好的纹理数据尺寸
     GLint compress_size=0;
     glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_COMPRESSED_IMAGE_SIZE, &compress_size);
+    SPDLOG_INFO("compress_size:{}",compress_size);
 
     //3. 获取具体的纹理压缩格式
     GLint compress_format=0;
     glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_INTERNAL_FORMAT, &compress_format);
+    SPDLOG_INFO("compress_format:{}",compress_format);
 
     //4. 从GPU中，将显存中保存的压缩好的纹理数据，下载到内存
     void* img=malloc(compress_size);

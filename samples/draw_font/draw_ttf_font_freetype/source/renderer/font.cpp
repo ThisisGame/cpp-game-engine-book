@@ -6,7 +6,7 @@
 #include <fstream>
 #include "freetype/ftbitmap.h"
 #include "../utils/application.h"
-#include "spdlog/spdlog.h"
+#include "../utils/debug.h"
 #include "texture2d.h"
 
 using std::ifstream;
@@ -34,7 +34,7 @@ Font* Font::LoadFromFile(std::string font_file_path,unsigned short font_size){
     FT_Init_FreeType(&ft_library);//FreeType初始化;
     FT_Error error = FT_New_Memory_Face(ft_library, (const FT_Byte*)font_file_buffer, len, 0, &ft_face);
     if (error != 0){
-        spdlog::error("FT_New_Memory_Face return error {}!",error);
+        DEBUG_LOG_ERROR("FT_New_Memory_Face return error {}!",error);
         return nullptr;
     }
 
@@ -45,7 +45,7 @@ Font* Font::LoadFromFile(std::string font_file_path,unsigned short font_size){
     FT_Set_Char_Size(ft_face, ft_size, 0, 72, 72);
 
     if (ft_face == nullptr){
-        spdlog::error("FT_Set_Char_Size error!");
+        DEBUG_LOG_ERROR("FT_Set_Char_Size error!");
         return nullptr;
     }
 
@@ -60,7 +60,7 @@ Font* Font::LoadFromFile(std::string font_file_path,unsigned short font_size){
     //创建空白的、仅Alpha通道纹理，用于生成文字。
     unsigned char * pixels = (unsigned char *)malloc(font->font_texture_size_ * font->font_texture_size_);
     memset(pixels, 0,font->font_texture_size_*font->font_texture_size_);
-    font->font_texture_=Texture2D::Create(font->font_texture_size_,font->font_texture_size_,GL_ALPHA,GL_ALPHA,GL_UNSIGNED_BYTE,pixels);
+    font->font_texture_=Texture2D::Create(font->font_texture_size_,font->font_texture_size_,GL_RED,GL_RED,GL_UNSIGNED_BYTE,pixels);
     delete pixels;
 
     return font;
@@ -79,7 +79,7 @@ void Font::LoadCharacter(char ch) {
 
     FT_BitmapGlyph ft_bitmap_glyph = (FT_BitmapGlyph)ft_glyph;
     FT_Bitmap& ft_bitmap = ft_bitmap_glyph->bitmap;
-    font_texture_->UpdateSubImage(0, 0, ft_bitmap.width, ft_bitmap.rows, GL_ALPHA, GL_UNSIGNED_BYTE, ft_bitmap.buffer);
+    font_texture_->UpdateSubImage(0, 0, ft_bitmap.width, ft_bitmap.rows, GL_RED, GL_UNSIGNED_BYTE, ft_bitmap.buffer);
 }
 
 

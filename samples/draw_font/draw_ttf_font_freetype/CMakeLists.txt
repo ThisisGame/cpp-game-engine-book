@@ -21,7 +21,6 @@ file(COPY "../../template/depends/rttr-0.9.6/src/rttr/" DESTINATION "../depends/
 
 #拷贝data文件
 file(COPY "../../template/data/images/diffuse_fishsoup_pot.cpt" DESTINATION "../data/images/")
-file(COPY "../../template/data/images/urban_128.cpt" DESTINATION "../data/images/")
 file(COPY "../../template/data/model/fishsoup_pot.mesh" DESTINATION "../data/model/")
 file(COPY "../../template/data/shader/unlit.vs" DESTINATION "../data/shader/")
 file(COPY "../../template/data/shader/unlit.fs" DESTINATION "../data/shader/")
