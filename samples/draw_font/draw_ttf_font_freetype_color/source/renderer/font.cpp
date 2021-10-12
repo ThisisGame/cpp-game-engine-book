@@ -60,7 +60,7 @@ Font* Font::LoadFromFile(std::string font_file_path,unsigned short font_size){
     //创建空白的、仅Alpha通道纹理，用于生成文字。
     unsigned char * pixels = (unsigned char *)malloc(font->font_texture_size_ * font->font_texture_size_);
     memset(pixels, 0,font->font_texture_size_*font->font_texture_size_);
-    font->font_texture_=Texture2D::Create(font->font_texture_size_,font->font_texture_size_,GL_ALPHA,GL_ALPHA,GL_UNSIGNED_BYTE,pixels);
+    font->font_texture_=Texture2D::Create(font->font_texture_size_,font->font_texture_size_, GL_RED,GL_RED,GL_UNSIGNED_BYTE,pixels);
     delete pixels;
 
     return font;
@@ -95,7 +95,7 @@ void Font::LoadCharacter(char ch) {
         spdlog::error("{} is out of font_texture y",ch);
         return;
     }
-    font_texture_->UpdateSubImage(font_texture_fill_x, font_texture_fill_y, ft_bitmap.width, ft_bitmap.rows, GL_ALPHA, GL_UNSIGNED_BYTE, ft_bitmap.buffer);
+    font_texture_->UpdateSubImage(font_texture_fill_x, font_texture_fill_y, ft_bitmap.width, ft_bitmap.rows,  GL_RED, GL_UNSIGNED_BYTE, ft_bitmap.buffer);
 
     //存储字符信息
     Character* character=new Character(font_texture_fill_x*1.0f/font_texture_size_,font_texture_fill_y*1.0f/font_texture_size_,(font_texture_fill_x+ft_bitmap.width)*1.0f/font_texture_size_,(font_texture_fill_y+ft_bitmap.rows)*1.0f/font_texture_size_);

@@ -89,7 +89,7 @@ void LoginScene::CreateFont() {
                 0,2,3
         };
         //创建模型 GameObject
-        auto go=new GameObject("quad_draw_font");
+        auto go=new GameObject("quad_draw_font_color");
         go->set_layer(0x01);
 
         //挂上 Transform 组件
@@ -102,7 +102,7 @@ void LoginScene::CreateFont() {
 
         //创建 Material
         auto material=new Material();//设置材质
-        material->Parse("material/quad_draw_font.mat");
+        material->Parse("material/quad_draw_font_color.mat");
 
         //挂上 MeshRenderer 组件
         auto mesh_renderer=dynamic_cast<MeshRenderer*>(go->AddComponent("MeshRenderer"));

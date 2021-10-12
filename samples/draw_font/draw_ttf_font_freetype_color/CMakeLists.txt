@@ -25,7 +25,7 @@ file(COPY "../../template/data/images/urban_128.cpt" DESTINATION "../data/images
 file(COPY "../../template/data/model/fishsoup_pot.mesh" DESTINATION "../data/model/")
 file(COPY "../../template/data/shader/" DESTINATION "../data/shader/")
 file(COPY "../../template/data/material/fishsoup_pot.mat" DESTINATION "../data/material/")
-file(COPY "../../template/data/material/quad_draw_font.mat" DESTINATION "../data/material/")
+file(COPY "../../template/data/material/quad_draw_font_color.mat" DESTINATION "../data/material/")
 file(COPY "../../template/data/font/" DESTINATION "../data/font/")
 
 #头文件目录

@@ -45,8 +45,8 @@ private:
     FT_Face ft_face_;
     Texture2D* font_texture_;
     unsigned short font_texture_size_=1024;
-    unsigned short font_texture_fill_x=0;//
-    unsigned short font_texture_fill_y=0;
+    unsigned short font_texture_fill_x=0;//当前行的起始点
+    unsigned short font_texture_fill_y=0;//新的一行的纵向起始点
     std::unordered_map<char,Character*> character_map_;//已经生成bitmap的字符
 
 public:

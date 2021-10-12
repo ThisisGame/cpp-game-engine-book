@@ -15,9 +15,7 @@
 #endif
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
-#include "spdlog/spdlog.h"
-#include "spdlog/sinks/stdout_color_sinks.h"
-#include "spdlog/sinks/basic_file_sink.h"
+#include "debug.h"
 #include "component/game_object.h"
 #include "renderer/camera.h"
 #include "renderer/mesh_renderer.h"
@@ -73,31 +71,12 @@ static void mouse_scroll_callback(GLFWwindow* window, double x, double y)
 }
 
 void Application::Init() {
-    //初始化spdlog
-    try
-    {
-        auto console_sink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
-        console_sink->set_level(spdlog::level::trace);
-        console_sink->set_pattern("[multi_sink_example] [%^%l%$] %v");
-
-        auto file_sink = std::make_shared<spdlog::sinks::basic_file_sink_mt>("logs/multisink.txt", true);
-        file_sink->set_level(spdlog::level::trace);
-
-        spdlog::sinks_init_list sink_list = { file_sink, console_sink };
-
-        // you can even set multi_sink logger as default logger
-        spdlog::set_default_logger(std::make_shared<spdlog::logger>("multi_sink", spdlog::sinks_init_list({console_sink, file_sink})));
-    }
-    catch (const spdlog::spdlog_ex& ex)
-    {
-        std::cout << "Log initialization failed: " << ex.what() << std::endl;
-    }
-    spdlog::info("game start");
-
+    Debug::Init();
+    DEBUG_LOG_INFO("game start");
     glfwSetErrorCallback(error_callback);
     if (!glfwInit())
     {
-        spdlog::error("glfwinit failed!");
+        DEBUG_LOG_ERROR("glfw init failed!");
         exit(EXIT_FAILURE);
     }
 
@@ -111,7 +90,7 @@ void Application::Init() {
     glfw_window_ = glfwCreateWindow(960, 640, "Simple example", NULL, NULL);
     if (!glfw_window_)
     {
-        spdlog::error("glfwCreateWindow error!");
+        DEBUG_LOG_ERROR("glfwCreateWindow error!");
         glfwTerminate();
         exit(EXIT_FAILURE);
     }
