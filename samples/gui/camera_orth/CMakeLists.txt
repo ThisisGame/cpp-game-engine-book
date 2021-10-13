@@ -22,10 +22,12 @@ file(COPY "../../template/depends/rttr-0.9.6/src/rttr/" DESTINATION "../depends/
 #拷贝data文件
 file(COPY "../../template/data/images/diffuse_fishsoup_pot.cpt" DESTINATION "../data/images/")
 file(COPY "../../template/data/images/urban_128.cpt" DESTINATION "../data/images/")
+file(COPY "../../template/data/images/mod_bag.cpt" DESTINATION "../data/images/")
 file(COPY "../../template/data/model/fishsoup_pot.mesh" DESTINATION "../data/model/")
 file(COPY "../../template/data/shader/" DESTINATION "../data/shader/")
 file(COPY "../../template/data/material/fishsoup_pot.mat" DESTINATION "../data/material/")
 file(COPY "../../template/data/material/quad_draw_font_color.mat" DESTINATION "../data/material/")
+file(COPY "../../template/data/material/ui.mat" DESTINATION "../data/material/")
 file(COPY "../../template/data/font/" DESTINATION "../data/font/")
 
 #头文件目录

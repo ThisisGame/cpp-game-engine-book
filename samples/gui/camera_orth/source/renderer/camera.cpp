@@ -43,7 +43,7 @@ void Camera::SetView(const glm::vec3 &cameraForward,const glm::vec3 &cameraUp) {
     view_mat4_=glm::lookAt(transform->position(), cameraForward, cameraUp);
 }
 
-void Camera::SetProjection(float fovDegrees, float aspectRatio, float nearClip, float farClip) {
+void Camera::SetPerspective(float fovDegrees, float aspectRatio, float nearClip, float farClip) {
     projection_mat4_=glm::perspective(glm::radians(fovDegrees),aspectRatio,nearClip,farClip);
 }
 

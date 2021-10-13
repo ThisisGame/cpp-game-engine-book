@@ -46,6 +46,8 @@ void LoginScene::Awake() {
     CreateFishSoupPot();
 
     CreateFont();
+
+    CreateUI();
 }
 
 void LoginScene::CreateFishSoupPot() {
@@ -113,9 +115,62 @@ void LoginScene::CreateFont() {
     }
 }
 
+void LoginScene::CreateUI() {
+    //创建UI相机 GameObject
+    auto go_camera_ui=new GameObject("ui_camera");
+    //挂上 Transform 组件
+    auto transform_camera_ui=dynamic_cast<Transform*>(go_camera_ui->AddComponent("Transform"));
+    transform_camera_ui->set_position(glm::vec3(0, 0, 10));
+    //挂上 Camera 组件
+    auto camera_ui=dynamic_cast<Camera*>(go_camera_ui->AddComponent("Camera"));
+    camera_ui->set_depth(1);
+    camera_ui->set_culling_mask(0x02);
+    //UI相机不能清除之前的颜色。不然用第一个相机矩阵渲染的物体就被清除 没了。
+    camera_ui->set_clear_flag(GL_DEPTH_BUFFER_BIT);
+    //设置正交相机
+    camera_ui->SetView(glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
+    camera_ui->SetOrthographic(-Screen::width()/2,Screen::width()/2,-Screen::height()/2,Screen::height()/2,-100,100);
+
+    //加载图片
+    auto texture2D=Texture2D::LoadFromFile("images/mod_bag.cpt");
+
+    //生成顶点数据
+    vector<MeshFilter::Vertex> vertex_vector={
+            { {0.f, 0.0f, 0.0f}, {1.0f,1.0f,1.0f,1.0f},   {0.f, 0.f} },
+            { {texture2D->width(), 0.0f, 0.0f}, {1.0f,1.0f,1.0f,1.0f},   {1.f, 0.f} },
+            { {texture2D->width(),  texture2D->height(), 0.0f}, {1.0f,1.0f,1.0f,1.0f},   {1.f, 1.f} },
+            { {0.f,  texture2D->height(), 0.0f}, {1.0f,1.0f,1.0f,1.0f},   {0.f, 1.f} }
+    };
+    vector<unsigned short> index_vector={
+            0,1,2,
+            0,2,3
+    };
+    //创建模型 GameObject
+    auto go=new GameObject("image_mod_bag");
+    go->set_layer(0x02);
+
+    //挂上 Transform 组件
+    go->AddComponent("Transform");
+
+    //挂上 MeshFilter 组件
+    auto mesh_filter=dynamic_cast<MeshFilter*>(go->AddComponent("MeshFilter"));
+    mesh_filter->CreateMesh(vertex_vector,index_vector);
+
+    //创建 Material
+    auto material=new Material();//设置材质
+    material->Parse("material/ui.mat");
+
+    //挂上 MeshRenderer 组件
+    auto mesh_renderer=dynamic_cast<MeshRenderer*>(go->AddComponent("MeshRenderer"));
+    mesh_renderer->SetMaterial(material);
+
+    //使用文字贴图
+    material->SetTexture("u_diffuse_texture", texture2D);
+}
+
 void LoginScene::Update() {
     camera_1_->SetView(glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
-    camera_1_->SetProjection(60.f, Screen::aspect_ratio(), 1.f, 1000.f);
+    camera_1_->SetPerspective(60.f, Screen::aspect_ratio(), 1.f, 1000.f);
 
     //旋转物体
     if(Input::GetKeyDown(KEY_CODE_R)){

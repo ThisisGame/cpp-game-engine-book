@@ -25,7 +25,7 @@ public:
     /// \param aspectRatio  宽高比
     /// \param nearClip 近裁剪面
     /// \param farClip  远裁剪面
-    void SetProjection(float fovDegrees,float aspectRatio,float nearClip,float farClip);
+    void SetPerspective(float fovDegrees, float aspectRatio, float nearClip, float farClip);
 
 
     glm::mat4& view_mat4(){return view_mat4_;}

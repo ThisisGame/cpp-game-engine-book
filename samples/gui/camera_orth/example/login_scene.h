@@ -27,6 +27,9 @@ private:
 
     /// 创建文字
     void CreateFont();
+
+    /// 创建UI
+    void CreateUI();
 private:
     Transform* transform_fishsoup_pot_;
 //    Material* material;
