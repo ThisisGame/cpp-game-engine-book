@@ -138,7 +138,7 @@ void LoginScene::CreateUI() {
     go_ui_mask->set_layer(0x02);
     //挂上 Transform 组件
     auto transform_ui_mask=dynamic_cast<Transform*>(go_ui_mask->AddComponent("Transform"));
-    transform_ui_mask->set_position(glm::vec3(-50.f,0.f,0.f));
+//    transform_ui_mask->set_position(glm::vec3(-50.f,0.f,0.f));
     //挂上 UIImage 组件
     auto ui_mask_mod_bag=dynamic_cast<UIMask*>(go_ui_mask->AddComponent("UIMask"));
     ui_mask_mod_bag->set_texture(Texture2D::LoadFromFile("images/mod_bag_mask.cpt"));
@@ -156,6 +156,11 @@ void LoginScene::CreateUI() {
 void LoginScene::Update() {
     camera_1_->SetView(glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
     camera_1_->SetPerspective(60.f, Screen::aspect_ratio(), 1.f, 1000.f);
+
+    if(Input::GetKeyUp(KEY_CODE_A)){
+        auto go_ui_mask = GameObject::Find("mask_mod_bag");
+        go_ui_mask->set_active(!go_ui_mask->active());
+    }
 
     //旋转物体
     if(Input::GetKeyDown(KEY_CODE_R)){

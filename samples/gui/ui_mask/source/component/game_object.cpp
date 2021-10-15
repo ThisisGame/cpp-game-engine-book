@@ -70,3 +70,12 @@ void GameObject::Foreach(std::function<void(GameObject* game_object)> func) {
     }
 }
 
+GameObject* GameObject::Find(std::string name) {
+    for (auto game_object:game_object_list_) {
+        if(game_object->name()==name){
+            return game_object;
+        }
+    }
+    return nullptr;
+}
+

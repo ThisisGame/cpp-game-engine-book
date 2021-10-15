@@ -21,8 +21,11 @@ public:
     void Update() override;
     /// 渲染之前
     void OnPreRender() override;
+
+    void OnPostRender() override;
 private:
     Texture2D* texture2D_= nullptr;//Texture
+
 };
 
 

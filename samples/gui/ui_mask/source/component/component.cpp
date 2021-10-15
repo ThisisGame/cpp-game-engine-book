@@ -12,6 +12,10 @@ Component::~Component() {
 
 }
 
+void Component::OnEnable() {
+
+}
+
 void Component::Awake() {
 
 }
@@ -25,5 +29,9 @@ void Component::OnPreRender() {
 }
 
 void Component::OnPostRender() {
+
+}
+
+void Component::OnDisable() {
 
 }

@@ -9,6 +9,7 @@
 #include "../renderer/texture2d.h"
 #include "../renderer/material.h"
 #include "../renderer/mesh_renderer.h"
+#include "utils/debug.h"
 
 using namespace rttr;
 RTTR_REGISTRATION{
@@ -22,6 +23,10 @@ UIMask::UIMask() {
 }
 
 UIMask::~UIMask() {
+
+}
+
+void UIMask::OnEnable() {
 
 }
 
@@ -48,7 +53,7 @@ void UIMask::Update() {
 
         //创建 Material
         auto material=new Material();//设置材质
-        material->Parse("material/ui.mat");
+        material->Parse("material/ui_mask.mat");
         material->SetTexture("u_diffuse_texture", texture2D_);
 
         //挂上 MeshRenderer 组件
@@ -59,16 +64,16 @@ void UIMask::Update() {
 
 void UIMask::OnPreRender() {
     Component::OnPreRender();
-//    glEnable(GL_ALPHA_TEST);//开启Alpha测试
-//    glAlphaFunc(GL_GREATER,0.5f);
-
-//    glEnable(GL_STENCIL_TEST);//开启模版测试
-//    glClearStencil(0);//设置默认模版值 0
-//    glStencilFunc(GL_NEVER, 0x0, 0xFF);//通通不通过模版测试。
-//    glStencilOp(GL_INCR, GL_INCR, GL_INCR);//像素的模版值 0+1 = 1
+    glEnable(GL_STENCIL_TEST);__CHECK_GL_ERROR__//开启模版测试
+    glClearStencil(0);__CHECK_GL_ERROR__//设置默认模版值 0
+    glStencilFunc(GL_NEVER, 0x0, 0xFF);__CHECK_GL_ERROR__//通通不通过模版测试。
+    glStencilOp(GL_INCR, GL_INCR, GL_INCR);__CHECK_GL_ERROR__//像素的模版值 0+1 = 1
 }
 
 void UIMask::OnPostRender() {
     Component::OnPostRender();
-//    glDisable(GL_ALPHA_TEST);
+}
+
+void UIMask::OnDisable() {
+    glDisable(GL_STENCIL_TEST);__CHECK_GL_ERROR__
 }

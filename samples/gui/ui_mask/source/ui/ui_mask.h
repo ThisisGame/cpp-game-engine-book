@@ -18,11 +18,15 @@ public:
     void set_texture(Texture2D* texture2D){texture2D_=texture2D;}
 
 public:
+    void OnEnable() override;
+
     void Update() override;
     /// 渲染之前
     void OnPreRender() override;
     /// 渲染之后
     void OnPostRender() override;
+
+    void OnDisable() override;
 private:
     Texture2D* texture2D_= nullptr;//Texture
 };

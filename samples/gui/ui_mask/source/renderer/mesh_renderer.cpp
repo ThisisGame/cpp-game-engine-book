@@ -15,6 +15,7 @@
 #include "camera.h"
 #include "component/game_object.h"
 #include "component/transform.h"
+#include "utils/debug.h"
 
 using namespace rttr;
 RTTR_REGISTRATION
@@ -123,13 +124,13 @@ void MeshRenderer::Render() {
             component->OnPreRender();
         });
 
-        glEnable(GL_DEPTH_TEST);
-        glEnable(GL_CULL_FACE);//开启背面剔除
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glEnable(GL_DEPTH_TEST);__CHECK_GL_ERROR__
+        glEnable(GL_CULL_FACE);__CHECK_GL_ERROR__//开启背面剔除
+        glEnable(GL_BLEND);__CHECK_GL_ERROR__
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);__CHECK_GL_ERROR__
 
         //上传mvp矩阵
-        glUniformMatrix4fv(glGetUniformLocation(gl_program_id, "u_mvp"), 1, GL_FALSE, &mvp[0][0]);
+        glUniformMatrix4fv(glGetUniformLocation(gl_program_id, "u_mvp"), 1, GL_FALSE, &mvp[0][0]);__CHECK_GL_ERROR__
 
         //从Pass节点拿到保存的Texture
         std::vector<std::pair<std::string,Texture2D*>> textures=material_->textures();
@@ -147,8 +148,13 @@ void MeshRenderer::Render() {
         {
             glDrawElements(GL_TRIANGLES,mesh_filter->mesh()->vertex_index_num_,GL_UNSIGNED_SHORT,0);//使用顶点索引进行绘制，最后的0表示数据偏移量。
         }
-        glBindVertexArray(0);
+        glBindVertexArray(0);__CHECK_GL_ERROR__
+
+        // PostRender
+        game_object()->ForeachComponent([](Component* component){
+            component->OnPostRender();
+        });
     }
-    glUseProgram(-1);
+    glUseProgram(GL_NONE);__CHECK_GL_ERROR__
 }
 

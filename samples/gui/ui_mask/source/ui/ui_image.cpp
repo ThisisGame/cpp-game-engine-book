@@ -9,6 +9,7 @@
 #include "../renderer/texture2d.h"
 #include "../renderer/material.h"
 #include "../renderer/mesh_renderer.h"
+#include "../utils/debug.h"
 
 using namespace rttr;
 RTTR_REGISTRATION{
@@ -58,8 +59,12 @@ void UIImage::Update() {
 
 void UIImage::OnPreRender() {
     Component::OnPreRender();
-//    glStencilFunc(GL_EQUAL, 0x1, 0xFF);//等于1 通过测试 ,就是上次绘制的图 的范围 才通过测试。
-//    glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);//没有通过测试的，保留原来的，也就是保留上一次的值。
+    glStencilFunc(GL_EQUAL, 0x1, 0xFF);//等于1 通过测试 ,就是上次绘制的图 的范围 才通过测试。
+    glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);//没有通过测试的，保留原来的，也就是保留上一次的值。
 }
 
+void UIImage::OnPostRender() {
+    Component::OnPostRender();
+    glDisable(GL_STENCIL_TEST);__CHECK_GL_ERROR__
+}
 

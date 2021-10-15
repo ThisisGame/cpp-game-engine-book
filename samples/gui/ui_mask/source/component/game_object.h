@@ -44,14 +44,24 @@ public:
     unsigned char layer(){return layer_;}
     void set_layer(unsigned char layer){layer_=layer;}
 
+    bool active(){return active_;}
+    void set_active(bool active){active_=active;}
+
     /// 遍历所有Camera
     /// \param func
     static void Foreach(std::function<void(GameObject* game_object)> func);
+
+    /// 全局查找GameObject
+    /// \param name
+    /// \return
+    static GameObject* Find(std::string name);
 private:
     std::string name_;
     std::unordered_map<std::string,std::vector<Component*>> component_type_instance_map_;
 
     unsigned char layer_;//将物体分不同的层，用于相机分层、物理碰撞分层等。
+
+    bool active_;//是否激活
 
     static std::list<GameObject*> game_object_list_;//存储所有的GameObject。
 };
