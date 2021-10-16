@@ -1,5 +1,5 @@
 print("-------run lua--------")
-local player = Player()
+local player = Player.new()
 print(player)
 print("player.hp_:" .. player.hp_)
 print("player.AddHp(4):" .. player:AddHp(4))

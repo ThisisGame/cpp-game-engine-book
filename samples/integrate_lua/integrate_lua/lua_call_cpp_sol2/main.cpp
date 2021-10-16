@@ -1,10 +1,5 @@
 #define SOL_ALL_SAFETIES_ON 1
-#define SOL_STD_VARIANT 0
 #include <sol/sol.hpp>
-#include<string>
-
-#include <stdio.h>
-#include <string.h>
 
 using namespace std;
 
@@ -22,24 +17,13 @@ public:
 
 int main(int argc, char * argv[])
 {
-    sol::state lua;
-    lua.open_libraries(sol::lib::base);
-//    lua
-//
-//
-//    lua_State* lua_state = luaL_newstate();
-//    luaL_openlibs(lua_state);
-//
-//    luabridge::getGlobalNamespace(lua_state)
-//            .beginClass<Player>("Player")
-//            .addConstructor<void (*) (void)>()
-//            .addFunction("AddHp", &Player::AddHp)
-//            .addData("hp_",&Player::hp_)
-//            .endClass();
-//
-//    luaL_dofile(lua_state, "../a.lua");
-//
-//    lua_close(lua_state);
+    sol::state sol_state;
+    sol_state.open_libraries(sol::lib::base);
+    sol::usertype<Player> usertype_player=sol_state.new_usertype<Player>("Player",sol::constructors<Player()>());
+    usertype_player["AddHp"]=&Player::AddHp;
+    usertype_player["hp_"]=&Player::hp_;
+
+    sol_state.script_file("../a.lua");
 
     return 0;
 }
