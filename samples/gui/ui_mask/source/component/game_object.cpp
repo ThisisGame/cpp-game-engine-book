@@ -6,15 +6,14 @@
 #include <assert.h>
 #include <rttr/registration>
 #include "component.h"
+#include "../utils/debug.h"
 
 using namespace rttr;
 
-std::list<GameObject*> GameObject::game_object_list_;
+Tree GameObject::game_object_tree_;//用树存储所有的GameObject。
 
-GameObject::GameObject(std::string name):layer_(0x01) {
+GameObject::GameObject(std::string name): Tree::Node(),layer_(0x01) {
     set_name(name);
-
-    game_object_list_.push_back(this);
 }
 
 GameObject::~GameObject() {
@@ -63,19 +62,39 @@ void GameObject::ForeachComponent(std::function<void(Component *)> func) {
     }
 }
 
-void GameObject::Foreach(std::function<void(GameObject* game_object)> func) {
-    for (auto iter=game_object_list_.begin();iter!=game_object_list_.end();iter++){
-        auto game_object=*iter;
-        func(game_object);
+bool GameObject::SetParent(GameObject* parent){
+    if(parent== nullptr){
+        DEBUG_LOG_ERROR("parent null");
+        return false;
     }
+    parent->AddChild(this);
+    return true;
+}
+
+
+GameObject* GameObject::Create(std::string name) {
+    GameObject* game_object=new GameObject(name);
+    game_object_tree_.root_node()->AddChild(game_object);
+    return game_object;
+}
+
+void GameObject::Foreach(std::function<void(GameObject* game_object)> func) {
+    game_object_tree_.Post(game_object_tree_.root_node(),[&func](Tree::Node* node){
+        auto n=node;
+        GameObject* game_object= dynamic_cast<GameObject *>(n);
+        func(game_object);
+    });
 }
 
 GameObject* GameObject::Find(std::string name) {
-    for (auto game_object:game_object_list_) {
+    GameObject* game_object_find= nullptr;
+    game_object_tree_.Find(game_object_tree_.root_node(), [&name](Tree::Node* node){
+        GameObject* game_object=dynamic_cast<GameObject*>(node);
         if(game_object->name()==name){
-            return game_object;
+            return true;
         }
-    }
-    return nullptr;
+        return false;
+    }, reinterpret_cast<Node **>(&game_object_find));
+    return game_object_find;
 }
 

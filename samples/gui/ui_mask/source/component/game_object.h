@@ -12,11 +12,14 @@
 #include <memory>
 #include <list>
 #include <functional>
+#include "../data_structs/tree.h"
 
 class Component;
-class GameObject {
-public:
+class GameObject:public Tree::Node {
+private:
+    GameObject(){}
     GameObject(std::string name);
+public:
     ~GameObject();
 
     std::string& name(){return name_;}
@@ -47,6 +50,20 @@ public:
     bool active(){return active_;}
     void set_active(bool active){active_=active;}
 
+    /// 设置父节点
+    /// \param parent
+    /// \return
+    bool SetParent(GameObject* parent);
+private:
+    std::string name_;
+    std::unordered_map<std::string,std::vector<Component*>> component_type_instance_map_;
+
+    unsigned char layer_;//将物体分不同的层，用于相机分层、物理碰撞分层等。
+
+    bool active_;//是否激活
+public:
+    static GameObject* Create(std::string name);
+
     /// 遍历所有Camera
     /// \param func
     static void Foreach(std::function<void(GameObject* game_object)> func);
@@ -55,15 +72,9 @@ public:
     /// \param name
     /// \return
     static GameObject* Find(std::string name);
+
 private:
-    std::string name_;
-    std::unordered_map<std::string,std::vector<Component*>> component_type_instance_map_;
-
-    unsigned char layer_;//将物体分不同的层，用于相机分层、物理碰撞分层等。
-
-    bool active_;//是否激活
-
-    static std::list<GameObject*> game_object_list_;//存储所有的GameObject。
+    static Tree game_object_tree_;//用树存储所有的GameObject。
 };
 
 

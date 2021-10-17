@@ -35,7 +35,7 @@ LoginScene::LoginScene() :Component(){}
 
 void LoginScene::Awake() {
     //创建相机1 GameObject
-    auto go_camera_1=new GameObject("main_camera");
+    auto go_camera_1=GameObject::Create("main_camera");
     //挂上 Transform 组件
     transform_camera_1_=dynamic_cast<Transform*>(go_camera_1->AddComponent("Transform"));
     transform_camera_1_->set_position(glm::vec3(0, 0, 10));
@@ -54,7 +54,7 @@ void LoginScene::Awake() {
 
 void LoginScene::CreateFishSoupPot() {
     //创建模型 GameObject
-    GameObject* go=new GameObject("fishsoup_pot");
+    GameObject* go=GameObject::Create("fishsoup_pot");
     go->set_layer(0x01);
 
     //挂上 Transform 组件
@@ -93,7 +93,7 @@ void LoginScene::CreateFont() {
                 0,2,3
         };
         //创建模型 GameObject
-        auto go=new GameObject("quad_draw_font_color");
+        auto go=GameObject::Create("quad_draw_font_color");
         go->set_layer(0x01);
 
         //挂上 Transform 组件
@@ -119,7 +119,7 @@ void LoginScene::CreateFont() {
 
 void LoginScene::CreateUI() {
     //创建UI相机 GameObject
-    auto go_camera_ui=new GameObject("ui_camera");
+    auto go_camera_ui=GameObject::Create("ui_camera");
     //挂上 Transform 组件
     auto transform_camera_ui=dynamic_cast<Transform*>(go_camera_ui->AddComponent("Transform"));
     transform_camera_ui->set_position(glm::vec3(0, 0, 10));
@@ -134,23 +134,24 @@ void LoginScene::CreateUI() {
     camera_ui->SetOrthographic(-Screen::width()/2,Screen::width()/2,-Screen::height()/2,Screen::height()/2,-100,100);
 
     //创建 GameObject
-    auto go_ui_mask=new GameObject("mask_mod_bag");
-    go_ui_mask->set_layer(0x02);
-    //挂上 Transform 组件
-    auto transform_ui_mask=dynamic_cast<Transform*>(go_ui_mask->AddComponent("Transform"));
-//    transform_ui_mask->set_position(glm::vec3(-50.f,0.f,0.f));
-    //挂上 UIImage 组件
-    auto ui_mask_mod_bag=dynamic_cast<UIMask*>(go_ui_mask->AddComponent("UIMask"));
-    ui_mask_mod_bag->set_texture(Texture2D::LoadFromFile("images/mod_bag_mask.cpt"));
-
-    //创建 GameObject
-    auto go_ui_image=new GameObject("image_mod_bag");
+    auto go_ui_image=GameObject::Create("image_mod_bag");
     go_ui_image->set_layer(0x02);
     //挂上 Transform 组件
     go_ui_image->AddComponent("Transform");
     //挂上 UIImage 组件
     auto ui_image_mod_bag=dynamic_cast<UIImage*>(go_ui_image->AddComponent("UIImage"));
     ui_image_mod_bag->set_texture(Texture2D::LoadFromFile("images/mod_bag.cpt"));
+
+    //创建 GameObject
+    auto go_ui_mask=GameObject::Create("mask_mod_bag");
+    go_ui_mask->set_layer(0x02);
+    go_ui_mask->SetParent(go_ui_image);
+    //挂上 Transform 组件
+    auto transform_ui_mask=dynamic_cast<Transform*>(go_ui_mask->AddComponent("Transform"));
+//    transform_ui_mask->set_position(glm::vec3(-50.f,0.f,0.f));
+    //挂上 UIMask 组件
+    auto ui_mask_mod_bag=dynamic_cast<UIMask*>(go_ui_mask->AddComponent("UIMask"));
+    ui_mask_mod_bag->set_texture(Texture2D::LoadFromFile("images/mod_bag_mask.cpt"));
 }
 
 void LoginScene::Update() {
