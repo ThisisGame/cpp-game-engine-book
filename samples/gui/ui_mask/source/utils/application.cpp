@@ -21,7 +21,7 @@
 #include "renderer/mesh_renderer.h"
 #include "control/input.h"
 #include "screen.h"
-#include "renderer/render_device_opengl.h"
+#include "render_device/render_device_opengl.h"
 
 
 std::string Application::data_path_;

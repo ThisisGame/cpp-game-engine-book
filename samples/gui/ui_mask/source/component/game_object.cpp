@@ -6,7 +6,7 @@
 #include <assert.h>
 #include <rttr/registration>
 #include "component.h"
-#include "../utils/debug.h"
+#include "utils/debug.h"
 
 using namespace rttr;
 

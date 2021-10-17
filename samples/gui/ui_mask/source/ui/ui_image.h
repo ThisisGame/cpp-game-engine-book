@@ -5,8 +5,8 @@
 #ifndef UNTITLED_UI_IMAGE_H
 #define UNTITLED_UI_IMAGE_H
 
-#include "../component/component.h"
-#include "../renderer/mesh_filter.h"
+#include "component/component.h"
+#include "renderer/mesh_filter.h"
 
 class Texture2D;
 class UIImage : public Component {

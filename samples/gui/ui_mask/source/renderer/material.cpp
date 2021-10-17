@@ -11,7 +11,7 @@
 #include "rapidxml/rapidxml_utils.hpp"
 #include "shader.h"
 #include "texture2d.h"
-#include "../utils/application.h"
+#include "utils/application.h"
 
 using std::ifstream;
 using std::ios;

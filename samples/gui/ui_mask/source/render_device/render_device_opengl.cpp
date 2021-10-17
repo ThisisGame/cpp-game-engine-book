@@ -4,7 +4,7 @@
 
 #include "render_device_opengl.h"
 #include "glad/gl.h"
-#include "../utils/debug.h"
+#include "utils/debug.h"
 
 void RenderDeviceOpenGL::Enable(RenderDevice::RenderState render_state) {
     if(render_state_map_.find(render_state)!=render_state_map_.end() && render_state_map_[render_state]==true){

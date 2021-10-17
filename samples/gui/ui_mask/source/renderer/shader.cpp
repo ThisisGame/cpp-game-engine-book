@@ -6,8 +6,8 @@
 #include <iostream>
 #include <fstream>
 #include <glad/gl.h>
-#include "../utils/debug.h"
-#include "../utils/application.h"
+#include "utils/debug.h"
+#include "utils/application.h"
 
 using std::ifstream;
 using std::ios;

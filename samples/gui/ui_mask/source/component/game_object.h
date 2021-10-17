@@ -12,7 +12,7 @@
 #include <memory>
 #include <list>
 #include <functional>
-#include "../data_structs/tree.h"
+#include "data_structs/tree.h"
 
 class Component;
 class GameObject:public Tree::Node {

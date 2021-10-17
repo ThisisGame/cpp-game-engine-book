@@ -7,9 +7,9 @@
 #include <fstream>
 #include "timetool/stopwatch.h"
 #include "stb/stb_truetype.h"
-#include "../utils/debug.h"
+#include "utils/debug.h"
 #include "glm/glm.hpp"
-#include "../utils/application.h"
+#include "utils/application.h"
 
 
 

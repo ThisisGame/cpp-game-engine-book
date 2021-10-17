@@ -5,8 +5,8 @@
 #ifndef UNTITLED_UI_MASK_H
 #define UNTITLED_UI_MASK_H
 
-#include "../component/component.h"
-#include "../renderer/mesh_filter.h"
+#include "component/component.h"
+#include "renderer/mesh_filter.h"
 
 class Texture2D;
 class UIMask : public Component {

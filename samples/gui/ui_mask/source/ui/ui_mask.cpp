@@ -5,11 +5,11 @@
 #include "ui_mask.h"
 #include <vector>
 #include <rttr/registration>
-#include "../component/game_object.h"
-#include "../renderer/texture2d.h"
-#include "../renderer/material.h"
-#include "../renderer/mesh_renderer.h"
-#include "../renderer/render_device.h"
+#include "component/game_object.h"
+#include "renderer/texture2d.h"
+#include "renderer/material.h"
+#include "renderer/mesh_renderer.h"
+#include "render_device/render_device.h"
 #include "utils/debug.h"
 
 using namespace rttr;
