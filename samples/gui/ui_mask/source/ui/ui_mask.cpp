@@ -9,6 +9,7 @@
 #include "../renderer/texture2d.h"
 #include "../renderer/material.h"
 #include "../renderer/mesh_renderer.h"
+#include "../renderer/render_device.h"
 #include "utils/debug.h"
 
 using namespace rttr;
@@ -64,7 +65,7 @@ void UIMask::Update() {
 
 void UIMask::OnPreRender() {
     Component::OnPreRender();
-    glEnable(GL_STENCIL_TEST);__CHECK_GL_ERROR__//开启模版测试
+    RenderDevice::instance()->Enable(RenderDevice::STENCIL_TEST);//开启模版测试
     glClearStencil(0);__CHECK_GL_ERROR__//设置默认模版值 0
     glStencilFunc(GL_NEVER, 0x0, 0xFF);__CHECK_GL_ERROR__//通通不通过模版测试。
     glStencilOp(GL_INCR, GL_INCR, GL_INCR);__CHECK_GL_ERROR__//像素的模版值 0+1 = 1
@@ -75,5 +76,5 @@ void UIMask::OnPostRender() {
 }
 
 void UIMask::OnDisable() {
-    glDisable(GL_STENCIL_TEST);__CHECK_GL_ERROR__
+    RenderDevice::instance()->Disable(RenderDevice::STENCIL_TEST);
 }

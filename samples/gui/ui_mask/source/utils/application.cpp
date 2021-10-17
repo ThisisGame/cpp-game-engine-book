@@ -21,6 +21,7 @@
 #include "renderer/mesh_renderer.h"
 #include "control/input.h"
 #include "screen.h"
+#include "renderer/render_device_opengl.h"
 
 
 std::string Application::data_path_;
@@ -73,6 +74,8 @@ static void mouse_scroll_callback(GLFWwindow* window, double x, double y)
 void Application::Init() {
     Debug::Init();
     DEBUG_LOG_INFO("game start");
+    RenderDevice::Init(new RenderDeviceOpenGL());
+
     glfwSetErrorCallback(error_callback);
     if (!glfwInit())
     {
