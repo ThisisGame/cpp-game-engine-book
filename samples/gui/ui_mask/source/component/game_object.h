@@ -16,10 +16,8 @@
 
 class Component;
 class GameObject:public Tree::Node {
-private:
-    GameObject(){}
-    GameObject(std::string name);
 public:
+    GameObject(std::string name);
     ~GameObject();
 
     std::string& name(){return name_;}
@@ -62,8 +60,6 @@ private:
 
     bool active_;//是否激活
 public:
-    static GameObject* Create(std::string name);
-
     /// 遍历所有Camera
     /// \param func
     static void Foreach(std::function<void(GameObject* game_object)> func);

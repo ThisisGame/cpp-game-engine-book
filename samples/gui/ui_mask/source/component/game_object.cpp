@@ -14,6 +14,7 @@ Tree GameObject::game_object_tree_;//用树存储所有的GameObject。
 
 GameObject::GameObject(std::string name): Tree::Node(),layer_(0x01) {
     set_name(name);
+    game_object_tree_.root_node()->AddChild(this);
 }
 
 GameObject::~GameObject() {
@@ -69,13 +70,6 @@ bool GameObject::SetParent(GameObject* parent){
     }
     parent->AddChild(this);
     return true;
-}
-
-
-GameObject* GameObject::Create(std::string name) {
-    GameObject* game_object=new GameObject(name);
-    game_object_tree_.root_node()->AddChild(game_object);
-    return game_object;
 }
 
 void GameObject::Foreach(std::function<void(GameObject* game_object)> func) {

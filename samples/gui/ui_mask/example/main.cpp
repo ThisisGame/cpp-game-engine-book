@@ -5,7 +5,7 @@ int main(void){
     Application::set_data_path("../data/");//设置资源目录
     Application::Init();//初始化引擎
 
-    GameObject* go=GameObject::Create("LoginSceneGo");
+    GameObject* go=new GameObject("LoginSceneGo");
     go->AddComponent("Transform");
     go->AddComponent("LoginScene");
 
