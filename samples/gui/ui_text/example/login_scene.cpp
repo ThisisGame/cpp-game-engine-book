@@ -20,8 +20,10 @@
 #include "component/transform.h"
 #include "control/key_code.h"
 #include "renderer/font.h"
+#include "ui/ui_camera.h"
 #include "ui/ui_image.h"
 #include "ui/ui_mask.h"
+#include "ui/ui_text.h"
 
 
 using namespace rttr;
@@ -47,7 +49,7 @@ void LoginScene::Awake() {
 
     CreateFishSoupPot();
 
-    CreateFont();
+//    CreateFont();
 
     CreateUI();
 }
@@ -124,7 +126,7 @@ void LoginScene::CreateUI() {
     auto transform_camera_ui=dynamic_cast<Transform*>(go_camera_ui->AddComponent("Transform"));
     transform_camera_ui->set_position(glm::vec3(0, 0, 10));
     //挂上 Camera 组件
-    auto camera_ui=dynamic_cast<Camera*>(go_camera_ui->AddComponent("Camera"));
+    auto camera_ui=dynamic_cast<Camera*>(go_camera_ui->AddComponent("UICamera"));
     camera_ui->set_depth(1);
     camera_ui->set_culling_mask(0x02);
     //UI相机不能清除之前的颜色。不然用第一个相机矩阵渲染的物体就被清除 没了。
@@ -148,10 +150,22 @@ void LoginScene::CreateUI() {
     go_ui_mask->SetParent(go_ui_image);
     //挂上 Transform 组件
     auto transform_ui_mask=dynamic_cast<Transform*>(go_ui_mask->AddComponent("Transform"));
-//    transform_ui_mask->set_position(glm::vec3(-50.f,0.f,0.f));
     //挂上 UIMask 组件
     auto ui_mask_mod_bag=dynamic_cast<UIMask*>(go_ui_mask->AddComponent("UIMask"));
     ui_mask_mod_bag->set_texture(Texture2D::LoadFromFile("images/mod_bag_mask.cpt"));
+
+    //生成文字贴图
+    Font* font=Font::LoadFromFile("font/hkyuan.ttf",100);
+    //创建 GameObject
+    auto go_ui_text=new GameObject("text");
+    go_ui_text->set_layer(0x02);
+    //挂上 Transform 组件
+    auto transform_ui_text =dynamic_cast<Transform*>(go_ui_text->AddComponent("Transform"));
+    transform_ui_text->set_position({-200.f,-200.f,0});
+    //挂上 UIText 组件
+    auto ui_text=dynamic_cast<UIText*>(go_ui_text->AddComponent("UIText"));
+    ui_text->set_font(font);
+    ui_text->set_text("looks good");
 }
 
 void LoginScene::Update() {

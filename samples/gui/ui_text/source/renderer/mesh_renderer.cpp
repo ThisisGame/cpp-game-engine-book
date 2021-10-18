@@ -24,7 +24,7 @@ RTTR_REGISTRATION
             .constructor<>()(rttr::policy::ctor::as_raw_ptr);
 }
 
-MeshRenderer::MeshRenderer() {
+MeshRenderer::MeshRenderer():Component() {
 
 }
 
@@ -124,7 +124,11 @@ void MeshRenderer::Render() {
             component->OnPreRender();
         });
 
-        glEnable(GL_DEPTH_TEST);__CHECK_GL_ERROR__
+        if(current_camera->camera_use_for()==Camera::CameraUseFor::SCENE){
+            glEnable(GL_DEPTH_TEST);__CHECK_GL_ERROR__
+        }else{
+            glDisable(GL_DEPTH_TEST);__CHECK_GL_ERROR__
+        }
         glEnable(GL_CULL_FACE);__CHECK_GL_ERROR__//开启背面剔除
         glEnable(GL_BLEND);__CHECK_GL_ERROR__
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);__CHECK_GL_ERROR__

@@ -63,6 +63,28 @@ public:
     unsigned char culling_mask(){return culling_mask_;}
     void set_culling_mask(unsigned char culling_mask){culling_mask_=culling_mask;}
 
+
+
+    /// 相机用于
+    enum CameraUseFor{
+        UI,
+        SCENE
+    };
+    CameraUseFor camera_use_for(){return camera_use_for_;}
+
+protected:
+    glm::mat4 view_mat4_;//指定相机坐标和朝向
+    glm::mat4 projection_mat4_;//指定相机范围
+
+    glm::vec4 clear_color_;//清屏颜色
+    unsigned int clear_flag_;//刷新数据标志
+
+    unsigned char depth_;//排序深度
+
+    unsigned char culling_mask_;//控制渲染哪些Layer的物体
+
+    CameraUseFor camera_use_for_=CameraUseFor::SCENE;
+public:
     /// 遍历所有Camera
     /// \param func
     static void Foreach(std::function<void()> func);
@@ -74,24 +96,7 @@ public:
     /// 按 depth_ 排序
     static void Sort();
 
-    /// 相机投影类型
-    enum Projection{
-        Perspective,
-        Orthographic
-    };
 private:
-
-    glm::mat4 view_mat4_;//指定相机坐标和朝向
-    glm::mat4 projection_mat4_;//指定相机范围
-
-    glm::vec4 clear_color_;//清屏颜色
-    unsigned int clear_flag_;//刷新数据标志
-
-    unsigned char depth_;//排序深度
-
-    unsigned char culling_mask_;//控制渲染哪些Layer的物体
-
-
     static std::vector<Camera*> all_camera_;//所有Camera，每一帧都遍历Camera，设置current_camera_。
     static Camera* current_camera_;//当前用于渲染的Camera，就是MeshRenderer在计算MVP的时候，用这个Camera的View Projection矩阵计算MVP。
 };

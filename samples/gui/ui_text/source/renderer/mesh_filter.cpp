@@ -19,7 +19,7 @@ RTTR_REGISTRATION
 }
 
 MeshFilter::MeshFilter()
-    :mesh_(nullptr) {
+    :Component(),mesh_(nullptr) {
 
 }
 
@@ -51,6 +51,9 @@ MeshFilter::~MeshFilter() {
 }
 
 void MeshFilter::CreateMesh(std::vector<Vertex> &vertex_data, std::vector<unsigned short> &vertex_index_data) {
+    if(mesh_!= nullptr){
+        delete mesh_;
+    }
     mesh_=new Mesh();
     mesh_->vertex_num_=vertex_data.size();
     mesh_->vertex_index_num_=vertex_index_data.size();
