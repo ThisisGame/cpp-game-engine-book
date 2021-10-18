@@ -20,7 +20,7 @@ RTTR_REGISTRATION{
             .constructor<>()(rttr::policy::ctor::as_raw_ptr);
 }
 
-UIText::UIText() {
+UIText::UIText():color_({1,1,1,1}) {
 
 }
 
@@ -46,7 +46,7 @@ void UIText::Update() {
 
         //创建 Material
         auto material=new Material();//设置材质
-        material->Parse("material/quad_draw_font_color.mat");
+        material->Parse("material/ui_text.mat");
 
         //挂上 MeshRenderer 组件
         auto mesh_renderer=dynamic_cast<MeshRenderer*>(game_object()->AddComponent("MeshRenderer"));
@@ -73,10 +73,10 @@ void UIText::Update() {
             unsigned short height=(character->right_bottom_y_-character->left_top_y_)*font_->font_texture()->height();
             //因为FreeType生成的bitmap是上下颠倒的，所以这里UV坐标也要做对应翻转，将左上角作为零点。
             vertex_vector.insert(vertex_vector.end(),{
-                    {{x,0.0f, 0.0f}, {1.0f, 0.0f, 0.0f, 1.0f}, {character->left_top_x_,     character->right_bottom_y_}},
-                    {{x+width,0.0f, 0.0f}, {1.0f, 0.0f, 0.0f, 1.0f}, {character->right_bottom_x_, character->right_bottom_y_}},
-                    {{x+width,height, 0.0f}, {0.0f, 1.0f, 0.0f, 1.0f}, {character->right_bottom_x_, character->left_top_y_}},
-                    {{x,height, 0.0f}, {0.0f, 1.0f, 0.0f, 1.0f}, {character->left_top_x_,     character->left_top_y_}}
+                    {{x,0.0f, 0.0f}, color_, {character->left_top_x_,     character->right_bottom_y_}},
+                    {{x+width,0.0f, 0.0f}, color_, {character->right_bottom_x_, character->right_bottom_y_}},
+                    {{x+width,height, 0.0f}, color_, {character->right_bottom_x_, character->left_top_y_}},
+                    {{x,height, 0.0f}, color_, {character->left_top_x_,     character->left_top_y_}}
             });
             x+=width;
 

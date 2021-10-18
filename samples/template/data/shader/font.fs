@@ -8,5 +8,5 @@ layout(location = 0) out vec4 o_fragColor;
 void main()
 {
     vec4 pixColor=texture(u_diffuse_texture,v_uv);
-    o_fragColor = vec4(v_color.x,v_color.y,v_color.z,pixColor.r);
+    o_fragColor = vec4(v_color.x,v_color.y,v_color.z,pixColor.r*v_color.a);
 }

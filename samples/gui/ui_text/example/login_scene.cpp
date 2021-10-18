@@ -155,17 +155,18 @@ void LoginScene::CreateUI() {
     ui_mask_mod_bag->set_texture(Texture2D::LoadFromFile("images/mod_bag_mask.cpt"));
 
     //生成文字贴图
-    Font* font=Font::LoadFromFile("font/hkyuan.ttf",100);
+    Font* font=Font::LoadFromFile("font/hkyuan.ttf",24);
     //创建 GameObject
     auto go_ui_text=new GameObject("text");
     go_ui_text->set_layer(0x02);
     //挂上 Transform 组件
     auto transform_ui_text =dynamic_cast<Transform*>(go_ui_text->AddComponent("Transform"));
-    transform_ui_text->set_position({-200.f,-200.f,0});
+    transform_ui_text->set_position({0.f,-200.f,0});
     //挂上 UIText 组件
     auto ui_text=dynamic_cast<UIText*>(go_ui_text->AddComponent("UIText"));
     ui_text->set_font(font);
     ui_text->set_text("looks good");
+    ui_text->set_color({1,0,0,1});
 }
 
 void LoginScene::Update() {

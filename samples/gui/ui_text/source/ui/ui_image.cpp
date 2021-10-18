@@ -49,7 +49,7 @@ void UIImage::Update() {
 
         //创建 Material
         auto material=new Material();//设置材质
-        material->Parse("material/ui.mat");
+        material->Parse("material/ui_image.mat");
         material->SetTexture("u_diffuse_texture", texture2D_);
 
         //挂上 MeshRenderer 组件
