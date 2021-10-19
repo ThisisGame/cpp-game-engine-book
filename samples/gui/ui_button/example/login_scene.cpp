@@ -174,19 +174,17 @@ void LoginScene::CreateUI() {
     go_button_image_normal->set_layer(0x02);
     go_button_image_normal->AddComponent("Transform");
     auto ui_image_button_image_normal=dynamic_cast<UIImage*>(go_button_image_normal->AddComponent("UIImage"));
-    ui_image_button_image_normal->set_texture(Texture2D::LoadFromFile("images/tab_btn_1.cpt"));
+    ui_image_button_image_normal->set_texture(Texture2D::LoadFromFile("images/mod_bag.cpt"));
 
     //创建 GameObject
     auto go_ui_button=new GameObject("button");
     go_ui_button->set_layer(0x02);
     //挂上 Transform 组件
     auto transform_ui_button =dynamic_cast<Transform*>(go_ui_button->AddComponent("Transform"));
-    transform_ui_button->set_position({-100.f,-200.f,0});
+    transform_ui_button->set_position({100.f,-200.f,0});
     //挂上 UIButton 组件
-    auto ui_button=dynamic_cast<UIButton*>(go_ui_text->AddComponent("UIButton"));
+    auto ui_button=dynamic_cast<UIButton*>(go_ui_button->AddComponent("UIButton"));
     ui_button->set_image_normal(ui_image_button_image_normal);
-
-    go_button_image_normal->set_parent(go_ui_button);
 }
 
 void LoginScene::Update() {
@@ -209,7 +207,7 @@ void LoginScene::Update() {
 
     //旋转相机
     if(Input::GetKeyDown(KEY_CODE_LEFT_ALT) && Input::GetMouseButtonDown(MOUSE_BUTTON_LEFT)){
-        float degrees= Input::mousePosition().x_ - last_frame_mouse_position_.x_;
+        float degrees= Input::mousePosition().x - last_frame_mouse_position_.x;
 
         glm::mat4 old_mat4=glm::mat4(1.0f);
 

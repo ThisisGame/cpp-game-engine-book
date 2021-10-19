@@ -38,7 +38,7 @@ private:
     Camera*     camera_1_;
     Transform* transform_camera_2_;
     Camera*     camera_2_;
-    vec2_ushort last_frame_mouse_position_;//上一帧的鼠标位置
+    glm::vec2 last_frame_mouse_position_;//上一帧的鼠标位置
 };
 
 
