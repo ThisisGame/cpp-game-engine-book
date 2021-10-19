@@ -24,7 +24,7 @@ file(COPY "../../template/data/images/diffuse_fishsoup_pot.cpt" DESTINATION "../
 file(COPY "../../template/data/images/urban_128.cpt" DESTINATION "../data/images/")
 file(COPY "../../template/data/images/mod_bag.cpt" DESTINATION "../data/images/")
 file(COPY "../../template/data/images/mod_bag_mask.cpt" DESTINATION "../data/images/")
-file(COPY "../../template/data/images/tab_btn_1.cpt" DESTINATION "../data/images/")
+file(COPY "../../template/data/images/btn_power.cpt" DESTINATION "../data/images/")
 file(COPY "../../template/data/model/fishsoup_pot.mesh" DESTINATION "../data/model/")
 file(COPY "../../template/data/shader/" DESTINATION "../data/shader/")
 file(COPY "../../template/data/material/fishsoup_pot.mat" DESTINATION "../data/material/")

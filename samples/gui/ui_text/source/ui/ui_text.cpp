@@ -66,7 +66,7 @@ void UIText::Update() {
 
         int x=0;
         std::vector<unsigned short> index={0, 1, 2, 0, 2, 3};
-
+        //合并Mesh
         for (int i = 0; i < character_vec.size(); ++i) {
             auto character=character_vec[i];
             unsigned short width=(character->right_bottom_x_-character->left_top_x_)*font_->font_texture()->width();

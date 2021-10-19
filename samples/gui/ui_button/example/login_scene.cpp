@@ -170,11 +170,11 @@ void LoginScene::CreateUI() {
     ui_text->set_color({1,0,0,1});
 
     //创建 GameObject
-    auto go_button_image_normal=new GameObject("tab_btn_1");
+    auto go_button_image_normal=new GameObject("btn_power");
     go_button_image_normal->set_layer(0x02);
     go_button_image_normal->AddComponent("Transform");
     auto ui_image_button_image_normal=dynamic_cast<UIImage*>(go_button_image_normal->AddComponent("UIImage"));
-    ui_image_button_image_normal->set_texture(Texture2D::LoadFromFile("images/mod_bag.cpt"));
+    ui_image_button_image_normal->set_texture(Texture2D::LoadFromFile("images/btn_power.cpt"));
 
     //创建 GameObject
     auto go_ui_button=new GameObject("button");

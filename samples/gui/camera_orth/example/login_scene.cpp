@@ -145,7 +145,7 @@ void LoginScene::CreateUI() {
             0,1,2,
             0,2,3
     };
-    //创建模型 GameObject
+    //创建UI GameObject
     auto go=new GameObject("image_mod_bag");
     go->set_layer(0x02);
 
@@ -158,13 +158,11 @@ void LoginScene::CreateUI() {
 
     //创建 Material
     auto material=new Material();//设置材质
-    material->Parse("material/ui.mat");
+    material->Parse("material/ui_image.mat");
 
     //挂上 MeshRenderer 组件
     auto mesh_renderer=dynamic_cast<MeshRenderer*>(go->AddComponent("MeshRenderer"));
     mesh_renderer->SetMaterial(material);
-
-    //使用文字贴图
     material->SetTexture("u_diffuse_texture", texture2D);
 }
 
