@@ -136,7 +136,7 @@ void LoginScene::CreateUI() {
     camera_ui->SetView(glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
     camera_ui->SetOrthographic(-Screen::width()/2,Screen::width()/2,-Screen::height()/2,Screen::height()/2,-100,100);
 
-    //创建 GameObject
+    //创建 UIImage
     auto go_ui_image=new GameObject("image_mod_bag");
     go_ui_image->set_layer(0x02);
     //挂上 Transform 组件
@@ -145,7 +145,7 @@ void LoginScene::CreateUI() {
     auto ui_image_mod_bag=dynamic_cast<UIImage*>(go_ui_image->AddComponent("UIImage"));
     ui_image_mod_bag->set_texture(Texture2D::LoadFromFile("images/mod_bag.cpt"));
 
-    //创建 GameObject
+    //创建 UIMask
     auto go_ui_mask=new GameObject("mask_mod_bag");
     go_ui_mask->set_layer(0x02);
     go_ui_mask->SetParent(go_ui_image);
@@ -157,7 +157,7 @@ void LoginScene::CreateUI() {
 
     //生成文字贴图
     Font* font=Font::LoadFromFile("font/hkyuan.ttf",24);
-    //创建 GameObject
+    //创建 UIText
     auto go_ui_text=new GameObject("text");
     go_ui_text->set_layer(0x02);
     //挂上 Transform 组件
@@ -169,32 +169,34 @@ void LoginScene::CreateUI() {
     ui_text->set_text("looks good");
     ui_text->set_color({1,0,0,1});
 
-    //创建 GameObject
+    //创建按钮普通状态图片
     auto go_button_image_normal=new GameObject("btn_power");
     go_button_image_normal->set_layer(0x02);
     go_button_image_normal->AddComponent("Transform");
     auto ui_image_button_image_normal=dynamic_cast<UIImage*>(go_button_image_normal->AddComponent("UIImage"));
     ui_image_button_image_normal->set_texture(Texture2D::LoadFromFile("images/btn_power.cpt"));
-
-    //创建 GameObject
+    //创建按钮按下状态图片
+    auto go_button_image_normal_press=new GameObject("btn_power_press");
+    go_button_image_normal_press->set_layer(0x02);
+    go_button_image_normal_press->AddComponent("Transform");
+    auto ui_image_button_image_normal_press=dynamic_cast<UIImage*>(go_button_image_normal_press->AddComponent("UIImage"));
+    ui_image_button_image_normal_press->set_texture(Texture2D::LoadFromFile("images/btn_power_press.cpt"));
+    //创建按钮
     auto go_ui_button=new GameObject("button");
     go_ui_button->set_layer(0x02);
-    //挂上 Transform 组件
     auto transform_ui_button =dynamic_cast<Transform*>(go_ui_button->AddComponent("Transform"));
     transform_ui_button->set_position({100.f,-200.f,0});
-    //挂上 UIButton 组件
     auto ui_button=dynamic_cast<UIButton*>(go_ui_button->AddComponent("UIButton"));
     ui_button->set_image_normal(ui_image_button_image_normal);
+    ui_button->set_image_press(ui_image_button_image_normal_press);
+    ui_button->set_click_callback([=](){
+        go_ui_mask->set_active(!go_ui_mask->active());
+    });
 }
 
 void LoginScene::Update() {
     camera_1_->SetView(glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
     camera_1_->SetPerspective(60.f, Screen::aspect_ratio(), 1.f, 1000.f);
-
-    if(Input::GetKeyUp(KEY_CODE_A)){
-        auto go_ui_mask = GameObject::Find("mask_mod_bag");
-        go_ui_mask->set_active(!go_ui_mask->active());
-    }
 
     //旋转物体
     if(Input::GetKeyDown(KEY_CODE_R)){
