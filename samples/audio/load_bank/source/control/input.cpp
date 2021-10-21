@@ -7,7 +7,7 @@
 #include "key_code.h"
 
 std::unordered_map<unsigned short,unsigned short> Input::key_event_map_;
-vec2_ushort Input::mouse_position_={0,0};
+glm::vec2 Input::mouse_position_={0,0};
 short Input::mouse_scroll_=0;
 
 bool Input::GetKey(unsigned short key_code) {

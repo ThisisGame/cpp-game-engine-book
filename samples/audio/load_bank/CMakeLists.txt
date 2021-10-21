@@ -4,11 +4,21 @@ project(untitled)
 set(CMAKE_CXX_STANDARD 17)
 add_definitions(-D USE_FMOD_STUDIO)#是否使用fmod studio，加载bank文件的形式。
 
+if (WIN32)
+    add_compile_options(/wd4819)#忽略保存为unicode警告
+endif ()
+
+include(CMakeLists.txt.glfw)
+include(CMakeLists.txt.FreeType)
+include(CMakeLists.txt.fmod)
+
 #拷贝depends目录
-file(COPY "../../template/depends/glfw-3.3.3.bin.WIN64/" DESTINATION "../depends/glfw-3.3.3.bin.WIN64/")
+file(COPY "../../template/depends/glfw-3.3-3.4/" DESTINATION "../depends/glfw-3.3-3.4/")
 file(COPY "../../template/depends/glm/" DESTINATION "../depends/glm/")
 file(COPY "../../template/depends/timetool/" DESTINATION "../depends/timetool/")
 file(COPY "../../template/depends/rapidxml/" DESTINATION "../depends/rapidxml/")
+file(COPY "../../template/depends/stb/" DESTINATION "../depends/stb/")
+file(COPY "../../template/depends/spdlog/include/spdlog/" DESTINATION "../depends/spdlog/")
 file(COPY "../../template/depends/rttr-0.9.6/src/rttr/" DESTINATION "../depends/rttr/")
 file(COPY "../../template/depends/fmod/" DESTINATION "../depends/fmod/")
 
@@ -24,26 +34,12 @@ file(GLOB unlit_shaders "../../template/data/shader/unlit.*")
 file(COPY ${unlit_shaders} DESTINATION "../data/shader/")
 
 #头文件目录
-include_directories("depends/glfw-3.3.3.bin.WIN64/include")
-include_directories("depends/glfw-3.3.3.bin.WIN64/deps")
 include_directories("depends")
 include_directories("source")
 
-#链接目录
-link_directories("depends/glfw-3.3.3.bin.WIN64/lib-static-ucrt")
-link_directories("depends/fmod/api/core/lib/x64")
-
-#链接lib文件
-link_libraries(opengl32 glfw3dll fmod_vc)
-
 file(GLOB_RECURSE engine_cpp source/*.cpp)
 file(GLOB_RECURSE rttr_cpp "depends/rttr/*.cpp")
-file(GLOB_RECURSE glfw_c depends/glfw-3.3.3.bin.WIN64/deps/glad_gl.c)
 file(GLOB_RECURSE example_cpp example/*.cpp)
 
-add_executable(untitled ${glfw_c} ${rttr_cpp} ${engine_cpp} ${example_cpp})
-
-
-#拷贝dll到exe目录
-file(COPY "depends/glfw-3.3.3.bin.WIN64/lib-static-ucrt/glfw3.dll" DESTINATION "./")
+add_executable(untitled ${glfw_sources} ${rttr_cpp} ${freetype_src} ${engine_cpp} ${example_cpp})
 

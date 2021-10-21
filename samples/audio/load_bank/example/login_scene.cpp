@@ -82,11 +82,11 @@ void LoginScene::CreateAudioListener() {
 
 void LoginScene::Update() {
     camera_1_->SetView(glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
-    camera_1_->SetProjection(60.f, Screen::aspect_ratio(), 1.f, 1000.f);
+    camera_1_->SetPerspective(60.f, Screen::aspect_ratio(), 1.f, 1000.f);
 
     //旋转相机
     if(Input::GetKeyDown(KEY_CODE_LEFT_ALT) && Input::GetMouseButtonDown(MOUSE_BUTTON_LEFT)){
-        float degrees= Input::mousePosition().x_ - last_frame_mouse_position_.x_;
+        float degrees= Input::mousePosition().x - last_frame_mouse_position_.x;
 
         glm::mat4 old_mat4=glm::mat4(1.0f);
 

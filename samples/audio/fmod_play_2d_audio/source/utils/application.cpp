@@ -4,15 +4,26 @@
 
 #include "application.h"
 #include <memory>
-#include "spdlog/spdlog.h"
-#include "spdlog/sinks/stdout_color_sinks.h"
-#include "spdlog/sinks/basic_file_sink.h"
+#include <glad/gl.h>
+#ifdef WIN32
+// 避免出现APIENTRY重定义警告。
+// freetype引用了windows.h，里面定义了APIENTRY。
+// glfw3.h会判断是否APIENTRY已经定义然后再定义一次。
+// 但是从编译顺序来看glfw3.h在freetype之前被引用了，判断不到 Windows.h中的定义，所以会出现重定义。
+// 所以在 glfw3.h之前必须引用  Windows.h。
+#include <Windows.h>
+#endif
+#define GLFW_INCLUDE_NONE
+#include <GLFW/glfw3.h>
+#include "debug.h"
 #include "component/game_object.h"
 #include "renderer/camera.h"
 #include "renderer/mesh_renderer.h"
 #include "control/input.h"
 #include "screen.h"
+#include "render_device/render_device_opengl.h"
 #include "audio/audio.h"
+
 
 std::string Application::data_path_;
 GLFWwindow* Application::glfw_window_;
@@ -62,30 +73,27 @@ static void mouse_scroll_callback(GLFWwindow* window, double x, double y)
 }
 
 void Application::Init() {
-    //初始化spdlog
-    InitSpdLog();
-    spdlog::info("game start");
-    // 初始化 glfw
-    InitGpuDevice();
-    //初始化 fmod
-    Audio::Init();
-}
-
-void Application::InitGpuDevice() {
+    Debug::Init();
+    DEBUG_LOG_INFO("game start");
+    RenderDevice::Init(new RenderDeviceOpenGL());
     glfwSetErrorCallback(error_callback);
     if (!glfwInit())
     {
-        spdlog::error("glfw init failed!");
+        DEBUG_LOG_ERROR("glfw init failed!");
         exit(EXIT_FAILURE);
     }
 
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+#ifdef __APPLE__
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+#endif
 
     glfw_window_ = glfwCreateWindow(960, 640, "Simple example", NULL, NULL);
     if (!glfw_window_)
     {
-        spdlog::error("glfwCreateWindow error!");
+        DEBUG_LOG_ERROR("glfwCreateWindow error!");
         glfwTerminate();
         exit(EXIT_FAILURE);
     }
@@ -100,43 +108,26 @@ void Application::InitGpuDevice() {
     glfwSetMouseButtonCallback(glfw_window_,mouse_button_callback);
     glfwSetScrollCallback(glfw_window_,mouse_scroll_callback);
     glfwSetCursorPosCallback(glfw_window_,mouse_move_callback);
-}
 
-void Application::InitSpdLog() {
-    try
-    {
-        auto console_sink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
-        console_sink->set_level(spdlog::level::trace);
-        console_sink->set_pattern("[multi_sink_example] [%^%l%$] %v");
-
-        auto file_sink = std::make_shared<spdlog::sinks::basic_file_sink_mt>("logs/multisink.txt", true);
-        file_sink->set_level(spdlog::level::trace);
-
-        spdlog::sinks_init_list sink_list = { file_sink, console_sink };
-
-        // you can even set multi_sink logger as default logger
-        spdlog::set_default_logger(std::make_shared<spdlog::logger>("multi_sink", spdlog::sinks_init_list({console_sink, file_sink})));
-    }
-    catch (const spdlog::spdlog_ex& ex)
-    {
-        std::cout << "Log initialization failed: " << ex.what() << std::endl;
-    }
+    //初始化 fmod
+    Audio::Init();
 }
 
 
 void Application::Update(){
-//    std::cout<<"Application::Update"<<std::endl;
     UpdateScreenSize();
 
     GameObject::Foreach([](GameObject* game_object){
-        game_object->ForeachComponent([](Component* component){
-           component->Update();
-        });
+        if(game_object->active()){
+            game_object->ForeachComponent([](Component* component){
+                component->Update();
+            });
+        }
     });
 
     Input::Update();
-
     Audio::Update();
+//    std::cout<<"Application::Update"<<std::endl;
 }
 
 
@@ -144,6 +135,9 @@ void Application::Render(){
     //遍历所有相机，每个相机的View Projection，都用来做一次渲染。
     Camera::Foreach([&](){
         GameObject::Foreach([](GameObject* game_object){
+            if(game_object->active()==false){
+                return;
+            }
             auto component=game_object->GetComponent("MeshRenderer");
             if (!component){
                 return;

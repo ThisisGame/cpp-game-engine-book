@@ -3,7 +3,7 @@
 //
 
 #include "audio.h"
-#include "spdlog/spdlog.h"
+#include "utils/debug.h"
 
 FMOD_SYSTEM* Audio::fmod_system_;
 
@@ -11,18 +11,18 @@ void Audio::Init(){
     FMOD_RESULT       result;
     // 创建FMOD System实例
     result=FMOD_System_Create(&fmod_system_);
-    spdlog::info("FMOD::System_Create ret code {}",result);
+    DEBUG_LOG_INFO("FMOD::System_Create ret code {}",result);
     //获取版本号
     unsigned int      version;
     result = FMOD_System_GetVersion(fmod_system_,&version);
-    spdlog::info("FMOD_System_GetVersion ret code {}",result);
+    DEBUG_LOG_INFO("FMOD_System_GetVersion ret code {}",result);
     if (version < FMOD_VERSION){
-        spdlog::critical("FMOD lib version {} doesn't match header version {}", version, FMOD_VERSION);
+        DEBUG_LOG_ERROR("FMOD lib version {} doesn't match header version {}", version, FMOD_VERSION);
         return;
     }
     //初始化 系统
     result=FMOD_System_Init(fmod_system_,32,FMOD_INIT_NORMAL,0);
-    spdlog::info("FMOD_System_Init ret code {}",result);
+    DEBUG_LOG_INFO("FMOD_System_Init ret code {}",result);
 }
 
 
@@ -32,6 +32,7 @@ FMOD_RESULT Audio::Update() {
 
 FMOD_RESULT
 Audio::CreateSound(const char *name_or_data,FMOD_MODE mode,FMOD_CREATESOUNDEXINFO *ex_info,FMOD_SOUND **sound) {
+    DEBUG_LOG_INFO("Audio::CreateSound name:{}",name_or_data);
     return FMOD_System_CreateSound(fmod_system_,name_or_data,mode,ex_info,sound);
 }
 

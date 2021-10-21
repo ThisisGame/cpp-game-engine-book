@@ -6,10 +6,9 @@
 #define UNTITLED_APPLICATION_H
 
 #include <string>
-#include <glad/gl.h>
-#include <GLFW/glfw3.h>
 
 
+class GLFWwindow;
 class Application {
 public:
     static void set_title(std::string title){title_=title;}
@@ -29,11 +28,6 @@ public:
 
     /// 逻辑代码执行后，应用到渲染。
     static void Render();
-
-private:
-
-    /// 初始化 glfw
-    static void InitGpuDevice();
 
 private:
     static std::string title_;//标题栏显示
