@@ -5,14 +5,24 @@
 #include "application.h"
 #include <memory>
 #include <easy/profiler.h>
-#include <timetool/stopwatch.h>
-#include <easy/profiler.h>
+#include <glad/gl.h>
+#ifdef WIN32
+// 避免出现APIENTRY重定义警告。
+// freetype引用了windows.h，里面定义了APIENTRY。
+// glfw3.h会判断是否APIENTRY已经定义然后再定义一次。
+// 但是从编译顺序来看glfw3.h在freetype之前被引用了，判断不到 Windows.h中的定义，所以会出现重定义。
+// 所以在 glfw3.h之前必须引用  Windows.h。
+#include <Windows.h>
+#endif
+#define GLFW_INCLUDE_NONE
+#include <GLFW/glfw3.h>
 #include "debug.h"
 #include "component/game_object.h"
 #include "renderer/camera.h"
 #include "renderer/mesh_renderer.h"
 #include "control/input.h"
 #include "screen.h"
+#include "render_device/render_device_opengl.h"
 #include "audio/audio.h"
 #include "time.h"
 
@@ -71,13 +81,7 @@ void Application::Init() {
     Debug::Init();
     DEBUG_LOG_INFO("game start");
     Time::Init();
-    // 初始化 glfw
-    InitGpuDevice();
-    //初始化 fmod
-    Audio::Init();
-}
-
-void Application::InitGpuDevice() {
+    RenderDevice::Init(new RenderDeviceOpenGL());
     glfwSetErrorCallback(error_callback);
     if (!glfwInit())
     {
@@ -85,9 +89,12 @@ void Application::InitGpuDevice() {
         exit(EXIT_FAILURE);
     }
 
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
-    glfwWindowHint(GLFW_REFRESH_RATE, GLFW_DONT_CARE);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+#ifdef __APPLE__
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+#endif
 
     glfw_window_ = glfwCreateWindow(960, 640, title_.c_str(), NULL, NULL);
     if (!glfw_window_)
@@ -107,23 +114,28 @@ void Application::InitGpuDevice() {
     glfwSetMouseButtonCallback(glfw_window_,mouse_button_callback);
     glfwSetScrollCallback(glfw_window_,mouse_scroll_callback);
     glfwSetCursorPosCallback(glfw_window_,mouse_move_callback);
+
+    //初始化 fmod
+    Audio::Init();
 }
+
 
 void Application::Update(){
     EASY_FUNCTION(profiler::colors::Magenta); // 标记函数
-//    std::cout<<"Application::Update"<<std::endl;
     Time::Update();
     UpdateScreenSize();
 
     GameObject::Foreach([](GameObject* game_object){
-        game_object->ForeachComponent([](Component* component){
-           component->Update();
-        });
+        if(game_object->active()){
+            game_object->ForeachComponent([](Component* component){
+                component->Update();
+            });
+        }
     });
 
     Input::Update();
-
     Audio::Update();
+//    std::cout<<"Application::Update"<<std::endl;
 }
 
 
@@ -132,6 +144,9 @@ void Application::Render(){
     //遍历所有相机，每个相机的View Projection，都用来做一次渲染。
     Camera::Foreach([&](){
         GameObject::Foreach([](GameObject* game_object){
+            if(game_object->active()==false){
+                return;
+            }
             auto component=game_object->GetComponent("MeshRenderer");
             if (!component){
                 return;

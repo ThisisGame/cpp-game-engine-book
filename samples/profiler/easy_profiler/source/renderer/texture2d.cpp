@@ -6,9 +6,11 @@
 #include "texture2d.h"
 #include <fstream>
 #include "timetool/stopwatch.h"
-#include "../utils/application.h"
 #include "stb/stb_truetype.h"
 #include "utils/debug.h"
+#include "glm/glm.hpp"
+#include "utils/application.h"
+
 
 
 using std::ifstream;
@@ -22,12 +24,26 @@ Texture2D::Texture2D() :mipmap_level_(0),width_(0),height_(0),gl_texture_format_
 
 Texture2D::~Texture2D() {
     if(gl_texture_id_>0){
-        glDeleteTextures(1,&gl_texture_id_);
+        glDeleteTextures(1,&gl_texture_id_);__CHECK_GL_ERROR__
     }
+}
+
+void Texture2D::UpdateSubImage(int x, int y, int width, int height, unsigned int client_format, unsigned int data_type,
+                               unsigned char *data) {
+    if(width<=0 || height<=0){
+        return;
+    }
+    glBindTexture(GL_TEXTURE_2D, gl_texture_id_);__CHECK_GL_ERROR__
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);__CHECK_GL_ERROR__
+    glTexSubImage2D(GL_TEXTURE_2D,0,x,y,width,height,client_format,data_type,data);__CHECK_GL_ERROR__
 }
 
 Texture2D* Texture2D::LoadFromFile(std::string image_file_path)
 {
+    if(image_file_path.empty()){
+        DEBUG_LOG_ERROR("image_file_path empty");
+        return nullptr;
+    }
     Texture2D* texture2d=new Texture2D();
 
     StopWatch stopwatch;
@@ -49,125 +65,48 @@ Texture2D* Texture2D::LoadFromFile(std::string image_file_path)
 
 
     //1. 通知显卡创建纹理对象，返回句柄;
-    glGenTextures(1, &(texture2d->gl_texture_id_));
+    glGenTextures(1, &(texture2d->gl_texture_id_));__CHECK_GL_ERROR__
 
     //2. 将纹理绑定到特定纹理目标;
-    glBindTexture(GL_TEXTURE_2D, texture2d->gl_texture_id_);
+    glBindTexture(GL_TEXTURE_2D, texture2d->gl_texture_id_);__CHECK_GL_ERROR__
 
     stopwatch.restart();
     {
         //3. 将压缩纹理数据上传到GPU;
         glCompressedTexImage2D(GL_TEXTURE_2D, 0, texture2d->gl_texture_format_, texture2d->width_, texture2d->height_, 0, cpt_file_head.compress_size_, data);
+        __CHECK_GL_ERROR__
     }
     stopwatch.stop();
     std::int64_t upload_cpt_cost = stopwatch.milliseconds();
 
     //4. 指定放大，缩小滤波方式，线性滤波，即放大缩小的插值方式;
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);__CHECK_GL_ERROR__
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);__CHECK_GL_ERROR__
 
     delete (data);
     return texture2d;
 }
 
-Texture2D *Texture2D::CreateFromTrueTypeFont(std::string ttf_file_path, const char* word) {
-    //加载ttf字体文件
-    FILE* font_file = fopen((Application::data_path()+ ttf_file_path).c_str(), "rb");
-    fseek(font_file, 0, SEEK_END);
-    long ttf_file_size = ftell(font_file);
-    fseek(font_file, 0, SEEK_SET);
-
-    unsigned char* font_buffer = static_cast<unsigned char *>(malloc(ttf_file_size));
-
-    fread(font_buffer, ttf_file_size, 1, font_file);
-    fclose(font_file);
-
-    //初始化stb ttf
-    stbtt_fontinfo font_info;
-    if (!stbtt_InitFont(&font_info, font_buffer, 0))
-    {
-        DEBUG_LOG_ERROR("Texture2D::CreateFromTrueTypeFont stbtt_InitFont failed\n");
-        delete (font_buffer);
-        return nullptr;
-    }
-
-    int bitmap_width = 512; /* bitmap width */
-    int bitmap_height = 512; /* bitmap height */
-    int line_height = 64; /* line height */
-
-    //创建一张bitmap，用来存储stb创建的文字图像
-    unsigned char* bitmap = static_cast<unsigned char *>(calloc(bitmap_width * bitmap_height, sizeof(unsigned char)));
-
-    //根据指定的行高，计算 font_info
-    float scale = stbtt_ScaleForPixelHeight(&font_info, line_height);
-
-    int x = 0;
-
-    int ascent, descent, lineGap;
-    stbtt_GetFontVMetrics(&font_info, &ascent, &descent, &lineGap);
-
-    ascent = roundf(ascent * scale);
-    descent = roundf(descent * scale);
-
-    for (int i = 0; i < strlen(word); ++i)
-    {
-        /* how wide is this character */
-        int ax;
-        int lsb;
-        stbtt_GetCodepointHMetrics(&font_info, word[i], &ax, &lsb);
-
-        /* get bounding box for character (may be offset to account for chars that dip above or below the line */
-        int c_x1, c_y1, c_x2, c_y2;
-        stbtt_GetCodepointBitmapBox(&font_info, word[i], scale, scale, &c_x1, &c_y1, &c_x2, &c_y2);
-
-        /* compute y (different characters have different heights */
-        int y = ascent + c_y1;
-
-        /* render character (stride and offset is important here) */
-        int byteOffset = x + roundf(lsb * scale) + (y * bitmap_width);
-        stbtt_MakeCodepointBitmap(&font_info, bitmap + byteOffset, c_x2 - c_x1, c_y2 - c_y1, bitmap_width, scale, scale, word[i]);
-
-        /* advance x */
-        x += roundf(ax * scale);
-
-        /* add kerning */
-        int kern;
-        kern = stbtt_GetCodepointKernAdvance(&font_info, word[i], word[i + 1]);
-        x += roundf(kern * scale);
-    }
-
-    //上下翻转
-    for (int i = 0; i < bitmap_width; ++i) {
-        for (int j = 0; j < bitmap_height/2; ++j) {
-            unsigned char top_char=bitmap[bitmap_width*j+i];
-            unsigned char bottom_char=bitmap[bitmap_width*(bitmap_height-j-1)+i];
-
-            bitmap[bitmap_width*(bitmap_height-j-1)+i]=top_char;
-            bitmap[bitmap_width*j+i]=bottom_char;
-        }
-    }
-
+Texture2D *Texture2D::Create(unsigned short width, unsigned short height, unsigned int server_format,unsigned int client_format,
+                             unsigned int data_type,unsigned char* data) {
     Texture2D* texture2d=new Texture2D();
-
-    texture2d->gl_texture_format_=GL_RED;
-    texture2d->width_=bitmap_width;
-    texture2d->height_=bitmap_height;
+    texture2d->gl_texture_format_=server_format;
+    texture2d->width_=width;
+    texture2d->height_=height;
 
     //1. 通知显卡创建纹理对象，返回句柄;
-    glGenTextures(1, &(texture2d->gl_texture_id_));
+    glGenTextures(1, &(texture2d->gl_texture_id_));__CHECK_GL_ERROR__
 
     //2. 将纹理绑定到特定纹理目标;
-    glBindTexture(GL_TEXTURE_2D, texture2d->gl_texture_id_);
+    glBindTexture(GL_TEXTURE_2D, texture2d->gl_texture_id_);__CHECK_GL_ERROR__
 
     //3. 将图片rgb数据上传到GPU;
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, texture2d->width_, texture2d->height_, 0, texture2d->gl_texture_format_, GL_UNSIGNED_BYTE, bitmap);
+    glTexImage2D(GL_TEXTURE_2D, 0, texture2d->gl_texture_format_, texture2d->width_, texture2d->height_, 0, client_format, data_type, data);
+    __CHECK_GL_ERROR__
 
     //4. 指定放大，缩小滤波方式，线性滤波，即放大缩小的插值方式;
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-
-    delete (bitmap);
-    delete (font_buffer);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);__CHECK_GL_ERROR__
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);__CHECK_GL_ERROR__
 
     return texture2d;
 }

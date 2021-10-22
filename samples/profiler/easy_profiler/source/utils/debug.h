@@ -13,6 +13,13 @@
 #define DEBUG_LOG_WARN SPDLOG_WARN
 #define DEBUG_LOG_ERROR SPDLOG_ERROR
 
+#define __CHECK_GL_ERROR__ { \
+        auto gl_error_code=glGetError();\
+        if(gl_error_code!=GL_NO_ERROR){\
+            DEBUG_LOG_ERROR("gl_error_code: {}",gl_error_code);\
+        }\
+    }
+
 class Debug {
 public:
     static void Init();

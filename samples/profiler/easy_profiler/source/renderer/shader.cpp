@@ -6,7 +6,8 @@
 #include <iostream>
 #include <fstream>
 #include <glad/gl.h>
-#include "../utils/application.h"
+#include "utils/debug.h"
+#include "utils/application.h"
 
 using std::ifstream;
 using std::ios;
@@ -70,7 +71,7 @@ void Shader::CreateGPUProgram(const char* vertex_shader_text, const char* fragme
     {
         GLchar message[256];
         glGetShaderInfoLog(vertex_shader, sizeof(message), 0, message);
-        cout<<"compile vs error:"<<message<<endl;
+        DEBUG_LOG_ERROR("compile vertex shader error:{}",message);
     }
 
     //创建片段Shader
@@ -86,7 +87,7 @@ void Shader::CreateGPUProgram(const char* vertex_shader_text, const char* fragme
     {
         GLchar message[256];
         glGetShaderInfoLog(fragment_shader, sizeof(message), 0, message);
-        cout<<"compile fs error:"<<message<<endl;
+        DEBUG_LOG_ERROR("compile fragment shader error:{}",message);
     }
 
     //创建GPU程序
@@ -103,7 +104,7 @@ void Shader::CreateGPUProgram(const char* vertex_shader_text, const char* fragme
     {
         GLchar message[256];
         glGetProgramInfoLog(gl_program_id_, sizeof(message), 0, message);
-        cout<<"link error:"<<message<<endl;
+        DEBUG_LOG_ERROR("link shader error:{}",message);
     }
 }
 
