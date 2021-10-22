@@ -1,6 +1,6 @@
 ## 游戏引擎 浅入浅出
 
-[![GitHub license](https://img.shields.io/badge/license-GPL-blue.svg?style=for-the-badge)](https://github.com/ThisisGame/makegameengineatnight/blob/main/LICENSE) [![GitHub license](https://img.shields.io/badge/Windows-Success-brightgreen.svg?style=for-the-badge)](https://github.com/ThisisGame/makegameengineatnight/blob/main/LICENSE) [![GitHub license](https://img.shields.io/badge/macOS-Adapting-yellow.svg?style=for-the-badge)](https://github.com/ThisisGame/makegameengineatnight/blob/main/LICENSE)
+[![GitHub license](https://img.shields.io/badge/license-GPL-blue.svg?style=for-the-badge)](https://github.com/ThisisGame/makegameengineatnight/blob/main/LICENSE) [![GitHub license](https://img.shields.io/badge/Windows-Success-brightgreen.svg?style=for-the-badge)](https://github.com/ThisisGame/makegameengineatnight/blob/main/LICENSE) [![GitHub license](https://img.shields.io/badge/macOS-Success-brightgreen.svg?style=for-the-badge)](https://github.com/ThisisGame/makegameengineatnight/blob/main/LICENSE)
 
 :blush::blush::blush::blush::blush::blush::blush::blush::blush::blush::blush::blush::blush::blush::blush::blush::blush::blush::blush::blush::blush::blush::blush::blush::blush:
 
