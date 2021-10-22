@@ -1,0 +1,37 @@
+global target_pid
+global target_name
+
+probe scheduler.ctxswitch {
+    
+    if (target_pid != 0
+        && next_pid != target_pid
+        && prev_pid != target_pid)
+            next
+
+    if (target_name != ""
+        && prev_task_name != target_name
+        && next_task_name != target_name)
+            next
+            
+    //printf("Switch from %d(%s) to %d(%s) at %d\n",prev_tid, prev_task_name,next_tid,next_task_name, gettimeofday_ns())
+    printf("%d %d %d %s %d\n", get_cycles(), prev_tid, next_tid, next_task_name, next_pid)
+    //printf("%d %d %d\n",gettimeofday_ns(),prev_tid, next_tid )
+}
+
+probe begin
+{
+    target_pid = 0
+    target_name = ""
+
+    %( $# == 1 || $# > 2 %?
+        log("Wrong number of arguments, use none, 'pid nr' or 'name proc'")
+        exit()
+    %)
+
+    %( $# == 2 %?
+        if(@1 == "pid") 
+            target_pid = strtol(@2, 10)
+        if(@1 == "name")
+            target_name = @2
+    %)
+}

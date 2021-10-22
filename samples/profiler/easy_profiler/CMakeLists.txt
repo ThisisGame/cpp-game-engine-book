@@ -5,15 +5,13 @@ set(CMAKE_CXX_STANDARD 17)
 add_definitions(-D USE_FMOD_STUDIO)#是否使用fmod studio，加载bank文件的形式。
 add_definitions(-D BUILD_WITH_EASY_PROFILER)#开启easy_profiler
 
-#set(CMAKE_EXE_LINKER_FLAGS "-static")
-message("CMAKE_EXE_LINKER_FLAGS:" ${CMAKE_EXE_LINKER_FLAGS})
-IF(CMAKE_EXE_LINKER_FLAGS STREQUAL "-static")
-    set(RTTR_DIR "rttr")
-    set(RTTR_LIB "rttr_core_d")
-ELSE()
-    set(RTTR_DIR "rttr_dll")
-    set(RTTR_LIB "rttr_core_d.dll")
-ENDIF()
+if (WIN32)
+    add_compile_options(/wd4819)#忽略保存为unicode警告
+endif ()
+
+include(CMakeLists.txt.glfw)
+include(CMakeLists.txt.FreeType)
+include(CMakeLists.txt.fmod)
 
 #拷贝depends目录
 file(COPY "../../template/depends/glfw-3.3.3.bin.WIN64/" DESTINATION "../depends/glfw-3.3.3.bin.WIN64/")
@@ -38,11 +36,6 @@ file(GLOB unlit_shaders "../../template/data/shader/unlit.*")
 file(COPY ${unlit_shaders} DESTINATION "../data/shader/")
 
 #头文件目录
-include_directories("depends/glfw-3.3.3.bin.WIN64/include")
-include_directories("depends/glfw-3.3.3.bin.WIN64/deps")
-include_directories("depends/${RTTR_DIR}/include")
-include_directories("depends/fmod/api/core/inc")
-include_directories("depends/easy_profiler/include")
 include_directories("depends")
 include_directories("source")
 
@@ -51,24 +44,9 @@ link_directories("depends/glfw-3.3.3.bin.WIN64/lib-static-ucrt")
 link_directories("depends/${RTTR_DIR}/lib")
 link_directories("depends/fmod/api/core/lib/x64")
 link_directories("depends/fmod/api/studio/lib/x64")
-link_directories("depends/easy_profiler/lib")
-
-#链接lib文件
-link_libraries(opengl32 glfw3dll ${RTTR_LIB} fmod_vc fmodstudio_vc easy_profiler.dll)
 
 file(GLOB_RECURSE engine_cpp source/*.cpp)
-file(GLOB_RECURSE fmod_cpp depends/fmod/api/*.cpp)
-file(GLOB_RECURSE glfw_c depends/glfw-3.3.3.bin.WIN64/deps/glad_gl.c)
-
+file(GLOB_RECURSE rttr_cpp "depends/rttr/*.cpp")
 file(GLOB_RECURSE example_cpp example/*.cpp)
-add_executable(untitled ${glfw_c} ${engine_cpp} ${example_cpp})
 
-
-#拷贝dll到exe目录
-file(COPY "depends/glfw-3.3.3.bin.WIN64/lib-static-ucrt/glfw3.dll" DESTINATION "./")
-file(COPY "depends/fmod/api/core/lib/x64/fmod.dll" DESTINATION "./")
-file(COPY "depends/fmod/api/studio/lib/x64/fmodstudio.dll" DESTINATION "./")
-IF(CMAKE_EXE_LINKER_FLAGS STREQUAL "")
-    file(COPY "depends/${RTTR_DIR}/bin/librttr_core_d.dll" DESTINATION "./")
-ENDIF()
-file(COPY "depends/easy_profiler/bin/libeasy_profiler.dll" DESTINATION "./")
+add_executable(untitled ${glfw_sources} ${rttr_cpp} ${freetype_src} ${engine_cpp} ${example_cpp})
