@@ -4,22 +4,16 @@
 
 #ifndef TEST_GAME_OBJECT_H
 #define TEST_GAME_OBJECT_H
-extern "C"
-{
-#include "lua.h"
-#include "lauxlib.h"
-#include "lualib.h"
-}
-#include "LuaBridge/LuaBridge.h"
-#include<string>
-#include<unordered_map>
+#include <sol/sol.hpp>
+#include <iostream>
+#include <string>
+#include <unordered_map>
 #include <stdio.h>
 #include <string.h>
 #include <list>
 #include <rttr/registration>
 
 using namespace std;
-using namespace luabridge;
 using namespace rttr;
 
 #include "component.h"

@@ -1,29 +1,14 @@
-#include "../source/game_object.h"
+#include <iostream>
+#include <string>
+#include <sol/sol.hpp>
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
+#include "../source/game_object.h"
 #include "../source/key_action.h"
 #include "../source/animator.h"
 #include "../source/camera.h"
 
-lua_State* lua_state;
-
-
-
-// 注册枚举
-template <typename T>
-struct EnumWrapper {
-    static typename std::enable_if<std::is_enum<T>::value, void>::type push(lua_State* L, T value){
-        lua_pushnumber (L, static_cast<std::size_t> (value));
-    }
-    static typename std::enable_if<std::is_enum<T>::value, T>::type get(lua_State* L, int index){
-        return static_cast <T> (lua_tointeger (L, index));
-    }
-};
-
-namespace luabridge {
-    template <>
-    struct Stack<KeyAction> : EnumWrapper<KeyAction>{};
-} // namespace luabridge
+sol::state sol_state;
 
 
 void CompareGameObject(GameObject* a,GameObject* b){
@@ -32,53 +17,48 @@ void CompareGameObject(GameObject* a,GameObject* b){
 
 int main(int argc, char * argv[])
 {
-    lua_state = luaL_newstate();
-    luaL_openlibs(lua_state);
+    sol_state.open_libraries(sol::lib::base);
 
     //绑定glm::vec3
     {
-        luabridge::getGlobalNamespace(lua_state)
-                .beginNamespace("glm")//指定NameSpace
-                .beginClass<glm::vec3>("vec3")//绑定类
-                .addConstructor<void(*)(const float&, const float&, const float&)>()//绑定 构造函数
-                .addData("x", &glm::vec3::x)//绑定 成员变量
-                .addData("y", &glm::vec3::y)
-                .addData("z", &glm::vec3::z)
-                .addData("r", &glm::vec3::r)
-                .addData("g", &glm::vec3::g)
-                .addData("b", &glm::vec3::b)
-                .addFunction ("__tostring", std::function <std::string (const glm::vec3*)> ([] (const glm::vec3* vec) {return glm::to_string(*vec);}))//指定Lua Meta Function
-                .addFunction ("__add", std::function <glm::vec3 (const glm::vec3*,const glm::vec3*)> ([] (const glm::vec3* vec_a,const  glm::vec3* vec_b) {return (*vec_a)+(*vec_b);}))
-                .addFunction ("__sub", std::function <glm::vec3 (const glm::vec3*,const glm::vec3*)> ([] (const glm::vec3* vec_a,const  glm::vec3* vec_b) {return (*vec_a)-(*vec_b);}))
-                .addFunction ("__mul", std::function <glm::vec3 (const glm::vec3*,const float)> ([] (const glm::vec3* vec,const float a) {return (*vec)*a;}))
-                .addFunction ("__div", std::function <glm::vec3 (const glm::vec3*,const float)> ([] (const glm::vec3* vec,const float a) {return (*vec)/a;}))
-                .addFunction ("__unm", std::function <glm::vec3 (const glm::vec3*)> ([] (const glm::vec3* vec) {return (*vec)*-1;}))
-                .addFunction ("__eq", std::function <bool (const glm::vec3*,const glm::vec3*)> ([] (const glm::vec3* vec_a,const  glm::vec3* vec_b) {return (*vec_a)==(*vec_b);}))
-                .endClass();
+        auto glm_ns_table = sol_state["glm"].get_or_create<sol::table>();
+        glm_ns_table.new_usertype<glm::vec3>("vec3",sol::constructors<glm::vec3(const float&, const float&, const float&)>(),
+                "x", &glm::vec3::x,
+                "y", &glm::vec3::y,
+                "z", &glm::vec3::z,
+                "r", &glm::vec3::r,
+                "g", &glm::vec3::g,
+                "b", &glm::vec3::b,
+                sol::meta_function::to_string,[] (const glm::vec3* vec) -> std::string {return glm::to_string(*vec);},
+                sol::meta_function::addition,[] (const glm::vec3* vec_a,const  glm::vec3* vec_b) {return (*vec_a)+(*vec_b);},
+                sol::meta_function::subtraction,[] (const glm::vec3* vec_a,const  glm::vec3* vec_b) {return (*vec_a)-(*vec_b);},
+                sol::meta_function::multiplication,[] (const glm::vec3* vec,const float a) {return (*vec)*a;},
+                sol::meta_function::division,[] (const glm::vec3* vec,const float a) {return (*vec)/a;},
+                sol::meta_function::unary_minus,[] (const glm::vec3* vec) {return (*vec)*-1;},
+                sol::meta_function::equal_to,[] (const glm::vec3* vec_a,const  glm::vec3* vec_b) {return (*vec_a)==(*vec_b);}
+                );
     }
 
     //绑定glm::vec4
     {
-        luabridge::getGlobalNamespace(lua_state)
-                .beginNamespace("glm")
-                .beginClass<glm::vec4>("vec4")
-                .addConstructor<void(*)(const float&, const float&, const float&, const float&)>()
-                .addData("x", &glm::vec4::x)
-                .addData("y", &glm::vec4::y)
-                .addData("z", &glm::vec4::z)
-                .addData("w", &glm::vec4::w)
-                .addData("r", &glm::vec4::r)
-                .addData("g", &glm::vec4::g)
-                .addData("b", &glm::vec4::b)
-                .addData("a", &glm::vec4::a)
-                .addFunction ("__tostring", std::function <std::string (const glm::vec4*)> ([] (const glm::vec4* vec) {return glm::to_string(*vec);}))
-                .addFunction ("__add", std::function <glm::vec4 (const glm::vec4*,const glm::vec4*)> ([] (const glm::vec4* vec_a,const  glm::vec4* vec_b) {return (*vec_a)+(*vec_b);}))
-                .addFunction ("__sub", std::function <glm::vec4 (const glm::vec4*,const glm::vec4*)> ([] (const glm::vec4* vec_a,const  glm::vec4* vec_b) {return (*vec_a)-(*vec_b);}))
-                .addFunction ("__mul", std::function <glm::vec4 (const glm::vec4*,const float)> ([] (const glm::vec4* vec,const float a) {return (*vec)*a;}))
-                .addFunction ("__div", std::function <glm::vec4 (const glm::vec4*,const float)> ([] (const glm::vec4* vec,const float a) {return (*vec)/a;}))
-                .addFunction ("__unm", std::function <glm::vec4 (const glm::vec4*)> ([] (const glm::vec4* vec) {return (*vec)*-1;}))
-                .addFunction ("__eq", std::function <bool (const glm::vec4*,const glm::vec4*)> ([] (const glm::vec4* vec_a,const  glm::vec4* vec_b) {return (*vec_a)==(*vec_b);}))
-                .endClass();
+        auto glm_ns_table = sol_state["glm"].get_or_create<sol::table>();
+        glm_ns_table.new_usertype<glm::vec4>("vec4",sol::constructors<glm::vec4(const float&, const float&, const float&, const float&)>(),
+                "x", &glm::vec4::x,
+                "y", &glm::vec4::y,
+                "z", &glm::vec4::z,
+                "w", &glm::vec4::w,
+                "r", &glm::vec4::r,
+                "g", &glm::vec4::g,
+                "b", &glm::vec4::b,
+                "a", &glm::vec4::a,
+                sol::meta_function::to_string,[] (const glm::vec4* vec) {return glm::to_string(*vec);},
+                sol::meta_function::addition,[] (const glm::vec4* vec_a,const  glm::vec4* vec_b) {return (*vec_a)+(*vec_b);},
+                sol::meta_function::subtraction,[] (const glm::vec4* vec_a,const  glm::vec4* vec_b) {return (*vec_a)-(*vec_b);},
+                sol::meta_function::multiplication,[] (const glm::vec4* vec,const float a) {return (*vec)*a;},
+                sol::meta_function::division,[] (const glm::vec4* vec,const float a) {return (*vec)/a;},
+                sol::meta_function::unary_minus,[] (const glm::vec4* vec) {return (*vec)*-1;},
+                sol::meta_function::equal_to,[] (const glm::vec4* vec_a,const  glm::vec4* vec_b) {return (*vec_a)==(*vec_b);}
+                );
     }
 
     //绑定glm::mat4
