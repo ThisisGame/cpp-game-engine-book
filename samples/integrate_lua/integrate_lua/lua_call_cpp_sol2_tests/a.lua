@@ -3,14 +3,25 @@ print("-------run lua--------")
 
 print("--------test cpp pass obj to lua--------")
 
-print(enemy_player)
-print(enemy_player)
+enemy_player:print(1)
+enemy_player:print("aaa")
+
+print(KeyCode.B)
+
+local eq=(GetKeyCode()==KeyCode.C)
+print("GetKeyCode()==KeyCode.C:" .. tostring(eq))
+
+eq=(GetKeyCode()==2)
+print("GetKeyCode()==2:" .. tostring(eq))
+
+--print(enemy_player)
+--print(enemy_player)
 --print("enemy_player.hp_:" .. enemy_player.hp_)
 --print("enemy_player.AddHp(5):" .. enemy_player:AddHp(5))
 --print("enemy_player.hp_:" .. enemy_player.hp_)
 
-local a=enemy_player+enemy_player
-local a=(enemy_player==enemy_player)
+--local a=enemy_player+enemy_player
+--local a=(enemy_player==enemy_player)
 
 --print("--------test lua return obj to cpp--------")
 --function get_enemy_player()

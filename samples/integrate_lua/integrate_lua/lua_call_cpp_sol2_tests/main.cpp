@@ -15,20 +15,26 @@ public:
         return hp_;
     }
 
-    void ToString(const Player* player){
-        std::cout<<"ToString"<<std::endl;
+    void print(int i){
+        std::cout<<"print int:"<<i<<std::endl;
     }
 
-    void Add(){
-        std::cout<<"Add"<<std::endl;
-    }
-
-    void Eq(){
-        std::cout<<"Eq"<<std::endl;
+    void print(string s){
+        std::cout<<"print string:"<<s<<std::endl;
     }
 
     int hp_=0;
 };
+
+enum class KeyCode{
+    A=0,
+    B=1,
+    C=2
+};
+
+KeyCode GetKeyCode(){
+    return KeyCode::C;
+}
 
 int main(int argc, char * argv[])
 {
@@ -43,7 +49,16 @@ int main(int argc, char * argv[])
     glm_namespace_table.new_usertype<Player>("Player",sol::constructors<Player()>(),
                                                 "AddHp", &Player::AddHp,
                                                 "hp_", &Player::hp_,
-                                             sol::meta_function::addition, &Player::Add); // the usual
+                                                "print",sol::overload(
+                                                        [](Player* p,int i){p->print(i);},
+                                                        [](Player* p,const string s){p->print(s);}
+                                                        )); // the usual
+    sol_state.new_enum<KeyCode,true>("KeyCode",{
+            {"A",KeyCode::A},
+            {"B",KeyCode::B},
+            {"C",KeyCode::C}
+    });
+    sol_state.set_function("GetKeyCode",&GetKeyCode);
 
     //cpp new object set to lua
     Player* enemy_player=new Player();

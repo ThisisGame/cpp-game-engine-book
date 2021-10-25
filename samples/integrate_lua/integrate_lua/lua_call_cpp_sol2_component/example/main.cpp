@@ -63,85 +63,72 @@ int main(int argc, char * argv[])
 
     //绑定glm::mat4
     {
-        luabridge::getGlobalNamespace(lua_state)
-                .beginNamespace("glm")
-                .beginClass<glm::mat4>("mat4")
-                .addConstructor<void(*)(const float&)>()
-                .addFunction ("__tostring", std::function <std::string (const glm::mat4*)> ([] (const glm::mat4* m) {return glm::to_string(*m);}))
-                .addFunction ("__add", std::function <glm::mat4 (const glm::mat4*,const glm::mat4*)> ([] (const glm::mat4* m_a,const  glm::mat4* m_b) {return (*m_a)+(*m_b);}))
-                .addFunction ("__sub", std::function <glm::mat4 (const glm::mat4*,const glm::mat4*)> ([] (const glm::mat4* m_a,const  glm::mat4* m_b) {return (*m_a)-(*m_b);}))
-                .addFunction ("__mul", std::function <glm::vec4 (const glm::mat4*,const glm::vec4*)> ([] (const glm::mat4* m,const glm::vec4* v) {return (*m)*(*v);}))
-                .addFunction ("__div", std::function <glm::mat4 (const glm::mat4*,const float)> ([] (const glm::mat4* m,const float a) {return (*m)/a;}))
-                .addFunction ("__unm", std::function <glm::mat4 (const glm::mat4*)> ([] (const glm::mat4* m) {return (*m)*-1;}))
-                .addFunction ("__eq", std::function <bool (const glm::mat4*,const glm::mat4*)> ([] (const glm::mat4* m_a,const  glm::mat4* m_b) {return (*m_a)==(*m_b);}))
-                .endClass();
+        auto glm_ns_table = sol_state["glm"].get_or_create<sol::table>();
+        glm_ns_table.new_usertype<glm::mat4>("mat4",sol::constructors<glm::mat4(const float&)>(),
+                sol::meta_function::to_string,[] (const glm::mat4* m) {return glm::to_string(*m);},
+                sol::meta_function::addition,[] (const glm::mat4* m_a,const  glm::mat4* m_b) {return (*m_a)+(*m_b);},
+                sol::meta_function::subtraction,[] (const glm::mat4* m_a,const  glm::mat4* m_b) {return (*m_a)-(*m_b);},
+                sol::meta_function::multiplication,[] (const glm::mat4* m,const glm::vec4* v) {return (*m)*(*v);},
+                sol::meta_function::division,[] (const glm::mat4* m,const float a) {return (*m)/a;},
+                sol::meta_function::unary_minus,[] (const glm::mat4* m) {return (*m)*-1;},
+                sol::meta_function::equal_to,[] (const glm::mat4* m_a,const  glm::mat4* m_b) {return (*m_a)==(*m_b);}
+        );
     }
 
     //绑定glm函数
     {
-        luabridge::getGlobalNamespace(lua_state)
-                .beginNamespace("glm")
-//            .addFunction("to_string",std::function <std::string (const glm::mat4*)> ([] (const glm::mat4* m) {return glm::to_string((*m));}))
-//            .addFunction("to_string",std::function <std::string (const glm::vec3*)> ([] (const glm::vec3* v) {return glm::to_string((*v));}))//同名覆盖，不支持函数重载。应该使用 __tostring注册。
-                .addFunction("rotate",std::function <glm::mat4 (const glm::mat4*,const float,const glm::vec3*)> ([] (const glm::mat4* m,const float f,const glm::vec3* v) {return glm::rotate(*m,f,*v);}))
-                .addFunction("radians",std::function <float (const float)> ([] (const float f) {return glm::radians(f);}));
+        auto glm_ns_table = sol_state["glm"].get_or_create<sol::table>();
+        glm_ns_table.set_function("rotate",[] (const glm::mat4* m,const float f,const glm::vec3* v) {return glm::rotate(*m,f,*v);});
+        glm_ns_table.set_function("radians",[] (const float f) {return glm::radians(f);});
+        glm_ns_table.set_function("to_string",sol::overload(
+                [] (const glm::mat4* m) {return glm::to_string((*m));},
+                [] (const glm::vec3* v) {return glm::to_string((*v));}
+                ));
     }
 
     //绑定 GameObject
     {
-        luabridge::getGlobalNamespace(lua_state)
-                .beginClass<GameObject>("GameObject")
-                .addConstructor<void (*) ()>() //绑定 构造函数
-                .addFunction("__eq", &GameObject::operator==)// 操作符重载
-                .addFunction("AddComponent", &GameObject::AddComponentFromLua)//绑定 成员函数
-                .addFunction("GetComponent",&GameObject::GetComponentFromLua)//绑定 成员函数
-                .endClass();
+        sol_state.new_usertype<GameObject>("GameObject",sol::constructors<GameObject()>(),
+                "AddComponent", &GameObject::AddComponentFromLua,
+                "GetComponent",&GameObject::GetComponentFromLua,
+                sol::meta_function::equal_to,&GameObject::operator==
+        );
     }
 
     //绑定 Component
     {
-        luabridge::getGlobalNamespace(lua_state)
-                .beginClass<Component>("Component")
-                .addConstructor<void (*) ()>()
-                .addFunction("Awake",&Component::Awake)
-                .addFunction("Update",&Component::Update)
-                .addFunction("game_object",&Component::game_object)
-                .addFunction("set_game_object",&Component::set_game_object)
-                .endClass();
+        sol_state.new_usertype<Component>("Component",sol::constructors<Component()>(),
+                "Awake",&Component::Awake,
+                "Update",&Component::Update,
+                "game_object",&Component::game_object,
+                "set_game_object",&Component::set_game_object
+        );
     }
 
     //绑定 Animator
     {
-        luabridge::getGlobalNamespace(lua_state)
-                .deriveClass<Animator,Component>("Animator")
-                .addConstructor<void (*) ()>()
-                .endClass();
+        sol_state.new_usertype<Animator>("Animator",sol::constructors<Animator()>());
     }
     //绑定 Camera
     {
-        luabridge::getGlobalNamespace(lua_state)
-                .deriveClass<Camera,Component>("Camera")//指明继承自 Component
-                .addConstructor<void (*) ()>()//绑定 构造函数
-                .addFunction("position",&Camera::position)//绑定 子类函数
-                .addFunction("set_position",&Camera::set_position)
-                .endClass();
+        sol_state.new_usertype<Camera>("Camera",sol::constructors<Camera()>(),
+                "position",&Camera::position,
+                "set_position",&Camera::set_position
+        );
     }
 
 
     //绑定普通函数
     {
-        luabridge::getGlobalNamespace(lua_state)
-                .addFunction("CompareGameObject", &CompareGameObject);
+        sol_state.set_function("CompareGameObject", &CompareGameObject);
     }
 
     //绑定常量
     {
         const int const_value=12;
 
-        luabridge::getGlobalNamespace(lua_state)
-                .beginNamespace("Test")
-                .addConstant("const_value",const_value)
-                .endNamespace();
+        auto test_ns_table = sol_state["Test"].get_or_create<sol::table>();
+        test_ns_table.set("const_value",const_value);
     }
 
     //绑定枚举
