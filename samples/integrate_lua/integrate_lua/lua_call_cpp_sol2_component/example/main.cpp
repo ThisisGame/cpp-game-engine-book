@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <functional>
 #include <sol/sol.hpp>
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
@@ -78,8 +79,9 @@ int main(int argc, char * argv[])
     //绑定glm函数
     {
         auto glm_ns_table = sol_state["glm"].get_or_create<sol::table>();
-        glm_ns_table.set_function("rotate",[] (const glm::mat4* m,const float f,const glm::vec3* v) {return glm::rotate(*m,f,*v);});
-        glm_ns_table.set_function("radians",[] (const float f) {return glm::radians(f);});
+//        glm_ns_table.set_function("rotate",[] (const glm::mat4* m,const float f,const glm::vec3* v) {return glm::rotate(*m,f,*v);});
+//        glm_ns_table.set_function("radians",[] (const float f) {return glm::radians(f);});
+        glm_ns_table.set_function("radians",std::function <float (const float*)> ([] (const float* f) {return glm::radians(*f);}));
         glm_ns_table.set_function("to_string",sol::overload(
                 [] (const glm::mat4* m) {return glm::to_string((*m));},
                 [] (const glm::vec3* v) {return glm::to_string((*v));}
@@ -133,52 +135,56 @@ int main(int argc, char * argv[])
 
     //绑定枚举
     {
-        luabridge::getGlobalNamespace(lua_state)
-                .beginNamespace("KeyAction")
-                .addConstant<std::size_t>("UP",KeyAction::UP)
-                .addConstant<std::size_t>("DOWN",KeyAction::DOWN)
-                .endNamespace();
+        sol_state.new_enum<KeyAction,true>("KeyAction",{
+                {"UP",KeyAction::UP},
+                {"DOWN",KeyAction::DOWN}
+        });
 
-        luabridge::getGlobalNamespace(lua_state)
-                .addFunction("GetKeyActionUp",&GetKeyActionUp)
-                .addFunction("GetKeyActionDown",&GetKeyActionDown);
+        sol_state.set_function("GetKeyActionUp", &GetKeyActionUp);
+        sol_state.set_function("GetKeyActionDown", &GetKeyActionDown);
     }
-
-
 
     //设置lua搜索目录
     {
-        luabridge::LuaRef package_ref = luabridge::getGlobal(lua_state,"package");
-        luabridge::LuaRef path_ref=package_ref["path"];
-        std::string path=path_ref.tostring();
+        sol::table package_table=sol_state["package"];
+        std::string path=package_table["path"];
         path.append(";../example/?.lua;");
-        package_ref["path"]=path;
+        package_table["path"]=path;
     }
 
-    luaL_dofile(lua_state, "../example/main.lua");
+    //执行lua
+    auto result= sol_state.script_file("../example/main.lua");
+    if(result.valid()==false){
+        sol::error err = result;
+        std::cerr << "---- LOAD LUA ERROR ----" << std::endl;
+        std::cerr << err.what() << std::endl;
+        std::cerr << "------------------------" << std::endl;
+    }
 
-    //加上大括号，为了LuaRef在lua_close之前自动析构。
-    {
-        luabridge::LuaRef main_function = luabridge::getGlobal(lua_state, "main");
-        try {
-            main_function();
-        } catch (const luabridge::LuaException& e) {
-            std::cout<<"lua error: "<<e.what()<<std::endl;
-        }
+    //调用lua main()
+    sol::protected_function main_function=sol_state["main"];
+    result=main_function();
+    if(result.valid()== false){
+        sol::error err = result;
+        std::cerr << "----- RUN LUA ERROR ----" << std::endl;
+        std::cerr << err.what() << std::endl;
+        std::cerr << "------------------------" << std::endl;
     }
 
     for(int i=0;i<3;i++){
         GameObject::Foreach([](GameObject* game_object){
-            game_object->ForeachLuaComponent([](LuaRef lua_ref){
-                LuaRef update_function_ref=lua_ref["Update"];
-                if(update_function_ref.isFunction()){
-                    update_function_ref(lua_ref);
+            game_object->ForeachLuaComponent([](sol::table lua_component_instance_table){
+                sol::protected_function update_function=lua_component_instance_table["Update"];
+                auto result=update_function(lua_component_instance_table);
+                if(result.valid()== false){
+                    sol::error err = result;
+                    std::cerr << "----- RUN LUA ERROR ----" << std::endl;
+                    std::cerr << err.what() << std::endl;
+                    std::cerr << "------------------------" << std::endl;
                 }
             });
         });
     }
-
-    lua_close(lua_state);
 
     return 0;
 }

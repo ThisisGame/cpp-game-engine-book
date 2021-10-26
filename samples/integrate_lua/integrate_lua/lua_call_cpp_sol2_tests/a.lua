@@ -1,7 +1,8 @@
 print("-------run lua--------")
 
-
 print("--------test cpp pass obj to lua--------")
+
+--a.fun()
 
 enemy_player:print(1)
 enemy_player:print("aaa")
@@ -13,6 +14,15 @@ print("GetKeyCode()==KeyCode.C:" .. tostring(eq))
 
 eq=(GetKeyCode()==2)
 print("GetKeyCode()==2:" .. tostring(eq))
+
+function run()
+    --a.fun()
+end
+
+function main()
+    print("main")
+    run()
+end
 
 --print(enemy_player)
 --print(enemy_player)
@@ -50,3 +60,14 @@ print("GetKeyCode()==2:" .. tostring(eq))
 --print("player.AddHp(4):" .. player:AddHp(4))
 --print("player.hp_:" .. player.hp_)
 --player:ExtendFunction()
+
+LoginScene={}
+
+function LoginScene:Awake()
+    print("LoginScene:Awake " .. tostring(self))
+end
+
+setmetatable(LoginScene,{["__call"]=function(table,param)
+    local instance=setmetatable({},{__index=table})
+    return instance
+end})

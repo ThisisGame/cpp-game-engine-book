@@ -18,7 +18,7 @@ using namespace rttr;
 
 #include "component.h"
 
-extern lua_State* lua_state;
+extern sol::state sol_state;;
 class GameObject{
 public:
     GameObject() {
@@ -37,15 +37,15 @@ public:
             return nullptr;
         }
 
-        luabridge::LuaRef component_table=AddComponentFromLua(component_type_name);
-        Component* component=component_table.cast<Component*>();
+        sol::table component_table=AddComponentFromLua(component_type_name);
+        Component* component=component_table.as<Component*>();
         return component;
     }
 
     std::vector<Component*> GetComponents(std::string component_type_name) {
         std::vector<Component*> component_table_vec;
         for (auto& iter : lua_component_type_instance_map_[component_type_name]){
-            Component* component=iter.cast<Component*>();
+            Component* component=iter.as<Component*>();
             component_table_vec.push_back(component);
         }
         return component_table_vec;
@@ -53,8 +53,8 @@ public:
 
 
     Component* GetComponent(std::string component_type_name) {
-        luabridge::LuaRef component_table=GetComponentFromLua(component_type_name);
-        Component* component=component_table.cast<Component*>();
+        sol::table component_table=GetComponentFromLua(component_type_name);
+        Component* component=component_table.as<Component*>();
         return component;
     }
 
@@ -77,28 +77,46 @@ public:
     /// 根据传入的组件名，创建组件实例
     /// \param component_type_name
     /// \return
-    luabridge::LuaRef AddComponentFromLua(std::string component_type_name) {
-        luabridge::LuaRef component_type=luabridge::getGlobal(lua_state,component_type_name.c_str());
-        auto new_table=component_type();//luabridge对c++的class注册为table，并实现了__call，所以可以直接带括号。
+    sol::table AddComponentFromLua(std::string component_type_name) {
+        sol::protected_function component_type_construct_function=sol_state[component_type_name];//对c++的class注册为table，并实现了__call，所以可以直接带括号。
+        auto result=component_type_construct_function();
+        if(result.valid()== false){
+            sol::error err = result;
+            std::cerr << "----- RUN LUA ERROR ----" << std::endl;
+            std::cerr <<"AddComponentFromLua call type construct error,type:"<<component_type_name<< std::endl;
+            std::cerr << err.what() << std::endl;
+            std::cerr << "------------------------" << std::endl;
+        }
+        sol::table new_table=result;
 
-        LuaRef function_ref=new_table["set_game_object"];
-        if(function_ref.isFunction()){
-            function_ref(new_table,this);
+        result=new_table["set_game_object"](new_table,this);
+        if(result.valid()== false){
+            sol::error err = result;
+            std::cerr << "----- RUN LUA ERROR ----" << std::endl;
+            std::cerr <<"AddComponentFromLua call set_game_object error,type:"<<component_type_name<< std::endl;
+            std::cerr << err.what() << std::endl;
+            std::cerr << "------------------------" << std::endl;
         }
 
         if(lua_component_type_instance_map_.find(component_type_name)==lua_component_type_instance_map_.end()){
-            std::vector<luabridge::LuaRef> component_vec;
+            std::vector<sol::table> component_vec;
             component_vec.push_back(new_table);
             lua_component_type_instance_map_[component_type_name]=component_vec;
         }else{
             lua_component_type_instance_map_[component_type_name].push_back(new_table);
         }
-        new_table["Awake"](new_table);
-
+        result=new_table["Awake"](new_table);
+        if(result.valid()== false){
+            sol::error err = result;
+            std::cerr << "----- RUN LUA ERROR ----" << std::endl;
+            std::cerr <<"AddComponentFromLua call Awake error,type:"<<component_type_name<< std::endl;
+            std::cerr << err.what() << std::endl;
+            std::cerr << "------------------------" << std::endl;
+        }
         return new_table;
     }
 
-    luabridge::LuaRef GetComponentFromLua(std::string component_type_name) {
+    sol::table GetComponentFromLua(std::string component_type_name) {
         if(lua_component_type_instance_map_.find(component_type_name)==lua_component_type_instance_map_.end()){
             return nullptr;
         }
@@ -108,16 +126,16 @@ public:
         return lua_component_type_instance_map_[component_type_name][0];
     }
 
-    void ForeachLuaComponent(std::function<void(LuaRef)> func) {
+    void ForeachLuaComponent(std::function<void(sol::table)> func) {
         for (auto& v : lua_component_type_instance_map_){
             for (auto& iter : v.second){
-                LuaRef lua_ref=iter;
-                func(lua_ref);
+                sol::table lua_component_instance_table=iter;
+                func(lua_component_instance_table);
             }
         }
     }
 
 private:
-    std::unordered_map<std::string,std::vector<luabridge::LuaRef>> lua_component_type_instance_map_;
+    std::unordered_map<std::string,std::vector<sol::table>> lua_component_type_instance_map_;
 };
 #endif //TEST_GAME_OBJECT_H
