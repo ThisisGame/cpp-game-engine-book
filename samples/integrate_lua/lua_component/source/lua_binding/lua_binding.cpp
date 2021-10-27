@@ -6,6 +6,7 @@
 
 #include "lua_binding.h"
 #include <glm/ext.hpp>
+#include <sol/sol.hpp>
 #include "audio/audio.h"
 #include "audio/studio/audio_studio.h"
 #include "audio/studio/audio_studio_event.h"
@@ -17,9 +18,7 @@
 #include "renderer/material.h"
 #include "renderer/mesh_filter.h"
 #include "renderer/mesh_renderer.h"
-#include "renderer/pass.h"
 #include "renderer/shader.h"
-#include "renderer/technique.h"
 #include "renderer/texture2d.h"
 #include "utils/application.h"
 #include "utils/debug.h"
@@ -28,88 +27,79 @@
 
 
 
-lua_State* LuaBinding::lua_state_;
-
-namespace luabridge {
-    // 注册枚举
-    template <typename T>
-    struct EnumWrapper {
-        static typename std::enable_if<std::is_enum<T>::value, void>::type push(lua_State* L, T value){
-            lua_pushnumber (L, static_cast<std::size_t> (value));
-        }
-        static typename std::enable_if<std::is_enum<T>::value, T>::type get(lua_State* L, int index){
-            return static_cast <T> (lua_tointeger (L, index));
-        }
-    };
-
-    template <> struct Stack<FMOD_RESULT> : EnumWrapper<FMOD_RESULT>{};
-    template <> struct Stack<KeyAction> : EnumWrapper<KeyAction>{};
-    template <> struct Stack<KeyCode> : EnumWrapper<KeyCode>{};
-} // namespace luabridge
+sol::state sol_state;
 
 void LuaBinding::BindLua(lua_State *lua_state) {
-    lua_state_=lua_state;
-
     // depends
     {
         // glm
         {
-            luabridge::getGlobalNamespace(lua_state)
-                    .beginNamespace("glm")
-                    .beginClass<glm::vec3>("vec3")
-                    .addConstructor<void(*)(const float&, const float&, const float&)>()
-                    .addData("x", &glm::vec3::x)
-                    .addData("y", &glm::vec3::y)
-                    .addData("z", &glm::vec3::z)
-                    .addData("r", &glm::vec3::r)
-                    .addData("g", &glm::vec3::g)
-                    .addData("b", &glm::vec3::b)
-                    .addFunction ("__tostring", std::function <std::string (const glm::vec3*)> ([] (const glm::vec3* vec) {return glm::to_string(*vec);}))
-                    .addFunction ("__add", std::function <glm::vec3 (const glm::vec3*,const glm::vec3*)> ([] (const glm::vec3* vec_a,const  glm::vec3* vec_b) {return (*vec_a)+(*vec_b);}))
-                    .addFunction ("__sub", std::function <glm::vec3 (const glm::vec3*,const glm::vec3*)> ([] (const glm::vec3* vec_a,const  glm::vec3* vec_b) {return (*vec_a)-(*vec_b);}))
-                    .addFunction ("__mul", std::function <glm::vec3 (const glm::vec3*,const float)> ([] (const glm::vec3* vec,const float a) {return (*vec)*a;}))
-                    .addFunction ("__div", std::function <glm::vec3 (const glm::vec3*,const float)> ([] (const glm::vec3* vec,const float a) {return (*vec)/a;}))
-                    .addFunction ("__unm", std::function <glm::vec3 (const glm::vec3*)> ([] (const glm::vec3* vec) {return (*vec)*-1;}))
-                    .addFunction ("__eq", std::function <bool (const glm::vec3*,const glm::vec3*)> ([] (const glm::vec3* vec_a,const  glm::vec3* vec_b) {return (*vec_a)==(*vec_b);}))
-                    .endClass();
+            //绑定glm::vec3
+            {
+                auto glm_ns_table = sol_state["glm"].get_or_create<sol::table>();
+                glm_ns_table.new_usertype<glm::vec3>("vec3",sol::call_constructor,sol::constructors<glm::vec3(const float&, const float&, const float&)>(),
+                        "x", &glm::vec3::x,
+                        "y", &glm::vec3::y,
+                        "z", &glm::vec3::z,
+                        "r", &glm::vec3::r,
+                        "g", &glm::vec3::g,
+                        "b", &glm::vec3::b,
+                        sol::meta_function::to_string,[] (const glm::vec3* vec) -> std::string {return glm::to_string(*vec);},
+                        sol::meta_function::addition,[] (const glm::vec3* vec_a,const  glm::vec3* vec_b) {return (*vec_a)+(*vec_b);},
+                        sol::meta_function::subtraction,[] (const glm::vec3* vec_a,const  glm::vec3* vec_b) {return (*vec_a)-(*vec_b);},
+                        sol::meta_function::multiplication,[] (const glm::vec3* vec,const float a) {return (*vec)*a;},
+                        sol::meta_function::division,[] (const glm::vec3* vec,const float a) {return (*vec)/a;},
+                        sol::meta_function::unary_minus,[] (const glm::vec3* vec) {return (*vec)*-1;},
+                        sol::meta_function::equal_to,[] (const glm::vec3* vec_a,const  glm::vec3* vec_b) {return (*vec_a)==(*vec_b);}
+                );
+            }
 
-            luabridge::getGlobalNamespace(lua_state)
-                    .beginNamespace("glm")
-                    .beginClass<glm::vec4>("vec4")
-                    .addConstructor<void(*)(const float&, const float&, const float&, const float&)>()
-                    .addData("x", &glm::vec4::x)
-                    .addData("y", &glm::vec4::y)
-                    .addData("z", &glm::vec4::z)
-                    .addData("w", &glm::vec4::w)
-                    .addData("r", &glm::vec4::r)
-                    .addData("g", &glm::vec4::g)
-                    .addData("b", &glm::vec4::b)
-                    .addData("a", &glm::vec4::a)
-                    .addFunction ("__tostring", std::function <std::string (const glm::vec4*)> ([] (const glm::vec4* vec) {return glm::to_string(*vec);}))
-                    .addFunction ("__add", std::function <glm::vec4 (const glm::vec4*,const glm::vec4*)> ([] (const glm::vec4* vec_a,const  glm::vec4* vec_b) {return (*vec_a)+(*vec_b);}))
-                    .addFunction ("__sub", std::function <glm::vec4 (const glm::vec4*,const glm::vec4*)> ([] (const glm::vec4* vec_a,const  glm::vec4* vec_b) {return (*vec_a)-(*vec_b);}))
-                    .addFunction ("__mul", std::function <glm::vec4 (const glm::vec4*,const float)> ([] (const glm::vec4* vec,const float a) {return (*vec)*a;}))
-                    .addFunction ("__div", std::function <glm::vec4 (const glm::vec4*,const float)> ([] (const glm::vec4* vec,const float a) {return (*vec)/a;}))
-                    .addFunction ("__unm", std::function <glm::vec4 (const glm::vec4*)> ([] (const glm::vec4* vec) {return (*vec)*-1;}))
-                    .addFunction ("__eq", std::function <bool (const glm::vec4*,const glm::vec4*)> ([] (const glm::vec4* vec_a,const  glm::vec4* vec_b) {return (*vec_a)==(*vec_b);}))
-                    .endClass();
+            //绑定glm::vec4
+            {
+                auto glm_ns_table = sol_state["glm"].get_or_create<sol::table>();
+                glm_ns_table.new_usertype<glm::vec4>("vec4",sol::call_constructor,sol::constructors<glm::vec4(const float&, const float&, const float&, const float&)>(),
+                        "x", &glm::vec4::x,
+                        "y", &glm::vec4::y,
+                        "z", &glm::vec4::z,
+                        "w", &glm::vec4::w,
+                        "r", &glm::vec4::r,
+                        "g", &glm::vec4::g,
+                        "b", &glm::vec4::b,
+                        "a", &glm::vec4::a,
+                        sol::meta_function::to_string,[] (const glm::vec4* vec) {return glm::to_string(*vec);},
+                        sol::meta_function::addition,[] (const glm::vec4* vec_a,const  glm::vec4* vec_b) {return (*vec_a)+(*vec_b);},
+                        sol::meta_function::subtraction,[] (const glm::vec4* vec_a,const  glm::vec4* vec_b) {return (*vec_a)-(*vec_b);},
+                        sol::meta_function::multiplication,[] (const glm::vec4* vec,const float a) {return (*vec)*a;},
+                        sol::meta_function::division,[] (const glm::vec4* vec,const float a) {return (*vec)/a;},
+                        sol::meta_function::unary_minus,[] (const glm::vec4* vec) {return (*vec)*-1;},
+                        sol::meta_function::equal_to,[] (const glm::vec4* vec_a,const  glm::vec4* vec_b) {return (*vec_a)==(*vec_b);}
+                );
+            }
 
-            luabridge::getGlobalNamespace(lua_state)
-                    .beginNamespace("glm")
-                    .beginClass<glm::mat4>("mat4")
-                    .addConstructor<void(*)(const float&)>()
-                    .addFunction ("__tostring", std::function <std::string (const glm::mat4*)> ([] (const glm::mat4* m) {return glm::to_string(*m);}))
-                    .addFunction ("__add", std::function <glm::mat4 (const glm::mat4*,const glm::mat4*)> ([] (const glm::mat4* m_a,const  glm::mat4* m_b) {return (*m_a)+(*m_b);}))
-                    .addFunction ("__sub", std::function <glm::mat4 (const glm::mat4*,const glm::mat4*)> ([] (const glm::mat4* m_a,const  glm::mat4* m_b) {return (*m_a)-(*m_b);}))
-                    .addFunction ("__mul", std::function <glm::vec4 (const glm::mat4*,const glm::vec4*)> ([] (const glm::mat4* m,const glm::vec4* v) {return (*m)*(*v);}))
-                    .addFunction ("__div", std::function <glm::mat4 (const glm::mat4*,const float)> ([] (const glm::mat4* m,const float a) {return (*m)/a;}))
-                    .addFunction ("__unm", std::function <glm::mat4 (const glm::mat4*)> ([] (const glm::mat4* m) {return (*m)*-1;}))
-                    .addFunction ("__eq", std::function <bool (const glm::mat4*,const glm::mat4*)> ([] (const glm::mat4* m_a,const  glm::mat4* m_b) {return (*m_a)==(*m_b);}))
-                    .endClass();
-            luabridge::getGlobalNamespace(lua_state)
-                    .beginNamespace("glm")
-                    .addFunction("rotate",std::function <glm::mat4 (const glm::mat4*,const float,const glm::vec3*)> ([] (const glm::mat4* m,const float f,const glm::vec3* v) {return glm::rotate(*m,f,*v);}))
-                    .addFunction("radians",std::function <float (const float)> ([] (const float f) {return glm::radians(f);}));
+            //绑定glm::mat4
+            {
+                auto glm_ns_table = sol_state["glm"].get_or_create<sol::table>();
+                glm_ns_table.new_usertype<glm::mat4>("mat4",sol::call_constructor,sol::constructors<glm::mat4(const float&)>(),
+                        sol::meta_function::to_string,[] (const glm::mat4* m) {return glm::to_string(*m);},
+                        sol::meta_function::addition,[] (const glm::mat4* m_a,const  glm::mat4* m_b) {return (*m_a)+(*m_b);},
+                        sol::meta_function::subtraction,[] (const glm::mat4* m_a,const  glm::mat4* m_b) {return (*m_a)-(*m_b);},
+                        sol::meta_function::multiplication,[] (const glm::mat4* m,const glm::vec4* v) {return (*m)*(*v);},
+                        sol::meta_function::division,[] (const glm::mat4* m,const float a) {return (*m)/a;},
+                        sol::meta_function::unary_minus,[] (const glm::mat4* m) {return (*m)*-1;},
+                        sol::meta_function::equal_to,[] (const glm::mat4* m_a,const  glm::mat4* m_b) {return (*m_a)==(*m_b);}
+                );
+            }
+
+            //绑定glm函数
+            {
+                auto glm_ns_table = sol_state["glm"].get_or_create<sol::table>();
+                glm_ns_table.set_function("rotate",sol::overload([] (const glm::mat4* m,const float f,const glm::vec3* v) {return glm::rotate(*m,f,*v);}));
+                glm_ns_table.set_function("radians",sol::overload([] (const float f) {return glm::radians(f);}));
+                glm_ns_table.set_function("to_string",sol::overload(
+                        [] (const glm::mat4* m) {return glm::to_string((*m));},
+                        [] (const glm::vec3* v) {return glm::to_string((*v));}
+                ));
+            }
         }
     }
 
@@ -117,94 +107,97 @@ void LuaBinding::BindLua(lua_State *lua_state) {
     {
         // FMOD_RESULT
         {
-            luabridge::getGlobalNamespace(lua_state)
-                    .beginNamespace("FMOD_RESULT")
-                    .addConstant<std::size_t>("FMOD_OK",FMOD_RESULT::FMOD_OK)
-                    .addConstant<std::size_t>("FMOD_ERR_BADCOMMAND",FMOD_RESULT::FMOD_ERR_BADCOMMAND)
-                    .addConstant<std::size_t>("FMOD_ERR_CHANNEL_ALLOC",FMOD_RESULT::FMOD_ERR_CHANNEL_ALLOC)
-                    .addConstant<std::size_t>("FMOD_ERR_CHANNEL_STOLEN",FMOD_RESULT::FMOD_ERR_CHANNEL_STOLEN)
-                    .addConstant<std::size_t>("FMOD_ERR_DMA",FMOD_RESULT::FMOD_ERR_DMA)
-                    .addConstant<std::size_t>("FMOD_ERR_DSP_CONNECTION",FMOD_RESULT::FMOD_ERR_DSP_CONNECTION)
-                    .addConstant<std::size_t>("FMOD_ERR_DSP_DONTPROCESS",FMOD_RESULT::FMOD_ERR_DSP_DONTPROCESS)
-                    .addConstant<std::size_t>("FMOD_ERR_DSP_FORMAT",FMOD_RESULT::FMOD_ERR_DSP_FORMAT)
-                    .addConstant<std::size_t>("FMOD_ERR_DSP_INUSE",FMOD_RESULT::FMOD_ERR_DSP_INUSE)
-                    .addConstant<std::size_t>("FMOD_ERR_DSP_NOTFOUND",FMOD_RESULT::FMOD_ERR_DSP_NOTFOUND)
-                    .addConstant<std::size_t>("FMOD_ERR_DSP_RESERVED",FMOD_RESULT::FMOD_ERR_DSP_RESERVED)
-                    .addConstant<std::size_t>("FMOD_ERR_DSP_SILENCE",FMOD_RESULT::FMOD_ERR_DSP_SILENCE)
-                    .addConstant<std::size_t>("FMOD_ERR_DSP_TYPE",FMOD_RESULT::FMOD_ERR_DSP_TYPE)
-                    .addConstant<std::size_t>("FMOD_ERR_FILE_BAD",FMOD_RESULT::FMOD_ERR_FILE_BAD)
-                    .addConstant<std::size_t>("FMOD_ERR_FILE_COULDNOTSEEK",FMOD_RESULT::FMOD_ERR_FILE_COULDNOTSEEK)
-                    .addConstant<std::size_t>("FMOD_ERR_FILE_DISKEJECTED",FMOD_RESULT::FMOD_ERR_FILE_DISKEJECTED)
-                    .addConstant<std::size_t>("FMOD_ERR_FILE_EOF",FMOD_RESULT::FMOD_ERR_FILE_EOF)
-                    .addConstant<std::size_t>("FMOD_ERR_FILE_ENDOFDATA",FMOD_RESULT::FMOD_ERR_FILE_ENDOFDATA)
-                    .addConstant<std::size_t>("FMOD_ERR_FILE_NOTFOUND",FMOD_RESULT::FMOD_ERR_FILE_NOTFOUND)
-                    .addConstant<std::size_t>("FMOD_ERR_FORMAT",FMOD_RESULT::FMOD_ERR_FORMAT)
-                    .addConstant<std::size_t>("FMOD_ERR_HEADER_MISMATCH",FMOD_RESULT::FMOD_ERR_HEADER_MISMATCH)
-                    .addConstant<std::size_t>("FMOD_ERR_HTTP",FMOD_RESULT::FMOD_ERR_HTTP)
-                    .addConstant<std::size_t>("FMOD_ERR_HTTP_ACCESS",FMOD_RESULT::FMOD_ERR_HTTP_ACCESS)
-                    .addConstant<std::size_t>("FMOD_ERR_HTTP_PROXY_AUTH",FMOD_RESULT::FMOD_ERR_HTTP_PROXY_AUTH)
-                    .addConstant<std::size_t>("FMOD_ERR_HTTP_SERVER_ERROR",FMOD_RESULT::FMOD_ERR_HTTP_SERVER_ERROR)
-                    .addConstant<std::size_t>("FMOD_ERR_HTTP_TIMEOUT",FMOD_RESULT::FMOD_ERR_HTTP_TIMEOUT)
-                    .addConstant<std::size_t>("FMOD_ERR_INITIALIZATION",FMOD_RESULT::FMOD_ERR_INITIALIZATION)
-                    .addConstant<std::size_t>("FMOD_ERR_INITIALIZED",FMOD_RESULT::FMOD_ERR_INITIALIZED)
-                    .addConstant<std::size_t>("FMOD_ERR_INTERNAL",FMOD_RESULT::FMOD_ERR_INTERNAL)
-                    .addConstant<std::size_t>("FMOD_ERR_INVALID_FLOAT",FMOD_RESULT::FMOD_ERR_INVALID_FLOAT)
-                    .addConstant<std::size_t>("FMOD_ERR_INVALID_HANDLE",FMOD_RESULT::FMOD_ERR_INVALID_HANDLE)
-                    .addConstant<std::size_t>("FMOD_ERR_INVALID_PARAM",FMOD_RESULT::FMOD_ERR_INVALID_PARAM)
-                    .addConstant<std::size_t>("FMOD_ERR_INVALID_POSITION",FMOD_RESULT::FMOD_ERR_INVALID_POSITION)
-                    .addConstant<std::size_t>("FMOD_ERR_INVALID_SPEAKER",FMOD_RESULT::FMOD_ERR_INVALID_SPEAKER)
-                    .addConstant<std::size_t>("FMOD_ERR_INVALID_SYNCPOINT",FMOD_RESULT::FMOD_ERR_INVALID_SYNCPOINT)
-                    .addConstant<std::size_t>("FMOD_ERR_INVALID_THREAD",FMOD_RESULT::FMOD_ERR_INVALID_THREAD)
-                    .addConstant<std::size_t>("FMOD_ERR_INVALID_VECTOR",FMOD_RESULT::FMOD_ERR_INVALID_VECTOR)
-                    .addConstant<std::size_t>("FMOD_ERR_MAXAUDIBLE",FMOD_RESULT::FMOD_ERR_MAXAUDIBLE)
-                    .addConstant<std::size_t>("FMOD_ERR_MEMORY",FMOD_RESULT::FMOD_ERR_MEMORY)
-                    .addConstant<std::size_t>("FMOD_ERR_MEMORY_CANTPOINT",FMOD_RESULT::FMOD_ERR_MEMORY_CANTPOINT)
-                    .addConstant<std::size_t>("FMOD_ERR_NEEDS3D",FMOD_RESULT::FMOD_ERR_NEEDS3D)
-                    .addConstant<std::size_t>("FMOD_ERR_NEEDSHARDWARE",FMOD_RESULT::FMOD_ERR_NEEDSHARDWARE)
-                    .addConstant<std::size_t>("FMOD_ERR_NET_CONNECT",FMOD_RESULT::FMOD_ERR_NET_CONNECT)
-                    .addConstant<std::size_t>("FMOD_ERR_NET_SOCKET_ERROR",FMOD_RESULT::FMOD_ERR_NET_SOCKET_ERROR)
-                    .addConstant<std::size_t>("FMOD_ERR_NET_URL",FMOD_RESULT::FMOD_ERR_NET_URL)
-                    .addConstant<std::size_t>("FMOD_ERR_NET_WOULD_BLOCK",FMOD_RESULT::FMOD_ERR_NET_WOULD_BLOCK)
-                    .addConstant<std::size_t>("FMOD_ERR_NOTREADY",FMOD_RESULT::FMOD_ERR_NOTREADY)
-                    .addConstant<std::size_t>("FMOD_ERR_OUTPUT_ALLOCATED",FMOD_RESULT::FMOD_ERR_OUTPUT_ALLOCATED)
-                    .addConstant<std::size_t>("FMOD_ERR_OUTPUT_CREATEBUFFER",FMOD_RESULT::FMOD_ERR_OUTPUT_CREATEBUFFER)
-                    .addConstant<std::size_t>("FMOD_ERR_OUTPUT_DRIVERCALL",FMOD_RESULT::FMOD_ERR_OUTPUT_DRIVERCALL)
-                    .addConstant<std::size_t>("FMOD_ERR_OUTPUT_FORMAT",FMOD_RESULT::FMOD_ERR_OUTPUT_FORMAT)
-                    .addConstant<std::size_t>("FMOD_ERR_OUTPUT_INIT",FMOD_RESULT::FMOD_ERR_OUTPUT_INIT)
-                    .addConstant<std::size_t>("FMOD_ERR_OUTPUT_NODRIVERS",FMOD_RESULT::FMOD_ERR_OUTPUT_NODRIVERS)
-                    .addConstant<std::size_t>("FMOD_ERR_PLUGIN",FMOD_RESULT::FMOD_ERR_PLUGIN)
-                    .addConstant<std::size_t>("FMOD_ERR_PLUGIN_MISSING",FMOD_RESULT::FMOD_ERR_PLUGIN_MISSING)
-                    .addConstant<std::size_t>("FMOD_ERR_PLUGIN_RESOURCE",FMOD_RESULT::FMOD_ERR_PLUGIN_RESOURCE)
-                    .addConstant<std::size_t>("FMOD_ERR_PLUGIN_VERSION",FMOD_RESULT::FMOD_ERR_PLUGIN_VERSION)
-                    .addConstant<std::size_t>("FMOD_ERR_RECORD",FMOD_RESULT::FMOD_ERR_RECORD)
-                    .addConstant<std::size_t>("FMOD_ERR_REVERB_CHANNELGROUP",FMOD_RESULT::FMOD_ERR_REVERB_CHANNELGROUP)
-                    .addConstant<std::size_t>("FMOD_ERR_REVERB_INSTANCE",FMOD_RESULT::FMOD_ERR_REVERB_INSTANCE)
-                    .addConstant<std::size_t>("FMOD_ERR_SUBSOUNDS",FMOD_RESULT::FMOD_ERR_SUBSOUNDS)
-                    .addConstant<std::size_t>("FMOD_ERR_SUBSOUND_ALLOCATED",FMOD_RESULT::FMOD_ERR_SUBSOUND_ALLOCATED)
-                    .addConstant<std::size_t>("FMOD_ERR_SUBSOUND_CANTMOVE",FMOD_RESULT::FMOD_ERR_SUBSOUND_CANTMOVE)
-                    .addConstant<std::size_t>("FMOD_ERR_TAGNOTFOUND",FMOD_RESULT::FMOD_ERR_TAGNOTFOUND)
-                    .addConstant<std::size_t>("FMOD_ERR_TOOMANYCHANNELS",FMOD_RESULT::FMOD_ERR_TOOMANYCHANNELS)
-                    .addConstant<std::size_t>("FMOD_ERR_TRUNCATED",FMOD_RESULT::FMOD_ERR_TRUNCATED)
-                    .addConstant<std::size_t>("FMOD_ERR_UNIMPLEMENTED",FMOD_RESULT::FMOD_ERR_UNIMPLEMENTED)
-                    .addConstant<std::size_t>("FMOD_ERR_UNINITIALIZED",FMOD_RESULT::FMOD_ERR_UNINITIALIZED)
-                    .addConstant<std::size_t>("FMOD_ERR_UNSUPPORTED",FMOD_RESULT::FMOD_ERR_UNSUPPORTED)
-                    .addConstant<std::size_t>("FMOD_ERR_VERSION",FMOD_RESULT::FMOD_ERR_VERSION)
-                    .addConstant<std::size_t>("FMOD_ERR_EVENT_ALREADY_LOADED",FMOD_RESULT::FMOD_ERR_EVENT_ALREADY_LOADED)
-                    .addConstant<std::size_t>("FMOD_ERR_EVENT_LIVEUPDATE_BUSY",FMOD_RESULT::FMOD_ERR_EVENT_LIVEUPDATE_BUSY)
-                    .addConstant<std::size_t>("FMOD_ERR_EVENT_LIVEUPDATE_MISMATCH",FMOD_RESULT::FMOD_ERR_EVENT_LIVEUPDATE_MISMATCH)
-                    .addConstant<std::size_t>("FMOD_ERR_EVENT_LIVEUPDATE_TIMEOUT",FMOD_RESULT::FMOD_ERR_EVENT_LIVEUPDATE_TIMEOUT)
-                    .addConstant<std::size_t>("FMOD_ERR_EVENT_NOTFOUND",FMOD_RESULT::FMOD_ERR_EVENT_NOTFOUND)
-                    .addConstant<std::size_t>("FMOD_ERR_STUDIO_UNINITIALIZED",FMOD_RESULT::FMOD_ERR_STUDIO_UNINITIALIZED)
-                    .addConstant<std::size_t>("FMOD_ERR_STUDIO_NOT_LOADED",FMOD_RESULT::FMOD_ERR_STUDIO_NOT_LOADED)
-                    .addConstant<std::size_t>("FMOD_ERR_INVALID_STRING",FMOD_RESULT::FMOD_ERR_INVALID_STRING)
-                    .addConstant<std::size_t>("FMOD_ERR_ALREADY_LOCKED",FMOD_RESULT::FMOD_ERR_ALREADY_LOCKED)
-                    .addConstant<std::size_t>("FMOD_ERR_NOT_LOCKED",FMOD_RESULT::FMOD_ERR_NOT_LOCKED)
-                    .addConstant<std::size_t>("FMOD_ERR_RECORD_DISCONNECTED",FMOD_RESULT::FMOD_ERR_RECORD_DISCONNECTED)
-                    .addConstant<std::size_t>("FMOD_ERR_TOOMANYSAMPLES",FMOD_RESULT::FMOD_ERR_TOOMANYSAMPLES)
-                    .addConstant<std::size_t>("FMOD_RESULT_FORCEINT",FMOD_RESULT::FMOD_RESULT_FORCEINT)
-                    .endNamespace();
+            sol_state.new_enum<FMOD_RESULT,true>("FMOD_RESULT",{
+                {"FMOD_OK",FMOD_RESULT::FMOD_OK},
+                {"FMOD_ERR_BADCOMMAND",FMOD_RESULT::FMOD_ERR_BADCOMMAND},
+                {"FMOD_ERR_CHANNEL_ALLOC",FMOD_RESULT::FMOD_ERR_CHANNEL_ALLOC},
+                {"FMOD_ERR_CHANNEL_STOLEN",FMOD_RESULT::FMOD_ERR_CHANNEL_STOLEN},
+                {"FMOD_ERR_DMA",FMOD_RESULT::FMOD_ERR_DMA},
+                {"FMOD_ERR_DSP_CONNECTION",FMOD_RESULT::FMOD_ERR_DSP_CONNECTION},
+                {"FMOD_ERR_DSP_DONTPROCESS",FMOD_RESULT::FMOD_ERR_DSP_DONTPROCESS},
+                {"FMOD_ERR_DSP_FORMAT",FMOD_RESULT::FMOD_ERR_DSP_FORMAT},
+                {"FMOD_ERR_DSP_INUSE",FMOD_RESULT::FMOD_ERR_DSP_INUSE},
+                {"FMOD_ERR_DSP_NOTFOUND",FMOD_RESULT::FMOD_ERR_DSP_NOTFOUND},
+                {"FMOD_ERR_DSP_RESERVED",FMOD_RESULT::FMOD_ERR_DSP_RESERVED},
+                {"FMOD_ERR_DSP_SILENCE",FMOD_RESULT::FMOD_ERR_DSP_SILENCE},
+                {"FMOD_ERR_DSP_TYPE",FMOD_RESULT::FMOD_ERR_DSP_TYPE},
+                {"FMOD_ERR_FILE_BAD",FMOD_RESULT::FMOD_ERR_FILE_BAD},
+                {"FMOD_ERR_FILE_COULDNOTSEEK",FMOD_RESULT::FMOD_ERR_FILE_COULDNOTSEEK},
+                {"FMOD_ERR_FILE_DISKEJECTED",FMOD_RESULT::FMOD_ERR_FILE_DISKEJECTED},
+                {"FMOD_ERR_FILE_EOF",FMOD_RESULT::FMOD_ERR_FILE_EOF},
+                {"FMOD_ERR_FILE_ENDOFDATA",FMOD_RESULT::FMOD_ERR_FILE_ENDOFDATA},
+                {"FMOD_ERR_FILE_NOTFOUND",FMOD_RESULT::FMOD_ERR_FILE_NOTFOUND},
+                {"FMOD_ERR_FORMAT",FMOD_RESULT::FMOD_ERR_FORMAT},
+                {"FMOD_ERR_HEADER_MISMATCH",FMOD_RESULT::FMOD_ERR_HEADER_MISMATCH},
+                {"FMOD_ERR_HTTP",FMOD_RESULT::FMOD_ERR_HTTP},
+                {"FMOD_ERR_HTTP_ACCESS",FMOD_RESULT::FMOD_ERR_HTTP_ACCESS},
+                {"FMOD_ERR_HTTP_PROXY_AUTH",FMOD_RESULT::FMOD_ERR_HTTP_PROXY_AUTH},
+                {"FMOD_ERR_HTTP_SERVER_ERROR",FMOD_RESULT::FMOD_ERR_HTTP_SERVER_ERROR},
+                {"FMOD_ERR_HTTP_TIMEOUT",FMOD_RESULT::FMOD_ERR_HTTP_TIMEOUT},
+                {"FMOD_ERR_INITIALIZATION",FMOD_RESULT::FMOD_ERR_INITIALIZATION},
+                {"FMOD_ERR_INITIALIZED",FMOD_RESULT::FMOD_ERR_INITIALIZED},
+                {"FMOD_ERR_INTERNAL",FMOD_RESULT::FMOD_ERR_INTERNAL},
+                {"FMOD_ERR_INVALID_FLOAT",FMOD_RESULT::FMOD_ERR_INVALID_FLOAT},
+                {"FMOD_ERR_INVALID_HANDLE",FMOD_RESULT::FMOD_ERR_INVALID_HANDLE},
+                {"FMOD_ERR_INVALID_PARAM",FMOD_RESULT::FMOD_ERR_INVALID_PARAM},
+                {"FMOD_ERR_INVALID_POSITION",FMOD_RESULT::FMOD_ERR_INVALID_POSITION},
+                {"FMOD_ERR_INVALID_SPEAKER",FMOD_RESULT::FMOD_ERR_INVALID_SPEAKER},
+                {"FMOD_ERR_INVALID_SYNCPOINT",FMOD_RESULT::FMOD_ERR_INVALID_SYNCPOINT},
+                {"FMOD_ERR_INVALID_THREAD",FMOD_RESULT::FMOD_ERR_INVALID_THREAD},
+                {"FMOD_ERR_INVALID_VECTOR",FMOD_RESULT::FMOD_ERR_INVALID_VECTOR},
+                {"FMOD_ERR_MAXAUDIBLE",FMOD_RESULT::FMOD_ERR_MAXAUDIBLE},
+                {"FMOD_ERR_MEMORY",FMOD_RESULT::FMOD_ERR_MEMORY},
+                {"FMOD_ERR_MEMORY_CANTPOINT",FMOD_RESULT::FMOD_ERR_MEMORY_CANTPOINT},
+                {"FMOD_ERR_NEEDS3D",FMOD_RESULT::FMOD_ERR_NEEDS3D},
+                {"FMOD_ERR_NEEDSHARDWARE",FMOD_RESULT::FMOD_ERR_NEEDSHARDWARE},
+                {"FMOD_ERR_NET_CONNECT",FMOD_RESULT::FMOD_ERR_NET_CONNECT},
+                {"FMOD_ERR_NET_SOCKET_ERROR",FMOD_RESULT::FMOD_ERR_NET_SOCKET_ERROR},
+                {"FMOD_ERR_NET_URL",FMOD_RESULT::FMOD_ERR_NET_URL},
+                {"FMOD_ERR_NET_WOULD_BLOCK",FMOD_RESULT::FMOD_ERR_NET_WOULD_BLOCK},
+                {"FMOD_ERR_NOTREADY",FMOD_RESULT::FMOD_ERR_NOTREADY},
+                {"FMOD_ERR_OUTPUT_ALLOCATED",FMOD_RESULT::FMOD_ERR_OUTPUT_ALLOCATED},
+                {"FMOD_ERR_OUTPUT_CREATEBUFFER",FMOD_RESULT::FMOD_ERR_OUTPUT_CREATEBUFFER},
+                {"FMOD_ERR_OUTPUT_DRIVERCALL",FMOD_RESULT::FMOD_ERR_OUTPUT_DRIVERCALL},
+                {"FMOD_ERR_OUTPUT_FORMAT",FMOD_RESULT::FMOD_ERR_OUTPUT_FORMAT},
+                {"FMOD_ERR_OUTPUT_INIT",FMOD_RESULT::FMOD_ERR_OUTPUT_INIT},
+                {"FMOD_ERR_OUTPUT_NODRIVERS",FMOD_RESULT::FMOD_ERR_OUTPUT_NODRIVERS},
+                {"FMOD_ERR_PLUGIN",FMOD_RESULT::FMOD_ERR_PLUGIN},
+                {"FMOD_ERR_PLUGIN_MISSING",FMOD_RESULT::FMOD_ERR_PLUGIN_MISSING},
+                {"FMOD_ERR_PLUGIN_RESOURCE",FMOD_RESULT::FMOD_ERR_PLUGIN_RESOURCE},
+                {"FMOD_ERR_PLUGIN_VERSION",FMOD_RESULT::FMOD_ERR_PLUGIN_VERSION},
+                {"FMOD_ERR_RECORD",FMOD_RESULT::FMOD_ERR_RECORD},
+                {"FMOD_ERR_REVERB_CHANNELGROUP",FMOD_RESULT::FMOD_ERR_REVERB_CHANNELGROUP},
+                {"FMOD_ERR_REVERB_INSTANCE",FMOD_RESULT::FMOD_ERR_REVERB_INSTANCE},
+                {"FMOD_ERR_SUBSOUNDS",FMOD_RESULT::FMOD_ERR_SUBSOUNDS},
+                {"FMOD_ERR_SUBSOUND_ALLOCATED",FMOD_RESULT::FMOD_ERR_SUBSOUND_ALLOCATED},
+                {"FMOD_ERR_SUBSOUND_CANTMOVE",FMOD_RESULT::FMOD_ERR_SUBSOUND_CANTMOVE},
+                {"FMOD_ERR_TAGNOTFOUND",FMOD_RESULT::FMOD_ERR_TAGNOTFOUND},
+                {"FMOD_ERR_TOOMANYCHANNELS",FMOD_RESULT::FMOD_ERR_TOOMANYCHANNELS},
+                {"FMOD_ERR_TRUNCATED",FMOD_RESULT::FMOD_ERR_TRUNCATED},
+                {"FMOD_ERR_UNIMPLEMENTED",FMOD_RESULT::FMOD_ERR_UNIMPLEMENTED},
+                {"FMOD_ERR_UNINITIALIZED",FMOD_RESULT::FMOD_ERR_UNINITIALIZED},
+                {"FMOD_ERR_UNSUPPORTED",FMOD_RESULT::FMOD_ERR_UNSUPPORTED},
+                {"FMOD_ERR_VERSION",FMOD_RESULT::FMOD_ERR_VERSION},
+                {"FMOD_ERR_EVENT_ALREADY_LOADED",FMOD_RESULT::FMOD_ERR_EVENT_ALREADY_LOADED},
+                {"FMOD_ERR_EVENT_LIVEUPDATE_BUSY",FMOD_RESULT::FMOD_ERR_EVENT_LIVEUPDATE_BUSY},
+                {"FMOD_ERR_EVENT_LIVEUPDATE_MISMATCH",FMOD_RESULT::FMOD_ERR_EVENT_LIVEUPDATE_MISMATCH},
+                {"FMOD_ERR_EVENT_LIVEUPDATE_TIMEOUT",FMOD_RESULT::FMOD_ERR_EVENT_LIVEUPDATE_TIMEOUT},
+                {"FMOD_ERR_EVENT_NOTFOUND",FMOD_RESULT::FMOD_ERR_EVENT_NOTFOUND},
+                {"FMOD_ERR_STUDIO_UNINITIALIZED",FMOD_RESULT::FMOD_ERR_STUDIO_UNINITIALIZED},
+                {"FMOD_ERR_STUDIO_NOT_LOADED",FMOD_RESULT::FMOD_ERR_STUDIO_NOT_LOADED},
+                {"FMOD_ERR_INVALID_STRING",FMOD_RESULT::FMOD_ERR_INVALID_STRING},
+                {"FMOD_ERR_ALREADY_LOCKED",FMOD_RESULT::FMOD_ERR_ALREADY_LOCKED},
+                {"FMOD_ERR_NOT_LOCKED",FMOD_RESULT::FMOD_ERR_NOT_LOCKED},
+                {"FMOD_ERR_RECORD_DISCONNECTED",FMOD_RESULT::FMOD_ERR_RECORD_DISCONNECTED},
+                {"FMOD_ERR_TOOMANYSAMPLES",FMOD_RESULT::FMOD_ERR_TOOMANYSAMPLES},
+                {"FMOD_RESULT_FORCEINT",FMOD_RESULT::FMOD_RESULT_FORCEINT}
+            });
         }
 
+        sol_state.new_usertype<Audio>("Audio",
+                                      "Init",&Audio::Init,
+                                      "Update",&Audio::Update
+        );
 
         luabridge::getGlobalNamespace(lua_state)
                 .beginClass<Audio>("Audio")

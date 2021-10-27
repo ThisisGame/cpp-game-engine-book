@@ -32,7 +32,7 @@ private:
 private:
     Transform*      transform_camera_1_= nullptr;
     Camera*         camera_1_= nullptr;
-    vec2_ushort     last_frame_mouse_position_={0,0};//上一帧的鼠标位置
+    glm::vec2     last_frame_mouse_position_={0,0};//上一帧的鼠标位置
 
     Transform*      transform_player_= nullptr;
 

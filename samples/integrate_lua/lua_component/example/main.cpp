@@ -4,8 +4,7 @@
 #include "utils/debug.h"
 #include "lua_binding/lua_binding.h"
 
-int main(void)
-{
+int main(void){
     lua_State* lua_state = luaL_newstate();
     luaL_openlibs(lua_state);
 
@@ -35,7 +34,6 @@ int main(void)
 
     return 0;
 }
-
 #else
 #include "component/game_object.h"
 #include "utils/application.h"
@@ -43,7 +41,6 @@ int main(void)
 int main(void){
     Application::set_title("[loadbank] press s play event,press 1 2 3 set param");
     Application::set_data_path("../data/");//设置资源目录
-
     Application::Init();//初始化引擎
 
     GameObject* go=new GameObject("LoginSceneGo");
@@ -53,4 +50,5 @@ int main(void){
     Application::Run();//开始引擎主循环
 }
 #endif
+
 

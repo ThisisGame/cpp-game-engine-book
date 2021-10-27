@@ -12,10 +12,10 @@
 #include <memory>
 #include <list>
 #include <functional>
-#include "lua_binding/lua_binding.h"
+#include "data_structs/tree.h"
 
 class Component;
-class GameObject {
+class GameObject:public Tree::Node {
 public:
     GameObject(std::string name);
     ~GameObject();
@@ -33,52 +33,6 @@ public:
     /// \return
     Component* GetComponent(std::string component_type_name);
 
-
-
-    unsigned char layer(){return layer_;}
-    void set_layer(unsigned char layer){layer_=layer;}
-
-    /// 遍历所有Camera
-    /// \param func
-    static void Foreach(std::function<void(GameObject*)> func);
-
-private:
-    std::string name_;
-
-    unsigned char layer_;//将物体分不同的层，用于相机分层、物理碰撞分层等。
-
-    static std::list<GameObject*> game_object_list_;//存储所有的GameObject。
-
-#ifdef USE_LUA_SCRIPT
-public:
-    /// 获取所有同名组件
-    /// \param component_type_name 组件类名
-    /// \return
-    std::vector<Component*> GetComponents(std::string component_type_name);
-public:
-    /// 重载==，用于LuaRef对象做比较
-    /// \param rhs
-    /// \return
-    bool operator==(GameObject* rhs) const;
-
-    /// 在Lua中添加组件
-    /// \param component_type_name cpp、lua的组件名称
-    /// \return
-    luabridge::LuaRef AddComponentFromLua(std::string component_type_name);
-
-    /// 获取组件
-    /// \param component_type_name
-    /// \return
-    luabridge::LuaRef GetComponentFromLua(std::string component_type_name);
-
-    /// 遍历组件 一般在Update中使用
-    /// \param func
-    void ForeachLuaComponent(std::function<void(luabridge::LuaRef)> func);
-
-private:
-    std::unordered_map<std::string,std::vector<luabridge::LuaRef>> lua_component_type_instance_map_;//所有lua component
-#else
-public:
     /// 获取所有同名组件
     /// \param component_type_name 组件类名
     /// \return
@@ -87,9 +41,36 @@ public:
     /// 遍历所有Component
     /// \param func
     void ForeachComponent(std::function<void(Component* component)> func);
+
+    unsigned char layer(){return layer_;}
+    void set_layer(unsigned char layer){layer_=layer;}
+
+    bool active(){return active_;}
+    void set_active(bool active){active_=active;}
+
+    /// 设置父节点
+    /// \param parent
+    /// \return
+    bool SetParent(GameObject* parent);
 private:
+    std::string name_;
     std::unordered_map<std::string,std::vector<Component*>> component_type_instance_map_;
-#endif
+
+    unsigned char layer_;//将物体分不同的层，用于相机分层、物理碰撞分层等。
+
+    bool active_;//是否激活
+public:
+    /// 遍历所有Camera
+    /// \param func
+    static void Foreach(std::function<void(GameObject* game_object)> func);
+
+    /// 全局查找GameObject
+    /// \param name
+    /// \return
+    static GameObject* Find(std::string name);
+
+private:
+    static Tree game_object_tree_;//用树存储所有的GameObject。
 };
 
 

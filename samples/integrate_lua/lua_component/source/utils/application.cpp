@@ -4,12 +4,25 @@
 
 #include "application.h"
 #include <memory>
+#include <easy/profiler.h>
+#include <glad/gl.h>
+#ifdef WIN32
+// 避免出现APIENTRY重定义警告。
+// freetype引用了windows.h，里面定义了APIENTRY。
+// glfw3.h会判断是否APIENTRY已经定义然后再定义一次。
+// 但是从编译顺序来看glfw3.h在freetype之前被引用了，判断不到 Windows.h中的定义，所以会出现重定义。
+// 所以在 glfw3.h之前必须引用  Windows.h。
+#include <Windows.h>
+#endif
+#define GLFW_INCLUDE_NONE
+#include <GLFW/glfw3.h>
 #include "debug.h"
 #include "component/game_object.h"
 #include "renderer/camera.h"
 #include "renderer/mesh_renderer.h"
 #include "control/input.h"
 #include "screen.h"
+#include "render_device/render_device_opengl.h"
 #include "audio/audio.h"
 #include "time.h"
 
@@ -62,16 +75,13 @@ static void mouse_scroll_callback(GLFWwindow* window, double x, double y)
 }
 
 void Application::Init() {
+    EASY_MAIN_THREAD;
+    profiler::startListen();// 启动profiler服务器，等待gui连接。
+
     Debug::Init();
     DEBUG_LOG_INFO("game start");
     Time::Init();
-    // 初始化 glfw
-    InitGpuDevice();
-    //初始化 fmod
-    Audio::Init();
-}
-
-void Application::InitGpuDevice() {
+    RenderDevice::Init(new RenderDeviceOpenGL());
     glfwSetErrorCallback(error_callback);
     if (!glfwInit())
     {
@@ -79,8 +89,12 @@ void Application::InitGpuDevice() {
         exit(EXIT_FAILURE);
     }
 
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+#ifdef __APPLE__
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+#endif
 
     glfw_window_ = glfwCreateWindow(960, 640, title_.c_str(), NULL, NULL);
     if (!glfw_window_)
@@ -100,40 +114,39 @@ void Application::InitGpuDevice() {
     glfwSetMouseButtonCallback(glfw_window_,mouse_button_callback);
     glfwSetScrollCallback(glfw_window_,mouse_scroll_callback);
     glfwSetCursorPosCallback(glfw_window_,mouse_move_callback);
+
+    //初始化 fmod
+    Audio::Init();
 }
 
+
 void Application::Update(){
-//    std::cout<<"Application::Update"<<std::endl;
+    EASY_FUNCTION(profiler::colors::Magenta); // 标记函数
     Time::Update();
     UpdateScreenSize();
 
-#ifdef USE_LUA_SCRIPT
     GameObject::Foreach([](GameObject* game_object){
-        game_object->ForeachLuaComponent([](luabridge::LuaRef lua_ref){
-            luabridge::LuaRef update_function_ref=lua_ref["Update"];
-            if(update_function_ref.isFunction()){
-                update_function_ref(lua_ref);
-            }
-        });
+        if(game_object->active()){
+            game_object->ForeachComponent([](Component* component){
+                component->Update();
+            });
+        }
     });
-#else
-    GameObject::Foreach([](GameObject* game_object){
-        game_object->ForeachComponent([](Component* component){
-            component->Update();
-        });
-    });
-#endif
 
     Input::Update();
-
     Audio::Update();
+//    std::cout<<"Application::Update"<<std::endl;
 }
 
 
 void Application::Render(){
+    EASY_FUNCTION(profiler::colors::Magenta); // 标记函数
     //遍历所有相机，每个相机的View Projection，都用来做一次渲染。
     Camera::Foreach([&](){
         GameObject::Foreach([](GameObject* game_object){
+            if(game_object->active()==false){
+                return;
+            }
             auto component=game_object->GetComponent("MeshRenderer");
             if (!component){
                 return;
@@ -148,14 +161,25 @@ void Application::Render(){
 }
 
 void Application::Run() {
-    while (!glfwWindowShouldClose(glfw_window_))
+    while (true)
     {
-        Update();
-        Render();
+        EASY_BLOCK("Frame"){
+            if(glfwWindowShouldClose(glfw_window_)){
+                break;
+            }
+            Update();
+            Render();
 
-        glfwSwapBuffers(glfw_window_);
+            EASY_BLOCK("glfwSwapBuffers"){
+                glfwSwapBuffers(glfw_window_);
+            }
+            EASY_END_BLOCK;
 
-        glfwPollEvents();
+            EASY_BLOCK("glfwPollEvents"){
+                glfwPollEvents();
+            }
+            EASY_END_BLOCK;
+        }EASY_END_BLOCK;
     }
 
     glfwDestroyWindow(glfw_window_);

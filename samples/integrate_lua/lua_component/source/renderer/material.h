@@ -12,7 +12,6 @@
 
 class Shader;
 class Texture2D;
-class Technique;
 class Material {
 public:
     Material();
@@ -29,11 +28,13 @@ public:
     /// \param texture2D
     void SetTexture(std::string property, Texture2D* texture2D);
 
-    Technique* technique_active(){return technique_active_;}
+    Shader* shader(){return shader_;}
+
+    std::vector<std::pair<std::string,Texture2D*>>& textures(){return textures_;}
 
 private:
-    std::vector<Technique*> technique_vec_;
-    Technique* technique_active_;
+    Shader* shader_;
+    std::vector<std::pair<std::string,Texture2D*>> textures_;
 
     std::vector<std::pair<std::string,float*>> uniform_matrix4fv_vec;
     std::vector<std::pair<std::string,int>> uniform_1i_vec;

@@ -21,7 +21,7 @@ RTTR_REGISTRATION//注册反射
 std::vector<Camera*> Camera::all_camera_;
 Camera* Camera::current_camera_;
 
-Camera::Camera():clear_color_(49.f/255,77.f/255,121.f/255,1.f),clear_flag_(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT),depth_(0),culling_mask_(0x01) {
+Camera::Camera():Component(),clear_color_(49.f/255,77.f/255,121.f/255,1.f),clear_flag_(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT|GL_STENCIL_BUFFER_BIT),depth_(0),culling_mask_(0x01) {
     //默认获取现有Camera最大depth，设置当前Camera.depth +1
     if (all_camera_.size()>0){
         unsigned char max_depth=all_camera_.back()->depth();
@@ -38,13 +38,17 @@ Camera::~Camera() {
     }
 }
 
-void Camera::SetView(glm::vec3 cameraFowrad,glm::vec3 cameraUp) {
+void Camera::SetView(const glm::vec3 &cameraForward,const glm::vec3 &cameraUp) {
     auto transform=dynamic_cast<Transform*>(game_object()->GetComponent("Transform"));
-    view_mat4_=glm::lookAt(transform->position(), cameraFowrad, cameraUp);
+    view_mat4_=glm::lookAt(transform->position(), cameraForward, cameraUp);
 }
 
-void Camera::SetProjection(float fovDegrees, float aspectRatio, float nearClip, float farClip) {
+void Camera::SetPerspective(float fovDegrees, float aspectRatio, float nearClip, float farClip) {
     projection_mat4_=glm::perspective(glm::radians(fovDegrees),aspectRatio,nearClip,farClip);
+}
+
+void Camera::SetOrthographic(float left,float right,float bottom,float top,float z_near,float z_far) {
+    projection_mat4_=glm::ortho(left,right,bottom,top,z_near,z_far);
 }
 
 void Camera::Clear() {
