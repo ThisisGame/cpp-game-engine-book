@@ -5,20 +5,28 @@ set(CMAKE_CXX_STANDARD 17)
 add_definitions(-D USE_FMOD_STUDIO)#是否使用fmod studio，加载bank文件的形式。
 add_definitions(-D USE_LUA_SCRIPT)#是否使用Lua脚本开发。
 
-#set(CMAKE_EXE_LINKER_FLAGS "-static")
+if (WIN32)
+    add_compile_options(/wd4819)#忽略保存为unicode警告
+endif ()
+
+include(CMakeLists.txt.glfw)
+include(CMakeLists.txt.FreeType)
+include(CMakeLists.txt.fmod)
+include(CMakeLists.txt.easy_profile_core)
+include(CMakeLists.txt.lua)
 
 #拷贝depends目录
-file(COPY "../../template/depends/glfw-3.3.3.bin.WIN64/" DESTINATION "../depends/glfw-3.3.3.bin.WIN64/")
+file(COPY "../../template/depends/glfw-3.3-3.4/" DESTINATION "../depends/glfw-3.3-3.4/")
 file(COPY "../../template/depends/glm/" DESTINATION "../depends/glm/")
 file(COPY "../../template/depends/timetool/" DESTINATION "../depends/timetool/")
 file(COPY "../../template/depends/rapidxml/" DESTINATION "../depends/rapidxml/")
 file(COPY "../../template/depends/stb/" DESTINATION "../depends/stb/")
 file(COPY "../../template/depends/spdlog/include/spdlog/" DESTINATION "../depends/spdlog/")
-file(COPY "../../template/depends/fmod/" DESTINATION "../depends/fmod/")
-file(COPY "../../template/depends/lua/" DESTINATION "../depends/lua/")
-file(COPY "../../template/depends/LuaBridge/" DESTINATION "../depends/LuaBridge/")
 file(COPY "../../template/depends/rttr-0.9.6/src/rttr/" DESTINATION "../depends/rttr/")
-
+file(COPY "../../template/depends/fmod/" DESTINATION "../depends/fmod/")
+file(COPY "../../template/depends/easy_profiler-2.1.0/easy_profiler_core/" DESTINATION "../depends/easy_profiler_core/")
+file(COPY "../../template/depends/lua/" DESTINATION "../depends/lua/")
+file(COPY "../../template/depends/sol2-3.2.2/include/sol/" DESTINATION "../depends/sol/")
 
 #拷贝data文件
 file(COPY "../../template/data/audio/load_bank/" DESTINATION "../data/audio/")
@@ -31,32 +39,11 @@ file(GLOB unlit_shaders "../../template/data/shader/unlit.*")
 file(COPY ${unlit_shaders} DESTINATION "../data/shader/")
 
 #头文件目录
-include_directories("depends/glfw-3.3.3.bin.WIN64/include")
-include_directories("depends/glfw-3.3.3.bin.WIN64/deps")
-include_directories("depends/fmod/api/core/inc")
-include_directories("depends/lua/src")
 include_directories("depends")
 include_directories("source")
 
-#链接目录
-link_directories("depends/glfw-3.3.3.bin.WIN64/lib-static-ucrt")
-link_directories("depends/fmod/api/core/lib/x64")
-link_directories("depends/fmod/api/studio/lib/x64")
-
-#链接lib文件
-link_libraries(opengl32 glfw3dll fmod_vc fmodstudio_vc)
-
 file(GLOB_RECURSE engine_cpp source/*.cpp)
-file(GLOB_RECURSE fmod_cpp depends/fmod/api/*.cpp)
-file(GLOB_RECURSE lua_c depends/lua/src/*.c)
-file(GLOB_RECURSE glfw_c depends/glfw-3.3.3.bin.WIN64/deps/glad_gl.c)
 file(GLOB_RECURSE rttr_cpp "depends/rttr/*.cpp")
-
 file(GLOB_RECURSE example_cpp example/*.cpp)
-add_executable(untitled ${glfw_c} ${engine_cpp} ${example_cpp} ${lua_c} ${rttr_cpp})
 
-
-#拷贝dll到exe目录
-file(COPY "depends/glfw-3.3.3.bin.WIN64/lib-static-ucrt/glfw3.dll" DESTINATION "./")
-file(COPY "depends/fmod/api/core/lib/x64/fmod.dll" DESTINATION "./")
-file(COPY "depends/fmod/api/studio/lib/x64/fmodstudio.dll" DESTINATION "./")
+add_executable(untitled ${glfw_sources} ${rttr_cpp} ${freetype_src} ${easy_profiler_core_source} ${lua_src} ${engine_cpp} ${example_cpp})
