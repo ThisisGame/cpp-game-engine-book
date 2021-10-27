@@ -8,7 +8,13 @@ using namespace std;
 class Player
 {
 public:
-    Player(){}
+    Player(){
+
+    }
+    Player(int a)
+    {
+        hp_=a;
+    }
 
     int AddHp(int add)
     {
@@ -48,47 +54,62 @@ int main(int argc, char * argv[])
 //    usertype_player["hp_"]=&Player::hp_;
 
     auto glm_namespace_table = sol_state["Engine"].get_or_create<sol::table>();
-    glm_namespace_table.new_usertype<Player>("Player",sol::constructors<Player()>(),
+    glm_namespace_table.new_usertype<Player>("Player",sol::call_constructor,sol::constructors<Player(), Player(int)>(),
                                                 "AddHp", &Player::AddHp,
                                                 "hp_", &Player::hp_,
                                                 "print",sol::overload(
                                                         [](Player* p,int i){p->print(i);},
                                                         [](Player* p,const string s){p->print(s);}
                                                         )); // the usual
-
-    sol::table engine_table=sol_state["Engine"];
-    sol::table player_table=engine_table["Player"];
-    sol::protected_function  player_new_function=player_table["new"];
-    auto result=player_new_function();
-    if(result.valid()==false){
-        sol::error err=result;
-        std::cerr<<err.what()<<std::endl;
-    }
-    sol::table player_instance_table=result;
-    player_instance_table["hp_"]=4;
-    Player* player_create_from_lua=player_instance_table.as<Player*>();
-    int hp=player_create_from_lua->hp_;
-//
-//    sol_state.new_enum<KeyCode,true>("KeyCode",{
-//            {"A",KeyCode::A},
-//            {"B",KeyCode::B},
-//            {"C",KeyCode::C}
-//    });
-//    sol_state.set_function("GetKeyCode",&GetKeyCode);
-//
-//    //cpp new object set to lua
-//    Player* enemy_player=new Player();
-//    sol_state["enemy_player"]=enemy_player;
-//
 //    {
-//        auto result= sol_state.script_file("../a.lua");
+//        sol::table engine_table=sol_state["Engine"];
+//        sol::protected_function player_call_function=engine_table["Player"];
+//        auto result=player_call_function();
 //        if(result.valid()==false){
-//            sol::error err = result;
-//            std::cerr << "---- LOAD LUA ERROR ----" << std::endl;
-//            std::cerr << err.what() << std::endl;
-//            std::cerr << "------------------------" << std::endl;
+//            sol::error err=result;
+//            std::cerr<<err.what()<<std::endl;
 //        }
+//        sol::table player_instance_table=result;
+//        player_instance_table["hp_"]=4;
+//        Player* player_create_from_lua=player_instance_table.as<Player*>();
+//        int hp=player_create_from_lua->hp_;
 //    }
+//    {
+//        sol::table engine_table=sol_state["Engine"];
+//        sol::table player_table=engine_table["Player"];
+//        sol::protected_function  player_new_function=player_table["new"];
+//        auto result=player_new_function();
+//        if(result.valid()==false){
+//            sol::error err=result;
+//            std::cerr<<err.what()<<std::endl;
+//        }
+//        sol::table player_instance_table=result;
+//        player_instance_table["hp_"]=4;
+//        Player* player_create_from_lua=player_instance_table.as<Player*>();
+//        int hp=player_create_from_lua->hp_;
+//    }
+
+
+    sol_state.new_enum<KeyCode,true>("KeyCode",{
+            {"A",KeyCode::A},
+            {"B",KeyCode::B},
+            {"C",KeyCode::C}
+    });
+    sol_state.set_function("GetKeyCode",&GetKeyCode);
+
+    //cpp new object set to lua
+    Player* enemy_player=new Player();
+    sol_state["enemy_player"]=enemy_player;
+
+    {
+        auto result= sol_state.script_file("../a.lua");
+        if(result.valid()==false){
+            sol::error err = result;
+            std::cerr << "---- LOAD LUA ERROR ----" << std::endl;
+            std::cerr << err.what() << std::endl;
+            std::cerr << "------------------------" << std::endl;
+        }
+    }
 //
 //
 //    {

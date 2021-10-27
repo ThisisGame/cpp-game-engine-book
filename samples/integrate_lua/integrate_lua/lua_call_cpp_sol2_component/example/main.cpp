@@ -23,7 +23,7 @@ int main(int argc, char * argv[])
     //绑定glm::vec3
     {
         auto glm_ns_table = sol_state["glm"].get_or_create<sol::table>();
-        glm_ns_table.new_usertype<glm::vec3>("vec3",sol::constructors<glm::vec3(const float&, const float&, const float&)>(),
+        glm_ns_table.new_usertype<glm::vec3>("vec3",sol::call_constructor,sol::constructors<glm::vec3(const float&, const float&, const float&)>(),
                 "x", &glm::vec3::x,
                 "y", &glm::vec3::y,
                 "z", &glm::vec3::z,
@@ -43,7 +43,7 @@ int main(int argc, char * argv[])
     //绑定glm::vec4
     {
         auto glm_ns_table = sol_state["glm"].get_or_create<sol::table>();
-        glm_ns_table.new_usertype<glm::vec4>("vec4",sol::constructors<glm::vec4(const float&, const float&, const float&, const float&)>(),
+        glm_ns_table.new_usertype<glm::vec4>("vec4",sol::call_constructor,sol::constructors<glm::vec4(const float&, const float&, const float&, const float&)>(),
                 "x", &glm::vec4::x,
                 "y", &glm::vec4::y,
                 "z", &glm::vec4::z,
@@ -65,7 +65,7 @@ int main(int argc, char * argv[])
     //绑定glm::mat4
     {
         auto glm_ns_table = sol_state["glm"].get_or_create<sol::table>();
-        glm_ns_table.new_usertype<glm::mat4>("mat4",sol::constructors<glm::mat4(const float&)>(),
+        glm_ns_table.new_usertype<glm::mat4>("mat4",sol::call_constructor,sol::constructors<glm::mat4(const float&)>(),
                 sol::meta_function::to_string,[] (const glm::mat4* m) {return glm::to_string(*m);},
                 sol::meta_function::addition,[] (const glm::mat4* m_a,const  glm::mat4* m_b) {return (*m_a)+(*m_b);},
                 sol::meta_function::subtraction,[] (const glm::mat4* m_a,const  glm::mat4* m_b) {return (*m_a)-(*m_b);},
@@ -79,7 +79,7 @@ int main(int argc, char * argv[])
     //绑定glm函数
     {
         auto glm_ns_table = sol_state["glm"].get_or_create<sol::table>();
-        glm_ns_table.set_function("radians",sol::overload([] (const glm::mat4* m,const float f,const glm::vec3* v) {return glm::rotate(*m,f,*v);}));
+        glm_ns_table.set_function("rotate",sol::overload([] (const glm::mat4* m,const float f,const glm::vec3* v) {return glm::rotate(*m,f,*v);}));
         glm_ns_table.set_function("radians",sol::overload([] (const float f) {return glm::radians(f);}));
         glm_ns_table.set_function("to_string",sol::overload(
                 [] (const glm::mat4* m) {return glm::to_string((*m));},
@@ -89,7 +89,7 @@ int main(int argc, char * argv[])
 
     //绑定 GameObject
     {
-        sol_state.new_usertype<GameObject>("GameObject",sol::constructors<GameObject()>(),
+        sol_state.new_usertype<GameObject>("GameObject",sol::call_constructor,sol::constructors<GameObject()>(),
                 "AddComponent", &GameObject::AddComponentFromLua,
                 "GetComponent",&GameObject::GetComponentFromLua,
                 sol::meta_function::equal_to,&GameObject::operator==
@@ -98,7 +98,7 @@ int main(int argc, char * argv[])
 
     //绑定 Component
     {
-        sol_state.new_usertype<Component>("Component",sol::constructors<Component()>(),
+        sol_state.new_usertype<Component>("Component",sol::call_constructor,sol::constructors<Component()>(),
                 "Awake",&Component::Awake,
                 "Update",&Component::Update,
                 "game_object",&Component::game_object,
@@ -108,11 +108,13 @@ int main(int argc, char * argv[])
 
     //绑定 Animator
     {
-        sol_state.new_usertype<Animator>("Animator",sol::constructors<Animator()>());
+        sol_state.new_usertype<Animator>("Animator",sol::call_constructor,sol::constructors<Animator()>(),
+                sol::base_classes,sol::bases<Component>());
     }
     //绑定 Camera
     {
-        sol_state.new_usertype<Camera>("Camera",sol::constructors<Camera()>(),
+        sol_state.new_usertype<Camera>("Camera",sol::call_constructor,sol::constructors<Camera()>(),
+                sol::base_classes,sol::bases<Component>(),
                 "position",&Camera::position,
                 "set_position",&Camera::set_position
         );

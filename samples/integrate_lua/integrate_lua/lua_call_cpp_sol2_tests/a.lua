@@ -1,10 +1,13 @@
 print("-------run lua--------")
 
 print(Engine.Player)
+local enmey_lua=Engine.Player()
+enmey_lua.hp_=123
+print(enmey_lua.hp_)
 
-for k,v in pairs(Engine.Player) do
-    print(k,v)
-end
+--for k,v in pairs(Engine.Player) do
+--    print(k,v)
+--end
 
 print("--------test cpp pass obj to lua--------")
 
