@@ -18,7 +18,7 @@ void CompareGameObject(GameObject* a,GameObject* b){
 
 int main(int argc, char * argv[])
 {
-    sol_state.open_libraries(sol::lib::base);
+    sol_state.open_libraries(sol::lib::base,sol::lib::package);
 
     //绑定glm::vec3
     {
@@ -79,9 +79,8 @@ int main(int argc, char * argv[])
     //绑定glm函数
     {
         auto glm_ns_table = sol_state["glm"].get_or_create<sol::table>();
-//        glm_ns_table.set_function("rotate",[] (const glm::mat4* m,const float f,const glm::vec3* v) {return glm::rotate(*m,f,*v);});
-//        glm_ns_table.set_function("radians",[] (const float f) {return glm::radians(f);});
-        glm_ns_table.set_function("radians",std::function <float (const float*)> ([] (const float* f) {return glm::radians(*f);}));
+        glm_ns_table.set_function("radians",sol::overload([] (const glm::mat4* m,const float f,const glm::vec3* v) {return glm::rotate(*m,f,*v);}));
+        glm_ns_table.set_function("radians",sol::overload([] (const float f) {return glm::radians(f);}));
         glm_ns_table.set_function("to_string",sol::overload(
                 [] (const glm::mat4* m) {return glm::to_string((*m));},
                 [] (const glm::vec3* v) {return glm::to_string((*v));}

@@ -1,5 +1,11 @@
 print("-------run lua--------")
 
+print(Engine.Player)
+
+for k,v in pairs(Engine.Player) do
+    print(k,v)
+end
+
 print("--------test cpp pass obj to lua--------")
 
 --a.fun()

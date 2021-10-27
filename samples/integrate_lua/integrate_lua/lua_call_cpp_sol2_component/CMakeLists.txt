@@ -3,6 +3,9 @@ project(test)
 
 set(CMAKE_CXX_STANDARD 17)
 
+if (MSVC)
+    add_compile_options(/wd4819)#忽略保存为unicode警告
+endif ()
 
 #拷贝depends目录
 file(COPY "../../../template/depends/lua/" DESTINATION "../depends/lua/")

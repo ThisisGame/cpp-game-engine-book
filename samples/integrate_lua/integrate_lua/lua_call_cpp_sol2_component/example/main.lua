@@ -3,7 +3,7 @@
 function main()
     require("login_scene")
 
-    local game_object = GameObject()
+    local game_object = GameObject.new()
     print("game_object:" .. tostring(game_object))
 
     print("----------- Add Cpp.Component.Animator --------------")
