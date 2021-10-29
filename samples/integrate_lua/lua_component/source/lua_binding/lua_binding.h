@@ -5,27 +5,26 @@
 #ifndef UNTITLED_LUA_BINDING_H
 #define UNTITLED_LUA_BINDING_H
 
-#if USE_LUA_SCRIPT
-extern "C"
-{
-#include "lua.h"
-#include "lauxlib.h"
-#include "lualib.h"
-}
-#include "LuaBridge/LuaBridge.h"
+#include <sol/sol.hpp>
 
 class LuaBinding{
 public:
+    /// 初始化
+    /// \param package_path 设置lua文件搜索目录
+    static void Init(std::string package_path);
+
     /// 绑定引擎所有类到Lua
-    /// \param lua_state
-    static void BindLua(lua_State* lua_state);
+    static void BindLua();
 
-    static lua_State* lua_state(){return lua_state_;}
+    /// 执行Lua脚本文件
+    /// \param script_file_path
+    static void RunLuaFile(std::string script_file_path);
 
-private:
-    static lua_State* lua_state_;
+    /// 调用Lua函数
+    /// \param function_name
+    /// \return
+    static sol::protected_function_result CallLuaFunction(std::string function_name);
+
+    static sol::state& sol_state();
 };
-
-#endif
-
 #endif //UNTITLED_LUA_BINDING_H

@@ -30,7 +30,11 @@ FMOD_RESULT AudioStudio::Update() {
 FMOD_RESULT AudioStudio::LoadBankFile(string file_name) {
     string bank_path=Application::data_path()+file_name;
     FMOD_STUDIO_BANK* bank= nullptr;
-    return FMOD_Studio_System_LoadBankFile(system_, bank_path.c_str(), FMOD_STUDIO_LOAD_BANK_NORMAL, &bank);
+    FMOD_RESULT result= FMOD_Studio_System_LoadBankFile(system_, bank_path.c_str(), FMOD_STUDIO_LOAD_BANK_NORMAL, &bank);
+    if(result!=FMOD_OK){
+        DEBUG_LOG_ERROR("FMOD_Studio_System_LoadBankFile result:{},file_name:{}",result,file_name);
+    }
+    return result;
 }
 
 
@@ -53,7 +57,7 @@ AudioStudioEvent* AudioStudio::CreateEventInstance(const char *event_path) {
     return audio_studio_event;
 }
 
-void AudioStudio::setListenerAttributes(float x, float y, float z) {
+void AudioStudio::SetListenerAttributes(float x, float y, float z) {
     FMOD_3D_ATTRIBUTES attributes = { { x,y,z } };
     attributes.forward.z = 1.0f;
     attributes.up.y = 1.0f;

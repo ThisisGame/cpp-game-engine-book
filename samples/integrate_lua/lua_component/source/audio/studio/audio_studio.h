@@ -36,7 +36,7 @@ public:
     /// \param x
     /// \param y
     /// \param z
-    static void setListenerAttributes(float x,float y,float z);
+    static void SetListenerAttributes(float x,float y,float z);
 
 private:
     static FMOD_STUDIO_SYSTEM* system_;

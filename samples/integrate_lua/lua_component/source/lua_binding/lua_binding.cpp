@@ -25,11 +25,21 @@
 #include "utils/screen.h"
 #include "utils/time.h"
 
-
-
 sol::state sol_state;
 
-void LuaBinding::BindLua(lua_State *lua_state) {
+sol::state& LuaBinding::sol_state(){
+    return sol_state;
+}
+
+void LuaBinding::Init(std::string package_path) {
+    //设置lua搜索目录
+    sol::table package_table=sol_state["package"];
+    std::string path=package_table["path"];
+    path.append(package_path);
+    package_table["path"]=path;
+}
+
+void LuaBinding::BindLua() {
     // depends
     {
         // glm
@@ -199,48 +209,36 @@ void LuaBinding::BindLua(lua_State *lua_state) {
                                       "Update",&Audio::Update
         );
 
-        luabridge::getGlobalNamespace(lua_state)
-                .beginClass<Audio>("Audio")
-                .addStaticFunction("Init",&Audio::Init)
-                .addStaticFunction("Update",&Audio::Update)
-                .endClass();
+        sol_state.new_usertype<Audio>("AudioStudio",
+                                      "Init",&AudioStudio::Init,
+                                      "Update",&AudioStudio::Update,
+                                      "LoadBankFile",&AudioStudio::LoadBankFile,
+                                      "CreateEventInstance",&AudioStudio::CreateEventInstance,
+                                      "SetListenerAttributes",&AudioStudio::SetListenerAttributes
+        );
 
-        luabridge::getGlobalNamespace(lua_state)
-                .beginClass<AudioStudio>("AudioStudio")
-                .addConstructor<void (*) ()>()
-                .addStaticFunction("Init",&AudioStudio::Init)
-                .addStaticFunction("Update",&AudioStudio::Update)
-                .addStaticFunction("LoadBankFile",&AudioStudio::LoadBankFile)
-                .addStaticFunction("CreateEventInstance",&AudioStudio::CreateEventInstance)
-                .addStaticFunction("setListenerAttributes",&AudioStudio::setListenerAttributes)
-                .endClass();
-
-        luabridge::getGlobalNamespace(lua_state)
-                .beginClass<AudioStudioEvent>("AudioStudioEvent")
-                .addConstructor<void (*) ()>()
-                .addFunction("event_instance",&AudioStudioEvent::event_instance)
-                .addFunction("SetParameterByName",&AudioStudioEvent::SetParameterByName)
-                .addFunction("Set3DAttribute",&AudioStudioEvent::Set3DAttribute)
-                .addFunction("Start",&AudioStudioEvent::Start)
-                .addFunction("Stop",&AudioStudioEvent::Stop)
-                .addFunction("Pause",&AudioStudioEvent::Pause)
-                .endClass();
+        sol_state.new_usertype<AudioStudioEvent>("AudioStudioEvent",
+//                                      "event_instance",&AudioStudioEvent::event_instance,
+                                      "SetParameterByName",&AudioStudioEvent::SetParameterByName,
+                                      "Set3DAttribute",&AudioStudioEvent::Set3DAttribute,
+                                      "Start",&AudioStudioEvent::Start,
+                                      "Stop",&AudioStudioEvent::Stop,
+                                      "Pause",&AudioStudioEvent::Pause
+        );
     }
 
     // component
     {
-        luabridge::getGlobalNamespace(lua_state)
-                .beginClass<GameObject>("GameObject")
-                .addConstructor<void (*) (std::string)>()
-               .addFunction("name",&GameObject::name)
-               .addFunction("set_name",&GameObject::set_name)
-               .addFunction("layer",&GameObject::layer)
-               .addFunction("set_layer",&GameObject::set_layer)
-                .addFunction("__eq", &GameObject::operator==)
-                .addFunction("AddComponent", &GameObject::AddComponentFromLua)
-                .addFunction("GetComponent",&GameObject::GetComponentFromLua)
-                .addFunction("Foreach",&GameObject::ForeachLuaComponent)
-                .endClass();
+        sol_state.new_usertype<GameObject>("GameObject",sol::call_constructor,sol::constructors<GameObject(std::string)>(),
+                "name",&GameObject::name,
+                "set_name",&GameObject::set_name,
+                "layer",&GameObject::layer,
+                "set_layer",&GameObject::set_layer,
+                "AddComponent", &GameObject::AddComponentFromLua,
+                "GetComponent",&GameObject::GetComponentFromLua,
+                "Foreach",&GameObject::ForeachLuaComponent
+        );
+
         luabridge::getGlobalNamespace(lua_state)
                 .beginClass<Component>("Component")
                 .addFunction("Awake",&Component::Awake)
@@ -552,4 +550,21 @@ void LuaBinding::BindLua(lua_State *lua_state) {
     }
 }
 
+void LuaBinding::RunLuaFile(std::string script_file_path) {
+    auto result= sol_state.script_file(script_file_path);
+    if(result.valid()==false){
+        sol::error err = result;
+        DEBUG_LOG_ERROR("---- LOAD LUA ERROR ----\n{}\n------------------------",err.what());
+    }
+}
+
+sol::protected_function_result LuaBinding::CallLuaFunction(std::string function_name) {
+    sol::protected_function main_function=sol_state["main"];
+    sol::protected_function_result result=main_function();
+    if(result.valid()== false){
+        sol::error err = result;
+        DEBUG_LOG_ERROR("---- RUN LUA_FUNCTION ERROR ----\n{}\n------------------------",err.what());
+    }
+    return result;
+}
 #endif

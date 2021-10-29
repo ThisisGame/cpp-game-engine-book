@@ -3,7 +3,6 @@ project(untitled)
 
 set(CMAKE_CXX_STANDARD 17)
 add_definitions(-D USE_FMOD_STUDIO)#是否使用fmod studio，加载bank文件的形式。
-add_definitions(-D USE_LUA_SCRIPT)#是否使用Lua脚本开发。
 
 if (WIN32)
     add_compile_options(/wd4819)#忽略保存为unicode警告
@@ -23,7 +22,6 @@ file(COPY "../../template/depends/rapidxml/" DESTINATION "../depends/rapidxml/")
 file(COPY "../../template/depends/stb/" DESTINATION "../depends/stb/")
 file(COPY "../../template/depends/spdlog/include/spdlog/" DESTINATION "../depends/spdlog/")
 file(COPY "../../template/depends/rttr-0.9.6/src/rttr/" DESTINATION "../depends/rttr/")
-file(COPY "../../template/depends/fmod/" DESTINATION "../depends/fmod/")
 file(COPY "../../template/depends/easy_profiler-2.1.0/easy_profiler_core/" DESTINATION "../depends/easy_profiler_core/")
 file(COPY "../../template/depends/lua/" DESTINATION "../depends/lua/")
 file(COPY "../../template/depends/sol2-3.2.2/include/sol/" DESTINATION "../depends/sol/")

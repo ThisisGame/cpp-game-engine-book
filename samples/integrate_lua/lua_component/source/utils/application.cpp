@@ -127,8 +127,13 @@ void Application::Update(){
 
     GameObject::Foreach([](GameObject* game_object){
         if(game_object->active()){
-            game_object->ForeachComponent([](Component* component){
-                component->Update();
+            game_object->ForeachLuaComponent([](sol::table lua_component_instance_table){
+                sol::protected_function update_function=lua_component_instance_table["Update"];
+                auto result=update_function(lua_component_instance_table);
+                if(result.valid()== false){
+                    sol::error err = result;
+                    DEBUG_LOG_ERROR("---- RUN LUA ERROR ----\n{}\n------------------------",err.what());
+                }
             });
         }
     });
