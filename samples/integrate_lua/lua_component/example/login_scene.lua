@@ -36,7 +36,7 @@ function LoginScene:game_object()
 end
 
 function LoginScene:set_game_object(game_object)
-    print("LoginScene:set_game_object " .. tostring(game_object))
+    print("LoginScene:set_game_object " .. tostring(game_object) .. " self:" .. tostring(self))
     self.game_object_=game_object
 end
 
@@ -77,6 +77,7 @@ end
 
 
 function LoginScene:Update()
+    print("LoginScene:Update")
     self.camera_1_:set_depth(0)
     self.camera_1_:SetView(glm.vec3(0.0,0.0,0.0), glm.vec3(0.0,1.0,0.0))
     self.camera_1_:SetPerspective(60, Screen.aspect_ratio(), 1, 1000)

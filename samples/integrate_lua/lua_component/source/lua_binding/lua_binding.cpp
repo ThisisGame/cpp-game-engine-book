@@ -35,77 +35,71 @@ void LuaBinding::Init(std::string package_path) {
 }
 
 void LuaBinding::BindLua() {
-    // depends
+    //绑定glm::vec3
     {
-        // glm
-        {
-            //绑定glm::vec3
-            {
-                auto glm_ns_table = sol_state_["glm"].get_or_create<sol::table>();
-                glm_ns_table.new_usertype<glm::vec3>("vec3",sol::call_constructor,sol::constructors<glm::vec3(const float&, const float&, const float&)>(),
-                                                     "x", &glm::vec3::x,
-                                                     "y", &glm::vec3::y,
-                                                     "z", &glm::vec3::z,
-                                                     "r", &glm::vec3::r,
-                                                     "g", &glm::vec3::g,
-                                                     "b", &glm::vec3::b,
-                                                     sol::meta_function::to_string,[] (const glm::vec3* vec) -> std::string {return glm::to_string(*vec);},
-                                                     sol::meta_function::addition,[] (const glm::vec3* vec_a,const  glm::vec3* vec_b) {return (*vec_a)+(*vec_b);},
-                                                     sol::meta_function::subtraction,[] (const glm::vec3* vec_a,const  glm::vec3* vec_b) {return (*vec_a)-(*vec_b);},
-                                                     sol::meta_function::multiplication,[] (const glm::vec3* vec,const float a) {return (*vec)*a;},
-                                                     sol::meta_function::division,[] (const glm::vec3* vec,const float a) {return (*vec)/a;},
-                                                     sol::meta_function::unary_minus,[] (const glm::vec3* vec) {return (*vec)*-1;},
-                                                     sol::meta_function::equal_to,[] (const glm::vec3* vec_a,const  glm::vec3* vec_b) {return (*vec_a)==(*vec_b);}
-                );
-            }
+        auto glm_ns_table = sol_state_["glm"].get_or_create<sol::table>();
+        glm_ns_table.new_usertype<glm::vec3>("vec3",sol::call_constructor,sol::constructors<glm::vec3(const float&, const float&, const float&)>(),
+                                             "x", &glm::vec3::x,
+                                             "y", &glm::vec3::y,
+                                             "z", &glm::vec3::z,
+                                             "r", &glm::vec3::r,
+                                             "g", &glm::vec3::g,
+                                             "b", &glm::vec3::b,
+                                             sol::meta_function::to_string,[] (const glm::vec3* vec) -> std::string {return glm::to_string(*vec);},
+                                             sol::meta_function::addition,[] (const glm::vec3* vec_a,const  glm::vec3* vec_b) {return (*vec_a)+(*vec_b);},
+                                             sol::meta_function::subtraction,[] (const glm::vec3* vec_a,const  glm::vec3* vec_b) {return (*vec_a)-(*vec_b);},
+                                             sol::meta_function::multiplication,[] (const glm::vec3* vec,const float a) {return (*vec)*a;},
+                                             sol::meta_function::division,[] (const glm::vec3* vec,const float a) {return (*vec)/a;},
+                                             sol::meta_function::unary_minus,[] (const glm::vec3* vec) {return (*vec)*-1;},
+                                             sol::meta_function::equal_to,[] (const glm::vec3* vec_a,const  glm::vec3* vec_b) {return (*vec_a)==(*vec_b);}
+        );
+    }
 
-            //绑定glm::vec4
-            {
-                auto glm_ns_table = sol_state_["glm"].get_or_create<sol::table>();
-                glm_ns_table.new_usertype<glm::vec4>("vec4",sol::call_constructor,sol::constructors<glm::vec4(const float&, const float&, const float&, const float&)>(),
-                                                     "x", &glm::vec4::x,
-                                                     "y", &glm::vec4::y,
-                                                     "z", &glm::vec4::z,
-                                                     "w", &glm::vec4::w,
-                                                     "r", &glm::vec4::r,
-                                                     "g", &glm::vec4::g,
-                                                     "b", &glm::vec4::b,
-                                                     "a", &glm::vec4::a,
-                                                     sol::meta_function::to_string,[] (const glm::vec4* vec) {return glm::to_string(*vec);},
-                                                     sol::meta_function::addition,[] (const glm::vec4* vec_a,const  glm::vec4* vec_b) {return (*vec_a)+(*vec_b);},
-                                                     sol::meta_function::subtraction,[] (const glm::vec4* vec_a,const  glm::vec4* vec_b) {return (*vec_a)-(*vec_b);},
-                                                     sol::meta_function::multiplication,[] (const glm::vec4* vec,const float a) {return (*vec)*a;},
-                                                     sol::meta_function::division,[] (const glm::vec4* vec,const float a) {return (*vec)/a;},
-                                                     sol::meta_function::unary_minus,[] (const glm::vec4* vec) {return (*vec)*-1;},
-                                                     sol::meta_function::equal_to,[] (const glm::vec4* vec_a,const  glm::vec4* vec_b) {return (*vec_a)==(*vec_b);}
-                );
-            }
+    //绑定glm::vec4
+    {
+        auto glm_ns_table = sol_state_["glm"].get_or_create<sol::table>();
+        glm_ns_table.new_usertype<glm::vec4>("vec4",sol::call_constructor,sol::constructors<glm::vec4(const float&, const float&, const float&, const float&)>(),
+                                             "x", &glm::vec4::x,
+                                             "y", &glm::vec4::y,
+                                             "z", &glm::vec4::z,
+                                             "w", &glm::vec4::w,
+                                             "r", &glm::vec4::r,
+                                             "g", &glm::vec4::g,
+                                             "b", &glm::vec4::b,
+                                             "a", &glm::vec4::a,
+                                             sol::meta_function::to_string,[] (const glm::vec4* vec) {return glm::to_string(*vec);},
+                                             sol::meta_function::addition,[] (const glm::vec4* vec_a,const  glm::vec4* vec_b) {return (*vec_a)+(*vec_b);},
+                                             sol::meta_function::subtraction,[] (const glm::vec4* vec_a,const  glm::vec4* vec_b) {return (*vec_a)-(*vec_b);},
+                                             sol::meta_function::multiplication,[] (const glm::vec4* vec,const float a) {return (*vec)*a;},
+                                             sol::meta_function::division,[] (const glm::vec4* vec,const float a) {return (*vec)/a;},
+                                             sol::meta_function::unary_minus,[] (const glm::vec4* vec) {return (*vec)*-1;},
+                                             sol::meta_function::equal_to,[] (const glm::vec4* vec_a,const  glm::vec4* vec_b) {return (*vec_a)==(*vec_b);}
+        );
+    }
 
-            //绑定glm::mat4
-            {
-                auto glm_ns_table = sol_state_["glm"].get_or_create<sol::table>();
-                glm_ns_table.new_usertype<glm::mat4>("mat4",sol::call_constructor,sol::constructors<glm::mat4(const float&)>(),
-                                                     sol::meta_function::to_string,[] (const glm::mat4* m) {return glm::to_string(*m);},
-                                                     sol::meta_function::addition,[] (const glm::mat4* m_a,const  glm::mat4* m_b) {return (*m_a)+(*m_b);},
-                                                     sol::meta_function::subtraction,[] (const glm::mat4* m_a,const  glm::mat4* m_b) {return (*m_a)-(*m_b);},
-                                                     sol::meta_function::multiplication,[] (const glm::mat4* m,const glm::vec4* v) {return (*m)*(*v);},
-                                                     sol::meta_function::division,[] (const glm::mat4* m,const float a) {return (*m)/a;},
-                                                     sol::meta_function::unary_minus,[] (const glm::mat4* m) {return (*m)*-1;},
-                                                     sol::meta_function::equal_to,[] (const glm::mat4* m_a,const  glm::mat4* m_b) {return (*m_a)==(*m_b);}
-                );
-            }
+    //绑定glm::mat4
+    {
+        auto glm_ns_table = sol_state_["glm"].get_or_create<sol::table>();
+        glm_ns_table.new_usertype<glm::mat4>("mat4",sol::call_constructor,sol::constructors<glm::mat4(const float&)>(),
+                                             sol::meta_function::to_string,[] (const glm::mat4* m) {return glm::to_string(*m);},
+                                             sol::meta_function::addition,[] (const glm::mat4* m_a,const  glm::mat4* m_b) {return (*m_a)+(*m_b);},
+                                             sol::meta_function::subtraction,[] (const glm::mat4* m_a,const  glm::mat4* m_b) {return (*m_a)-(*m_b);},
+                                             sol::meta_function::multiplication,[] (const glm::mat4* m,const glm::vec4* v) {return (*m)*(*v);},
+                                             sol::meta_function::division,[] (const glm::mat4* m,const float a) {return (*m)/a;},
+                                             sol::meta_function::unary_minus,[] (const glm::mat4* m) {return (*m)*-1;},
+                                             sol::meta_function::equal_to,[] (const glm::mat4* m_a,const  glm::mat4* m_b) {return (*m_a)==(*m_b);}
+        );
+    }
 
-            //绑定glm函数
-            {
-                auto glm_ns_table = sol_state_["glm"].get_or_create<sol::table>();
-                glm_ns_table.set_function("rotate",sol::overload([] (const glm::mat4* m,const float f,const glm::vec3* v) {return glm::rotate(*m,f,*v);}));
-                glm_ns_table.set_function("radians",sol::overload([] (const float f) {return glm::radians(f);}));
-                glm_ns_table.set_function("to_string",sol::overload(
-                        [] (const glm::mat4* m) {return glm::to_string((*m));},
-                        [] (const glm::vec3* v) {return glm::to_string((*v));}
-                ));
-            }
-        }
+    //绑定glm函数
+    {
+        auto glm_ns_table = sol_state_["glm"].get_or_create<sol::table>();
+        glm_ns_table.set_function("rotate",sol::overload([] (const glm::mat4* m,const float f,const glm::vec3* v) {return glm::rotate(*m,f,*v);}));
+        glm_ns_table.set_function("radians",sol::overload([] (const float f) {return glm::radians(f);}));
+        glm_ns_table.set_function("to_string",sol::overload(
+                [] (const glm::mat4* m) {return glm::to_string((*m));},
+                [] (const glm::vec3* v) {return glm::to_string((*v));}
+        ));
     }
 
     // audio
@@ -231,6 +225,7 @@ void LuaBinding::BindLua() {
                                             "set_layer",&GameObject::set_layer,
                                             "AddComponent", &GameObject::AddComponentFromLua,
                                             "GetComponent",&GameObject::GetComponentFromLua,
+                                            "SetParent",&GameObject::SetParent,
                                             "Foreach",&GameObject::ForeachLuaComponent
         );
 
@@ -515,7 +510,7 @@ void LuaBinding::RunLuaFile(std::string script_file_path) {
     auto result= sol_state_.script_file(script_file_path);
     if(result.valid()==false){
         sol::error err = result;
-        DEBUG_LOG_ERROR("---- LOAD LUA ERROR ----\n{}\n------------------------",err.what());
+        DEBUG_LOG_ERROR("\n---- LOAD LUA ERROR ----\n{}\n------------------------",err.what());
     }
 }
 
@@ -524,7 +519,7 @@ sol::protected_function_result LuaBinding::CallLuaFunction(std::string function_
     sol::protected_function_result result=main_function();
     if(result.valid()== false){
         sol::error err = result;
-        DEBUG_LOG_ERROR("---- RUN LUA_FUNCTION ERROR ----\n{}\n------------------------",err.what());
+        DEBUG_LOG_ERROR("\n---- RUN LUA_FUNCTION ERROR ----\n{}\n------------------------",err.what());
     }
     return result;
 }

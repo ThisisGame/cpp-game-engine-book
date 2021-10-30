@@ -18,7 +18,7 @@ GameObject::GameObject(std::string name): Tree::Node(),layer_(0x01) {
 }
 
 GameObject::~GameObject() {
-
+    DEBUG_LOG_INFO("GameObject::~GameObject");
 }
 
 Component* GameObject::AddComponent(std::string component_type_name) {
@@ -35,6 +35,9 @@ Component* GameObject::AddComponent(std::string component_type_name) {
 
 Component* GameObject::GetComponent(std::string component_type_name) {
     sol::table component_table=GetComponentFromLua(component_type_name);
+    if(!component_table){
+        return nullptr;
+    }
     Component* component=component_table.as<Component*>();
     return component;
 }
@@ -74,20 +77,14 @@ sol::table GameObject::AddComponentFromLua(std::string component_type_name) {
     auto result=component_type_construct_function();
     if(result.valid()== false){
         sol::error err = result;
-        std::cerr << "----- RUN LUA ERROR ----" << std::endl;
-        std::cerr <<"AddComponentFromLua call type construct error,type:"<<component_type_name<< std::endl;
-        std::cerr << err.what() << std::endl;
-        std::cerr << "------------------------" << std::endl;
+        DEBUG_LOG_ERROR("\n---- RUN LUA_FUNCTION ERROR ----\nAddComponentFromLua call type construct error,type:{}\n{}\n------------------------",component_type_name,err.what());
     }
     sol::table new_table=result;
 
     result=new_table["set_game_object"](new_table,this);
     if(result.valid()== false){
         sol::error err = result;
-        std::cerr << "----- RUN LUA ERROR ----" << std::endl;
-        std::cerr <<"AddComponentFromLua call set_game_object error,type:"<<component_type_name<< std::endl;
-        std::cerr << err.what() << std::endl;
-        std::cerr << "------------------------" << std::endl;
+        DEBUG_LOG_ERROR("\n---- RUN LUA_FUNCTION ERROR ----\nAddComponentFromLua call set_game_object error,type:{}\n{}\n------------------------",component_type_name,err.what());
     }
 
     if(lua_component_type_instance_map_.find(component_type_name)==lua_component_type_instance_map_.end()){
@@ -100,20 +97,17 @@ sol::table GameObject::AddComponentFromLua(std::string component_type_name) {
     result=new_table["Awake"](new_table);
     if(result.valid()== false){
         sol::error err = result;
-        std::cerr << "----- RUN LUA ERROR ----" << std::endl;
-        std::cerr <<"AddComponentFromLua call Awake error,type:"<<component_type_name<< std::endl;
-        std::cerr << err.what() << std::endl;
-        std::cerr << "------------------------" << std::endl;
+        DEBUG_LOG_ERROR("\n---- RUN LUA_FUNCTION ERROR ----\nAddComponentFromLua call Awake error,type:{}\n{}\n------------------------",component_type_name,err.what());
     }
     return new_table;
 }
 
 sol::table GameObject::GetComponentFromLua(std::string component_type_name) {
     if(lua_component_type_instance_map_.find(component_type_name)==lua_component_type_instance_map_.end()){
-        return nullptr;
+        return sol::nil;
     }
     if(lua_component_type_instance_map_[component_type_name].size()==0){
-        return nullptr;
+        return sol::nil;
     }
     return lua_component_type_instance_map_[component_type_name][0];
 }

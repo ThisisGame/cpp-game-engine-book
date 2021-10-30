@@ -122,10 +122,12 @@ void MeshRenderer::Render() {
         // PreRender
         game_object()->ForeachLuaComponent([](sol::table lua_component_instance_table){
             sol::protected_function function=lua_component_instance_table["OnPreRender"];
-            auto result=function(lua_component_instance_table);
-            if(result.valid()== false){
-                sol::error err = result;
-                DEBUG_LOG_ERROR("---- RUN LUA ERROR ----\n{}\n------------------------",err.what());
+            if(function.valid()){
+                auto result=function(lua_component_instance_table);
+                if(result.valid()== false){
+                    sol::error err = result;
+                    DEBUG_LOG_ERROR("\n---- RUN LUA ERROR ----\n{}\n------------------------",err.what());
+                }
             }
         });
 
@@ -162,10 +164,12 @@ void MeshRenderer::Render() {
         // PostRender
         game_object()->ForeachLuaComponent([](sol::table lua_component_instance_table){
             sol::protected_function function=lua_component_instance_table["OnPostRender"];
-            auto result=function(lua_component_instance_table);
-            if(result.valid()== false){
-                sol::error err = result;
-                DEBUG_LOG_ERROR("---- RUN LUA ERROR ----\n{}\n------------------------",err.what());
+            if(function.valid()){
+                auto result=function(lua_component_instance_table);
+                if(result.valid()== false){
+                    sol::error err = result;
+                    DEBUG_LOG_ERROR("\n---- RUN LUA ERROR ----\n{}\n------------------------",err.what());
+                }
             }
         });
     }

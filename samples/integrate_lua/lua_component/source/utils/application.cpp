@@ -132,7 +132,7 @@ void Application::Update(){
                 auto result=update_function(lua_component_instance_table);
                 if(result.valid()== false){
                     sol::error err = result;
-                    DEBUG_LOG_ERROR("---- RUN LUA ERROR ----\n{}\n------------------------",err.what());
+                    DEBUG_LOG_ERROR("\n---- RUN LUA ERROR ----\n{}\n------------------------",err.what());
                 }
             });
         }
