@@ -11,6 +11,10 @@
 class Camera:public Component
 {
 public:
+    ~Camera(){
+
+    }
+public:
     void Awake() override{
         std::cout<<"Camera Awake"<<std::endl;
     }

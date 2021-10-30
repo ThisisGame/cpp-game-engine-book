@@ -172,7 +172,13 @@ int main(int argc, char * argv[])
         std::cerr << "------------------------" << std::endl;
     }
 
-    for(int i=0;i<3;i++){
+    for(int i=0;i<30000;i++){
+        std::cout<<"Loop "<<i<<std::endl;
+
+        float time=1.0f;
+        for (int j = 1; j <10000000; ++j) {
+            time=time*j/j;
+        }
         GameObject::Foreach([](GameObject* game_object){
             game_object->ForeachLuaComponent([](sol::table lua_component_instance_table){
                 sol::protected_function update_function=lua_component_instance_table["Update"];

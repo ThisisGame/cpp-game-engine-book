@@ -1,9 +1,9 @@
-
+game_object=nil
 
 function main()
     require("login_scene")
 
-    local game_object = GameObject()
+    game_object = GameObject()
     print("game_object:" .. tostring(game_object))
 
     print("----------- Add Cpp.Component.Animator --------------")

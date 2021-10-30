@@ -9,6 +9,10 @@
 class Animator:public Component
 {
 public:
+    ~Animator(){
+
+    }
+public:
     void Awake() override{
         std::cout<<"Animator Awake"<<std::endl;
     }

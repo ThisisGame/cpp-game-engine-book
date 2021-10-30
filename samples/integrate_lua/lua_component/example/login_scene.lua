@@ -3,10 +3,12 @@ LoginScene={
     go_camera_1_,
     go_audio_source_bgm_,
     go_player_,
+    material_player_,
     camera_1_,
     last_frame_mouse_position_,--上一帧的鼠标位置
     transform_player_= nullptr,
-    audio_studio_event_
+    audio_studio_event_,
+    material_audio_listener_,
 }
 
 setmetatable(LoginScene,{["__call"]=function(table,param)
@@ -49,9 +51,9 @@ function LoginScene:CreateAudioSource()
     mesh_filter:LoadMesh("model/sphere.mesh")
     --挂上 MeshRenderer 组件
     local mesh_renderer= self.go_audio_source_bgm_:AddComponent("MeshRenderer")
-    local material = Material()--设置材质
-    material:Parse("material/sphere_audio_source_3d_music.mat")
-    mesh_renderer:SetMaterial(material)
+    self.material_player_ = Material()--设置材质
+    self.material_player_:Parse("material/sphere_audio_source_3d_music.mat")
+    mesh_renderer:SetMaterial(self.material_player_)
 
     --加载bank
     print(AudioStudio.Init())
@@ -67,9 +69,9 @@ function LoginScene:CreateAudioListener()
     local mesh_filter=self.go_player_:AddComponent("MeshFilter")
     mesh_filter:LoadMesh("model/sphere.mesh")
     local mesh_renderer=self.go_player_:AddComponent("MeshRenderer")
-    local material = Material()--设置材质
-    material:Parse("material/sphere_audio_source_3d_listener.mat")
-    mesh_renderer:SetMaterial(material)
+    self.material_audio_listener_ = Material()--设置材质
+    self.material_audio_listener_:Parse("material/sphere_audio_source_3d_listener.mat")
+    mesh_renderer:SetMaterial(self.material_audio_listener_)
 
     --设置听者位置
     AudioStudio.SetListenerAttributes(0,0,0)
@@ -77,7 +79,7 @@ end
 
 
 function LoginScene:Update()
-    print("LoginScene:Update")
+    --print("LoginScene:Update")
     self.camera_1_:set_depth(0)
     self.camera_1_:SetView(glm.vec3(0.0,0.0,0.0), glm.vec3(0.0,1.0,0.0))
     self.camera_1_:SetPerspective(60, Screen.aspect_ratio(), 1, 1000)
@@ -103,11 +105,11 @@ function LoginScene:Update()
 
     --按键盘1、2、3设置参数值，切换不同的地面类型，播放不同的脚步声
     if Input.GetKeyUp(KeyCode.KEY_CODE_1) then
-        self.audio_studio_event_:SetParameterByName("groundtype",0.0)
+        self.audio_studio_event_:SetParameterByName("groundtype",0.0,false)
     elseif Input.GetKeyUp(KeyCode.KEY_CODE_2) then
-        self.audio_studio_event_:SetParameterByName("groundtype",1.0)
+        self.audio_studio_event_:SetParameterByName("groundtype",1.0,false)
     elseif Input.GetKeyUp(KeyCode.KEY_CODE_3) then
-        self.audio_studio_event_:SetParameterByName("groundtype",2.0)
+        self.audio_studio_event_:SetParameterByName("groundtype",2.0,false)
     end
     self.last_frame_mouse_position_=Input.mousePosition()
 
