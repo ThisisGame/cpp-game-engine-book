@@ -120,8 +120,13 @@ void MeshRenderer::Render() {
     glUseProgram(gl_program_id);
     {
         // PreRender
-        game_object()->ForeachComponent([](Component* component){
-            component->OnPreRender();
+        game_object()->ForeachLuaComponent([](sol::table lua_component_instance_table){
+            sol::protected_function function=lua_component_instance_table["OnPreRender"];
+            auto result=function(lua_component_instance_table);
+            if(result.valid()== false){
+                sol::error err = result;
+                DEBUG_LOG_ERROR("---- RUN LUA ERROR ----\n{}\n------------------------",err.what());
+            }
         });
 
         if(current_camera->camera_use_for()==Camera::CameraUseFor::SCENE){
@@ -155,8 +160,13 @@ void MeshRenderer::Render() {
         glBindVertexArray(0);__CHECK_GL_ERROR__
 
         // PostRender
-        game_object()->ForeachComponent([](Component* component){
-            component->OnPostRender();
+        game_object()->ForeachLuaComponent([](sol::table lua_component_instance_table){
+            sol::protected_function function=lua_component_instance_table["OnPostRender"];
+            auto result=function(lua_component_instance_table);
+            if(result.valid()== false){
+                sol::error err = result;
+                DEBUG_LOG_ERROR("---- RUN LUA ERROR ----\n{}\n------------------------",err.what());
+            }
         });
     }
     glUseProgram(GL_NONE);__CHECK_GL_ERROR__

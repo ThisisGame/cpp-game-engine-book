@@ -72,14 +72,14 @@ function LoginScene:CreateAudioListener()
     mesh_renderer:SetMaterial(material)
 
     --设置听者位置
-    AudioStudio.setListenerAttributes(0,0,0)
+    AudioStudio.SetListenerAttributes(0,0,0)
 end
 
 
 function LoginScene:Update()
     self.camera_1_:set_depth(0)
     self.camera_1_:SetView(glm.vec3(0.0,0.0,0.0), glm.vec3(0.0,1.0,0.0))
-    self.camera_1_:SetProjection(60, Screen.aspect_ratio(), 1, 1000)
+    self.camera_1_:SetPerspective(60, Screen.aspect_ratio(), 1, 1000)
 
     --旋转相机
     if Input.GetKeyDown(KeyCode.KEY_CODE_LEFT_ALT) and Input.GetMouseButtonDown(KeyCode.MOUSE_BUTTON_LEFT) then
@@ -120,5 +120,5 @@ function LoginScene:Update()
 
     local new_pos_vec4=rotate_mat4 * old_player_pos_vec4--旋转矩阵 * 原来的坐标 = 以零点做旋转。
     self.transform_player_:set_position(glm.vec3(new_pos_vec4.x,new_pos_vec4.y,new_pos_vec4.z))
-    AudioStudio.setListenerAttributes(new_pos_vec4.x,new_pos_vec4.y,new_pos_vec4.z)
+    AudioStudio.SetListenerAttributes(new_pos_vec4.x,new_pos_vec4.y,new_pos_vec4.z)
 end

@@ -25,6 +25,9 @@ public:
     /// \return
     static sol::protected_function_result CallLuaFunction(std::string function_name);
 
-    static sol::state& sol_state();
+    static sol::state& sol_state(){return sol_state_;};
+
+private:
+    static sol::state sol_state_;
 };
 #endif //UNTITLED_LUA_BINDING_H

@@ -4,9 +4,11 @@ project(untitled)
 set(CMAKE_CXX_STANDARD 17)
 add_definitions(-D USE_FMOD_STUDIO)#是否使用fmod studio，加载bank文件的形式。
 
-if (WIN32)
+add_compile_options(/bigobj)
+if (MSVC)
     add_compile_options(/wd4819)#忽略保存为unicode警告
 endif ()
+
 
 include(CMakeLists.txt.glfw)
 include(CMakeLists.txt.FreeType)
