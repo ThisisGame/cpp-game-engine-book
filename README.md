@@ -39,7 +39,7 @@
 
 本书拆分游戏引擎的多个模块，到书中的每一章进行讲解，最终实现一个简单的游戏引擎。
 
-![](imgs/chapter.svg)
+![](imgs/chapter.png)
 
 ## Content
 
