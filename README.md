@@ -92,6 +92,12 @@
 
 :arrow_forward: 再过一遍代码。
 
+## Find&Load CLion Project
+
+每一小节的文章开头都贴出了本小节的CLion项目，按照下面Gif图指引打开。
+
+![](imgs/open_clion_project.gif)
+
 ## Resource download
 
 本书Markdown以及章节配套项目托管在Github上，读书过程中有疑问、发现错误都可以提Issues。
