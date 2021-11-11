@@ -17,15 +17,40 @@ int main(void){
 //    //调用lua main()
 //    LuaBinding::CallLuaFunction("main");
 
-    glm::vec4 joint_model_position_t_pos = glm::vec4(0,0,1,0);
-    glm::mat4 rotate = glm::mat4 (0.8660, 0.5000,  0.0000, 0.0000,
-                                  0.0000, 0.0000, -1.0000, 0.0000,
-                                  -0.5000, 0.8660,  0.0000, 0.0000,
-                                  0.0000, 0.0000,  0.0000, 1.0000);
+//    glm::mat4 armature_matrix_world = glm::mat4 (1.0000, 0.0000,  0.0000, 0.0000,
+//                                                 0.0000, 1.0000,  0.0000, 0.0000,
+//                                                 0.0000, 0.0000,  1.0000, 0.0000,
+//                                                 0.0000, 0.0000,  0.0000, 1.0000);
+//
+//    glm::vec4 joint_model_position_t_pos = glm::vec4(0,1,0,0);
+//
+//
+//
+//    glm::mat4 rotate = glm::mat4 (0.8660, 0.5000,  0.0000, 0.0000,
+//                                  0.0000, 0.0000, -1.0000, 0.0000,
+//                                  -0.5000, 0.8660,  0.0000, 0.0000,
+//                                  0.0000, 0.0000,  0.0000, 1.0000);
+//
+//    glm::vec4 joint_model_position_key_frame=rotate * joint_model_position_t_pos;
+//
+//    std::cout<<glm::to_string(joint_model_position_key_frame)<<std::endl;
 
-    glm::vec4 joint_model_position_key_frame=rotate * joint_model_position_t_pos;
+//    glm::mat4 armature_matrix_world = glm::mat4 (1.0000, 0.0000,  0.0000, 0.0000,
+//                                                 0.0000, 1.0000,  0.0000, 0.0000,
+//                                                 0.0000, 0.0000,  1.0000, 0.0000,
+//                                                 0.0000, 0.0000,  0.0000, 1.0000);
 
-    std::cout<<glm::to_string(joint_model_position_key_frame)<<std::endl;
+    glm::mat4 mat_local = glm::mat4 (1.0000, 0.0000,  0.0000, 0.0000,
+                                     0.0000, 0.0000, -1.0000, 0.0000,
+                                     0.0000, 1.0000,  0.0000, 1.0000,
+                                     0.0000, 0.0000,  0.0000, 1.0000);
+
+    glm::mat4 mat_basis = glm::mat4 ( 0.8864, 0.4630, 0.0000, 0.0000,
+                                     -0.4630, 0.8864, 0.0000, 0.0000,
+                                      0.0000, 0.0000, 1.0000, 0.0000,
+                                      0.0000, 0.0000, 0.0000, 1.0000);
+
+    std::cout<<glm::to_string(mat_local * mat_basis)<<std::endl;
 
     return 0;
 }
