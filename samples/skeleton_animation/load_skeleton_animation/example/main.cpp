@@ -68,13 +68,15 @@ int main(void){
                                                        0.0000, 0.0000,  1.0000, 0.0000,
                                                        0.0000, 1.0000,  0.0000, 1.0000);
 
+    glm::vec4 bone_1_tail_joint_vec4_local = glm::vec4(0.0000, 1.0000,  0.0000,1.000);
+
     //Bone_1 head在当前k帧的变换
     glm::mat4 bone_1_head_joint_mat_basis = glm::mat4 (0.5000, -0.8660, 0.0000, 0.0000,
                                                        0.8660, 0.5000, 0.0000, 0.0000,
                                                        0.0000, 0.0000, 1.0000, 0.0000,
                                                        0.0000, 0.0000, 0.0000, 1.0000);
 
-    std::cout << glm::to_string(mat_model * bone_head_joint_mat_basis*bone_tail_joint_mat_local*bone_1_head_joint_mat_basis*bone_1_tail_joint_mat_local) << std::endl;
+    std::cout << glm::to_string(mat_model * bone_head_joint_mat_basis*bone_tail_joint_mat_local*bone_1_head_joint_mat_basis*bone_1_tail_joint_vec4_local) << std::endl;
 
 //    glm::vec4 bone_1_tail_joint_model_position_t_pos = glm::vec4(0, 2, 0, 1);
 //
@@ -87,6 +89,8 @@ int main(void){
 //    std::cout << glm::to_string(bone_1_tail_joint_model_position_t_pos * bone_1_head_joint_mat_basis * bone_head_joint_mat_basis * mat_model) << std::endl;
 
 //    std::cout<<glm::to_string(glm::translate(glm::mat4(1),glm::vec3(1,0,0)))<<std::endl;
+
+    //假设现在有蒙皮顶点关联到bone_1 tail
 
     return 0;
 }
