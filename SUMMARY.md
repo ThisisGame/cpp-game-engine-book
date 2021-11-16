@@ -84,6 +84,7 @@
     * [18.1 Blender制作骨骼动画](pages/18. 骨骼动画/18.1 Blender制作骨骼动画.md)
     * [18.2 Blender导出骨骼动画](pages/18. 骨骼动画/18.2 Blender导出骨骼动画.md)
     * [18.3 解析播放骨骼动画](pages/18. 骨骼动画/18.3 解析播放骨骼动画.md)
+* [89. Doxygen生成API文档](pages/89. Doxygen生成API文档/89. Doxygen生成API文档.md)
 * [90. GPU分析工具](pages/90. GPU分析工具/90. GPU分析工具.md)
     * [90.1 RenderDoc分析不显示bug](pages/90. GPU分析工具/90.1 RenderDoc分析不显示bug.md)
 * [98. SubstancePainter插件开发](pages/98. SubstancePainter插件开发/98. SubstancePainter插件开发.md)

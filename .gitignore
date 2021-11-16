@@ -5,3 +5,4 @@
 logs
 *.cache
 .DS_Store
+.doxygen
