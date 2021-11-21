@@ -18,6 +18,8 @@
 #include "renderer/mesh_renderer.h"
 #include "renderer/shader.h"
 #include "renderer/texture2d.h"
+#include "renderer/animation_clip.h"
+#include "renderer/animation.h"
 #include "utils/application.h"
 #include "utils/debug.h"
 #include "utils/screen.h"
@@ -469,6 +471,11 @@ void LuaBinding::BindLua() {
                                            "gl_texture_format", &Texture2D::gl_texture_format,
                                            "gl_texture_id", &Texture2D::gl_texture_id,
                                            "LoadFromFile", &Texture2D::LoadFromFile
+        );
+
+        sol_state_.new_usertype<AnimationClip>("AnimationClip",sol::call_constructor,sol::constructors<AnimationClip()>(),
+                                            "LoadFromFile", &AnimationClip::LoadFromFile,
+                                            "duration", &AnimationClip::duration
         );
     }
 

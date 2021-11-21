@@ -37,6 +37,7 @@ file(COPY ${audio_source_3d_cube_materials} DESTINATION "../data/material/")
 file(COPY "../../template/data/model/sphere.mesh" DESTINATION "../data/model/")
 file(GLOB unlit_shaders "../../template/data/shader/unlit.*")
 file(COPY ${unlit_shaders} DESTINATION "../data/shader/")
+file(COPY "../../template/data/animation/load_skeleton_animation/export.skeleton_anim" DESTINATION "../data/animation/")
 
 #头文件目录
 include_directories("depends")

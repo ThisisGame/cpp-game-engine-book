@@ -40,10 +40,12 @@ public:
         unsigned short* vertex_index_data_;//顶点索引数据
         ~Mesh(){
             if(vertex_data_!= nullptr){
-                delete vertex_data_;
+                delete[] vertex_data_;
+                vertex_data_ = nullptr;
             }
             if(vertex_index_data_!= nullptr){
-                delete vertex_index_data_;
+                delete[] vertex_index_data_;
+                vertex_index_data_ = nullptr;
             }
         }
     };

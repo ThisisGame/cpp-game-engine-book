@@ -61,7 +61,7 @@ Font* Font::LoadFromFile(std::string font_file_path,unsigned short font_size){
     unsigned char * pixels = (unsigned char *)malloc(font->font_texture_size_ * font->font_texture_size_);
     memset(pixels, 0,font->font_texture_size_*font->font_texture_size_);
     font->font_texture_=Texture2D::Create(font->font_texture_size_,font->font_texture_size_, GL_RED,GL_RED,GL_UNSIGNED_BYTE,pixels);
-    delete pixels;
+    free(pixels);
 
     return font;
 }
