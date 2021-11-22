@@ -475,7 +475,10 @@ void LuaBinding::BindLua() {
 
         sol_state_.new_usertype<AnimationClip>("AnimationClip",sol::call_constructor,sol::constructors<AnimationClip()>(),
                                             "LoadFromFile", &AnimationClip::LoadFromFile,
-                                            "duration", &AnimationClip::duration
+                                            "duration", &AnimationClip::duration,
+                                            "Play", &AnimationClip::Play,
+                                            "Stop", &AnimationClip::Stop,
+                                            "Update", &AnimationClip::Update
         );
     }
 

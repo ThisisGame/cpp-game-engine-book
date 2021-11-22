@@ -37,6 +37,7 @@ void AnimationClip::LoadFromFile(const char *file_path) {
         DEBUG_LOG_ERROR("AnimationClip::LoadFromFile: file head error,file_head:{},the right is:{}",file_head,SKELETON_ANIMATION_HEAD);
         return;
     }
+
     //读取骨骼数量
     unsigned short bone_count=0;
     input_file_stream.read(reinterpret_cast<char *>(&bone_count), sizeof(unsigned short));
@@ -77,10 +78,10 @@ void AnimationClip::LoadFromFile(const char *file_path) {
     input_file_stream.read(reinterpret_cast<char *>(&frame_count_), sizeof(unsigned short));
 
     //读取骨骼动画
-    for (int frame_index = 0; frame_index < frame_count_; ++frame_index) {
+    for (int frame_index = 0; frame_index < frame_count_; frame_index++) {
         //读取一帧的骨骼矩阵
         std::vector<glm::mat4> bone_matrices;
-        for (unsigned short bone_index = 0; bone_index < bone_count; ++bone_index) {
+        for (unsigned short bone_index = 0; bone_index < 2; bone_index++) {
             glm::mat4 bone_matrix;
             input_file_stream.read(reinterpret_cast<char *>(&bone_matrix), sizeof(float) * 16);
             bone_matrices.push_back(bone_matrix);
@@ -92,15 +93,22 @@ void AnimationClip::LoadFromFile(const char *file_path) {
 void AnimationClip::Play() {
     //记录当前时间
     start_time_=Time::TimeSinceStartup();
+    is_playing_=true;
 }
 
 void AnimationClip::Update() {
+    if(!is_playing_) {
+        return;
+    }
     //计算当前时间对应的帧序号
     float current_time=Time::TimeSinceStartup()-start_time_;
-    unsigned short current_frame_index=static_cast<unsigned short>(current_time/SKELETON_ANIMATION_FRAME_RATE);
+    unsigned short current_frame_index=static_cast<unsigned short>(current_time*SKELETON_ANIMATION_FRAME_RATE);
     if(current_frame_index >= frame_count_) {
         current_frame_index=frame_count_-1;
+        return;
     }
+    DEBUG_LOG_INFO("AnimationClip::Update: current_frame_index:{}",current_frame_index);
+
     //计算当前帧的骨骼矩阵
     std::vector<glm::mat4> current_frame_bone_matrices=bone_animation_vector_[current_frame_index];
     CalculateBoneMatrix(current_frame_bone_matrices,0,glm::mat4(1.0f));
@@ -122,5 +130,5 @@ void AnimationClip::CalculateBoneMatrix(std::vector<glm::mat4>& current_frame_bo
 
 
 void AnimationClip::Stop() {
-
+    is_playing_=false;
 }

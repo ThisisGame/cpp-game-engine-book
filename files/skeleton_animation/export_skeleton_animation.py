@@ -70,9 +70,8 @@ class EngineAnimation:
 
             #写入关键帧数据
             for frame in self.frames:
-                f.write(struct.pack('H',len(frame)))
-                for boneTPose in frame:
-                    boneTPose.write_to_file(f)
+                for boneMatrix in frame:
+                    boneMatrix.write_to_file(f)
 
             f.close()
 
@@ -109,17 +108,21 @@ for i in range(0, len(bpy.context.visible_pose_bones)):
     engineAnimation.boneTPoses[engineAnimation.get_bone_index(bone.name)]=EngineMatrix(matrix_local)
 
 print("---------- EXPORT FRAME ------------")
+print("bpy.context.scene.frame_start:"+str(bpy.context.scene.frame_start))
+print("bpy.context.scene.frame_end:"+str(bpy.context.scene.frame_end))
 engineAnimation.frames = [None] * (bpy.context.scene.frame_end - bpy.context.scene.frame_start + 1)
 
-for frame_index in range(0, bpy.context.scene.frame_end - bpy.context.scene.frame_start + 1):
-    bpy.context.scene.frame_set(frame_index)
-    print("---------- FRAME:"+str(frame_index))
-    engineAnimation.frames[frame_index] = [None] * len(bpy.context.visible_pose_bones)
+frame_index = 0
+for frame in range(bpy.context.scene.frame_start, bpy.context.scene.frame_end + 1):
+    bpy.context.scene.frame_set(frame)
+    print("---------- FRAME:"+str(frame))
 
+    engineAnimation.frames[frame_index] = [None] * len(bpy.context.visible_pose_bones)
     for i in range(0, len(bpy.context.visible_pose_bones)):
         bone = bpy.context.visible_pose_bones[i]
         matrix_basis = armature_obj.pose.bones[bone.name].matrix_basis
         engineAnimation.frames[frame_index][engineAnimation.get_bone_index(bone.name)]=EngineMatrix(matrix_basis)
+    frame_index = frame_index + 1
 
 print("---------- WRITE FILE ------------")
 blender_project_dir = os.path.dirname(bpy.data.filepath)
