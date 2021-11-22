@@ -108,6 +108,18 @@
 
     GameDevTools: https://github.com/ThisisGame/GameDevTools
 
+## Discuss
+
+如果有疑问，可以先在issue提问，也可以加入q群(879187705)讨论，得到答案后，更新issue，方便其他人查询。
+
+<table>
+  <tr>
+    <td align="center">
+    <img src="https://raw.githubusercontent.com/ThisisGame/makegameengineatnight/main/imgs/readme/qq_qrcode.png" alt="https://raw.githubusercontent.com/ThisisGame/makegameengineatnight/main/imgs/readme/qq_qrcode.png" class="transparent">
+    </td>
+  </tr>
+</table>
+
 ## Contributors
 
 项目目前由我个人维护更新, you could become one too !
