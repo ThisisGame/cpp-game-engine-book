@@ -2,6 +2,8 @@ import bpy
 import json
 import os
 import struct
+from mathutils import Matrix
+from math import radians
 
 # 矩阵
 class EngineMatrix:
@@ -12,7 +14,7 @@ class EngineMatrix:
         for i in range(4):
             self.matrix.append([])
             for j in range(4):
-                self.matrix[i].append(blenderMatrix[i][j])
+                self.matrix[i].append(blenderMatrix[j][i])
     
     def write_to_file(self , file):
         for i in range(4):
@@ -104,7 +106,7 @@ engineAnimation.boneTPoses = [None] * len(bpy.context.visible_pose_bones)
 
 for i in range(0, len(bpy.context.visible_pose_bones)):
     bone = bpy.context.visible_pose_bones[i]
-    matrix_local = armature_obj.data.bones[bone.name].matrix_local
+    matrix_local = armature_obj.data.bones[bone.name].matrix_local @ Matrix.Rotation(radians(-90), 4, "X")
     engineAnimation.boneTPoses[engineAnimation.get_bone_index(bone.name)]=EngineMatrix(matrix_local)
 
 print("---------- EXPORT FRAME ------------")

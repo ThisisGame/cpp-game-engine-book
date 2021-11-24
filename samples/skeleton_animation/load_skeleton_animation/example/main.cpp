@@ -8,24 +8,32 @@
 #include <glm/ext.hpp>
 
 int main(void){
-//    //设置lua搜索目录
-//    LuaBinding::Init(";..\\example\\?.lua;");
-//    //绑定引擎所有类到Lua
-//    LuaBinding::BindLua();
-//    //执行lua
-//    LuaBinding::RunLuaFile("../example/main.lua");
-//    //调用lua main()
-//    LuaBinding::CallLuaFunction("main");
+    //设置lua搜索目录
+    LuaBinding::Init(";..\\example\\?.lua;");
+    //绑定引擎所有类到Lua
+    LuaBinding::BindLua();
+    //执行lua
+    LuaBinding::RunLuaFile("../example/main.lua");
+    //调用lua main()
+    LuaBinding::CallLuaFunction("main");
 
     //blender的位移在右边一列
-    glm::mat4 mat=glm::mat4(1.000000, 0.000000, 0.000000, 0.000000,
-                            0.000000, 0.000000, -1.000000, 0.000000,
-                            0.000000, 1.000000, 0.000000, 2.000000,
-                            0.000000, 0.000000, 0.000000, 1.000000);
-    glm::mat4 trans=glm::translate(glm::vec3(0.0f,2.0f,0.0f)); //glm的位移在底下一行。
-    std::cout << glm::to_string(trans) << std::endl;
-    glm::mat4 rotate=glm::rotate(glm::mat4(1.0f),glm::radians(-90.0f),glm::vec3(1.0f,0.0f,0.0f));
-    std::cout << glm::to_string(rotate) << std::endl;
+//    glm::mat4 mat=glm::mat4(1.000000, 0.000000, 0.000000, 0.000000,
+//                            0.000000, 0.000000, -1.000000, 0.000000,
+//                            0.000000, 1.000000, 0.000000, 2.000000,
+//                            0.000000, 0.000000, 0.000000, 1.000000);
+//
+//    std::cout << glm::to_string(glm::transpose(mat)) << std::endl;
+
+//    glm::mat4 trans=glm::translate(glm::vec3(0.0f,2.0f,0.0f)); //glm的位移在底下一行。
+//    std::cout << glm::to_string(trans) << std::endl;
+
+//    glm::mat4 rotate=glm::rotate(glm::mat4(1.0f),glm::radians(90.0f),glm::vec3(1.0f,0.0f,0.0f));
+//    std::cout << glm::to_string(rotate) << std::endl;
+//    glm::mat4 rotate_back=glm::rotate(glm::mat4(1.0f),glm::radians(-90.0f),glm::vec3(1.0f,0.0f,0.0f));
+//    std::cout << glm::to_string(rotate_back) << std::endl;
+//    std::cout << glm::to_string(rotate*rotate_back) << std::endl;
+
 
 //    //整个骨架的变换 x=1
 //    glm::mat4 mat_model = glm::mat4 (1.0000, 0.0000,  0.0000, 0.0000,
