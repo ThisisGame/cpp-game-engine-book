@@ -5,6 +5,7 @@
 #include "animation_clip.h"
 #include <fstream>
 #include <glm/ext.hpp>
+#include <glm/gtx/string_cast_beauty.hpp>
 #include "utils/application.h"
 #include "utils/debug.h"
 #include "utils/time.h"
@@ -107,7 +108,12 @@ void AnimationClip::Update() {
         current_frame_index=frame_count_-1;
         return;
     }
-    DEBUG_LOG_INFO("AnimationClip::Update: current_frame_index:{}",current_frame_index);
+    if(current_frame_==current_frame_index) {
+        return;
+    }
+    current_frame_=current_frame_index;
+
+    DEBUG_LOG_INFO("current_frame_index:{}",current_frame_index);
 
     //计算当前帧的骨骼矩阵
     std::vector<glm::mat4> current_frame_bone_matrices=bone_animation_vector_[current_frame_index];
@@ -116,11 +122,12 @@ void AnimationClip::Update() {
 
 void AnimationClip::CalculateBoneMatrix(std::vector<glm::mat4>& current_frame_bone_matrices,unsigned short bone_index, const glm::mat4 &parent_matrix) {
     glm::mat4 bone_matrix=current_frame_bone_matrices[bone_index];
-    DEBUG_LOG_INFO("Bone:{} bone_matrix:{}",bone_names_[bone_index],glm::to_string(bone_matrix));
     glm::mat4 bone_t_pos_matrix=bone_t_pose_vector_[bone_index];
-    DEBUG_LOG_INFO("Bone:{} bone_t_pos_matrix:{}",bone_names_[bone_index],glm::to_string(bone_t_pos_matrix));
     glm::mat4 bone_matrix_with_parent=parent_matrix*bone_matrix*bone_t_pos_matrix;
-    DEBUG_LOG_INFO("Bone:{} bone_matrix_with_parent:{}",bone_names_[bone_index],glm::to_string(bone_matrix_with_parent));
+
+    DEBUG_LOG_INFO("{} bone_matrix:{}",bone_names_[bone_index],glm::to_string_beauty(bone_matrix));
+    DEBUG_LOG_INFO("{} bone_t_pos_matrix:{}",bone_names_[bone_index],glm::to_string_beauty(bone_t_pos_matrix));
+    DEBUG_LOG_INFO("{} bone_matrix_with_parent:{}",bone_names_[bone_index],glm::to_string_beauty(bone_matrix_with_parent));
 
     current_frame_bone_matrices[bone_index]=bone_matrix_with_parent;
     std::vector<unsigned short> child_indexes=bone_children_vector_[bone_index];

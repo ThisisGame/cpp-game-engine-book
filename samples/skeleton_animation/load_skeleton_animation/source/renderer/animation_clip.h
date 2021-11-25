@@ -49,7 +49,7 @@ private:
     std::vector<glm::mat4> bone_t_pose_vector_;
     /// 持续时间
     float duration_=0.0f;
-    /// 帧数
+    /// 总帧数
     unsigned short frame_count_=0;
     /// 骨骼动画
     std::vector<std::vector<glm::mat4>> bone_animation_vector_;
@@ -57,6 +57,8 @@ private:
     float start_time_=0.0f;
     /// 骨骼动画是否在播放
     bool is_playing_=false;
+    /// 当前帧
+    unsigned short current_frame_=-1;
 };
 
 
