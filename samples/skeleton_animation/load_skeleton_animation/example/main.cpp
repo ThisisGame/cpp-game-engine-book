@@ -31,12 +31,15 @@ int main(void){
 
 //    glm::mat4 mat=glm::rotate(glm::mat4(1.0f),glm::radians(30.0f),glm::vec3(0.0f,0.0f,1.0f));
 
-    glm::vec4 pos=glm::vec4(0.f,1.f,0.f,1.f);
 
-    glm::mat4 mat=glm::translate(glm::vec3(0.f,2.f,0.f));
+
+    glm::mat4 mat=glm::translate(glm::vec3(4.f,5.f,6.f));
     std::cout<<glm::to_string_beauty(mat)<<std::endl;
 
-    std::cout<<glm::to_string(  pos * mat  )<<std::endl;
+    glm::vec4 pos=glm::vec4(7.f,8.f,9.f,1.f);
+    std::cout<<glm::to_string(pos)<<std::endl;
+
+    std::cout<<glm::to_string(  mat * pos  )<<std::endl;
 
 
 //    glm::vec4 bone_tail_joint_vec4_local = glm::vec4(0.0000, 2.0000,  0.0000,1.000);
