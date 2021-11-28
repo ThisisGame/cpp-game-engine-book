@@ -15,6 +15,8 @@ class EngineMatrix:
             self.matrix.append([])
             for j in range(4):
                 self.matrix[i].append(blenderMatrix[j][i])
+        #调换y和z
+        self.matrix[3][1] , self.matrix[3][2] = self.matrix[3][2] , self.matrix[3][1]
     
     def write_to_file(self , file):
         for i in range(4):
@@ -123,6 +125,7 @@ for frame in range(bpy.context.scene.frame_start, bpy.context.scene.frame_end + 
     for i in range(0, len(bpy.context.visible_pose_bones)):
         bone = bpy.context.visible_pose_bones[i]
         matrix_basis = armature_obj.pose.bones[bone.name].matrix_basis
+        # print(matrix_basis)
         engineAnimation.frames[frame_index][engineAnimation.get_bone_index(bone.name)]=EngineMatrix(matrix_basis)
     frame_index = frame_index + 1
 

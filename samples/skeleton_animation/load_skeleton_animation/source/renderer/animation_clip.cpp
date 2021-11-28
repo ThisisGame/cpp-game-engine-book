@@ -123,11 +123,9 @@ void AnimationClip::Update() {
 void AnimationClip::CalculateBoneMatrix(std::vector<glm::mat4>& current_frame_bone_matrices,unsigned short bone_index, const glm::mat4 &parent_matrix) {
     glm::mat4 bone_matrix=current_frame_bone_matrices[bone_index];
     glm::mat4 bone_t_pos_matrix=bone_t_pose_vector_[bone_index];
-    glm::mat4 bone_matrix_with_parent=parent_matrix*bone_matrix*bone_t_pos_matrix;
+    glm::mat4 bone_matrix_with_parent=parent_matrix*bone_t_pos_matrix*bone_matrix;
 
-    DEBUG_LOG_INFO("{} bone_matrix:{}",bone_names_[bone_index],glm::to_string_beauty(bone_matrix));
-    DEBUG_LOG_INFO("{} bone_t_pos_matrix:{}",bone_names_[bone_index],glm::to_string_beauty(bone_t_pos_matrix));
-    DEBUG_LOG_INFO("{} bone_matrix_with_parent:{}",bone_names_[bone_index],glm::to_string_beauty(bone_matrix_with_parent));
+    DEBUG_LOG_INFO("{} bone_matrix:{}",bone_names_[bone_index],glm::to_string_beauty(bone_matrix_with_parent));
 
     current_frame_bone_matrices[bone_index]=bone_matrix_with_parent;
     std::vector<unsigned short> child_indexes=bone_children_vector_[bone_index];
