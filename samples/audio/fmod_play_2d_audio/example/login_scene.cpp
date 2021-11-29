@@ -168,5 +168,7 @@ void LoginScene::PlayPauseSound(FMOD_SOUND *sound, FMOD_CHANNEL** channel) {
             //播放音效
             result = Audio::PlaySound(sound, nullptr, false, channel);
             break;
+        default:
+            break;
     }
 }
