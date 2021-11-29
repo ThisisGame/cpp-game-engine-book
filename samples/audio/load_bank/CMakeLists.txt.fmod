@@ -5,9 +5,16 @@ include_directories("depends/fmod/api/core/inc")
 link_directories("depends/fmod/api/core/lib/x64")
 link_directories("depends/fmod/api/studio/lib/x64")
 
-#链接lib文件
-link_libraries(fmod_vc fmodstudio_vc)
 
-#拷贝dll到exe目录
-file(COPY "depends/fmod/api/core/lib/x64/fmod.dll" DESTINATION "./")
-file(COPY "depends/fmod/api/studio/lib/x64/fmodstudio.dll" DESTINATION "./")
+
+if(WIN32)
+    #链接lib文件
+    link_libraries(fmod_vc fmodstudio_vc)
+
+    #拷贝dll到exe目录
+    file(COPY "depends/fmod/api/core/lib/x64/fmod.dll" DESTINATION "./")
+    file(COPY "depends/fmod/api/studio/lib/x64/fmodstudio.dll" DESTINATION "./")
+else()
+    #链接lib文件
+    link_libraries(fmod fmodstudio)
+endif()
