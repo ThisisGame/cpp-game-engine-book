@@ -104,10 +104,10 @@ sol::table GameObject::AddComponentFromLua(std::string component_type_name) {
 
 sol::table GameObject::GetComponentFromLua(std::string component_type_name) {
     if(lua_component_type_instance_map_.find(component_type_name)==lua_component_type_instance_map_.end()){
-        return sol::nil;
+        return sol::lua_nil;
     }
     if(lua_component_type_instance_map_[component_type_name].size()==0){
-        return sol::nil;
+        return sol::lua_nil;
     }
     return lua_component_type_instance_map_[component_type_name][0];
 }
