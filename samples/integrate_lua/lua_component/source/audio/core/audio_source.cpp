@@ -56,6 +56,8 @@ void AudioSource::Play() {
             //播放音效
             result = AudioCore::PlaySound(audio_clip_->fmod_sound(), nullptr, false, &fmod_channel_);
             break;
+        default:
+            break;
     }
 }
 

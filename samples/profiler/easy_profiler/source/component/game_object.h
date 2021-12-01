@@ -58,7 +58,7 @@ private:
 
     unsigned char layer_;//将物体分不同的层，用于相机分层、物理碰撞分层等。
 
-    bool active_;//是否激活
+    bool active_=true;//是否激活
 public:
     /// 遍历所有Camera
     /// \param func
