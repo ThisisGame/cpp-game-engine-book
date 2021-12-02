@@ -67,10 +67,15 @@ public:
     void set_vertex_relate_bone_index(unsigned char* vertex_relate_bone_index){
         vertex_relate_bone_index_ = vertex_relate_bone_index;
     }
+
+    /// 获取蒙皮Mesh对象指针
+    Mesh* skinned_mesh(){return skinned_mesh_;};
+    void set_skinned_mesh(Mesh* skinned_mesh){skinned_mesh_ = skinned_mesh;};
 private:
     Mesh* mesh_;//Mesh对象
 
     unsigned char* vertex_relate_bone_index_;//顶点关联骨骼索引，长度为顶点个数
+    Mesh* skinned_mesh_;//蒙皮Mesh对象
 };
 
 

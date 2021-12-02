@@ -66,11 +66,13 @@ void MeshRenderer::Render() {
     glm::mat4 mvp=projection*view * model;
 
     //主动获取 MeshFilter 组件
-    auto component_meshfilter=game_object()->GetComponent("MeshFilter");
-    auto mesh_filter=dynamic_cast<MeshFilter*>(component_meshfilter);
+    auto component_mesh_filter=game_object()->GetComponent("MeshFilter");
+    auto mesh_filter=dynamic_cast<MeshFilter*>(component_mesh_filter);
     if(!mesh_filter){
         return;
     }
+    //当骨骼蒙皮动画生效时，渲染骨骼蒙皮Mesh
+    MeshFilter::Mesh* mesh=mesh_filter->skinned_mesh()== nullptr?mesh_filter->mesh():mesh_filter->skinned_mesh();
 
     //获取`Shader`的`gl_program_id`，指定为目标Shader程序。
     GLuint gl_program_id=material_->shader()->gl_program_id();
@@ -85,14 +87,14 @@ void MeshRenderer::Render() {
         //将缓冲区对象指定为顶点缓冲区对象
         glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer_object_);
         //上传顶点数据到缓冲区对象
-        glBufferData(GL_ARRAY_BUFFER, mesh_filter->mesh()->vertex_num_ * sizeof(MeshFilter::Vertex), mesh_filter->mesh()->vertex_data_, GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, mesh->vertex_num_ * sizeof(MeshFilter::Vertex), mesh->vertex_data_, GL_STATIC_DRAW);
 
         //在GPU上创建缓冲区对象
         glGenBuffers(1,&element_buffer_object_);
         //将缓冲区对象指定为顶点索引缓冲区对象
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_buffer_object_);
         //上传顶点索引数据到缓冲区对象
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, mesh_filter->mesh()->vertex_index_num_ * sizeof(unsigned short), mesh_filter->mesh()->vertex_index_data_, GL_STATIC_DRAW);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, mesh->vertex_index_num_ * sizeof(unsigned short), mesh->vertex_index_data_, GL_STATIC_DRAW);
 
         glGenVertexArrays(1,&vertex_array_object_);
 
@@ -157,7 +159,7 @@ void MeshRenderer::Render() {
 
         glBindVertexArray(vertex_array_object_);
         {
-            glDrawElements(GL_TRIANGLES,mesh_filter->mesh()->vertex_index_num_,GL_UNSIGNED_SHORT,0);//使用顶点索引进行绘制，最后的0表示数据偏移量。
+            glDrawElements(GL_TRIANGLES,mesh->vertex_index_num_,GL_UNSIGNED_SHORT,0);//使用顶点索引进行绘制，最后的0表示数据偏移量。
         }
         glBindVertexArray(0);__CHECK_GL_ERROR__
 

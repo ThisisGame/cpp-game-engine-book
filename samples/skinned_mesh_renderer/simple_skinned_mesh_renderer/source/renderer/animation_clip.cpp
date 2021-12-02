@@ -87,37 +87,16 @@ void AnimationClip::LoadFromFile(const char *file_path) {
             input_file_stream.read(reinterpret_cast<char *>(&bone_matrix), sizeof(float) * 16);
             bone_matrices.push_back(bone_matrix);
         }
-        bone_animation_vector_.push_back(bone_matrices);
+        bone_matrix_frames_vector_.push_back(bone_matrices);
     }
 }
 
-void AnimationClip::Play() {
-    //记录当前时间
-    start_time_=Time::TimeSinceStartup();
-    is_playing_=true;
-}
-
-void AnimationClip::Update() {
-    if(!is_playing_) {
-        return;
+void AnimationClip::Bake() {
+    for (int i = 0; i < frame_count_; ++i) {
+        //计算当前帧的骨骼矩阵
+        std::vector<glm::mat4> current_frame_bone_matrices=bone_matrix_frames_vector_[i];
+        CalculateBoneMatrix(current_frame_bone_matrices,0,glm::mat4(1.0f));
     }
-    //计算当前时间对应的帧序号
-    float current_time=Time::TimeSinceStartup()-start_time_;
-    unsigned short current_frame_index=static_cast<unsigned short>(current_time*SKELETON_ANIMATION_FRAME_RATE);
-    if(current_frame_index >= frame_count_) {
-        current_frame_index=frame_count_-1;
-        return;
-    }
-    if(current_frame_==current_frame_index) {
-        return;
-    }
-    current_frame_=current_frame_index;
-
-    DEBUG_LOG_INFO("current_frame_index:{}",current_frame_index);
-
-    //计算当前帧的骨骼矩阵
-    std::vector<glm::mat4> current_frame_bone_matrices=bone_animation_vector_[current_frame_index];
-    CalculateBoneMatrix(current_frame_bone_matrices,0,glm::mat4(1.0f));
 }
 
 void AnimationClip::CalculateBoneMatrix(std::vector<glm::mat4>& current_frame_bone_matrices,unsigned short bone_index, const glm::mat4 &parent_matrix) {
@@ -133,6 +112,34 @@ void AnimationClip::CalculateBoneMatrix(std::vector<glm::mat4>& current_frame_bo
         CalculateBoneMatrix(current_frame_bone_matrices,child_index,bone_matrix_with_parent);
     }
 }
+
+void AnimationClip::Play() {
+    //记录当前时间
+    start_time_=Time::TimeSinceStartup();
+    is_playing_=true;
+}
+
+void AnimationClip::Update() {
+    if (is_playing_== false){
+        DEBUG_LOG_ERROR("AnimationClip is not playing");
+        return;
+    }
+    //计算当前时间对应的帧序号
+    float current_time=Time::TimeSinceStartup()-start_time_;
+    unsigned short current_frame_index=static_cast<unsigned short>(current_time*SKELETON_ANIMATION_FRAME_RATE);
+    if(current_frame_index >= frame_count_) {
+        current_frame_index=0;
+    }
+    current_frame_=current_frame_index;
+}
+
+std::vector<glm::mat4> AnimationClip::GetCurrentFrameBoneMatrix(){
+    if (is_playing_== false){
+        DEBUG_LOG_ERROR("AnimationClip is not playing");
+    }
+    return bone_matrix_frames_vector_[current_frame_];
+}
+
 
 
 
