@@ -58,9 +58,19 @@ public:
     /// \param vertex_index_data 索引数据
     void CreateMesh(std::vector<Vertex>& vertex_data,std::vector<unsigned short>& vertex_index_data);
 
-    Mesh* mesh(){return mesh_;};//Mesh对象
+    /// 获取Mesh对象指针
+    Mesh* mesh(){return mesh_;};
+
+    /// 获取顶点关联骨骼索引数组，长度为顶点个数
+    unsigned char* vertex_relate_bone_index(){return vertex_relate_bone_index_;};
+
+    void set_vertex_relate_bone_index(unsigned char* vertex_relate_bone_index){
+        vertex_relate_bone_index_ = vertex_relate_bone_index;
+    }
 private:
     Mesh* mesh_;//Mesh对象
+
+    unsigned char* vertex_relate_bone_index_;//顶点关联骨骼索引，长度为顶点个数
 };
 
 
