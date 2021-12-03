@@ -133,7 +133,7 @@ void AnimationClip::Update() {
     current_frame_=current_frame_index;
 }
 
-std::vector<glm::mat4> AnimationClip::GetCurrentFrameBoneMatrix(){
+std::vector<glm::mat4>& AnimationClip::GetCurrentFrameBoneMatrix(){
     if (is_playing_== false){
         DEBUG_LOG_ERROR("AnimationClip is not playing");
     }

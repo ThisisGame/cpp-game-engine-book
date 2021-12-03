@@ -34,6 +34,7 @@ public:
 
     //Mesh数据
     struct Mesh{
+        unsigned short total_bytes_;//占用内存大小
         unsigned short vertex_num_;//顶点个数
         unsigned short vertex_index_num_;//索引个数
         Vertex* vertex_data_;//顶点数据
@@ -62,20 +63,20 @@ public:
     Mesh* mesh(){return mesh_;};
 
     /// 获取顶点关联骨骼索引数组，长度为顶点个数
-    unsigned char* vertex_relate_bone_index(){return vertex_relate_bone_index_;};
+    unsigned char* vertex_relate_bone_index(){return vertex_relate_bone_index_array_;};
 
-    void set_vertex_relate_bone_index(unsigned char* vertex_relate_bone_index){
-        vertex_relate_bone_index_ = vertex_relate_bone_index;
+    void set_vertex_relate_bone_index_array(unsigned char* vertex_relate_bone_index_array){
+        vertex_relate_bone_index_array_ = vertex_relate_bone_index_array;
     }
 
     /// 获取蒙皮Mesh对象指针
     Mesh* skinned_mesh(){return skinned_mesh_;};
     void set_skinned_mesh(Mesh* skinned_mesh){skinned_mesh_ = skinned_mesh;};
 private:
-    Mesh* mesh_;//Mesh对象
+    Mesh* mesh_= nullptr;//Mesh对象
 
-    unsigned char* vertex_relate_bone_index_;//顶点关联骨骼索引，长度为顶点个数
-    Mesh* skinned_mesh_;//蒙皮Mesh对象
+    unsigned char* vertex_relate_bone_index_array_= nullptr;//顶点关联骨骼索引，长度为顶点个数
+    Mesh* skinned_mesh_= nullptr;//蒙皮Mesh对象
 };
 
 

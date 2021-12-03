@@ -25,7 +25,7 @@ public:
     }
 
     /// 获取当前帧最新的骨骼矩阵
-    std::vector<glm::mat4> GetCurrentFrameBoneMatrix();
+    std::vector<glm::mat4>& GetCurrentFrameBoneMatrix();
 
 public:
     /// 播放骨骼动画

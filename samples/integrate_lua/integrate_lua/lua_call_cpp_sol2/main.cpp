@@ -13,6 +13,10 @@ public:
     }
 
     int hp_=0;
+
+    void CreateMesh(float data[],int size){
+        float x=data[0];
+    }
 };
 
 int main(int argc, char * argv[])
@@ -24,8 +28,15 @@ int main(int argc, char * argv[])
     //注册成员函数和变量到lua
     usertype_player["AddHp"]=&Player::AddHp;
     usertype_player["hp_"]=&Player::hp_;
+    usertype_player["CreateMesh"]=&Player::CreateMesh;
 
-    sol_state.script_file("../a.lua");
+
+
+    auto result= sol_state.script_file("../a.lua");
+    if(result.valid()==false){
+        sol::error err = result;
+        std::cerr<<"\n---- LOAD LUA ERROR ----\n"<<err.what()<<std::endl;
+    }
 
     return 0;
 }
