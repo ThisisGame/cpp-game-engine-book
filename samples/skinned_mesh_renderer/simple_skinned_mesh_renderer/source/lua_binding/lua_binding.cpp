@@ -59,6 +59,7 @@ void LuaBinding::BindLua() {
         auto sol2_ns_table = sol_state_["sol2"].get_or_create<sol::table>();
         sol2_ns_table["convert_sequence_float"]=&sol2::convert_sequence<float>;
         sol2_ns_table["convert_sequence_ushort"]=&sol2::convert_sequence<unsigned short>;
+        sol2_ns_table["convert_sequence_uchar"]=&sol2::convert_sequence<unsigned char>;
     }
     //绑定glm::vec3
     {
@@ -468,9 +469,9 @@ void LuaBinding::BindLua() {
         sol_state_.new_usertype<MeshFilter>("MeshFilter",sol::call_constructor,sol::constructors<MeshFilter()>(),
                                             sol::base_classes,sol::bases<Component>(),
                                             "LoadMesh", &MeshFilter::LoadMesh,
-                                            "CreateMesh", [] (MeshFilter* meshFilter,std::vector<float>& vertex_data,std::vector<unsigned short>& vertex_index_data) {
-                                                                return meshFilter->CreateMesh(vertex_data,vertex_index_data);
-                                                            }
+                                            "CreateMesh", [] (MeshFilter* meshFilter,std::vector<float>& vertex_data,std::vector<unsigned short>& vertex_index_data)
+                                                                {return meshFilter->CreateMesh(vertex_data,vertex_index_data);},
+                                            "set_vertex_relate_bone_index_vec",&MeshFilter::set_vertex_relate_bone_index_vec
         );
 
         sol_state_.new_usertype<MeshRenderer>("MeshRenderer",sol::call_constructor,sol::constructors<MeshRenderer()>(),

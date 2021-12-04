@@ -68,10 +68,10 @@ public:
     Mesh* mesh(){return mesh_;};
 
     /// 获取顶点关联骨骼索引数组，长度为顶点个数
-    unsigned char* vertex_relate_bone_index(){return vertex_relate_bone_index_array_;};
+    std::vector<unsigned char>& vertex_relate_bone_index_vec(){return vertex_relate_bone_index_vec_;};
 
-    void set_vertex_relate_bone_index_array(unsigned char* vertex_relate_bone_index_array){
-        vertex_relate_bone_index_array_ = vertex_relate_bone_index_array;
+    void set_vertex_relate_bone_index_vec(std::vector<unsigned char>& vertex_relate_bone_index_vec){
+        vertex_relate_bone_index_vec_ = vertex_relate_bone_index_vec;
     }
 
     /// 获取蒙皮Mesh对象指针
@@ -79,9 +79,9 @@ public:
     void set_skinned_mesh(Mesh* skinned_mesh){skinned_mesh_ = skinned_mesh;};
 private:
     Mesh* mesh_= nullptr;//Mesh对象
-
-    unsigned char* vertex_relate_bone_index_array_= nullptr;//顶点关联骨骼索引，长度为顶点个数
     Mesh* skinned_mesh_= nullptr;//蒙皮Mesh对象
+    std::vector<unsigned char> vertex_relate_bone_index_vec_;//顶点关联骨骼索引，长度为顶点个数
+
 };
 
 

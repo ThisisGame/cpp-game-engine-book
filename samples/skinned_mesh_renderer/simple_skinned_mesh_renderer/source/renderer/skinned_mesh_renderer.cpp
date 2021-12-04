@@ -28,9 +28,9 @@ void SkinnedMeshRenderer::Update() {
         return;
     }
     //获取顶点关联骨骼索引数组，长度为顶点个数
-    auto vertex_relate_bone_index=mesh_filter->vertex_relate_bone_index();
-    if(!vertex_relate_bone_index){
-        DEBUG_LOG_ERROR("SkinnedMeshRenderer::Update() failed, can't get vertex_relate_bone_index");
+    auto vertex_relate_bone_index_vec=mesh_filter->vertex_relate_bone_index_vec();
+    if(vertex_relate_bone_index_vec.empty()){
+        DEBUG_LOG_ERROR("SkinnedMeshRenderer::Update() failed, can't get vertex relate bone index");
         return;
     }
 
@@ -58,13 +58,13 @@ void SkinnedMeshRenderer::Update() {
     //计算当前帧顶点位置
     for(int i=0;i<skinned_mesh->vertex_num_;i++){
         auto& vertex=mesh->vertex_data_[i];
-        auto& bone_index=vertex_relate_bone_index[i];
+        auto& bone_index=vertex_relate_bone_index_vec[i];
         auto& bone_matrix=bone_matrices[bone_index];
 
-        glm::vec4 pos_in_model=glm::vec4{vertex.pos_,1.0f};
+        glm::vec4 pos_in_model=glm::vec4{vertex.position_,1.0f};
         glm::vec4 pos_in_bone=bone_matrix*pos_in_model;
 
-        skinned_mesh->vertex_data_[i].pos_=glm::vec3{pos_in_bone.x,pos_in_bone.y,pos_in_bone.z};
+        skinned_mesh->vertex_data_[i].position_=glm::vec3{pos_in_bone.x,pos_in_bone.y,pos_in_bone.z};
     }
 }
 

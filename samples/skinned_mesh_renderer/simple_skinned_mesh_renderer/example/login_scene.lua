@@ -1,8 +1,11 @@
 LoginScene={
     go_camera_, --相机物体
+    camera_ = nil, --相机
     go_skeleton_, --骨骼蒙皮动画物体
     animation_,--骨骼动画
-    animation_clip_ --- 骨骼动画片段
+    animation_clip_, --- 骨骼动画片段
+    material_, --材质
+    last_frame_mouse_position_,--上一帧的鼠标位置
 }
 
 setmetatable(LoginScene,{["__call"]=function(table,param)
@@ -17,24 +20,42 @@ function LoginScene:Awake()
     --挂上 Transform 组件
     self.go_camera_:AddComponent("Transform"):set_position(glm.vec3(0, 0, 10))
     --挂上 Camera 组件
-    self.camera_1_=self.go_camera_:AddComponent("Camera")
-    self.camera_1_:set_depth(0)
+    self.camera_=self.go_camera_:AddComponent("Camera")
+    self.camera_:set_depth(0)
 
     --创建骨骼蒙皮动画
     self.go_skeleton_=GameObject("skeleton")
     self.go_skeleton_:AddComponent("Transform"):set_position(glm.vec3(0, 0, 0))
-    local mesh_filter=self.go_skeleton_:AddComponent("MeshFilter")
-    self.go_skeleton_:AddComponent("Animation")
+    --self.go_skeleton_:AddComponent("Animation"):LoadAnimationClipFromFile("animation/export.skeleton_anim","idle")
 
     --手动创建Mesh
-    local t={1.0,2.0,3.0,4.0}
-    local vertex_data=sol2.convert_sequence_float(t)
-    local vertex_index_data=sol2.convert_sequence_ushort({1,2,3,3,4,5})
+    local vertex_data=sol2.convert_sequence_float({
+        -0.2,0,0,  1.0,1.0,1.0,1.0, 0,0,
+         0.2,0,0,  1.0,1.0,1.0,1.0, 1,0,
+         0.2,2,0,  1.0,1.0,1.0,1.0, 1,1,
+        -0.2,2,0,  1.0,1.0,1.0,1.0, 0,1
+    })
+    local vertex_index_data=sol2.convert_sequence_ushort({
+        0,1,2,
+        0,2,3
+    })
+    local vertex_relate_bone_index_vec=sol2.convert_sequence_uchar({
+        0,
+        0,
+        0,
+        0
+    })
+    local mesh_filter=self.go_skeleton_:AddComponent("MeshFilter")
     mesh_filter:CreateMesh(vertex_data,vertex_index_data)
+    mesh_filter:set_vertex_relate_bone_index_vec(vertex_relate_bone_index_vec)
 
-    self.animation_clip_=AnimationClip()
-    self.animation_clip_:LoadFromFile("animation/export.skeleton_anim")
-    self.animation_clip_:Play()
+    --手动创建Material
+    self.material_ = Material()--设置材质
+    self.material_:Parse("material/cube.mat")
+
+    --挂上 MeshRenderer 组件
+    local mesh_renderer= self.go_skeleton_:AddComponent("MeshRenderer")
+    mesh_renderer:SetMaterial(self.material_)
 end
 
 function LoginScene:game_object()
@@ -49,5 +70,11 @@ end
 
 function LoginScene:Update()
     --print("LoginScene:Update")
-    self.animation_clip_:Update()
+    self.camera_:set_depth(0)
+    self.camera_:SetView(glm.vec3(0.0,0.0,0.0), glm.vec3(0.0,1.0,0.0))
+    self.camera_:SetPerspective(60, Screen.aspect_ratio(), 1, 1000)
+
+    self.last_frame_mouse_position_=Input.mousePosition()
+    --鼠标滚轮控制相机远近
+    self.go_camera_:GetComponent("Transform"):set_position(self.go_camera_:GetComponent("Transform"):position() *(10 - Input.mouse_scroll())/10)
 end

@@ -2,8 +2,6 @@ cmake_minimum_required(VERSION 3.17)
 project(untitled)
 
 set(CMAKE_CXX_STANDARD 17)
-add_definitions(-D USE_FMOD_STUDIO)#是否使用fmod studio，加载bank文件的形式。
-
 
 if (MSVC)
     add_compile_options(/bigobj)
@@ -27,16 +25,12 @@ file(COPY "../../template/depends/stb/" DESTINATION "../depends/stb/")
 file(COPY "../../template/depends/spdlog/include/spdlog/" DESTINATION "../depends/spdlog/")
 file(COPY "../../template/depends/rttr-0.9.6/src/rttr/" DESTINATION "../depends/rttr/")
 file(COPY "../../template/depends/easy_profiler-2.1.0/easy_profiler_core/" DESTINATION "../depends/easy_profiler_core/")
-file(COPY "../../template/depends/lua/" DESTINATION "../depends/lua/")
-file(COPY "../../template/depends/sol2-3.2.2/include/sol/" DESTINATION "../depends/sol/")
+
 
 #拷贝data文件
 file(COPY "../../template/data/audio/load_bank/" DESTINATION "../data/audio/")
-file(COPY "../../template/data/images/listen.cpt" DESTINATION "../data/images/")
-file(COPY "../../template/data/images/music.cpt" DESTINATION "../data/images/")
-file(GLOB audio_source_3d_cube_materials "../../template/data/material/sphere_audio_source_3d_*")
-file(COPY ${audio_source_3d_cube_materials} DESTINATION "../data/material/")
-file(COPY "../../template/data/model/sphere.mesh" DESTINATION "../data/model/")
+file(COPY "../../template/data/images/urban.cpt" DESTINATION "../data/images/")
+file(COPY "../../template/data/material/cube.mat" DESTINATION "../data/material/")
 file(GLOB unlit_shaders "../../template/data/shader/unlit.*")
 file(COPY ${unlit_shaders} DESTINATION "../data/shader/")
 file(COPY "../../template/data/animation/load_skeleton_animation/export.skeleton_anim" DESTINATION "../data/animation/")
