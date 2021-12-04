@@ -17,17 +17,20 @@ function LoginScene:Awake()
     --挂上 Transform 组件
     self.go_camera_:AddComponent("Transform"):set_position(glm.vec3(0, 0, 10))
     --挂上 Camera 组件
-    self.camera_1_=self.go_camera_1_:AddComponent("Camera")
+    self.camera_1_=self.go_camera_:AddComponent("Camera")
     self.camera_1_:set_depth(0)
 
     --创建骨骼蒙皮动画
     self.go_skeleton_=GameObject("skeleton")
     self.go_skeleton_:AddComponent("Transform"):set_position(glm.vec3(0, 0, 0))
-    self.go_skeleton_:AddComponent("MeshFilter")
+    local mesh_filter=self.go_skeleton_:AddComponent("MeshFilter")
     self.go_skeleton_:AddComponent("Animation")
 
     --手动创建Mesh
-
+    local t={1.0,2.0,3.0,4.0}
+    local vertex_data=sol2.convert_sequence_float(t)
+    local vertex_index_data=sol2.convert_sequence_ushort({1,2,3,3,4,5})
+    mesh_filter:CreateMesh(vertex_data,vertex_index_data)
 
     self.animation_clip_=AnimationClip()
     self.animation_clip_:LoadFromFile("animation/export.skeleton_anim")

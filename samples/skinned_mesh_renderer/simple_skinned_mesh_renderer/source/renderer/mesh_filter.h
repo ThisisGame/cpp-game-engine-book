@@ -20,7 +20,7 @@ public:
 public:
     //顶点
     struct Vertex{
-        glm::vec3 pos_;
+        glm::vec3 position_;
         glm::vec4 color_;
         glm::vec2 uv_;
     };
@@ -58,6 +58,11 @@ public:
     /// \param vertex_data 顶点数据
     /// \param vertex_index_data 索引数据
     void CreateMesh(std::vector<Vertex>& vertex_data,std::vector<unsigned short>& vertex_index_data);
+
+    /// 创建Mesh
+    /// \param vertex_data 所有的顶点数据,以float数组形式从lua传过来
+    /// \param vertex_index_data 所有的索引数据,以unsigned short数组形式从lua传过来
+    void CreateMesh(std::vector<float>& vertex_data,std::vector<unsigned short>& vertex_index_data);
 
     /// 获取Mesh对象指针
     Mesh* mesh(){return mesh_;};

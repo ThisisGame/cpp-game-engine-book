@@ -77,7 +77,7 @@ sol::table GameObject::AddComponentFromLua(std::string component_type_name) {
     auto result=component_type_construct_function();
     if(result.valid()== false){
         sol::error err = result;
-        DEBUG_LOG_ERROR("\n---- RUN LUA_FUNCTION ERROR ----\nAddComponentFromLua call type construct error,type:{}\n{}\n------------------------",component_type_name,err.what());
+        DEBUG_LOG_ERROR("\n---- RUN LUA_FUNCTION ERROR ----\nAddComponentFromLua call type construct error,type:{},not register in lua binding?\n{}\n------------------------",component_type_name,err.what());
     }
     sol::table new_table=result;
 

@@ -36,7 +36,30 @@ void LuaBinding::Init(std::string package_path) {
     package_table["path"]=path;
 }
 
+namespace sol2{
+    /// 将lua中的table转换为std::vector
+    /// \tparam elementType
+    /// \param t
+    /// \return
+    template <typename elementType>
+    std::vector<elementType> convert_sequence(sol::table t)
+    {
+        std::size_t sz = t.size();
+        std::vector<elementType> res(sz);
+        for (int i = 1; i <= sz; i++) {
+            res[i - 1] = t[i];
+        }
+        return res;
+    }
+}
+
 void LuaBinding::BindLua() {
+    //辅助函数
+    {
+        auto sol2_ns_table = sol_state_["sol2"].get_or_create<sol::table>();
+        sol2_ns_table["convert_sequence_float"]=&sol2::convert_sequence<float>;
+        sol2_ns_table["convert_sequence_ushort"]=&sol2::convert_sequence<unsigned short>;
+    }
     //绑定glm::vec3
     {
         auto glm_ns_table = sol_state_["glm"].get_or_create<sol::table>();
@@ -445,7 +468,9 @@ void LuaBinding::BindLua() {
         sol_state_.new_usertype<MeshFilter>("MeshFilter",sol::call_constructor,sol::constructors<MeshFilter()>(),
                                             sol::base_classes,sol::bases<Component>(),
                                             "LoadMesh", &MeshFilter::LoadMesh,
-                                            "CreateMesh", &MeshFilter::CreateMesh
+                                            "CreateMesh", [] (MeshFilter* meshFilter,std::vector<float>& vertex_data,std::vector<unsigned short>& vertex_index_data) {
+                                                                return meshFilter->CreateMesh(vertex_data,vertex_index_data);
+                                                            }
         );
 
         sol_state_.new_usertype<MeshRenderer>("MeshRenderer",sol::call_constructor,sol::constructors<MeshRenderer()>(),
@@ -479,6 +504,13 @@ void LuaBinding::BindLua() {
                                             "Play", &AnimationClip::Play,
                                             "Stop", &AnimationClip::Stop,
                                             "Update", &AnimationClip::Update
+        );
+
+        sol_state_.new_usertype<Animation>("Animation",sol::call_constructor,sol::constructors<Animation()>(),
+                                              sol::base_classes,sol::bases<Component>(),
+                                              "LoadAnimationClipFromFile", &Animation::LoadAnimationClipFromFile,
+                                              "Play", &Animation::Play,
+                                              "current_animation_clip", &Animation::current_animation_clip
         );
     }
 

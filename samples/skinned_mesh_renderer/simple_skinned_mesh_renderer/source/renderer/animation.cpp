@@ -3,8 +3,28 @@
 //
 
 #include "animation.h"
+#include <rttr/registration>
 #include "animation_clip.h"
 #include "utils/debug.h"
+
+using namespace rttr;
+RTTR_REGISTRATION
+{
+registration::class_<Animation>("Animation")
+.constructor<>()(rttr::policy::ctor::as_raw_ptr);
+}
+
+Animation::Animation()
+{
+
+}
+
+Animation::~Animation()
+{
+    for (auto iter:animation_clips_map_) {
+        delete iter.second;
+    }
+}
 
 void Animation::LoadAnimationClipFromFile(const char *path, const char *alias_name) {
     AnimationClip* animationClip = new AnimationClip();
