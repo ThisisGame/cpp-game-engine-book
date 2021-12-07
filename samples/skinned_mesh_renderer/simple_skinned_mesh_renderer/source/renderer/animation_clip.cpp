@@ -128,10 +128,10 @@ void AnimationClip::Update() {
     }
     //计算当前时间对应的帧序号
     float current_time=Time::TimeSinceStartup()-start_time_;
-    DEBUG_LOG_INFO("current_time:{}",current_time);
+//    DEBUG_LOG_INFO("current_time:{}",current_time);
     unsigned short current_frame_index=static_cast<unsigned short>(current_time*SKELETON_ANIMATION_FRAME_RATE);
     current_frame_=current_frame_index%frame_count_;
-    current_frame_=19;
+//    current_frame_=19;
 }
 
 std::vector<glm::mat4>& AnimationClip::GetCurrentFrameBoneMatrix(){

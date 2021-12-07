@@ -119,6 +119,7 @@ void MeshRenderer::Render() {
         glBindBuffer(GL_ARRAY_BUFFER, 0);__CHECK_GL_ERROR__
     }
     else{
+        glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer_object_);__CHECK_GL_ERROR__
         //更新Buffer数据
         glBufferSubData(GL_ARRAY_BUFFER,0,mesh->vertex_num_ * sizeof(MeshFilter::Vertex),mesh->vertex_data_);__CHECK_GL_ERROR__
     }
