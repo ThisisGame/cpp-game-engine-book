@@ -8,6 +8,7 @@
 #include "../source/key_action.h"
 #include "../source/animator.h"
 #include "../source/camera.h"
+#include "../source/ui_camera.h"
 
 sol::state sol_state;
 
@@ -117,6 +118,9 @@ int main(int argc, char * argv[])
                 sol::base_classes,sol::bases<Component>(),
                 "position",&Camera::position,
                 "set_position",&Camera::set_position
+        );
+        sol_state.new_usertype<UICamera>("UICamera",sol::call_constructor,sol::constructors<UICamera()>(),
+                                       sol::base_classes,sol::bases<Camera,Component>()
         );
     }
 

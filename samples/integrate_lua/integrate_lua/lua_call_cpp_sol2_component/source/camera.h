@@ -5,8 +5,10 @@
 #ifndef TEST_CAMERA_H
 #define TEST_CAMERA_H
 
+#include <iostream>
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
+#include "component.h"
 
 class Camera:public Component
 {

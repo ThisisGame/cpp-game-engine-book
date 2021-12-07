@@ -15,7 +15,7 @@ class Texture2D;
 class MeshRenderer:public Component{
 public:
     MeshRenderer();
-    ~MeshRenderer();
+    virtual ~MeshRenderer();
 
     void SetMaterial(Material* material);//设置Material
     Material* material(){return material_;}

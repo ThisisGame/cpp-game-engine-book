@@ -28,6 +28,10 @@ public:
     /// 获取当前播放的动画
     AnimationClip* current_animation_clip() const{return current_animation_clip_;}
 
+public:
+    // 刷帧
+    void Update() override;
+
 private:
     /// 动画列表
     std::unordered_map<std::string,AnimationClip*> animation_clips_map_;

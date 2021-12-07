@@ -5,6 +5,9 @@
 #ifndef TEST_ANIMATOR_H
 #define TEST_ANIMATOR_H
 
+#include <iostream>
+#include "component.h"
+
 
 class Animator:public Component
 {

@@ -87,7 +87,7 @@ void MeshRenderer::Render() {
         //将缓冲区对象指定为顶点缓冲区对象
         glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer_object_);
         //上传顶点数据到缓冲区对象
-        glBufferData(GL_ARRAY_BUFFER, mesh->vertex_num_ * sizeof(MeshFilter::Vertex), mesh->vertex_data_, GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, mesh->vertex_num_ * sizeof(MeshFilter::Vertex), mesh->vertex_data_, GL_DYNAMIC_DRAW);
 
         //在GPU上创建缓冲区对象
         glGenBuffers(1,&element_buffer_object_);
@@ -99,24 +99,28 @@ void MeshRenderer::Render() {
         glGenVertexArrays(1,&vertex_array_object_);
 
         //设置VAO
-        glBindVertexArray(vertex_array_object_);
+        glBindVertexArray(vertex_array_object_);__CHECK_GL_ERROR__
         {
             //指定当前使用的VBO
-            glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer_object_);
+            glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer_object_);__CHECK_GL_ERROR__
             //将Shader变量(a_pos)和顶点坐标VBO句柄进行关联，最后的0表示数据偏移量。
-            glVertexAttribPointer(vpos_location, 3, GL_FLOAT, false, sizeof(MeshFilter::Vertex), 0);
+            glVertexAttribPointer(vpos_location, 3, GL_FLOAT, false, sizeof(MeshFilter::Vertex), 0);__CHECK_GL_ERROR__
             //启用顶点Shader属性(a_color)，指定与顶点颜色数据进行关联
-            glVertexAttribPointer(vcol_location, 4, GL_FLOAT, false, sizeof(MeshFilter::Vertex), (void*)(sizeof(float)*3));
+            glVertexAttribPointer(vcol_location, 4, GL_FLOAT, false, sizeof(MeshFilter::Vertex), (void*)(sizeof(float)*3));__CHECK_GL_ERROR__
             //将Shader变量(a_uv)和顶点UV坐标VBO句柄进行关联，最后的0表示数据偏移量。
-            glVertexAttribPointer(a_uv_location, 2, GL_FLOAT, false, sizeof(MeshFilter::Vertex), (void*)(sizeof(float)*(3+4)));
+            glVertexAttribPointer(a_uv_location, 2, GL_FLOAT, false, sizeof(MeshFilter::Vertex), (void*)(sizeof(float)*(3+4)));__CHECK_GL_ERROR__
 
-            glEnableVertexAttribArray(vpos_location);
-            glEnableVertexAttribArray(vcol_location);
-            glEnableVertexAttribArray(a_uv_location);
+            glEnableVertexAttribArray(vpos_location);__CHECK_GL_ERROR__
+            glEnableVertexAttribArray(vcol_location);__CHECK_GL_ERROR__
+            glEnableVertexAttribArray(a_uv_location);__CHECK_GL_ERROR__
 
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_buffer_object_);
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_buffer_object_);__CHECK_GL_ERROR__
         }
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);__CHECK_GL_ERROR__
+    }
+    else{
+        //更新Buffer数据
+        glBufferSubData(GL_ARRAY_BUFFER,0,mesh->vertex_num_ * sizeof(MeshFilter::Vertex),mesh->vertex_data_);__CHECK_GL_ERROR__
     }
 
     glUseProgram(gl_program_id);

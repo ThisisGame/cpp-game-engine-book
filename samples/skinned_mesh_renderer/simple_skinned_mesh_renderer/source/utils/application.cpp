@@ -154,7 +154,10 @@ void Application::Render(){
             }
             auto component=game_object->GetComponent("MeshRenderer");
             if (!component){
-                return;
+                component=game_object->GetComponent("SkinnedMeshRenderer");
+                if (!component){
+                    return;
+                }
             }
             auto mesh_renderer=dynamic_cast<MeshRenderer*>(component);
             if(!mesh_renderer){

@@ -21,5 +21,6 @@ include_directories("depends")
 
 file(GLOB_RECURSE lua_c "depends/lua/src/*.c")
 file(GLOB_RECURSE rttr_cpp "depends/rttr/*.cpp")
+file(GLOB_RECURSE engine_cpp "source/*.cpp")
 
-add_executable(test ${lua_c} ${rttr_cpp} "example/main.cpp" source/component.cpp source/game_object.cpp)
+add_executable(test ${lua_c} ${rttr_cpp} "example/main.cpp" ${engine_cpp})

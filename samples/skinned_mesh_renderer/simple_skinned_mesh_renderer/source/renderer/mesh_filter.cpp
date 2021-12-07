@@ -37,7 +37,6 @@ void MeshFilter::LoadMesh(string mesh_file_path) {
     input_file_stream.close();
 
     mesh_=new Mesh();
-    mesh_->total_bytes_=sizeof(mesh_->total_bytes_)+sizeof(mesh_file_head)+mesh_file_head.vertex_num_*sizeof(Vertex)+mesh_file_head.vertex_index_num_*sizeof(unsigned short);
     mesh_->vertex_num_=mesh_file_head.vertex_num_;
     mesh_->vertex_index_num_=mesh_file_head.vertex_index_num_;
     mesh_->vertex_data_=(Vertex*)vertex_data;

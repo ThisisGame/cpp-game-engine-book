@@ -3,13 +3,21 @@
 //
 
 #include "skinned_mesh_renderer.h"
+#include <rttr/registration>
 #include "component/game_object.h"
 #include "mesh_filter.h"
 #include "animation.h"
 #include "animation_clip.h"
 #include "utils/debug.h"
 
-SkinnedMeshRenderer::SkinnedMeshRenderer() {
+using namespace rttr;
+RTTR_REGISTRATION
+{
+registration::class_<SkinnedMeshRenderer>("SkinnedMeshRenderer")
+.constructor<>()(rttr::policy::ctor::as_raw_ptr);
+}
+
+SkinnedMeshRenderer::SkinnedMeshRenderer():MeshRenderer() {
 
 }
 
@@ -52,8 +60,14 @@ void SkinnedMeshRenderer::Update() {
     //获取 SkinnedMesh
     MeshFilter::Mesh* skinned_mesh=mesh_filter->skinned_mesh();
     if(skinned_mesh==nullptr){
-        skinned_mesh= static_cast<MeshFilter::Mesh *>(malloc(mesh->total_bytes_));
-        memcpy(skinned_mesh,mesh,mesh->total_bytes_);
+        //拷贝Mesh整体
+        skinned_mesh= static_cast<MeshFilter::Mesh *>(malloc(mesh->size()));
+        memcpy(skinned_mesh,mesh, mesh->size());
+        mesh_filter->set_skinned_mesh(skinned_mesh);
+
+        //拷贝顶点数据 vertex_data_
+        skinned_mesh->vertex_data_= static_cast<MeshFilter::Vertex *>(malloc(mesh->vertex_num_*sizeof(MeshFilter::Vertex)));
+        memcpy(skinned_mesh->vertex_data_,mesh->vertex_data_, mesh->vertex_num_*sizeof(MeshFilter::Vertex));
     }
     //计算当前帧顶点位置
     for(int i=0;i<skinned_mesh->vertex_num_;i++){

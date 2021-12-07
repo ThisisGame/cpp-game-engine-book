@@ -16,6 +16,11 @@ function main()
     local camera=game_object:AddComponent("Camera")
     print("add camera:" .. tostring(camera))
 
+    print("----------- Add Cpp.Component.UICamera ----------------")
+
+    local ui_camera=game_object:AddComponent("UICamera")
+    print("add ui_camera:" .. tostring(ui_camera))
+
     print("----------- Add Lua.Component.LoginScene ------------")
 
     local loginScene=game_object:AddComponent("LoginScene")

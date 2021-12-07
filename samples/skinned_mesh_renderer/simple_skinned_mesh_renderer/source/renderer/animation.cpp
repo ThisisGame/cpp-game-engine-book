@@ -14,13 +14,9 @@ registration::class_<Animation>("Animation")
 .constructor<>()(rttr::policy::ctor::as_raw_ptr);
 }
 
-Animation::Animation()
-{
+Animation::Animation():current_animation_clip_(nullptr){}
 
-}
-
-Animation::~Animation()
-{
+Animation::~Animation(){
     for (auto iter:animation_clips_map_) {
         delete iter.second;
     }
@@ -37,5 +33,12 @@ void Animation::Play(const char *alias_name) {
         DEBUG_LOG_ERROR("AnimationClip not found: {}", alias_name);
         return;
     }
-    animation_clips_map_[alias_name]->Play();
+    current_animation_clip_= animation_clips_map_[alias_name];
+    current_animation_clip_->Play();
+}
+
+void Animation::Update() {
+    if (current_animation_clip_) {
+        current_animation_clip_->Update();
+    }
 }

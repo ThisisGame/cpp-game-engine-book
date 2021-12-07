@@ -16,6 +16,7 @@
 #include "renderer/material.h"
 #include "renderer/mesh_filter.h"
 #include "renderer/mesh_renderer.h"
+#include "renderer/skinned_mesh_renderer.h"
 #include "renderer/shader.h"
 #include "renderer/texture2d.h"
 #include "renderer/animation_clip.h"
@@ -481,6 +482,11 @@ void LuaBinding::BindLua() {
                                               "Render", &MeshRenderer::Render
         );
 
+
+        sol_state_.new_usertype<SkinnedMeshRenderer>("SkinnedMeshRenderer",sol::call_constructor,sol::constructors<SkinnedMeshRenderer()>(),
+                                                     sol::base_classes,sol::bases<MeshRenderer,Component>()
+        );
+
         sol_state_.new_usertype<Shader>("Shader",sol::call_constructor,sol::constructors<Shader()>(),
                                         "Parse", &Shader::Parse,
                                         "CreateGPUProgram", &Shader::CreateGPUProgram,
@@ -513,6 +519,7 @@ void LuaBinding::BindLua() {
                                               "Play", &Animation::Play,
                                               "current_animation_clip", &Animation::current_animation_clip
         );
+
     }
 
     // utils

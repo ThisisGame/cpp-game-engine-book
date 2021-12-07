@@ -26,7 +26,7 @@ function LoginScene:Awake()
     --创建骨骼蒙皮动画
     self.go_skeleton_=GameObject("skeleton")
     self.go_skeleton_:AddComponent("Transform"):set_position(glm.vec3(0, 0, 0))
-    --self.go_skeleton_:AddComponent("Animation"):LoadAnimationClipFromFile("animation/export.skeleton_anim","idle")
+    self.go_skeleton_:AddComponent("Animation"):LoadAnimationClipFromFile("animation/export.skeleton_anim","idle")
 
     --手动创建Mesh
     local vertex_data=sol2.convert_sequence_float({
@@ -54,8 +54,11 @@ function LoginScene:Awake()
     self.material_:Parse("material/cube.mat")
 
     --挂上 MeshRenderer 组件
-    local mesh_renderer= self.go_skeleton_:AddComponent("MeshRenderer")
-    mesh_renderer:SetMaterial(self.material_)
+    local skinned_mesh_renderer= self.go_skeleton_:AddComponent("SkinnedMeshRenderer")
+    skinned_mesh_renderer:SetMaterial(self.material_)
+
+    --播放动画
+    self.go_skeleton_:GetComponent("Animation"):Play("idle")
 end
 
 function LoginScene:game_object()
