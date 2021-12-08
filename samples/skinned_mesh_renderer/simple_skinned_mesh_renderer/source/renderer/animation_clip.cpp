@@ -95,8 +95,9 @@ void AnimationClip::LoadFromFile(const char *file_path) {
 
 void AnimationClip::Bake() {
     for (int i = 0; i < frame_count_; ++i) {
+        DEBUG_LOG_INFO("AnimationClip::Bake: frame_index:{}",i);
         //计算当前帧的骨骼矩阵
-        std::vector<glm::mat4> current_frame_bone_matrices=bone_matrix_frames_vector_[i];
+        std::vector<glm::mat4>& current_frame_bone_matrices=bone_matrix_frames_vector_[i];
         CalculateBoneMatrix(current_frame_bone_matrices,0,glm::mat4(1.0f));
     }
 }
@@ -134,11 +135,16 @@ void AnimationClip::Update() {
 //    current_frame_=19;
 }
 
+glm::mat4& AnimationClip::GetBoneTPose(unsigned char bone_index){
+    return this->bone_t_pose_vector_[bone_index];
+}
+
 std::vector<glm::mat4>& AnimationClip::GetCurrentFrameBoneMatrix(){
     if (is_playing_== false){
         DEBUG_LOG_ERROR("AnimationClip is not playing");
     }
     return bone_matrix_frames_vector_[current_frame_];
+//    return bone_matrix_frames_vector_[19];
 }
 
 

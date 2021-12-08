@@ -24,6 +24,11 @@ public:
         return this->duration_;
     }
 
+    /// 获取骨骼T-pose
+    /// \param bone_index 骨骼index
+    /// \return 骨骼T-pose
+    glm::mat4& GetBoneTPose(unsigned char bone_index);
+
     /// 获取当前帧最新的骨骼矩阵
     std::vector<glm::mat4>& GetCurrentFrameBoneMatrix();
 

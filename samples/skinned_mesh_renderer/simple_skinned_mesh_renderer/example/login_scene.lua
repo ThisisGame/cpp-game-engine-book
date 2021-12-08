@@ -30,20 +30,26 @@ function LoginScene:Awake()
 
     --手动创建Mesh
     local vertex_data=sol2.convert_sequence_float({
-        -0.2,0,0,  1.0,1.0,1.0,1.0, 0,0,
+        -0.2,0,0,  1.0,1.0,1.0,1.0, 0,0,--与 Bone 关联的顶点，就是下面那一根骨骼。
          0.2,0,0,  1.0,1.0,1.0,1.0, 1,0,
          0.2,2,0,  1.0,1.0,1.0,1.0, 1,1,
-        -0.2,2,0,  1.0,1.0,1.0,1.0, 0,1
+        -0.2,2,0,  1.0,1.0,1.0,1.0, 0,1,
+
+        -0.2,2,0,  1.0,1.0,1.0,1.0, 0,0,--与 Bone.001 关联的顶点，就是上面一根骨骼。
+         0.2,2,0,  1.0,1.0,1.0,1.0, 1,0,
+         0.2,3,0,  1.0,1.0,1.0,1.0, 1,1,
+        -0.2,3,0,  1.0,1.0,1.0,1.0, 0,1,
     })
     local vertex_index_data=sol2.convert_sequence_ushort({
         0,1,2,
-        0,2,3
+        0,2,3,
+
+        4,5,6,
+        4,6,7
     })
     local vertex_relate_bone_index_vec=sol2.convert_sequence_uchar({
-        0,
-        0,
-        0,
-        0
+        0, 0, 0, 0,
+        1, 1, 1, 1
     })
     local mesh_filter=self.go_skeleton_:AddComponent("MeshFilter")
     mesh_filter:CreateMesh(vertex_data,vertex_index_data)
