@@ -34,6 +34,9 @@ public:
     void Stop();
 
 private:
+    /// 预计算骨骼矩阵
+    void Bake();
+
     /// 递归计算骨骼矩阵,从根节点开始。Blender导出的时候要确保先导出父节点。
     /// \param bone_name
     /// \param parent_matrix
@@ -51,8 +54,8 @@ private:
     float duration_=0.0f;
     /// 总帧数
     unsigned short frame_count_=0;
-    /// 骨骼动画
-    std::vector<std::vector<glm::mat4>> bone_animation_vector_;
+    /// 每一帧每一个骨骼的位移矩阵
+    std::vector<std::vector<glm::mat4>> bone_matrix_frames_vector_;
     /// 骨骼动画开始播放时间
     float start_time_=0.0f;
     /// 骨骼动画是否在播放

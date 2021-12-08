@@ -89,6 +89,7 @@ void AnimationClip::LoadFromFile(const char *file_path) {
         }
         bone_matrix_frames_vector_.push_back(bone_matrices);
     }
+    input_file_stream.close();
 
     Bake();
 }

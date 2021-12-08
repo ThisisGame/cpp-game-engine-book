@@ -87,7 +87,33 @@ void AnimationClip::LoadFromFile(const char *file_path) {
             input_file_stream.read(reinterpret_cast<char *>(&bone_matrix), sizeof(float) * 16);
             bone_matrices.push_back(bone_matrix);
         }
-        bone_animation_vector_.push_back(bone_matrices);
+        bone_matrix_frames_vector_.push_back(bone_matrices);
+    }
+    input_file_stream.close();
+
+    Bake();
+}
+
+void AnimationClip::Bake() {
+    for (int i = 0; i < frame_count_; ++i) {
+        DEBUG_LOG_INFO("AnimationClip::Bake: frame_index:{}",i);
+        //计算当前帧的骨骼矩阵
+        std::vector<glm::mat4>& current_frame_bone_matrices=bone_matrix_frames_vector_[i];
+        CalculateBoneMatrix(current_frame_bone_matrices,0,glm::mat4(1.0f));
+    }
+}
+
+void AnimationClip::CalculateBoneMatrix(std::vector<glm::mat4>& current_frame_bone_matrices,unsigned short bone_index, const glm::mat4 &parent_matrix) {
+    glm::mat4 bone_matrix=current_frame_bone_matrices[bone_index];
+    glm::mat4 bone_t_pos_matrix=bone_t_pose_vector_[bone_index];
+    glm::mat4 bone_matrix_with_parent=parent_matrix*bone_t_pos_matrix*bone_matrix;
+
+    DEBUG_LOG_INFO("{} bone_matrix:{}",bone_names_[bone_index],glm::to_string_beauty(bone_matrix_with_parent));
+
+    current_frame_bone_matrices[bone_index]=bone_matrix_with_parent;
+    std::vector<unsigned short> child_indexes=bone_children_vector_[bone_index];
+    for(unsigned short child_index:child_indexes) {
+        CalculateBoneMatrix(current_frame_bone_matrices,child_index,bone_matrix_with_parent);
     }
 }
 
@@ -112,29 +138,7 @@ void AnimationClip::Update() {
         return;
     }
     current_frame_=current_frame_index;
-
-    DEBUG_LOG_INFO("current_frame_index:{}",current_frame_index);
-
-    //计算当前帧的骨骼矩阵
-    std::vector<glm::mat4> current_frame_bone_matrices=bone_animation_vector_[current_frame_index];
-    CalculateBoneMatrix(current_frame_bone_matrices,0,glm::mat4(1.0f));
 }
-
-void AnimationClip::CalculateBoneMatrix(std::vector<glm::mat4>& current_frame_bone_matrices,unsigned short bone_index, const glm::mat4 &parent_matrix) {
-    glm::mat4 bone_matrix=current_frame_bone_matrices[bone_index];
-    glm::mat4 bone_t_pos_matrix=bone_t_pose_vector_[bone_index];
-    glm::mat4 bone_matrix_with_parent=parent_matrix*bone_t_pos_matrix*bone_matrix;
-
-    DEBUG_LOG_INFO("{} bone_matrix:{}",bone_names_[bone_index],glm::to_string_beauty(bone_matrix_with_parent));
-
-    current_frame_bone_matrices[bone_index]=bone_matrix_with_parent;
-    std::vector<unsigned short> child_indexes=bone_children_vector_[bone_index];
-    for(unsigned short child_index:child_indexes) {
-        CalculateBoneMatrix(current_frame_bone_matrices,child_index,bone_matrix_with_parent);
-    }
-}
-
-
 
 void AnimationClip::Stop() {
     is_playing_=false;
