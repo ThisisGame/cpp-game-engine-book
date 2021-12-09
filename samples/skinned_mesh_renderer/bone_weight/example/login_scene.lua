@@ -49,7 +49,7 @@ function LoginScene:Awake()
     })
     local vertex_relate_bone_index_vec=sol2.convert_sequence_uchar({--顶点关联的骨骼序号
         0, 0, 0, 0,
-        1, 1, 1, 1
+        0, 0, 1, 1
     })
     local mesh_filter=self.go_skeleton_:AddComponent("MeshFilter")
     mesh_filter:CreateMesh(vertex_data,vertex_index_data)--手动构建Mesh
