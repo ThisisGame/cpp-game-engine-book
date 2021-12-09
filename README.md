@@ -43,13 +43,13 @@
 
 ## Content
 
-本书包含内容
+本书主要内容
 
 :white_check_mark: 各种开源库的使用方式
 
 :white_check_mark: 如何将开源库组装成游戏引擎
 
-本书不包括内容
+本书少量介绍
 
 :no_entry: 图形学
 
