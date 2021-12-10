@@ -61,6 +61,7 @@ void LuaBinding::BindLua() {
         sol2_ns_table["convert_sequence_float"]=&sol2::convert_sequence<float>;
         sol2_ns_table["convert_sequence_ushort"]=&sol2::convert_sequence<unsigned short>;
         sol2_ns_table["convert_sequence_uchar"]=&sol2::convert_sequence<unsigned char>;
+        sol2_ns_table["convert_sequence_int"]=&sol2::convert_sequence<int>;
     }
     //绑定glm::vec3
     {
@@ -472,7 +473,7 @@ void LuaBinding::BindLua() {
                                             "LoadMesh", &MeshFilter::LoadMesh,
                                             "CreateMesh", [] (MeshFilter* meshFilter,std::vector<float>& vertex_data,std::vector<unsigned short>& vertex_index_data)
                                                                 {return meshFilter->CreateMesh(vertex_data,vertex_index_data);},
-                                            "set_vertex_relate_bone_index_vec",&MeshFilter::set_vertex_relate_bone_index_vec
+                                            "set_vertex_relate_bone_infos",&MeshFilter::set_vertex_relate_bone_infos
         );
 
         sol_state_.new_usertype<MeshRenderer>("MeshRenderer",sol::call_constructor,sol::constructors<MeshRenderer()>(),

@@ -3,6 +3,8 @@ project(untitled)
 
 set(CMAKE_CXX_STANDARD 17)
 
+add_definitions(-D GLM_SWIZZLE)#GLM开启重排，随意转换。 vec2 v2 = v4.xz();
+
 if (MSVC)
     add_compile_options(/bigobj)
     add_compile_options(/wd4819)#忽略保存为unicode警告

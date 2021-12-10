@@ -47,13 +47,21 @@ function LoginScene:Awake()
         4,5,6,
         4,6,7
     })
-    local vertex_relate_bone_index_vec=sol2.convert_sequence_uchar({--顶点关联的骨骼序号
-        0, 0, 0, 0,
-        0, 0, 1, 1
+    --顶点关联骨骼信息,按照 bone_index_[4] bone_weight_[4] 的顺序存储
+    local vertex_relate_bone_infos=sol2.convert_sequence_int({
+        0, -1, -1, -1, --[[左边骨骼，右边权重]] 100, -1, -1, -1,--第一个顶点：关联骨骼0，权重是1。注意-1表示无骨骼。
+        0, -1, -1, -1, --[[左边骨骼，右边权重]] 100, -1, -1, -1,--第二个顶点同理
+        0, -1, -1, -1, --[[左边骨骼，右边权重]] 100, -1, -1, -1,--第三个顶点同理
+        0, -1, -1, -1, --[[左边骨骼，右边权重]] 100, -1, -1, -1,--第四个顶点同理
+
+        0,  1, -1, -1, --[[左边骨骼，右边权重]] 70,  30, -1, -1,--第一个顶点：关联骨骼0，权重0.7，关联骨骼1，权重0.3。
+        0, -1, -1, -1, --[[左边骨骼，右边权重]] 100, -1, -1, -1,--第二个顶点：关联骨骼0，权重1.
+        1, -1, -1, -1, --[[左边骨骼，右边权重]] 100, -1, -1, -1,--第三个顶点：关联骨骼1，权重1.
+        1, -1, -1, -1, --[[左边骨骼，右边权重]] 100, -1, -1, -1,--第四个顶点：关联骨骼1，权重1.
     })
     local mesh_filter=self.go_skeleton_:AddComponent("MeshFilter")
     mesh_filter:CreateMesh(vertex_data,vertex_index_data)--手动构建Mesh
-    mesh_filter:set_vertex_relate_bone_index_vec(vertex_relate_bone_index_vec)
+    mesh_filter:set_vertex_relate_bone_infos(vertex_relate_bone_infos)
 
     --手动创建Material
     self.material_ = Material()--设置材质

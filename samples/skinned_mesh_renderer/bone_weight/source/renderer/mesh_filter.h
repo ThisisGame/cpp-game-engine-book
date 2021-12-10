@@ -80,11 +80,28 @@ public:
     /// 获取Mesh对象指针
     Mesh* mesh(){return mesh_;};
 
-    /// 获取顶点关联骨骼索引数组，长度为顶点个数
-    std::vector<unsigned char>& vertex_relate_bone_index_vec(){return vertex_relate_bone_index_vec_;};
+    /// 顶点关联骨骼及权重,每个顶点最多可以关联4个骨骼。
+    struct VertexRelateBoneInfo{
+        char bone_index_[4];//骨骼索引，一般骨骼少于128个，用char就行。
+        char bone_weight_[4];//骨骼权重，权重不会超过100，所以用char类型就可以。
+    };
 
-    void set_vertex_relate_bone_index_vec(std::vector<unsigned char>& vertex_relate_bone_index_vec){
-        vertex_relate_bone_index_vec_ = vertex_relate_bone_index_vec;
+    /// 获取顶点关联骨骼信息(4个骨骼索引、骨骼权重)，长度为顶点个数
+    VertexRelateBoneInfo* vertex_relate_bone_infos(){return vertex_relate_bone_infos_;};
+
+    /// 设置顶点关联骨骼信息
+    /// \param vertex_relate_bone_info_vec unsigned char数组形式，长度为顶点个数*8.
+    /// 每个顶点按照 bone_index_[4] bone_weight_[4] 的顺序存储，
+    void set_vertex_relate_bone_infos(std::vector<int>& vertex_relate_bone_info_data){
+        if(vertex_relate_bone_infos_!=nullptr){
+            delete[] vertex_relate_bone_infos_;
+            vertex_relate_bone_infos_ = nullptr;
+        }
+        size_t data_size=vertex_relate_bone_info_data.size()*sizeof(char);
+        vertex_relate_bone_infos_= static_cast<VertexRelateBoneInfo*>(malloc(data_size));
+        for (int i = 0; i < data_size; ++i) {
+            ((char*)vertex_relate_bone_infos_)[i]=vertex_relate_bone_info_data[i];
+        }
     }
 
     /// 获取蒙皮Mesh对象指针
@@ -93,7 +110,7 @@ public:
 private:
     Mesh* mesh_= nullptr;//Mesh对象
     Mesh* skinned_mesh_= nullptr;//蒙皮Mesh对象
-    std::vector<unsigned char> vertex_relate_bone_index_vec_;//顶点关联骨骼索引，长度为顶点个数
+    VertexRelateBoneInfo* vertex_relate_bone_infos_= nullptr;//顶点关联骨骼信息(4个骨骼索引、骨骼权重)，长度为顶点个数
 };
 
 

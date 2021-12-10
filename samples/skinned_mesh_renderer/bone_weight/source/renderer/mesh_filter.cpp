@@ -50,6 +50,14 @@ MeshFilter::~MeshFilter() {
         delete mesh_;
         mesh_=nullptr;
     }
+    if(skinned_mesh_!=nullptr) {
+        delete skinned_mesh_;
+        skinned_mesh_=nullptr;
+    }
+    if(vertex_relate_bone_infos_!=nullptr) {
+        delete vertex_relate_bone_infos_;
+        vertex_relate_bone_infos_=nullptr;
+    }
 }
 
 void MeshFilter::CreateMesh(std::vector<Vertex> &vertex_data, std::vector<unsigned short> &vertex_index_data) {

@@ -36,9 +36,9 @@ void SkinnedMeshRenderer::Update() {
         return;
     }
     //获取顶点关联骨骼索引数组，长度为顶点个数
-    auto vertex_relate_bone_index_vec=mesh_filter->vertex_relate_bone_index_vec();
-    if(vertex_relate_bone_index_vec.empty()){
-        DEBUG_LOG_ERROR("SkinnedMeshRenderer::Update() failed, can't get vertex relate bone index");
+    auto vertex_relate_bone_infos=mesh_filter->vertex_relate_bone_infos();
+    if(!vertex_relate_bone_infos){
+        DEBUG_LOG_ERROR("SkinnedMeshRenderer::Update() failed, can't get vertex_relate_bone_infos");
         return;
     }
 
@@ -72,21 +72,33 @@ void SkinnedMeshRenderer::Update() {
     //计算当前帧顶点位置
     for(int i=0;i<skinned_mesh->vertex_num_;i++){
         auto& vertex=mesh->vertex_data_[i];
-        auto& bone_index=vertex_relate_bone_index_vec[i];
 
-        //获取当前顶点关联的骨骼T-Pos矩阵
-        glm::mat4& bone_t_pose_matrix=animation_clip->GetBoneTPose(bone_index);
-        //获取T-Pos矩阵的逆矩阵
-        glm::mat4 bone_t_pose_matrix_inverse=glm::inverse(bone_t_pose_matrix);
-        //将顶点坐标转换到骨骼空间
-        glm::vec4 vertex_position=bone_t_pose_matrix_inverse*glm::vec4(vertex.position_,1.0f);
+        glm::vec4 pos_by_bones;//对每个Bone计算一次位置，然后乘以权重，最后求和
 
-        //当前帧顶点关联的骨骼矩阵
-        auto& bone_matrix=bone_matrices[bone_index];
-        //计算当前帧顶点位置(模型坐标系，bone_matrix里带了相对于模型坐标系的位置，作用到骨骼坐标系的位置上，就转换到了模型坐标系)
-        glm::vec4 pos_in_world=bone_matrix*vertex_position;
+        for(int j=0;j<4;j++){
+            auto& bone_index=vertex_relate_bone_infos[i].bone_index_[j];//顶点关联的骨骼索引
+            if(bone_index==-1){
+                continue;
+            }
+            float bone_weight=vertex_relate_bone_infos[i].bone_weight_[j]/100.f;//顶点关联的骨骼权重
 
-        skinned_mesh->vertex_data_[i].position_=glm::vec3{pos_in_world.x,pos_in_world.y,pos_in_world.z};
+            //获取当前顶点关联的骨骼T-Pos矩阵
+            glm::mat4& bone_t_pose_matrix=animation_clip->GetBoneTPose(bone_index);
+            //获取T-Pos矩阵的逆矩阵
+            glm::mat4 bone_t_pose_matrix_inverse=glm::inverse(bone_t_pose_matrix);
+            //将顶点坐标转换到骨骼空间
+            glm::vec4 vertex_position=bone_t_pose_matrix_inverse*glm::vec4(vertex.position_,1.0f);
+
+            //当前帧顶点关联的骨骼矩阵
+            auto& bone_matrix=bone_matrices[bone_index];
+            //计算当前帧顶点位置(模型坐标系，bone_matrix里带了相对于模型坐标系的位置，作用到骨骼坐标系的位置上，就转换到了模型坐标系)
+            glm::vec4 pos_in_world=bone_matrix*vertex_position;
+
+            //乘以权重
+            pos_by_bones=pos_by_bones+pos_in_world*bone_weight;
+        }
+
+        skinned_mesh->vertex_data_[i].position_=pos_by_bones.xyz();
     }
 }
 
