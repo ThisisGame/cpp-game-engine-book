@@ -110,7 +110,7 @@ public:
 private:
     Mesh* mesh_= nullptr;//Mesh对象
     Mesh* skinned_mesh_= nullptr;//蒙皮Mesh对象
-    VertexRelateBoneInfo* vertex_relate_bone_infos_= nullptr;//顶点关联骨骼信息(4个骨骼索引、骨骼权重)，长度为顶点个数
+    VertexRelateBoneInfo* vertex_relate_bone_infos_= nullptr;//顶点关联骨骼信息(4个骨骼索引、权重)，长度为顶点数
 };
 
 

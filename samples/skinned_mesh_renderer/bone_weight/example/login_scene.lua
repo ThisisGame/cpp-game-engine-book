@@ -47,6 +47,9 @@ function LoginScene:Awake()
         4,5,6,
         4,6,7
     })
+    local mesh_filter=self.go_skeleton_:AddComponent("MeshFilter")
+    mesh_filter:CreateMesh(vertex_data,vertex_index_data)--手动构建Mesh
+
     --顶点关联骨骼信息,按照 bone_index_[4] bone_weight_[4] 的顺序存储
     local vertex_relate_bone_infos=sol2.convert_sequence_int({
         0, -1, -1, -1, --[[左边骨骼，右边权重]] 100, -1, -1, -1,--第一个顶点：关联骨骼0，权重是1。注意-1表示无骨骼。
@@ -59,8 +62,6 @@ function LoginScene:Awake()
         1, -1, -1, -1, --[[左边骨骼，右边权重]] 100, -1, -1, -1,--第三个顶点：关联骨骼1，权重1.
         1, -1, -1, -1, --[[左边骨骼，右边权重]] 100, -1, -1, -1,--第四个顶点：关联骨骼1，权重1.
     })
-    local mesh_filter=self.go_skeleton_:AddComponent("MeshFilter")
-    mesh_filter:CreateMesh(vertex_data,vertex_index_data)--手动构建Mesh
     mesh_filter:set_vertex_relate_bone_infos(vertex_relate_bone_infos)
 
     --手动创建Material

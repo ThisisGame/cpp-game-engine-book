@@ -35,7 +35,7 @@ void SkinnedMeshRenderer::Update() {
         DEBUG_LOG_ERROR("SkinnedMeshRenderer::Update() failed, can't get Mesh");
         return;
     }
-    //获取顶点关联骨骼索引数组，长度为顶点个数
+    //获取顶点关联骨骼信息(4个骨骼索引、骨骼权重)，长度为顶点个数
     auto vertex_relate_bone_infos=mesh_filter->vertex_relate_bone_infos();
     if(!vertex_relate_bone_infos){
         DEBUG_LOG_ERROR("SkinnedMeshRenderer::Update() failed, can't get vertex_relate_bone_infos");
