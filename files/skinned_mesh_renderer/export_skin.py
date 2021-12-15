@@ -28,7 +28,7 @@ class EngineVertex:
         return equal
 
     def __str__(self) -> str:
-        return "x:{0},y:{1},z:{2},r:{3},g:{4},b:{5},a:{6},u:{7},v:{8}".format(self.x,self.y,self.z,self.r,self.g,self.b,self.a,self.u,self.v)
+        return "x:{:.2f},y:{:.2f},z:{:.2f},r:{:.2f},g:{:.2f},b:{:.2f},a:{:.2f},u:{:.2f},v:{:.2f}".format(self.x,self.y,self.z,self.r,self.g,self.b,self.a,self.u,self.v)
 
     def __repr__(self) -> str:#显示属性 用来打印。
         return str(self)
@@ -115,7 +115,7 @@ for bone in armature_obj.pose.bones:
         for g in v.groups:
             if g.group == gidx: 
                 w = g.weight
-                print('Vertex',v.index,'has a weight of',w,'for bone',bone.name)
+                print("Vertex {} has a weight of {:.2f} for bone {}".format(v.index,w,bone.name))
 
 
 
