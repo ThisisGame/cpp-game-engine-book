@@ -54,31 +54,38 @@ uv_layer = mesh.uv_layers.active.data
     
 print("-----------EXPORT MESH---------")
 
-# 收集顶点
 mEngineVertexes=[]
-for v in mesh.vertices:
-    engine_vertex=EngineVertex(v.co.x,v.co.z,v.co.y,1,1,1,1,0,0)#构造引擎顶点，注意 y z调换
-    mEngineVertexes.append(engine_vertex)
-
-# 收集UV
 mEngineVertexIndexes=[]
+
 for poly in mesh.polygons:#遍历多边形
-    # print("Polygon index: %d, length: %d" % (poly.index, poly.loop_total))#检查是三角形还是四边形
+    print("Polygon index: %d, length: %d" % (poly.index, poly.loop_total))
     if poly.loop_total==4:
         ShowMessageBox("Need Triangle","Polygon Error",  'ERROR')
         break
-    # 遍历一个多边形的3个顶点
+    
+    # 遍历一个多边形的3个顶点，注意这里的loop_index是包含重复顶点的顶点数组的index，是以三角形为单位*3作为顶点总数，并不是实际顶点的index。
+    # 例如第一个三角形就是0 1 2，第二个三角形就是 3 4 5。是包含重复顶点的。
     for loop_index in range(poly.loop_start, poly.loop_start + poly.loop_total):
-        vertex_index=mesh.loops[loop_index].vertex_index #顶点在Blender中的索引
-        mEngineVertexIndexes.append(vertex_index)#把index放入顶点索引表
+        vertex_index=mesh.loops[loop_index].vertex_index#顶点在Blender中的索引
+        v=mesh.vertices[vertex_index]
+        uv=uv_layer[loop_index].uv
 
-        v=mesh.vertices[vertex_index] #拿顶点索引获取顶点
-        uv=uv_layer[loop_index].uv #获取当前顶点的UV坐标
-        engine_vertex=mEngineVertexes[vertex_index]#补全顶点UV数据
-        engine_vertex.u=uv.x
-        engine_vertex.v=uv.y
-
-print(*mEngineVertexes,sep='\n')
+        engine_vertex=EngineVertex(v.co.x,v.co.z,v.co.y,1,1,1,1,uv.x,uv.y)#构造引擎顶点，注意 y z调换
+        
+        #判断顶点是否存在
+        find_engine_vertex_index=-1
+        for engine_vertex_index in range(len(mEngineVertexes)):
+            if mEngineVertexes[engine_vertex_index]==engine_vertex:
+                find_engine_vertex_index=engine_vertex_index
+                break
+        
+        if find_engine_vertex_index<0:
+            find_engine_vertex_index=len(mEngineVertexes)
+            mEngineVertexes.append(engine_vertex)
+            
+        mEngineVertexIndexes.append(find_engine_vertex_index)#把index放入顶点索引表
+        
+print(mEngineVertexes)
 print(mEngineVertexIndexes)
 
 
