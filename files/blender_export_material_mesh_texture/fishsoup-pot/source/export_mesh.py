@@ -57,7 +57,7 @@ engine_vertexes=[]
 engine_vertex_indexes=[]
 
 for poly in mesh_selected.polygons:#遍历多边形
-    print("Polygon index: %d, length: %d" % (poly.index, poly.loop_total))
+    # print("Polygon index: %d, length: %d" % (poly.index, poly.loop_total))
     if poly.loop_total==4:
         ShowMessageBox("Need Triangle","Polygon Error",  'ERROR')
         break
@@ -84,8 +84,8 @@ for poly in mesh_selected.polygons:#遍历多边形
             
         engine_vertex_indexes.append(find_engine_vertex_index)#把index放入顶点索引表
         
-print(engine_vertexes)
-print(engine_vertex_indexes)
+# print(engine_vertexes)
+# print(engine_vertex_indexes)
 
 
 
