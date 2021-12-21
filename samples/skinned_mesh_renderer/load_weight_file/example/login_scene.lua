@@ -28,6 +28,7 @@ function LoginScene:Awake()
     self.go_skeleton_:AddComponent("Transform"):set_position(glm.vec3(0, 0, 0))
     self.go_skeleton_:AddComponent("Animation"):LoadAnimationClipFromFile("animation/export.skeleton_anim","idle")
 
+    local mesh_filter=self.go_skeleton_:AddComponent("MeshFilter")
     ----手动创建Mesh
     --local vertex_data=sol2.convert_sequence_float({
     --    -0.2,0,0,  1.0,1.0,1.0,1.0, 0,0,--与 Bone 关联的顶点，就是下面那一根骨骼。
@@ -47,10 +48,9 @@ function LoginScene:Awake()
     --    4,5,6,
     --    4,6,7
     --})
-    local mesh_filter=self.go_skeleton_:AddComponent("MeshFilter")
+    --
     --mesh_filter:CreateMesh(vertex_data,vertex_index_data)--手动构建Mesh
-    mesh_filter:LoadMesh("model/export.mesh")--加载Mesh
-
+    --
     ----顶点关联骨骼信息,按照 bone_index_[4] bone_weight_[4] 的顺序存储
     --local vertex_relate_bone_infos=sol2.convert_sequence_int({
     --    0, -1, -1, -1, --[[左边骨骼，右边权重]] 100, -1, -1, -1,--第一个顶点：关联骨骼0，权重是1。注意-1表示无骨骼。
@@ -65,6 +65,7 @@ function LoginScene:Awake()
     --})
     --mesh_filter:set_vertex_relate_bone_infos(vertex_relate_bone_infos)
 
+    mesh_filter:LoadMesh("model/export.mesh")--加载Mesh
     mesh_filter:LoadWeight("model/export.weight")--加载权重文件
 
     --手动创建Material

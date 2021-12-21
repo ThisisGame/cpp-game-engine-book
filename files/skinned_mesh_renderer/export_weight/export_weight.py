@@ -100,7 +100,7 @@ engine_vertex_indexes=[]
 engine_vertex_relate_bone_infos=[]#顶点关联骨骼信息(4个骨骼索引、权重)，长度为顶点数。
 
 for poly in mesh_selected.polygons:#遍历多边形
-    print("Polygon index: %d, length: %d" % (poly.index, poly.loop_total))
+    # print("Polygon index: %d, length: %d" % (poly.index, poly.loop_total))
     if poly.loop_total==4:
         ShowMessageBox("Need Triangle","Polygon Error",  'ERROR')
         break
@@ -131,12 +131,15 @@ for poly in mesh_selected.polygons:#遍历多边形
                 group = vertex.groups[group_index]
                 group_name = object_group_names[group.group]#获取顶点组名字
                 # print("Vertex group index: %d, group name: %s, weight: %f" % (group_index, group_name, group.weight))
+                if group_index>=len(vertex_relate_bone_info.bone_index):
+                    print("\033[31mError: vertex relate more than 4 bone.\033[0m")
+                    continue
                 if group_name in bone_names:#判断顶点组名字是否在骨骼名字列表中。制作的时候，建模人员要严格按照骨骼名字来作为顶点组名字。
                     bone_index=bone_names.index(group_name)#获取骨骼索引。
                     vertex_relate_bone_info.bone_index[group_index]=bone_index
                     vertex_relate_bone_info.bone_weight[group_index]=group.weight
                 else:
-                    print("Error: group name not in bone names")
+                    print("\033[31mError: group name {} not in bone names.\033[0m".format(group_name))
             # print(vertex_relate_bone_info)
             engine_vertex_relate_bone_infos.append(vertex_relate_bone_info)
             
