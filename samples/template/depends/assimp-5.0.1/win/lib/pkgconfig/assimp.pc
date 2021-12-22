@@ -1,0 +1,11 @@
+prefix=F:/Github/assimp-5.0.1/out/install/x64-Debug
+exec_prefix=F:/Github/assimp-5.0.1/out/install/x64-Debug/
+libdir=F:/Github/assimp-5.0.1/out/install/x64-Debug/lib
+includedir=F:/Github/assimp-5.0.1/out/install/x64-Debug/../include/include
+
+Name: Assimp
+Description: Import various well-known 3D model formats in an uniform manner.
+Version: 5.0.0
+Libs: -L${libdir} -lassimp
+Libs.private:  
+Cflags: -I${includedir}
