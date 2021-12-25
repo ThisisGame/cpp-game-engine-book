@@ -31,6 +31,8 @@ file(COPY "../../template/depends/easy_profiler-2.1.0/easy_profiler_core/" DESTI
 #拷贝data文件
 file(COPY "../../template/data/images/assimp_extra_jiulian.cpt" DESTINATION "../data/images/")
 file(COPY "../../template/data/model/assimp_extra_jiulian.mesh" DESTINATION "../data/model/")
+file(COPY "../../template/data/model/assimp_extra_jiulian.weight" DESTINATION "../data/model/")
+file(COPY "../../template/data/animation/assimp_extra_take_001.skeleton_anim" DESTINATION "../data/animation/")
 file(COPY "../../template/data/shader/unlit.vs" DESTINATION "../data/shader/")
 file(COPY "../../template/data/shader/unlit.fs" DESTINATION "../data/shader/")
 file(COPY "../../template/data/material/assimp_extra_jiulian.mat" DESTINATION "../data/material/")

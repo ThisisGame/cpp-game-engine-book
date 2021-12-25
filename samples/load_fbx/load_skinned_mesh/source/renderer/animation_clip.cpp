@@ -38,7 +38,19 @@ void AnimationClip::LoadFromFile(const char *file_path) {
         DEBUG_LOG_ERROR("AnimationClip::LoadFromFile: file head error,file_head:{},the right is:{}",file_head,SKELETON_ANIMATION_HEAD);
         return;
     }
-
+    //读取名字长度
+    unsigned short name_length;
+    input_file_stream.read(reinterpret_cast<char *>(&name_length),sizeof(name_length));
+    //读取名字
+    char *name_buffer = new char[name_length+1];
+    input_file_stream.read(name_buffer,name_length);
+    name_buffer[name_length]='\0';
+    name_ = name_buffer;
+    delete[] name_buffer;
+    //读取帧数
+    input_file_stream.read(reinterpret_cast<char *>(&frame_count_),sizeof(frame_count_));
+    //读取帧率
+    input_file_stream.read(reinterpret_cast<char *>(&frame_per_second_),sizeof(frame_per_second_));
     //读取骨骼数量
     unsigned short bone_count=0;
     input_file_stream.read(reinterpret_cast<char *>(&bone_count), sizeof(unsigned short));
@@ -75,9 +87,6 @@ void AnimationClip::LoadFromFile(const char *file_path) {
         input_file_stream.read(reinterpret_cast<char *>(&bone_t_pose), sizeof(float) * 16);
         bone_t_pose_vector_.push_back(bone_t_pose);
     }
-    //读取帧数
-    input_file_stream.read(reinterpret_cast<char *>(&frame_count_), sizeof(unsigned short));
-
     //读取骨骼动画
     for (int frame_index = 0; frame_index < frame_count_; frame_index++) {
         //读取一帧的骨骼矩阵

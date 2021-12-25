@@ -19,10 +19,6 @@ public:
     /// \param file_path
     void LoadFromFile(const char *file_path);
 
-    /// 获取持续时间
-    float duration(){
-        return this->duration_;
-    }
 
     /// 获取骨骼T-pose
     /// \param bone_index 骨骼index
@@ -53,16 +49,18 @@ private:
     void CalculateBoneMatrix(std::vector<glm::mat4>& current_frame_bone_matrices,unsigned short bone_index, const glm::mat4 &parent_matrix);
 
 private:
+    /// 名字
+    std::string name_;
+    /// 帧数
+    unsigned short frame_count_;
+    /// 帧率
+    unsigned short frame_per_second_;
     /// 所有骨骼名字
     std::vector<std::string> bone_names_;
     /// 骨骼的子节点
     std::vector<std::vector<unsigned short>> bone_children_vector_;
     /// 骨骼T-pose
     std::vector<glm::mat4> bone_t_pose_vector_;
-    /// 持续时间
-    float duration_=0.0f;
-    /// 总帧数
-    unsigned short frame_count_=0;
     /// 每一帧每一个骨骼的位移矩阵
     std::vector<std::vector<glm::mat4>> bone_matrix_frames_vector_;
     /// 骨骼动画开始播放时间

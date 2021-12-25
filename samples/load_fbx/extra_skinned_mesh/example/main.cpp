@@ -98,22 +98,36 @@ namespace Engine{
         }
 
         // 写入文件
-        void Write(const char* filePath){
-            if (std::filesystem::exists(filePath)==false){
+        void Write(std::string filePath){
+            // 路径转小写
+            std::transform(filePath.begin(), filePath.end(), filePath.begin(), ::tolower);
+            // 替换文件名中的空格为_
+            std::filesystem::path path(filePath);
+            std::string file_name = path.filename().string();
+            // 判断文件名中是否存在空格，替换为_
+            if(file_name.find(" ") != std::string::npos){
+                DEBUG_LOG_ERROR("Animation::Write filePath:%s contains blank,will replace with _", filePath.c_str());
+                std::replace(file_name.begin(), file_name.end(), ' ', '_');
+                path.replace_filename(file_name);
+                filePath = path.string();
+            }
+            // 创建文件夹
+            if (std::filesystem::exists(path)==false){
                 DEBUG_LOG_INFO("{} not exist,will create.",filePath);
-                std::filesystem::path path(filePath);
                 if(path.has_filename()==false){
                     DEBUG_LOG_ERROR("{} is not correct file path.",filePath);
                     assert(false);
                 }
-                auto dir_path = std::filesystem::path{filePath}.parent_path();
-                std::error_code error_cord;
-                if(std::filesystem::create_directories(dir_path,error_cord)==false){
-                    DEBUG_LOG_ERROR("{} not exist,create failed.",filePath);
-                    assert(false);
+                auto dir_path = path.parent_path();
+                if(std::filesystem::exists(dir_path)==false){
+                    std::error_code error_cord;
+                    if(std::filesystem::create_directories(dir_path,error_cord)==false){
+                        DEBUG_LOG_ERROR("{} not exist,create failed.",filePath);
+                        assert(false);
+                    }
                 }
             }
-
+            // 写入文件
             std::ofstream file(filePath, std::ios::binary);
             if(file.is_open()==false){
                 DEBUG_LOG_ERROR("file open failed:{}",filePath);
@@ -157,9 +171,6 @@ namespace Engine{
                 glm::mat4 bone_t_pose = bone_t_pose_vec_[i];
                 file.write(reinterpret_cast<char*>(&bone_t_pose), sizeof(glm::mat4));
             }
-            // 写入关键帧帧数
-            unsigned short frame_num = frame_bones_matrix_vec_.size();
-            file.write(reinterpret_cast<char*>(&frame_num), sizeof(unsigned short));
             // 写入骨骼关键帧数据
             for (int frame_index = 0; frame_index < frame_bones_matrix_vec_.size(); ++frame_index) {
                 for (int bone_index = 0; bone_index < frame_bones_matrix_vec_[frame_index].size(); ++bone_index) {
@@ -356,7 +367,7 @@ void ExtraAnimation(const aiScene *scene){
             DEBUG_LOG_ERROR("Mesh {} has no bones", mesh->mName.C_Str());
             return;
         }
-        // 遍历Bone
+        // 遍历Bone，获取名字以及T-Pose矩阵
         for (int bone_index = 0; bone_index < mesh->mNumBones; ++bone_index) {
             aiBone* bone = mesh->mBones[bone_index];
             // 获取Bone名字
@@ -368,6 +379,29 @@ void ExtraAnimation(const aiScene *scene){
                     bone_matrix.b1, bone_matrix.b2, bone_matrix.b3, bone_matrix.b4,
                     bone_matrix.c1, bone_matrix.c2, bone_matrix.c3, bone_matrix.c4,
                     bone_matrix.d1, bone_matrix.d2, bone_matrix.d3, bone_matrix.d4));
+        }
+    }
+
+    // 遍历Bone与Node，存储父子关系。
+    for (int bone_index = 0; bone_index < engine_animation.bone_name_vec_.size(); ++bone_index) {
+        engine_animation.bone_children_vec_.push_back(std::vector<int>());
+        std::string bone_name = engine_animation.bone_name_vec_[bone_index];
+        aiNode* bone_node = scene->mRootNode->FindNode(bone_name.c_str());
+        if (bone_node == nullptr) {
+            DEBUG_LOG_ERROR("parent bone {} not found", bone_name);
+            continue;
+        }
+        // 遍历子节点
+        for (int child_index = 0; child_index < bone_node->mNumChildren; ++child_index) {
+            aiNode* child_node = bone_node->mChildren[child_index];
+            // 根据 child_node 名字，找到对应的 bone_index
+            int child_bone_index = engine_animation.get_bone_index(child_node->mName.C_Str());
+            if (child_bone_index == -1) {
+                DEBUG_LOG_ERROR("child bone {} not found", child_node->mName.C_Str());
+                continue;
+            }
+            // 存储父子关系
+            engine_animation.bone_children_vec_[bone_index].push_back(child_bone_index);
         }
     }
 
