@@ -1,0 +1,29 @@
+#使用Wwise播放音效
+add_definitions(-D USE_WWISE_AUDIO)
+
+#拷贝depends目录
+if(WIN32)
+    file(COPY "../../template/depends/wwise/x64_vc160/Debug/" DESTINATION "../depends/wwise/")
+else()
+    file(COPY "../../template/depends/wwise/Mac/Debug/" DESTINATION "../depends/wwise/")
+endif()
+file(COPY "../../template/depends/wwise/include" DESTINATION "../depends/wwise/")
+
+
+#头文件目录
+include_directories("depends/wwise/include")
+
+#链接目录
+link_directories("depends/wwise/lib")
+
+
+
+if(WIN32)
+    #链接lib文件
+    link_libraries(AkSoundEngine)
+    #拷贝dll到exe目录
+    file(COPY "depends/wwise/bin/AkSoundEngineDLL.dll" DESTINATION "./")
+else()
+    #链接lib文件
+    link_libraries(AkSoundEngine)
+endif()
