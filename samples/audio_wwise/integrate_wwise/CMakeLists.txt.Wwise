@@ -12,6 +12,7 @@ file(COPY "../../template/depends/wwise/include" DESTINATION "../depends/wwise/"
 
 #头文件目录
 include_directories("depends/wwise/include")
+include_directories("source/audio/wwise/SoundEngine/Win32")
 
 #链接目录
 link_directories("depends/wwise/lib")
@@ -20,7 +21,7 @@ link_directories("depends/wwise/lib")
 
 if(WIN32)
     #链接lib文件
-    link_libraries(AkSoundEngine)
+    link_libraries(AkSoundEngine AkStreamMgr AkMemoryMgr AkMusicEngine AkSpatialAudio CommunicationCentral)
     #拷贝dll到exe目录
     file(COPY "depends/wwise/bin/AkSoundEngineDLL.dll" DESTINATION "./")
 else()

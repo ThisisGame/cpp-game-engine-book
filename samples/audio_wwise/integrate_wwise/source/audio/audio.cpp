@@ -9,6 +9,7 @@
     #define AudioSolution AudioStudio
 #elif defined(USE_FMOD_CORE)
     #include "core/audio_core.h"
+    #include "fmod/api/core/inc/fmod.h"
     #define AudioSolution AudioCore
 #elif defined(USE_WWISE_AUDIO)
     #include "wwise/wwise_audio.h"
