@@ -3,7 +3,6 @@
 //
 
 #include "wwise_audio.h"
-#include <AK/SoundEngine/Common/AkTypes.h>
 #include <AK/SoundEngine/Common/AkMemoryMgr.h>		// Memory Manager
 #include <AK/SoundEngine/Common/AkModule.h>			// Default memory and stream managers
 #include <AK/SoundEngine/Common/IAkStreamMgr.h>		// Streaming Manager
@@ -19,41 +18,27 @@
 #include "SoundEngine/Win32/Platform.h"
 #include "utils/debug.h"
 
-static const AkGameObjectID LISTENER_ID = 10000;
-
 void ResourceMonitorDataCallback(const AkResourceMonitorDataSummary * in_pdataSummary);
 
 void WwiseAudio::Init() {
     // 创建并初始化默认的内存管理器。注意，你可以使用自己的内存管理器覆盖默认的内存管理器。详细信息请参考SDK文档。
     AkMemSettings memSettings;
-    AKRESULT res = AK::MemoryMgr::Init( &memSettings );
+    AKRESULT res = AK::MemoryMgr::Init(&memSettings);
     if ( res != AK_Success ){
         DEBUG_LOG_ERROR("WwiseAudio::Init() AK::MemoryMgr::Init() failed,res:{}", res);
         return;
     }
 
-    //
-    // Create and initialize an instance of the default streaming manager. Note
-    // that you can override the default streaming manager with your own. Refer
-    // to the SDK documentation for more information.
-    //
-
-    // Customize the Stream Manager settings here.
+    // 创建并初始化默认的流管理器。注意，你可以使用自己的流管理器覆盖默认的流管理器。详细信息请参考SDK文档。
     AkStreamMgrSettings streamMgrSettings;
 
-    if ( !AK::StreamMgr::Create( streamMgrSettings ) ){
+    if (!AK::StreamMgr::Create( streamMgrSettings)){
         DEBUG_LOG_ERROR("WwiseAudio::Init() AK::StreamMgr::Create() failed");
         return;
     }
 
-    //
-    // Create a streaming device with blocking low-level I/O handshaking.
-    // Note that you can override the default low-level I/O module with your own. Refer
-    // to the SDK documentation for more information.
-    //
-
-    // CAkFilePackageLowLevelIOBlocking::Init() creates a streaming device
-    // in the Stream Manager, and registers itself as the File Location Resolver.
+    // 创建一个流设备，并使用阻塞的低级I/O握手。注意，你可以使用自己的低级I/O模块覆盖默认的低级I/O模块。详细信息请参考SDK文档。
+    // CAkFilePackageLowLevelIOBlocking::Init()创建了一个流设备，并将自己注册为文件位置解析器。
     AkDeviceSettings deviceSettings;
     deviceSettings.bUseStreamCache = true;
     CAkFilePackageLowLevelIODeferred* lowLevelIoDeferred= new CAkFilePackageLowLevelIODeferred();
@@ -63,10 +48,7 @@ void WwiseAudio::Init() {
         return;
     }
 
-    //
-    // Create the Sound Engine
-    // Using default initialization parameters
-    //
+    // 创建声音引擎，使用默认的初始化参数
     AkInitSettings initSettings;
     AkPlatformInitSettings platformInitSettings;
     res = AK::SoundEngine::Init(&initSettings, &platformInitSettings);
@@ -75,10 +57,7 @@ void WwiseAudio::Init() {
         return;
     }
 
-    //
-    // Initialize the music engine
-    // Using default initialization parameters
-    //
+    // 初始化音乐引擎，使用默认的初始化参数
     AkMusicSettings musicInit;
     res = AK::MusicEngine::Init( &musicInit );
     if ( res != AK_Success ){
@@ -87,9 +66,7 @@ void WwiseAudio::Init() {
     }
 
 #if !defined AK_OPTIMIZED && !defined INTEGRATIONDEMO_DISABLECOMM
-    //
-    // Initialize communications (not in release build!)
-    //
+    // 初始化通信（非发布版本！）
     AkCommSettings commSettings;
     AKPLATFORM::SafeStrCpy(commSettings.szAppNetworkName, "Integration Demo", AK_COMM_SETTINGS_MAX_STRING_SIZE);
     res = AK::Comm::Init(commSettings);
@@ -99,29 +76,23 @@ void WwiseAudio::Init() {
     }
 #endif // AK_OPTIMIZED
 
+    // 初始化音频空间
     AkSpatialAudioInitSettings settings;
-
     res = AK::SpatialAudio::Init(settings);
     if (res != AK_Success){
         DEBUG_LOG_ERROR("AK::SpatialAudio::Init() returned AKRESULT {}", res);
         return;
     }
 
-    AK::SoundEngine::RegisterGameObj(LISTENER_ID, "Listener (Default)");
-    AK::SoundEngine::SetDefaultListeners(&LISTENER_ID, 1);
-
-    // For platforms with a read-only bank path, add a writable folder
-    // to the list of base paths. IO will fallback on this path
-    // when opening a file for writing fails.
+    // 对于具有只读bank路径的平台，将可写文件夹添加到基本路径列表中。 当打开文件写入失败时，IO 将回退到此路径。
 #if defined(WRITABLE_PATH)
     m_pLowLevelIO->AddBasePath(WRITABLE_PATH);
 #endif
 
-    // Set the path to the SoundBank Files last.
-    // The last base path is always the first queried for files.
+    // 最后设置 SoundBank 文件的路径。最后一个基本路径总是第一个查询文件。
     lowLevelIoDeferred->SetBasePath(SOUND_BANK_PATH);
 
-    // Set global language. Low-level I/O devices can use this string to find language-specific assets.
+    // 设置全局语言。 低级 I/O 设备可以使用此字符串来查找特定于语言的资产。
     if (AK::StreamMgr::SetCurrentLanguage(AKTEXT("English(US)")) != AK_Success){
         DEBUG_LOG_ERROR("AK::StreamMgr::SetCurrentLanguage() failed");
         return;
@@ -130,7 +101,7 @@ void WwiseAudio::Init() {
     AK::SoundEngine::RegisterResourceMonitorCallback(ResourceMonitorDataCallback);
 }
 
-#define DATA_SUMMARY_REFRESH_COOLDOWN 7; // Refresh cooldown affecting the refresh rate of the resource monitor data summary
+#define DATA_SUMMARY_REFRESH_COOLDOWN 7; // 刷新冷却时间影响资源监视器数据汇总的刷新率
 void ResourceMonitorDataCallback(const AkResourceMonitorDataSummary *in_pdataSummary) {
     static int ResourceMonitorUpdateCooldown = 0;
     if (ResourceMonitorUpdateCooldown <= 0){
@@ -150,4 +121,23 @@ void ResourceMonitorDataCallback(const AkResourceMonitorDataSummary *in_pdataSum
 void WwiseAudio::Update() {
     if (AK::SoundEngine::IsInitialized())
         AK::SoundEngine::RenderAudio();
+}
+
+void WwiseAudio::LoadBank(const char *bank_name) {
+    AkBankID bank_id;
+    if (AK::SoundEngine::LoadBank(bank_name, bank_id) != AK_Success){
+        DEBUG_LOG_ERROR("Failed to load bank {}", bank_name);
+        return;
+    }
+}
+
+AkGameObjectID WwiseAudio::GeneratorGameObjectID() {
+    return audio_object_id_next_++;
+}
+
+void WwiseAudio::CreateAudioObject(AkGameObjectID audio_object_id,const char *audio_object_name){
+    if (AK::SoundEngine::RegisterGameObj(audio_object_id, audio_object_name) != AK_Success){
+        DEBUG_LOG_ERROR("Failed to register game object {}", audio_object_name);
+        return;
+    }
 }
