@@ -115,7 +115,7 @@ void Application::Init() {
     glfwSetScrollCallback(glfw_window_,mouse_scroll_callback);
     glfwSetCursorPosCallback(glfw_window_,mouse_move_callback);
 
-    //初始化 fmod
+    //初始化 音频引擎
     Audio::Init();
 }
 

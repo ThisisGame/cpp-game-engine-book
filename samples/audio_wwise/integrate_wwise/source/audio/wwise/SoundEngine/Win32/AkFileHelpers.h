@@ -214,25 +214,26 @@ public:
 	/// Some platforms may return AK_NotImplemented, in this case you cannot rely on it.
 	static AKRESULT CheckDirectoryExists( const AkOSChar* in_pszBasePath )
 	{
-        return AK_Success;
-//		DWORD fileAttributes = INVALID_FILE_ATTRIBUTES;
-//#ifdef AK_USE_UWP_API
-//		WIN32_FILE_ATTRIBUTE_DATA    fileInfo;
-//		if( GetFileAttributesEx(in_pszBasePath, GetFileExInfoStandard, &fileInfo ) )
-//		{
-//			fileAttributes = fileInfo.dwFileAttributes;
-//		}
-//#else
-//		fileAttributes = GetFileAttributes( in_pszBasePath );
-//#endif
-//		if (fileAttributes == INVALID_FILE_ATTRIBUTES)
-//			return AK_Fail;  //something is wrong with your path!
-//
-//		if (fileAttributes & FILE_ATTRIBUTE_DIRECTORY)
-//			return AK_Success;   // this is a directory!
-//
-//
-//		return AK_Fail;    // this is not a directory!
+		DWORD fileAttributes = INVALID_FILE_ATTRIBUTES;
+#ifdef AK_USE_UWP_API
+		WIN32_FILE_ATTRIBUTE_DATA    fileInfo;
+		if( GetFileAttributesEx(in_pszBasePath, GetFileExInfoStandard, &fileInfo ) )
+		{
+			fileAttributes = fileInfo.dwFileAttributes;
+		}
+#else
+        char * pszFilename;
+        CONVERT_OSCHAR_TO_CHAR( in_pszBasePath,pszFilename);
+		fileAttributes = GetFileAttributes( pszFilename );
+#endif
+		if (fileAttributes == INVALID_FILE_ATTRIBUTES)
+			return AK_Fail;  //something is wrong with your path!
+
+		if (fileAttributes & FILE_ATTRIBUTE_DIRECTORY)
+			return AK_Success;   // this is a directory!
+
+
+		return AK_Fail;    // this is not a directory!
 	}
 
 	static AKRESULT WriteBlocking(

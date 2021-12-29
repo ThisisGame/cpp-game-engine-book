@@ -5,6 +5,8 @@
 #include "lua_binding.h"
 #include <glm/ext.hpp>
 #include <sol/sol.hpp>
+#include <audio/wwise/audio_source.h>
+#include <audio/wwise/audio_listener.h>
 #include "audio/audio.h"
 //#include "audio/studio/audio_studio.h"
 //#include "audio/studio/audio_studio_event.h"
@@ -132,116 +134,30 @@ void LuaBinding::BindLua() {
 
     // audio
     {
-        // FMOD_RESULT
-        {
-//            sol_state_.new_enum<FMOD_RESULT,true>("FMOD_RESULT",{
-//                    {"FMOD_OK",FMOD_RESULT::FMOD_OK},
-//                    {"FMOD_ERR_BADCOMMAND",FMOD_RESULT::FMOD_ERR_BADCOMMAND},
-//                    {"FMOD_ERR_CHANNEL_ALLOC",FMOD_RESULT::FMOD_ERR_CHANNEL_ALLOC},
-//                    {"FMOD_ERR_CHANNEL_STOLEN",FMOD_RESULT::FMOD_ERR_CHANNEL_STOLEN},
-//                    {"FMOD_ERR_DMA",FMOD_RESULT::FMOD_ERR_DMA},
-//                    {"FMOD_ERR_DSP_CONNECTION",FMOD_RESULT::FMOD_ERR_DSP_CONNECTION},
-//                    {"FMOD_ERR_DSP_DONTPROCESS",FMOD_RESULT::FMOD_ERR_DSP_DONTPROCESS},
-//                    {"FMOD_ERR_DSP_FORMAT",FMOD_RESULT::FMOD_ERR_DSP_FORMAT},
-//                    {"FMOD_ERR_DSP_INUSE",FMOD_RESULT::FMOD_ERR_DSP_INUSE},
-//                    {"FMOD_ERR_DSP_NOTFOUND",FMOD_RESULT::FMOD_ERR_DSP_NOTFOUND},
-//                    {"FMOD_ERR_DSP_RESERVED",FMOD_RESULT::FMOD_ERR_DSP_RESERVED},
-//                    {"FMOD_ERR_DSP_SILENCE",FMOD_RESULT::FMOD_ERR_DSP_SILENCE},
-//                    {"FMOD_ERR_DSP_TYPE",FMOD_RESULT::FMOD_ERR_DSP_TYPE},
-//                    {"FMOD_ERR_FILE_BAD",FMOD_RESULT::FMOD_ERR_FILE_BAD},
-//                    {"FMOD_ERR_FILE_COULDNOTSEEK",FMOD_RESULT::FMOD_ERR_FILE_COULDNOTSEEK},
-//                    {"FMOD_ERR_FILE_DISKEJECTED",FMOD_RESULT::FMOD_ERR_FILE_DISKEJECTED},
-//                    {"FMOD_ERR_FILE_EOF",FMOD_RESULT::FMOD_ERR_FILE_EOF},
-//                    {"FMOD_ERR_FILE_ENDOFDATA",FMOD_RESULT::FMOD_ERR_FILE_ENDOFDATA},
-//                    {"FMOD_ERR_FILE_NOTFOUND",FMOD_RESULT::FMOD_ERR_FILE_NOTFOUND},
-//                    {"FMOD_ERR_FORMAT",FMOD_RESULT::FMOD_ERR_FORMAT},
-//                    {"FMOD_ERR_HEADER_MISMATCH",FMOD_RESULT::FMOD_ERR_HEADER_MISMATCH},
-//                    {"FMOD_ERR_HTTP",FMOD_RESULT::FMOD_ERR_HTTP},
-//                    {"FMOD_ERR_HTTP_ACCESS",FMOD_RESULT::FMOD_ERR_HTTP_ACCESS},
-//                    {"FMOD_ERR_HTTP_PROXY_AUTH",FMOD_RESULT::FMOD_ERR_HTTP_PROXY_AUTH},
-//                    {"FMOD_ERR_HTTP_SERVER_ERROR",FMOD_RESULT::FMOD_ERR_HTTP_SERVER_ERROR},
-//                    {"FMOD_ERR_HTTP_TIMEOUT",FMOD_RESULT::FMOD_ERR_HTTP_TIMEOUT},
-//                    {"FMOD_ERR_INITIALIZATION",FMOD_RESULT::FMOD_ERR_INITIALIZATION},
-//                    {"FMOD_ERR_INITIALIZED",FMOD_RESULT::FMOD_ERR_INITIALIZED},
-//                    {"FMOD_ERR_INTERNAL",FMOD_RESULT::FMOD_ERR_INTERNAL},
-//                    {"FMOD_ERR_INVALID_FLOAT",FMOD_RESULT::FMOD_ERR_INVALID_FLOAT},
-//                    {"FMOD_ERR_INVALID_HANDLE",FMOD_RESULT::FMOD_ERR_INVALID_HANDLE},
-//                    {"FMOD_ERR_INVALID_PARAM",FMOD_RESULT::FMOD_ERR_INVALID_PARAM},
-//                    {"FMOD_ERR_INVALID_POSITION",FMOD_RESULT::FMOD_ERR_INVALID_POSITION},
-//                    {"FMOD_ERR_INVALID_SPEAKER",FMOD_RESULT::FMOD_ERR_INVALID_SPEAKER},
-//                    {"FMOD_ERR_INVALID_SYNCPOINT",FMOD_RESULT::FMOD_ERR_INVALID_SYNCPOINT},
-//                    {"FMOD_ERR_INVALID_THREAD",FMOD_RESULT::FMOD_ERR_INVALID_THREAD},
-//                    {"FMOD_ERR_INVALID_VECTOR",FMOD_RESULT::FMOD_ERR_INVALID_VECTOR},
-//                    {"FMOD_ERR_MAXAUDIBLE",FMOD_RESULT::FMOD_ERR_MAXAUDIBLE},
-//                    {"FMOD_ERR_MEMORY",FMOD_RESULT::FMOD_ERR_MEMORY},
-//                    {"FMOD_ERR_MEMORY_CANTPOINT",FMOD_RESULT::FMOD_ERR_MEMORY_CANTPOINT},
-//                    {"FMOD_ERR_NEEDS3D",FMOD_RESULT::FMOD_ERR_NEEDS3D},
-//                    {"FMOD_ERR_NEEDSHARDWARE",FMOD_RESULT::FMOD_ERR_NEEDSHARDWARE},
-//                    {"FMOD_ERR_NET_CONNECT",FMOD_RESULT::FMOD_ERR_NET_CONNECT},
-//                    {"FMOD_ERR_NET_SOCKET_ERROR",FMOD_RESULT::FMOD_ERR_NET_SOCKET_ERROR},
-//                    {"FMOD_ERR_NET_URL",FMOD_RESULT::FMOD_ERR_NET_URL},
-//                    {"FMOD_ERR_NET_WOULD_BLOCK",FMOD_RESULT::FMOD_ERR_NET_WOULD_BLOCK},
-//                    {"FMOD_ERR_NOTREADY",FMOD_RESULT::FMOD_ERR_NOTREADY},
-//                    {"FMOD_ERR_OUTPUT_ALLOCATED",FMOD_RESULT::FMOD_ERR_OUTPUT_ALLOCATED},
-//                    {"FMOD_ERR_OUTPUT_CREATEBUFFER",FMOD_RESULT::FMOD_ERR_OUTPUT_CREATEBUFFER},
-//                    {"FMOD_ERR_OUTPUT_DRIVERCALL",FMOD_RESULT::FMOD_ERR_OUTPUT_DRIVERCALL},
-//                    {"FMOD_ERR_OUTPUT_FORMAT",FMOD_RESULT::FMOD_ERR_OUTPUT_FORMAT},
-//                    {"FMOD_ERR_OUTPUT_INIT",FMOD_RESULT::FMOD_ERR_OUTPUT_INIT},
-//                    {"FMOD_ERR_OUTPUT_NODRIVERS",FMOD_RESULT::FMOD_ERR_OUTPUT_NODRIVERS},
-//                    {"FMOD_ERR_PLUGIN",FMOD_RESULT::FMOD_ERR_PLUGIN},
-//                    {"FMOD_ERR_PLUGIN_MISSING",FMOD_RESULT::FMOD_ERR_PLUGIN_MISSING},
-//                    {"FMOD_ERR_PLUGIN_RESOURCE",FMOD_RESULT::FMOD_ERR_PLUGIN_RESOURCE},
-//                    {"FMOD_ERR_PLUGIN_VERSION",FMOD_RESULT::FMOD_ERR_PLUGIN_VERSION},
-//                    {"FMOD_ERR_RECORD",FMOD_RESULT::FMOD_ERR_RECORD},
-//                    {"FMOD_ERR_REVERB_CHANNELGROUP",FMOD_RESULT::FMOD_ERR_REVERB_CHANNELGROUP},
-//                    {"FMOD_ERR_REVERB_INSTANCE",FMOD_RESULT::FMOD_ERR_REVERB_INSTANCE},
-//                    {"FMOD_ERR_SUBSOUNDS",FMOD_RESULT::FMOD_ERR_SUBSOUNDS},
-//                    {"FMOD_ERR_SUBSOUND_ALLOCATED",FMOD_RESULT::FMOD_ERR_SUBSOUND_ALLOCATED},
-//                    {"FMOD_ERR_SUBSOUND_CANTMOVE",FMOD_RESULT::FMOD_ERR_SUBSOUND_CANTMOVE},
-//                    {"FMOD_ERR_TAGNOTFOUND",FMOD_RESULT::FMOD_ERR_TAGNOTFOUND},
-//                    {"FMOD_ERR_TOOMANYCHANNELS",FMOD_RESULT::FMOD_ERR_TOOMANYCHANNELS},
-//                    {"FMOD_ERR_TRUNCATED",FMOD_RESULT::FMOD_ERR_TRUNCATED},
-//                    {"FMOD_ERR_UNIMPLEMENTED",FMOD_RESULT::FMOD_ERR_UNIMPLEMENTED},
-//                    {"FMOD_ERR_UNINITIALIZED",FMOD_RESULT::FMOD_ERR_UNINITIALIZED},
-//                    {"FMOD_ERR_UNSUPPORTED",FMOD_RESULT::FMOD_ERR_UNSUPPORTED},
-//                    {"FMOD_ERR_VERSION",FMOD_RESULT::FMOD_ERR_VERSION},
-//                    {"FMOD_ERR_EVENT_ALREADY_LOADED",FMOD_RESULT::FMOD_ERR_EVENT_ALREADY_LOADED},
-//                    {"FMOD_ERR_EVENT_LIVEUPDATE_BUSY",FMOD_RESULT::FMOD_ERR_EVENT_LIVEUPDATE_BUSY},
-//                    {"FMOD_ERR_EVENT_LIVEUPDATE_MISMATCH",FMOD_RESULT::FMOD_ERR_EVENT_LIVEUPDATE_MISMATCH},
-//                    {"FMOD_ERR_EVENT_LIVEUPDATE_TIMEOUT",FMOD_RESULT::FMOD_ERR_EVENT_LIVEUPDATE_TIMEOUT},
-//                    {"FMOD_ERR_EVENT_NOTFOUND",FMOD_RESULT::FMOD_ERR_EVENT_NOTFOUND},
-//                    {"FMOD_ERR_STUDIO_UNINITIALIZED",FMOD_RESULT::FMOD_ERR_STUDIO_UNINITIALIZED},
-//                    {"FMOD_ERR_STUDIO_NOT_LOADED",FMOD_RESULT::FMOD_ERR_STUDIO_NOT_LOADED},
-//                    {"FMOD_ERR_INVALID_STRING",FMOD_RESULT::FMOD_ERR_INVALID_STRING},
-//                    {"FMOD_ERR_ALREADY_LOCKED",FMOD_RESULT::FMOD_ERR_ALREADY_LOCKED},
-//                    {"FMOD_ERR_NOT_LOCKED",FMOD_RESULT::FMOD_ERR_NOT_LOCKED},
-//                    {"FMOD_ERR_RECORD_DISCONNECTED",FMOD_RESULT::FMOD_ERR_RECORD_DISCONNECTED},
-//                    {"FMOD_ERR_TOOMANYSAMPLES",FMOD_RESULT::FMOD_ERR_TOOMANYSAMPLES},
-//                    {"FMOD_RESULT_FORCEINT",FMOD_RESULT::FMOD_RESULT_FORCEINT}
-//            });
-        }
-
         sol_state_.new_usertype<Audio>("Audio",
                                        "Init",&Audio::Init,
                                        "Update",&Audio::Update
         );
 
-//        sol_state_.new_usertype<Audio>("AudioStudio",
-//                                       "Init",&AudioStudio::Init,
-//                                       "Update",&AudioStudio::Update,
-//                                       "LoadBankFile",&AudioStudio::LoadBankFile,
-//                                       "CreateEventInstance",&AudioStudio::CreateEventInstance,
-//                                       "SetListenerAttributes",&AudioStudio::SetListenerAttributes
-//        );
-//
-//        sol_state_.new_usertype<AudioStudioEvent>("AudioStudioEvent",
-////                                      "event_instance",&AudioStudioEvent::event_instance,
-//                                                  "SetParameterByName",&AudioStudioEvent::SetParameterByName,
-//                                                  "Set3DAttribute",&AudioStudioEvent::Set3DAttribute,
-//                                                  "Start",&AudioStudioEvent::Start,
-//                                                  "Stop",&AudioStudioEvent::Stop,
-//                                                  "Pause",&AudioStudioEvent::Pause
-//        );
+        sol_state_.new_usertype<WwiseAudio>("WwiseAudio",
+                                            "Init",&WwiseAudio::Init,
+                                            "Update",&WwiseAudio::Update,
+                                            "LoadBank",&WwiseAudio::LoadBank,
+                                            "CreateAudioObject",&WwiseAudio::CreateAudioObject,
+                                            "GeneratorGameObjectID",&WwiseAudio::GeneratorGameObjectID
+        );
+
+        sol_state_.new_usertype<AudioSource>("AudioSource",sol::call_constructor,sol::constructors<AudioSource()>(),
+                sol::base_classes,sol::bases<Component>(),
+                        "SetEvent",&AudioSource::SetEvent,
+                        "Play",&AudioSource::Play,
+                        "Stop",&AudioSource::Stop,
+                        "SetRTPCValue",&AudioSource::SetRTPCValue
+        );
+
+        sol_state_.new_usertype<AudioListener>("AudioListener",sol::call_constructor,sol::constructors<AudioListener()>(),
+                sol::base_classes,sol::bases<Component>()
+        );
     }
 
     // component

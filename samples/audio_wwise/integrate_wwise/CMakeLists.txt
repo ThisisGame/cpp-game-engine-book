@@ -37,6 +37,7 @@ file(COPY ${unlit_shaders} DESTINATION "../data/shader/")
 file(COPY "../../template/data/animation/load_skeleton_animation/export.skeleton_anim" DESTINATION "../data/animation/")
 file(COPY "../../template/data/model/load_weight_file/export.mesh" DESTINATION "../data/model/")
 file(COPY "../../template/data/model/load_weight_file/export.weight" DESTINATION "../data/model/")
+file(COPY "../../template/data/audio/integrate_wwise/windows/" DESTINATION "../data/audio/")
 
 #头文件目录
 include_directories("depends")

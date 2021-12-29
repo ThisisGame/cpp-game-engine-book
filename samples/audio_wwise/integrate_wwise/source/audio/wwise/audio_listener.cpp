@@ -22,6 +22,7 @@ AudioListener::AudioListener():Component() {
 void AudioListener::Awake() {
     audio_listener_object_id_=WwiseAudio::GeneratorGameObjectID();
     WwiseAudio::CreateAudioObject(audio_listener_object_id_,"");
+    WwiseAudio::SetDefaultListeners(audio_listener_object_id_);
 }
 
 void AudioListener::Update() {

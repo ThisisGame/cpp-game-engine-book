@@ -11,6 +11,7 @@
 class AudioSource:public Component {
 public:
     AudioSource();
+    ~AudioSource();
 
     void SetEvent(const std::string &event_name);
 
@@ -21,6 +22,8 @@ public:
     /// 设置是否循环
     /// \param mode_loop
     void SetLoop(bool mode_loop);
+
+    void SetRTPCValue(const std::string &rtpc_name, float value);
 
     void Play();
     void Pause();

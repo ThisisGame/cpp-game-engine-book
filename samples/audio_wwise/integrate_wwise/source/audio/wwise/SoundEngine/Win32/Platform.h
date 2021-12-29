@@ -18,12 +18,8 @@ written agreement between you and Audiokinetic Inc.
 
 #pragma once
 
-
-#ifdef MOTIONDEMO
-#define RELATIVE_PATH L"..\\..\\..\\..\\samples\\IntegrationDemo\\Motion\\WwiseProject\\GeneratedSoundBanks\\Windows\\"
-#else
-#define RELATIVE_PATH L"..\\..\\..\\..\\samples\\IntegrationDemo\\WwiseProject\\GeneratedSoundBanks\\Windows\\"
-#endif
+//#define RELATIVE_PATH L"..\\..\\..\\..\\samples\\IntegrationDemo\\WwiseProject\\GeneratedSoundBanks\\Windows\\"
+#define RELATIVE_PATH L"..\\data\\audio\\"
 
 #include <AK/SoundEngine/Platforms/Windows/AkTypes.h>
 

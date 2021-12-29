@@ -25,6 +25,8 @@ public:
     /// 生成GameObjectID
     static AkGameObjectID GeneratorGameObjectID();
 
+    /// 设置默认Listener
+    static void SetDefaultListeners(const AkGameObjectID& game_object_id);
 private:
     static AkGameObjectID audio_object_id_next_;
 };
