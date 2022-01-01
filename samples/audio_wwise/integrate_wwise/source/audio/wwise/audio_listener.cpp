@@ -33,4 +33,6 @@ void AudioListener::Update() {
         return;
     }
     auto pos=transform->position();
+
+    WwiseAudio::SetPosition(audio_listener_object_id_,pos,glm::vec3(0,0,-10),glm::vec3(0,1,0));
 }

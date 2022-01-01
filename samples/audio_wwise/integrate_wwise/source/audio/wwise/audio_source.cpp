@@ -76,7 +76,14 @@ void AudioSource::SetLoop(bool mode_loop) {
 
 void AudioSource::Update() {
     Component::Update();
+    auto component_transform=game_object()->GetComponent("Transform");
+    auto transform=dynamic_cast<Transform*>(component_transform);
+    if(!transform){
+        return;
+    }
+    auto pos=transform->position();
 
+    WwiseAudio::SetPosition(audio_object_id_,pos,glm::vec3(0,0,-10),glm::vec3(0,1,0));
 }
 
 AudioSource::~AudioSource() {

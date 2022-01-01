@@ -131,6 +131,7 @@ void ResourceMonitorDataCallback(const AkResourceMonitorDataSummary *in_pdataSum
     }
     PrintDataSummaryTimeStamp=Time::TimeSinceStartup()+DATA_SUMMARY_REFRESH_COOLDOWN;
 
+#ifdef PRINT_DATA_SUMMARY
     AkResourceMonitorDataSummary resourceDataSummary = *in_pdataSummary;
     DEBUG_LOG_INFO("------- RESOURCE DATA SUMMARY -------");
     DEBUG_LOG_INFO("Total CPU % : {} ", resourceDataSummary.totalCPU);
@@ -140,6 +141,7 @@ void ResourceMonitorDataCallback(const AkResourceMonitorDataSummary *in_pdataSum
     DEBUG_LOG_INFO("Total Voices : {} ", resourceDataSummary.totalVoices);
     DEBUG_LOG_INFO("Active events : {} ", resourceDataSummary.nbActiveEvents);
     DEBUG_LOG_INFO("-------------------------------------");
+#endif
 }
 
 void WwiseAudio::Update() {
@@ -179,4 +181,13 @@ void WwiseAudio::SetDefaultListeners(const AkGameObjectID& game_object_id) {
         DEBUG_LOG_ERROR("Failed to set default listeners,result:{}", result);
         return;
     }
+}
+
+void WwiseAudio::SetPosition(AkGameObjectID game_object_id, glm::vec3 position, glm::vec3 front, glm::vec3 up) {
+    AkSoundPosition soundPos;
+    AkVector akPosition={position.x,position.y,position.z};
+    AkVector akFront={front.x,front.y,front.z};
+    AkVector akUp={up.x,up.y,up.z};
+    soundPos.Set(akPosition,akFront,akUp);
+    AK::SoundEngine::SetPosition(game_object_id, soundPos);
 }

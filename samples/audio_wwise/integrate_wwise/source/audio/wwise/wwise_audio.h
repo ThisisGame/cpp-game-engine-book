@@ -5,6 +5,7 @@
 #ifndef UNTITLED_WWISE_AUDIO_H
 #define UNTITLED_WWISE_AUDIO_H
 
+#include <glm/glm.hpp>
 #include <AK/SoundEngine/Common/AkTypes.h>
 
 class WwiseAudio {
@@ -27,6 +28,11 @@ public:
 
     /// 设置默认Listener
     static void SetDefaultListeners(const AkGameObjectID& game_object_id);
+
+    /// 设置物体位置
+    static void SetPosition(AkGameObjectID game_object_id, glm::vec3 position,glm::vec3 front,glm::vec3 up);
+
+
 private:
     static AkGameObjectID audio_object_id_next_;
 };

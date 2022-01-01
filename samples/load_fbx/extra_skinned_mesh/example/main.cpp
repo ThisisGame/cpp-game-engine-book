@@ -9,6 +9,7 @@
 #include <glm/ext.hpp>
 #include <glm/gtx/string_cast.hpp>
 #include <glm/gtx/quaternion.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 #include <assimp/Importer.hpp>      // C++ importer interface
 #include <assimp/scene.h>           // Output data structure
 #include <assimp/postprocess.h>     // Post processing flags
@@ -106,8 +107,15 @@ namespace Engine{
             std::string file_name = path.filename().string();
             // 判断文件名中是否存在空格，替换为_
             if(file_name.find(" ") != std::string::npos){
-                DEBUG_LOG_ERROR("Animation::Write filePath:%s contains blank,will replace with _", filePath.c_str());
+                DEBUG_LOG_ERROR("Animation::Write filePath:{} contains blank,will replace with _", filePath.c_str());
                 std::replace(file_name.begin(), file_name.end(), ' ', '_');
+                path.replace_filename(file_name);
+                filePath = path.string();
+            }
+            // 判断文件名中是否存在 | ，替换为_
+            if(file_name.find("|") != std::string::npos){
+                DEBUG_LOG_ERROR("Animation::Write filePath:{} contains |,will replace with _", filePath.c_str());
+                std::replace(file_name.begin(), file_name.end(), '|', '_');
                 path.replace_filename(file_name);
                 filePath = path.string();
             }
@@ -374,11 +382,17 @@ void ExtraAnimation(const aiScene *scene){
             engine_animation.bone_name_vec_.push_back(bone->mName.C_Str());
             // 获取Bone T-Pose
             aiMatrix4x4& bone_matrix = bone->mOffsetMatrix;
-            engine_animation.bone_t_pose_vec_.push_back(glm::mat4(
-                    bone_matrix.a1, bone_matrix.a2, bone_matrix.a3, bone_matrix.a4,
-                    bone_matrix.b1, bone_matrix.b2, bone_matrix.b3, bone_matrix.b4,
-                    bone_matrix.c1, bone_matrix.c2, bone_matrix.c3, bone_matrix.c4,
-                    bone_matrix.d1, bone_matrix.d2, bone_matrix.d3, bone_matrix.d4));
+            glm::mat4 bone_matrix_glm=glm::mat4(
+                    bone_matrix.a1, bone_matrix.b1, bone_matrix.c1, bone_matrix.d1,
+                    bone_matrix.a2, bone_matrix.b2, bone_matrix.c2, bone_matrix.d2,
+                    bone_matrix.a3, bone_matrix.b3, bone_matrix.c3, bone_matrix.d3,
+                    bone_matrix.a4, bone_matrix.b4, bone_matrix.c4, bone_matrix.d4
+            );
+
+            bone_matrix_glm=glm::inverse(bone_matrix_glm);
+            glm::mat4 rotate_mat4=glm::rotate(glm::mat4(1.0f),glm::radians(-90.0f),glm::vec3(1.0f,0.0f,0.0f));
+            bone_matrix_glm=rotate_mat4*bone_matrix_glm;
+            engine_animation.bone_t_pose_vec_.push_back(bone_matrix_glm);
         }
     }
 

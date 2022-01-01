@@ -31,7 +31,7 @@
 sol::state LuaBinding::sol_state_;
 
 void LuaBinding::Init(std::string package_path) {
-    sol_state_.open_libraries(sol::lib::base,sol::lib::package);
+    sol_state_.open_libraries(sol::lib::base,sol::lib::package,sol::lib::math);
     //设置lua搜索目录
     sol::table package_table=sol_state_["package"];
     std::string path=package_table["path"];

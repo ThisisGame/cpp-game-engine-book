@@ -1,6 +1,9 @@
 #使用Wwise播放音效
 add_definitions(-D USE_WWISE_AUDIO)
 
+#是否输出wwise占用系统资源
+add_definitions(-D PRINT_DATA_SUMMARY)
+
 #拷贝depends目录
 if(WIN32)
     file(COPY "../../template/depends/wwise/x64_vc160/Debug/" DESTINATION "../depends/wwise/")
