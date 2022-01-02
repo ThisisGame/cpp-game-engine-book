@@ -189,5 +189,6 @@ void WwiseAudio::SetPosition(AkGameObjectID game_object_id, glm::vec3 position, 
     AkVector akFront={front.x,front.y,front.z};
     AkVector akUp={up.x,up.y,up.z};
     soundPos.Set(akPosition,akFront,akUp);
+
     AK::SoundEngine::SetPosition(game_object_id, soundPos);
 }

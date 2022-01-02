@@ -2,7 +2,7 @@
 add_definitions(-D USE_WWISE_AUDIO)
 
 #是否输出wwise占用系统资源
-add_definitions(-D PRINT_DATA_SUMMARY)
+#add_definitions(-D PRINT_DATA_SUMMARY)
 
 #拷贝depends目录
 if(WIN32)
@@ -24,9 +24,10 @@ link_directories("depends/wwise/lib")
 
 if(WIN32)
     #链接lib文件
-    link_libraries(AkSoundEngine AkStreamMgr AkMemoryMgr AkMusicEngine AkSpatialAudio CommunicationCentral)
+    link_libraries(AkSoundEngine AkStreamMgr AkMemoryMgr AkMusicEngine AkSpatialAudio CommunicationCentral AkMotionGeneratorSource AkMotionSink AkMotionSourceSource)
     #拷贝dll到exe目录
     file(COPY "depends/wwise/bin/AkSoundEngineDLL.dll" DESTINATION "./")
+    file(COPY "depends/wwise/bin/AkMotion.dll" DESTINATION "./")
 else()
     #链接lib文件
     link_libraries(AkSoundEngine)

@@ -23,7 +23,7 @@ AudioSource::AudioSource():Component() {
 
 void AudioSource::Awake() {
     audio_object_id_=WwiseAudio::GeneratorGameObjectID();
-    WwiseAudio::CreateAudioObject(audio_object_id_,"");
+    WwiseAudio::CreateAudioObject(audio_object_id_,game_object()->name().c_str());
 }
 
 void AudioSource::SetEvent(const std::string &event_name) {
@@ -83,7 +83,7 @@ void AudioSource::Update() {
     }
     auto pos=transform->position();
 
-    WwiseAudio::SetPosition(audio_object_id_,pos,glm::vec3(0,0,-10),glm::vec3(0,1,0));
+    WwiseAudio::SetPosition(audio_object_id_,pos,glm::vec3(0,0,1),glm::vec3(0,1,0));
 }
 
 AudioSource::~AudioSource() {
