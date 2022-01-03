@@ -4,10 +4,14 @@ LoginScene={
     hero_go_,--英雄
     monster_go_,--怪物
 
-
-    monster_pos_,--怪物位置，屏幕分为左中右三个区域，怪物在左中右区域中随机出现。
     hero_pos_index_,--英雄位置
     hero_pos_array_,--英雄位置数组
+
+    monster_pos_index_,--怪物位置，屏幕分为左中右三个区域，怪物在左中右区域中随机出现。
+    monster_pos_array_,--怪物位置数组
+
+    monster_infos_,--怪物信息
+    monster_info_index_,--当前怪物信息index
 }
 
 setmetatable(LoginScene,{["__call"]=function(table,param)
@@ -17,6 +21,26 @@ end})
 
 -- public:
 function LoginScene:Awake()
+    self.hero_pos_array_={
+        glm.vec3(-5,0,10),
+        glm.vec3(0,0,10),
+        glm.vec3(5,0,10),
+    }
+    self.monster_pos_array_={
+        glm.vec3(-5,0,10),
+        glm.vec3(0,0,10),
+        glm.vec3(5,0,10),
+    }
+    self.monster_infos_={
+        {name="lion",audio="lion"},
+        {name="wolf",audio="wolf"},
+        {name="orangutan",audio="orangutan"},
+        {name="peg",audio="peg"},
+        {name="sheep",audio="sheep"},
+        {name="tiger",audio="tiger"},
+        {name="horse",audio="horse"}
+    }
+
     -- 加载Init.bank文件
     WwiseAudio.LoadBank("Init.bnk")
     -- 加载游戏音效bank文件
@@ -43,11 +67,13 @@ function LoginScene:Awake()
     -- 创建怪物
     self.monster_go_=GameObject("monster")
     self.monster_go_:AddComponent("Transform")
+    self.monster_go_:AddComponent("AudioSource")
 
     -- 英雄默认在中间
-    self.hero_pos_index_=0
+    self.hero_pos_index_=2
 
     self:MonsterRefresh()
+    self:SetHeroPosition()
 end
 
 
@@ -64,18 +90,18 @@ end
 function LoginScene:Update()
     --print("LoginScene:Update")
     if Input.GetKeyUp(KeyCode.KEY_CODE_SPACE) then
-        print("LoginScene:Update KEY_CODE_SPACE monster_pos_:" .. tostring(self.monster_pos_) .. " hero_pos_index_:" .. tostring(self.hero_pos_index_))
+        print("LoginScene:Update KEY_CODE_SPACE monster_pos_index_:" .. tostring(self.monster_pos_index_) .. " hero_pos_index_:" .. tostring(self.hero_pos_index_))
         self.hero_go_:GetComponent("AudioSource"):Play()
 
         -- 判断英雄位置和怪物位置，如果相同，则播放击中音效
-        if self.hero_pos_index_==self.monster_pos_ then
+        if self.hero_pos_index_==self.monster_pos_index_ then
             print("LoginScene:Update KEY_CODE_SPACE hit")
             self:MonsterRefresh()
         end
     end
 
     if Input.GetKeyUp(KeyCode.KEY_CODE_A) or Input.GetKeyUp(KeyCode.KEY_CODE_LEFT) then
-        if self.hero_pos_index_ > -1 then
+        if self.hero_pos_index_ > 1 then
             self.hero_pos_index_=self.hero_pos_index_-1
             self:SetHeroPosition()
         else
@@ -86,7 +112,7 @@ function LoginScene:Update()
     end
 
     if Input.GetKeyUp(KeyCode.KEY_CODE_D) or Input.GetKeyUp(KeyCode.KEY_CODE_RIGHT) then
-        if self.hero_pos_index_ < 1 then
+        if self.hero_pos_index_ < 3 then
             self.hero_pos_index_=self.hero_pos_index_+1
             self:SetHeroPosition()
         else
@@ -101,11 +127,23 @@ end
 -- 刷新怪物，更新怪物位置
 function LoginScene:MonsterRefresh()
     -- 怪物位置
-    self.monster_pos_=math.random(-1,1)
-    print("MonsterRefresh monster_pos_:"..self.monster_pos_)
+    self.monster_pos_index_=math.random(1,3)
+    print("MonsterRefresh monster_pos_index_:"..self.monster_pos_index_)
+
+    local pos=self.monster_pos_array_[self.monster_pos_index_]
+    self.monster_go_:GetComponent("Transform"):set_position(pos)
+    print("MonsterRefresh " .. tostring(pos))
+
+    -- 当前怪物信息index
+    self.monster_info_index_=math.random(1,#self.monster_infos_)
+    local monster_info=self.monster_infos_[self.monster_info_index_]
+    print("MonsterRefresh " .. monster_info.audio)
+    self.monster_go_:GetComponent("AudioSource"):SetEvent(monster_info.audio)
+    self.monster_go_:GetComponent("AudioSource"):Play()
 end
 
 function LoginScene:SetHeroPosition()
-    local x=self.hero_pos_index_ * 50
-    self.hero_go_:GetComponent("Transform"):set_position(glm.vec3(x,0,0))
+    local pos=self.hero_pos_array_[self.hero_pos_index_]
+    self.hero_go_:GetComponent("Transform"):set_position(pos)
+    print("SetHeroPosition " .. tostring(pos))
 end
