@@ -5,8 +5,11 @@
 #ifndef UNTITLED_AUDIOSOURCE_H
 #define UNTITLED_AUDIOSOURCE_H
 #include <string>
+#include <functional>
+#include <AK/SoundEngine/Common/AkCallback.h>
 #include "component/component.h"
 #include "wwise_audio.h"
+
 
 class AudioSource:public Component {
 public:
@@ -31,6 +34,12 @@ public:
 
     bool Paused();
 
+    static void MusicCallback(AkCallbackType in_eType,AkCallbackInfo* in_pCallbackInfo);
+
+    void set_event_end_callback(std::function<void(void)> callback){
+        event_end_callback_ = callback;
+    }
+
 private:
     void Awake() override;
     void Update() override;
@@ -38,9 +47,13 @@ private:
 private:
     AkGameObjectID audio_object_id_;
     std::string event_name_;
+    AkPlayingID playing_id_;
     bool mode_3d_;
     bool mode_loop_;
     bool paused_;
+
+    std::function<void()> event_end_callback_;
+
 };
 
 

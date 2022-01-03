@@ -30,6 +30,19 @@ void AudioSource::SetEvent(const std::string &event_name) {
     event_name_=event_name;
 }
 
+void AudioSource::MusicCallback(AkCallbackType in_eType,AkCallbackInfo* in_pCallbackInfo)
+{
+    AudioSource* audio_source=(AudioSource*)in_pCallbackInfo->pCookie;
+    if(in_eType == AK_EndOfEvent)
+    {
+        DEBUG_LOG_INFO("end event: {}",audio_source->event_name_);
+        if(audio_source->event_end_callback_)
+        {
+            audio_source->event_end_callback_();
+        }
+    }
+}
+
 void AudioSource::SetRTPCValue(const std::string &rtpc_name, float value) {
     AKRESULT result = AK::SoundEngine::SetRTPCValue(rtpc_name.c_str(), value, audio_object_id_);
     if (result != AK_Success) {
@@ -47,10 +60,12 @@ void AudioSource::Set3DMode(bool mode_3d) {
 }
 
 void AudioSource::Play() {
-    AkPlayingID playing_id = AK::SoundEngine::PostEvent(event_name_.c_str(), audio_object_id_ );
-    if(playing_id==AK_INVALID_PLAYING_ID){
+    playing_id_ = AK::SoundEngine::PostEvent(event_name_.c_str(), audio_object_id_ );
+    if(playing_id_==AK_INVALID_PLAYING_ID){
         DEBUG_LOG_ERROR("AudioSource::Play() failed");
+        return;
     }
+    AK::SoundEngine::PostEvent(event_name_.c_str(),audio_object_id_,AK_EndOfEvent,&AudioSource::MusicCallback,this);
 }
 
 void AudioSource::Pause() {
@@ -58,7 +73,7 @@ void AudioSource::Pause() {
 }
 
 void AudioSource::Stop() {
-
+    AK::SoundEngine::ExecuteActionOnPlayingID(AK::SoundEngine::AkActionOnEventType::AkActionOnEventType_Stop,playing_id_);
 }
 
 bool AudioSource::Paused() {

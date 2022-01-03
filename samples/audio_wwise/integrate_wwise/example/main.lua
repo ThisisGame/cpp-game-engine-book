@@ -1,7 +1,7 @@
 function main()
-    require("login_scene")
+    require("game_scene")
 
-    Application.set_title("[loadbank] press s play event,press 1 2 3 set param")
+    Application.set_title("Hunter")
     Application.set_data_path("../data/")--设置资源目录
     Application.Init()--初始化引擎
 
@@ -11,7 +11,7 @@ function main()
     local pos=transform:position()
     print("pos:" .. tostring(pos))
 
-    go:AddComponent("LoginScene")
+    go:AddComponent("GameScene")
 
     Application.Run()--开始引擎主循环
 end

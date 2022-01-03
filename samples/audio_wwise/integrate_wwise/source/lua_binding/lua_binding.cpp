@@ -152,7 +152,8 @@ void LuaBinding::BindLua() {
                         "SetEvent",&AudioSource::SetEvent,
                         "Play",&AudioSource::Play,
                         "Stop",&AudioSource::Stop,
-                        "SetRTPCValue",&AudioSource::SetRTPCValue
+                        "SetRTPCValue",&AudioSource::SetRTPCValue,
+                        "set_event_end_callback",&AudioSource::set_event_end_callback
         );
 
         sol_state_.new_usertype<AudioListener>("AudioListener",sol::call_constructor,sol::constructors<AudioListener()>(),
