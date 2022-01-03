@@ -351,7 +351,7 @@
 							<PropertyList>
 								<Property Name="InitialDelay" Type="Real64">
 									<ValueList>
-										<Value>1</Value>
+										<Value>2</Value>
 									</ValueList>
 								</Property>
 								<Property Name="Pitch" Type="int32">
@@ -780,6 +780,550 @@
 							<ObjectLists/>
 							<ActiveSourceList>
 								<ActiveSource Name="orangutan" ID="{EEE7E0A7-CC27-4096-80A8-D87955BDA38E}" Platform="Linked"/>
+							</ActiveSourceList>
+						</Sound>
+					</ChildrenList>
+					<ObjectLists/>
+				</BlendContainer>
+				<RandomSequenceContainer Name="这么远都能听到狼的声音,希望不要遇到它" ID="{ABEDC9FC-5E28-467C-8C96-70A424C5DDB1}" ShortID="1061720218">
+					<PropertyList>
+						<Property Name="PlayMechanismStepOrContinuous" Type="int16" Value="0"/>
+						<Property Name="RandomOrSequence" Type="int16" Value="0"/>
+					</PropertyList>
+					<ReferenceList>
+						<Reference Name="Conversion">
+							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{CF635164-7CA4-4908-867D-CF1D31C3A03B}"/>
+						</Reference>
+						<Reference Name="OutputBus">
+							<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{EDE71B29-70AE-48D0-96BA-3DA2FA729F14}"/>
+						</Reference>
+					</ReferenceList>
+					<ChildrenList>
+						<Sound Name="这么远都能听到狼的声音" ID="{2FDFB1EA-1A85-4C22-A9E7-757E0A7CBF6F}" ShortID="785881285">
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{CF635164-7CA4-4908-867D-CF1D31C3A03B}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{EDE71B29-70AE-48D0-96BA-3DA2FA729F14}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<AudioFileSource Name="这么远都能听到狼的声音" ID="{790714EF-AB65-4A20-8496-7459308BF0FB}">
+									<Language>SFX</Language>
+									<AudioFile>这么远都能听到狼的声音.wav</AudioFile>
+									<MediaIDList>
+										<MediaID ID="464349162"/>
+									</MediaIDList>
+								</AudioFileSource>
+							</ChildrenList>
+							<ObjectLists/>
+							<ActiveSourceList>
+								<ActiveSource Name="这么远都能听到狼的声音" ID="{790714EF-AB65-4A20-8496-7459308BF0FB}" Platform="Linked"/>
+							</ActiveSourceList>
+						</Sound>
+						<Sound Name="希望不要遇到它" ID="{5EEBACB4-A8B9-49B0-8EE8-EE79412AD95B}" ShortID="630911114">
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{CF635164-7CA4-4908-867D-CF1D31C3A03B}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{EDE71B29-70AE-48D0-96BA-3DA2FA729F14}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<AudioFileSource Name="希望不要遇到它" ID="{87C064D6-CEEE-4DDB-987B-1080F25A7346}">
+									<Language>SFX</Language>
+									<AudioFile>希望不要遇到它.wav</AudioFile>
+									<MediaIDList>
+										<MediaID ID="133443536"/>
+									</MediaIDList>
+								</AudioFileSource>
+							</ChildrenList>
+							<ObjectLists/>
+							<ActiveSourceList>
+								<ActiveSource Name="希望不要遇到它" ID="{87C064D6-CEEE-4DDB-987B-1080F25A7346}" Platform="Linked"/>
+							</ActiveSourceList>
+						</Sound>
+					</ChildrenList>
+					<ObjectLists/>
+					<Playlist>
+						<ItemRef Name="这么远都能听到狼的声音" ID="{2FDFB1EA-1A85-4C22-A9E7-757E0A7CBF6F}"/>
+						<ItemRef Name="希望不要遇到它" ID="{5EEBACB4-A8B9-49B0-8EE8-EE79412AD95B}"/>
+					</Playlist>
+				</RandomSequenceContainer>
+				<RandomSequenceContainer Name="打中了" ID="{1CB624E1-9518-4F53-B27F-6E4CBD49E7C1}" ShortID="617385358">
+					<ReferenceList>
+						<Reference Name="Conversion">
+							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{CF635164-7CA4-4908-867D-CF1D31C3A03B}"/>
+						</Reference>
+						<Reference Name="OutputBus">
+							<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{EDE71B29-70AE-48D0-96BA-3DA2FA729F14}"/>
+						</Reference>
+					</ReferenceList>
+					<ChildrenList>
+						<Sound Name="打中了-天明-悲伤" ID="{171B5C84-D46A-4287-A10A-6D3FC5DC0C04}" ShortID="824328084">
+							<PropertyList>
+								<Property Name="Weight" Type="Real64">
+									<ValueList>
+										<Value>30</Value>
+									</ValueList>
+								</Property>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{CF635164-7CA4-4908-867D-CF1D31C3A03B}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{EDE71B29-70AE-48D0-96BA-3DA2FA729F14}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<AudioFileSource Name="打中了-天明-悲伤" ID="{D8085C7F-8AF3-4A9C-8DF9-AEDCDBE1E291}">
+									<Language>SFX</Language>
+									<AudioFile>打中了-天明-悲伤.wav</AudioFile>
+									<MediaIDList>
+										<MediaID ID="579748507"/>
+									</MediaIDList>
+								</AudioFileSource>
+							</ChildrenList>
+							<ObjectLists/>
+							<ActiveSourceList>
+								<ActiveSource Name="打中了-天明-悲伤" ID="{D8085C7F-8AF3-4A9C-8DF9-AEDCDBE1E291}" Platform="Linked"/>
+							</ActiveSourceList>
+						</Sound>
+						<Sound Name="打中了-普通" ID="{1CD6DA86-EFF1-4A29-B9CA-CA5845135395}" ShortID="539731335">
+							<PropertyList>
+								<Property Name="Weight" Type="Real64">
+									<ValueList>
+										<Value>70</Value>
+									</ValueList>
+								</Property>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{CF635164-7CA4-4908-867D-CF1D31C3A03B}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{EDE71B29-70AE-48D0-96BA-3DA2FA729F14}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<AudioFileSource Name="打中了-女声" ID="{632DEA81-BD3A-4A67-8F9C-07610EBB223A}">
+									<Language>SFX</Language>
+									<AudioFile>打中了-女声.wav</AudioFile>
+									<MediaIDList>
+										<MediaID ID="768695328"/>
+									</MediaIDList>
+								</AudioFileSource>
+							</ChildrenList>
+							<ObjectLists/>
+							<ActiveSourceList>
+								<ActiveSource Name="打中了-女声" ID="{632DEA81-BD3A-4A67-8F9C-07610EBB223A}" Platform="Linked"/>
+							</ActiveSourceList>
+						</Sound>
+					</ChildrenList>
+					<ObjectLists/>
+				</RandomSequenceContainer>
+				<RandomSequenceContainer Name="没打中" ID="{CAB06EF1-72E7-40D1-A606-89CB39903B39}" ShortID="31377005">
+					<ReferenceList>
+						<Reference Name="Conversion">
+							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{CF635164-7CA4-4908-867D-CF1D31C3A03B}"/>
+						</Reference>
+						<Reference Name="OutputBus">
+							<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{EDE71B29-70AE-48D0-96BA-3DA2FA729F14}"/>
+						</Reference>
+					</ReferenceList>
+					<ChildrenList>
+						<Sound Name="没打中小心它来了-小俊" ID="{12FBD7F4-6535-46E2-997C-E96C6D1DD28D}" ShortID="830792077">
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{CF635164-7CA4-4908-867D-CF1D31C3A03B}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{EDE71B29-70AE-48D0-96BA-3DA2FA729F14}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<AudioFileSource Name="没打中小心它来了-小俊" ID="{CCFCA881-6E72-46CE-977F-04582444B98D}">
+									<Language>SFX</Language>
+									<AudioFile>没打中小心它来了-小俊.wav</AudioFile>
+									<MediaIDList>
+										<MediaID ID="946134818"/>
+									</MediaIDList>
+								</AudioFileSource>
+							</ChildrenList>
+							<ObjectLists/>
+							<ActiveSourceList>
+								<ActiveSource Name="没打中小心它来了-小俊" ID="{CCFCA881-6E72-46CE-977F-04582444B98D}" Platform="Linked"/>
+							</ActiveSourceList>
+						</Sound>
+					</ChildrenList>
+					<ObjectLists/>
+				</RandomSequenceContainer>
+				<RandomSequenceContainer Name="小东西死亡" ID="{52F4AD82-629D-4852-84FD-1E373AABA67C}" ShortID="766907008">
+					<PropertyList>
+						<Property Name="3DSpatialization" Type="int16" Value="2"/>
+						<Property Name="CenterPercentage" Type="int32">
+							<ValueList>
+								<Value>100</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
+					<ReferenceList>
+						<Reference Name="Attenuation">
+							<ObjectRef Name="3DAudio" ID="{27DB1859-B2F5-4989-BDEE-899FCC35D1C0}" WorkUnitID="{D55A1D09-FBD2-4780-9F1B-28D6835EF20C}"/>
+						</Reference>
+						<Reference Name="Conversion">
+							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{CF635164-7CA4-4908-867D-CF1D31C3A03B}"/>
+						</Reference>
+						<Reference Name="OutputBus">
+							<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{EDE71B29-70AE-48D0-96BA-3DA2FA729F14}"/>
+						</Reference>
+					</ReferenceList>
+					<ChildrenList>
+						<Sound Name="小怪死亡" ID="{3B50FCF6-3007-43B4-A8E2-5AA73078E2E4}" ShortID="976626280">
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{CF635164-7CA4-4908-867D-CF1D31C3A03B}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{EDE71B29-70AE-48D0-96BA-3DA2FA729F14}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<AudioFileSource Name="小怪死亡" ID="{D655F8B7-DF38-47CB-B027-6AB0B6B68A9D}">
+									<Language>SFX</Language>
+									<AudioFile>小怪死亡.wav</AudioFile>
+									<MediaIDList>
+										<MediaID ID="581855935"/>
+									</MediaIDList>
+								</AudioFileSource>
+							</ChildrenList>
+							<ObjectLists/>
+							<ActiveSourceList>
+								<ActiveSource Name="小怪死亡" ID="{D655F8B7-DF38-47CB-B027-6AB0B6B68A9D}" Platform="Linked"/>
+							</ActiveSourceList>
+						</Sound>
+					</ChildrenList>
+					<ObjectLists/>
+				</RandomSequenceContainer>
+				<RandomSequenceContainer Name="中型怪物死亡" ID="{3BE143A8-5A17-4291-B1BE-73BB29755184}" ShortID="203198805">
+					<PropertyList>
+						<Property Name="3DSpatialization" Type="int16" Value="2"/>
+						<Property Name="CenterPercentage" Type="int32">
+							<ValueList>
+								<Value>100</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
+					<ReferenceList>
+						<Reference Name="Attenuation">
+							<ObjectRef Name="3DAudio" ID="{27DB1859-B2F5-4989-BDEE-899FCC35D1C0}" WorkUnitID="{D55A1D09-FBD2-4780-9F1B-28D6835EF20C}"/>
+						</Reference>
+						<Reference Name="Conversion">
+							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{CF635164-7CA4-4908-867D-CF1D31C3A03B}"/>
+						</Reference>
+						<Reference Name="OutputBus">
+							<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{EDE71B29-70AE-48D0-96BA-3DA2FA729F14}"/>
+						</Reference>
+					</ReferenceList>
+					<ChildrenList>
+						<Sound Name="中型怪物死亡倒地" ID="{C0F3AC88-E76A-4194-A4FE-7C4C6DA590A7}" ShortID="457607455">
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{CF635164-7CA4-4908-867D-CF1D31C3A03B}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{EDE71B29-70AE-48D0-96BA-3DA2FA729F14}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<AudioFileSource Name="中型怪物死亡倒地" ID="{94F432DC-7A5D-4258-97F9-DAF75697FCF6}">
+									<PropertyList>
+										<Property Name="LoopBegin" Type="Real64" Value="0"/>
+										<Property Name="OverrideWavLoop" Type="bool" Value="True"/>
+										<Property Name="TrimEnd" Type="Real64" Value="0.706665093783177"/>
+									</PropertyList>
+									<Language>SFX</Language>
+									<AudioFile>中型怪物死亡倒地.wav</AudioFile>
+									<MediaIDList>
+										<MediaID ID="496309304"/>
+									</MediaIDList>
+								</AudioFileSource>
+							</ChildrenList>
+							<ObjectLists/>
+							<ActiveSourceList>
+								<ActiveSource Name="中型怪物死亡倒地" ID="{94F432DC-7A5D-4258-97F9-DAF75697FCF6}" Platform="Linked"/>
+							</ActiveSourceList>
+						</Sound>
+						<Sound Name="游戏中僵尸死亡前的吼叫声" ID="{B6487E5B-D655-4F3A-8069-FB742160A26F}" ShortID="50017273">
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{CF635164-7CA4-4908-867D-CF1D31C3A03B}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{EDE71B29-70AE-48D0-96BA-3DA2FA729F14}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<AudioFileSource Name="游戏中僵尸死亡前的吼叫声" ID="{DE98BFCE-85DF-4F60-A4C5-C1F0FA7B2CDD}">
+									<Language>SFX</Language>
+									<AudioFile>游戏中僵尸死亡前的吼叫声.wav</AudioFile>
+									<MediaIDList>
+										<MediaID ID="415587178"/>
+									</MediaIDList>
+								</AudioFileSource>
+							</ChildrenList>
+							<ObjectLists/>
+							<ActiveSourceList>
+								<ActiveSource Name="游戏中僵尸死亡前的吼叫声" ID="{DE98BFCE-85DF-4F60-A4C5-C1F0FA7B2CDD}" Platform="Linked"/>
+							</ActiveSourceList>
+						</Sound>
+						<Sound Name="死亡" ID="{6443B71B-20D8-406A-93A3-1BA820F6646F}" ShortID="6684789">
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{CF635164-7CA4-4908-867D-CF1D31C3A03B}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{EDE71B29-70AE-48D0-96BA-3DA2FA729F14}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<AudioFileSource Name="死亡" ID="{4E4E973C-D1EA-4615-949A-7B6B40557AD8}">
+									<Language>SFX</Language>
+									<AudioFile>死亡.wav</AudioFile>
+									<MediaIDList>
+										<MediaID ID="353800492"/>
+									</MediaIDList>
+								</AudioFileSource>
+							</ChildrenList>
+							<ObjectLists/>
+							<ActiveSourceList>
+								<ActiveSource Name="死亡" ID="{4E4E973C-D1EA-4615-949A-7B6B40557AD8}" Platform="Linked"/>
+							</ActiveSourceList>
+						</Sound>
+					</ChildrenList>
+					<ObjectLists/>
+				</RandomSequenceContainer>
+				<RandomSequenceContainer Name="大型怪物死亡" ID="{28B09159-0E0B-45A5-AD91-BA4CA206479C}" ShortID="547178710">
+					<PropertyList>
+						<Property Name="3DSpatialization" Type="int16" Value="2"/>
+						<Property Name="CenterPercentage" Type="int32">
+							<ValueList>
+								<Value>100</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
+					<ReferenceList>
+						<Reference Name="Attenuation">
+							<ObjectRef Name="3DAudio" ID="{27DB1859-B2F5-4989-BDEE-899FCC35D1C0}" WorkUnitID="{D55A1D09-FBD2-4780-9F1B-28D6835EF20C}"/>
+						</Reference>
+						<Reference Name="Conversion">
+							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{CF635164-7CA4-4908-867D-CF1D31C3A03B}"/>
+						</Reference>
+						<Reference Name="OutputBus">
+							<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{EDE71B29-70AE-48D0-96BA-3DA2FA729F14}"/>
+						</Reference>
+					</ReferenceList>
+					<ChildrenList>
+						<Sound Name="山怪死亡" ID="{68AD0B35-5582-4819-B107-C0767EC521C0}" ShortID="849718728">
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{CF635164-7CA4-4908-867D-CF1D31C3A03B}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{EDE71B29-70AE-48D0-96BA-3DA2FA729F14}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<AudioFileSource Name="山怪死亡" ID="{00E68E78-99FF-4877-8AEF-440E676DB79A}">
+									<Language>SFX</Language>
+									<AudioFile>山怪死亡.wav</AudioFile>
+									<MediaIDList>
+										<MediaID ID="965182816"/>
+									</MediaIDList>
+								</AudioFileSource>
+							</ChildrenList>
+							<ObjectLists/>
+							<ActiveSourceList>
+								<ActiveSource Name="山怪死亡" ID="{00E68E78-99FF-4877-8AEF-440E676DB79A}" Platform="Linked"/>
+							</ActiveSourceList>
+						</Sound>
+						<Sound Name="恶魔怪物死亡痛苦的声音" ID="{87F6E65A-B38B-42D8-861E-3633ABB181F4}" ShortID="124221278">
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{CF635164-7CA4-4908-867D-CF1D31C3A03B}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{EDE71B29-70AE-48D0-96BA-3DA2FA729F14}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<AudioFileSource Name="恶魔怪物死亡痛苦的声音" ID="{01CEA848-73A0-4EBE-8BB8-20B4D5A05014}">
+									<Language>SFX</Language>
+									<AudioFile>恶魔怪物死亡痛苦的声音.wav</AudioFile>
+									<MediaIDList>
+										<MediaID ID="192046997"/>
+									</MediaIDList>
+								</AudioFileSource>
+							</ChildrenList>
+							<ObjectLists/>
+							<ActiveSourceList>
+								<ActiveSource Name="恶魔怪物死亡痛苦的声音" ID="{01CEA848-73A0-4EBE-8BB8-20B4D5A05014}" Platform="Linked"/>
+							</ActiveSourceList>
+						</Sound>
+						<Sound Name="庞然大物倒地死亡" ID="{C2B7CCD2-D39E-402B-842A-FC07B73B73EC}" ShortID="256732953">
+							<PropertyList>
+								<Property Name="InitialDelay" Type="Real64">
+									<ValueList>
+										<Value>0.5</Value>
+									</ValueList>
+								</Property>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{CF635164-7CA4-4908-867D-CF1D31C3A03B}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{EDE71B29-70AE-48D0-96BA-3DA2FA729F14}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<AudioFileSource Name="庞然大物倒地死亡" ID="{C7511001-4505-4175-B821-214286FA1173}">
+									<Language>SFX</Language>
+									<AudioFile>庞然大物倒地死亡.wav</AudioFile>
+									<MediaIDList>
+										<MediaID ID="242684069"/>
+									</MediaIDList>
+								</AudioFileSource>
+							</ChildrenList>
+							<ObjectLists/>
+							<ActiveSourceList>
+								<ActiveSource Name="庞然大物倒地死亡" ID="{C7511001-4505-4175-B821-214286FA1173}" Platform="Linked"/>
+							</ActiveSourceList>
+						</Sound>
+						<Sound Name="巨型怪物死亡倒地" ID="{BCB0F16A-115C-4597-902A-F43876060754}" ShortID="884756358">
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{CF635164-7CA4-4908-867D-CF1D31C3A03B}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{EDE71B29-70AE-48D0-96BA-3DA2FA729F14}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<AudioFileSource Name="巨型怪物死亡倒地" ID="{DD7B9A1D-2B65-4E1E-B8AA-0FBE5611C9D5}">
+									<Language>SFX</Language>
+									<AudioFile>巨型怪物死亡倒地.wav</AudioFile>
+									<MediaIDList>
+										<MediaID ID="45669304"/>
+									</MediaIDList>
+								</AudioFileSource>
+							</ChildrenList>
+							<ObjectLists/>
+							<ActiveSourceList>
+								<ActiveSource Name="巨型怪物死亡倒地" ID="{DD7B9A1D-2B65-4E1E-B8AA-0FBE5611C9D5}" Platform="Linked"/>
+							</ActiveSourceList>
+						</Sound>
+						<Sound Name="树形怪物死亡" ID="{9E1BF89B-D28C-4255-BF03-997DCDF2105A}" ShortID="415165703">
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{CF635164-7CA4-4908-867D-CF1D31C3A03B}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{EDE71B29-70AE-48D0-96BA-3DA2FA729F14}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<AudioFileSource Name="树形怪物死亡" ID="{77074E47-8D87-4268-9194-6BA298405FB5}">
+									<Language>SFX</Language>
+									<AudioFile>树形怪物死亡.wav</AudioFile>
+									<MediaIDList>
+										<MediaID ID="94269076"/>
+									</MediaIDList>
+								</AudioFileSource>
+							</ChildrenList>
+							<ObjectLists/>
+							<ActiveSourceList>
+								<ActiveSource Name="树形怪物死亡" ID="{77074E47-8D87-4268-9194-6BA298405FB5}" Platform="Linked"/>
+							</ActiveSourceList>
+						</Sound>
+					</ChildrenList>
+					<ObjectLists/>
+				</RandomSequenceContainer>
+				<BlendContainer Name="闹市" ID="{8521B8F4-686E-4D80-A370-A039FB8F993F}" ShortID="281817327">
+					<ReferenceList>
+						<Reference Name="Conversion">
+							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{CF635164-7CA4-4908-867D-CF1D31C3A03B}"/>
+						</Reference>
+						<Reference Name="OutputBus">
+							<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{EDE71B29-70AE-48D0-96BA-3DA2FA729F14}"/>
+						</Reference>
+					</ReferenceList>
+					<ChildrenList>
+						<Sound Name="闹市" ID="{7D9D6755-DC0E-4D58-AD7D-283326D9399D}" ShortID="53582277">
+							<PropertyList>
+								<Property Name="IsLoopingEnabled" Type="bool" Value="True"/>
+								<Property Name="IsLoopingInfinite" Type="bool" Value="False"/>
+								<Property Name="LoopCount" Type="int32" Value="3"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{CF635164-7CA4-4908-867D-CF1D31C3A03B}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{EDE71B29-70AE-48D0-96BA-3DA2FA729F14}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<AudioFileSource Name="闹市" ID="{6D61E948-4DFB-4B3D-8873-6144438D8294}">
+									<Language>SFX</Language>
+									<AudioFile>闹市.wav</AudioFile>
+									<MediaIDList>
+										<MediaID ID="234840562"/>
+									</MediaIDList>
+								</AudioFileSource>
+							</ChildrenList>
+							<ObjectLists/>
+							<ActiveSourceList>
+								<ActiveSource Name="闹市" ID="{6D61E948-4DFB-4B3D-8873-6144438D8294}" Platform="Linked"/>
+							</ActiveSourceList>
+						</Sound>
+					</ChildrenList>
+					<ObjectLists/>
+				</BlendContainer>
+				<BlendContainer Name="客人早上好" ID="{A6810E20-6508-4149-9B0B-DE490AD5C15B}" ShortID="335767519">
+					<ReferenceList>
+						<Reference Name="Conversion">
+							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{CF635164-7CA4-4908-867D-CF1D31C3A03B}"/>
+						</Reference>
+						<Reference Name="OutputBus">
+							<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{EDE71B29-70AE-48D0-96BA-3DA2FA729F14}"/>
+						</Reference>
+					</ReferenceList>
+					<ChildrenList>
+						<Sound Name="客人早上好-小露" ID="{C92654E6-49EF-43D9-844B-5EA2E15DD8FA}" ShortID="614355672">
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{CF635164-7CA4-4908-867D-CF1D31C3A03B}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{EDE71B29-70AE-48D0-96BA-3DA2FA729F14}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<AudioFileSource Name="客人早上好-小露" ID="{6CA8369D-E0B3-4B62-BF57-14D440C56D6B}">
+									<Language>SFX</Language>
+									<AudioFile>客人早上好-小露.wav</AudioFile>
+									<MediaIDList>
+										<MediaID ID="314258591"/>
+									</MediaIDList>
+								</AudioFileSource>
+							</ChildrenList>
+							<ObjectLists/>
+							<ActiveSourceList>
+								<ActiveSource Name="客人早上好-小露" ID="{6CA8369D-E0B3-4B62-BF57-14D440C56D6B}" Platform="Linked"/>
 							</ActiveSourceList>
 						</Sound>
 					</ChildrenList>

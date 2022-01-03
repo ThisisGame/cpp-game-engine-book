@@ -5,14 +5,20 @@
 			<ChildrenList>
 				<SoundBank Name="game" ID="{EB80A2E4-5283-4495-88A1-D7F604B87AEF}">
 					<ObjectInclusionList>
+						<ObjectRef Name="little_die" ID="{B389CD0D-616C-4117-B65B-A5B6629D933D}" WorkUnitID="{D67C4115-6345-4BAE-8F2E-476C3440F702}" Origin="Manual" Filter="7"/>
 						<ObjectRef Name="orangutan" ID="{B1798F6D-C9C3-4173-A6FA-9D66204263FC}" WorkUnitID="{D67C4115-6345-4BAE-8F2E-476C3440F702}" Origin="Manual" Filter="7"/>
+						<ObjectRef Name="New_Event" ID="{7604A168-432B-431E-9123-E2F542016868}" WorkUnitID="{D67C4115-6345-4BAE-8F2E-476C3440F702}" Origin="Manual" Filter="7"/>
 						<ObjectRef Name="open_door_walk_in" ID="{79F37C21-008E-4454-821D-9AAEC1FAD31B}" WorkUnitID="{D67C4115-6345-4BAE-8F2E-476C3440F702}" Origin="Manual" Filter="7"/>
+						<ObjectRef Name="not_hit" ID="{540D6C2C-2195-445F-8074-79DFD131E68E}" WorkUnitID="{D67C4115-6345-4BAE-8F2E-476C3440F702}" Origin="Manual" Filter="7"/>
 						<ObjectRef Name="peg" ID="{B135EC2D-8E3C-4651-8BD9-EADD872B265A}" WorkUnitID="{D67C4115-6345-4BAE-8F2E-476C3440F702}" Origin="Manual" Filter="7"/>
 						<ObjectRef Name="tiger" ID="{69D0C23A-CB3E-4790-B217-91E97546A8BF}" WorkUnitID="{D67C4115-6345-4BAE-8F2E-476C3440F702}" Origin="Manual" Filter="7"/>
 						<ObjectRef Name="fire" ID="{6827CCF1-F53D-4B7C-8038-0DEC4A1AF8F2}" WorkUnitID="{D67C4115-6345-4BAE-8F2E-476C3440F702}" Origin="Manual" Filter="7"/>
+						<ObjectRef Name="hit" ID="{74231BB9-1439-4BB7-B5D7-7238712310B3}" WorkUnitID="{D67C4115-6345-4BAE-8F2E-476C3440F702}" Origin="Manual" Filter="7"/>
+						<ObjectRef Name="big_die" ID="{5E5BEB32-7B80-4C78-8EA6-D02D2413C8DA}" WorkUnitID="{D67C4115-6345-4BAE-8F2E-476C3440F702}" Origin="Manual" Filter="7"/>
 						<ObjectRef Name="sheep" ID="{D654354D-D315-4C7C-AF1C-07C3C14C15FC}" WorkUnitID="{D67C4115-6345-4BAE-8F2E-476C3440F702}" Origin="Manual" Filter="7"/>
 						<ObjectRef Name="wolf" ID="{A639553D-5DAA-4CBC-B2BB-BC82660D744B}" WorkUnitID="{D67C4115-6345-4BAE-8F2E-476C3440F702}" Origin="Manual" Filter="7"/>
 						<ObjectRef Name="horse" ID="{2A7A9DE9-045C-4D9D-B275-62777D23D839}" WorkUnitID="{D67C4115-6345-4BAE-8F2E-476C3440F702}" Origin="Manual" Filter="7"/>
+						<ObjectRef Name="middle_die" ID="{23585438-53F7-4DD1-8BC1-D6DFED46C22F}" WorkUnitID="{D67C4115-6345-4BAE-8F2E-476C3440F702}" Origin="Manual" Filter="7"/>
 						<ObjectRef Name="lion" ID="{9DE07AD6-CDCB-4E6B-80F4-E773829E858F}" WorkUnitID="{D67C4115-6345-4BAE-8F2E-476C3440F702}" Origin="Manual" Filter="7"/>
 					</ObjectInclusionList>
 					<ObjectExclusionList/>

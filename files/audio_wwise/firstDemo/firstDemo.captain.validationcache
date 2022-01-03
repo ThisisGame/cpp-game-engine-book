@@ -1,5 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ValidationCache Version="1" SchemaVersion="103">
+	<ValidationCacheItem File="F:\Github\makegameengineatnight_github\files\audio_wwise\firstDemo\Virtual Acoustics\Factory Acoustic Textures.wwu" DateLow="1640792375" DateHigh="0"/>
+	<ValidationCacheItem File="F:\Github\makegameengineatnight_github\files\audio_wwise\firstDemo\Virtual Acoustics\Default Work Unit.wwu" DateLow="1640793216" DateHigh="0"/>
+	<ValidationCacheItem File="F:\Github\makegameengineatnight_github\files\audio_wwise\firstDemo\Triggers\Default Work Unit.wwu" DateLow="1640793216" DateHigh="0"/>
+	<ValidationCacheItem File="F:\Github\makegameengineatnight_github\files\audio_wwise\firstDemo\Switches\Default Work Unit.wwu" DateLow="1640793216" DateHigh="0"/>
+	<ValidationCacheItem File="F:\Github\makegameengineatnight_github\files\audio_wwise\firstDemo\States\Default Work Unit.wwu" DateLow="1640793216" DateHigh="0"/>
+	<ValidationCacheItem File="F:\Github\makegameengineatnight_github\files\audio_wwise\firstDemo\Soundcaster Sessions\Factory Tencent GME.wwu" DateLow="1640793222" DateHigh="0"/>
+	<ValidationCacheItem File="F:\Github\makegameengineatnight_github\files\audio_wwise\firstDemo\Soundcaster Sessions\Default Work Unit.wwu" DateLow="1640793216" DateHigh="0"/>
+	<ValidationCacheItem File="F:\Github\makegameengineatnight_github\files\audio_wwise\firstDemo\SoundBanks\Default Work Unit.wwu" DateLow="1641227135" DateHigh="0"/>
+	<ValidationCacheItem File="F:\Github\makegameengineatnight_github\files\audio_wwise\firstDemo\Queries\Factory Queries.wwu" DateLow="1640792375" DateHigh="0"/>
+	<ValidationCacheItem File="F:\Github\makegameengineatnight_github\files\audio_wwise\firstDemo\Queries\Default Work Unit.wwu" DateLow="1640793216" DateHigh="0"/>
+	<ValidationCacheItem File="F:\Github\makegameengineatnight_github\files\audio_wwise\firstDemo\Presets\Factory Spatial Audio.wwu" DateLow="1640792375" DateHigh="0"/>
+	<ValidationCacheItem File="F:\Github\makegameengineatnight_github\files\audio_wwise\firstDemo\Presets\Factory Reflect.wwu" DateLow="1640792412" DateHigh="0"/>
+	<ValidationCacheItem File="F:\Github\makegameengineatnight_github\files\audio_wwise\firstDemo\Presets\Default Work Unit.wwu" DateLow="1640793216" DateHigh="0"/>
+	<ValidationCacheItem File="F:\Github\makegameengineatnight_github\files\audio_wwise\firstDemo\Modulators\Default Work Unit.wwu" DateLow="1640793216" DateHigh="0"/>
+	<ValidationCacheItem File="F:\Github\makegameengineatnight_github\files\audio_wwise\firstDemo\Mixing Sessions\Default Work Unit.wwu" DateLow="1640793216" DateHigh="0"/>
+	<ValidationCacheItem File="F:\Github\makegameengineatnight_github\files\audio_wwise\firstDemo\Metadata\Default Work Unit.wwu" DateLow="1640793216" DateHigh="0"/>
+	<ValidationCacheItem File="F:\Github\makegameengineatnight_github\files\audio_wwise\firstDemo\Master-Mixer Hierarchy\Default Work Unit.wwu" DateLow="1640793222" DateHigh="0"/>
+	<ValidationCacheItem File="F:\Github\makegameengineatnight_github\files\audio_wwise\firstDemo\Interactive Music Hierarchy\Default Work Unit.wwu" DateLow="1640797893" DateHigh="0"/>
+	<ValidationCacheItem File="F:\Github\makegameengineatnight_github\files\audio_wwise\firstDemo\Game Parameters\Factory SoundSeed Air Game Syncs.wwu" DateLow="1640792413" DateHigh="0"/>
+	<ValidationCacheItem File="F:\Github\makegameengineatnight_github\files\audio_wwise\firstDemo\Game Parameters\Factory Motion.wwu" DateLow="1640792415" DateHigh="0"/>
+	<ValidationCacheItem File="F:\Github\makegameengineatnight_github\files\audio_wwise\firstDemo\Game Parameters\Default Work Unit.wwu" DateLow="1640793216" DateHigh="0"/>
+	<ValidationCacheItem File="F:\Github\makegameengineatnight_github\files\audio_wwise\firstDemo\firstDemo.wproj" DateLow="1640793216" DateHigh="0"/>
+	<ValidationCacheItem File="F:\Github\makegameengineatnight_github\files\audio_wwise\firstDemo\firstDemo.captain.wsettings" DateLow="1641228643" DateHigh="0"/>
+	<ValidationCacheItem File="F:\Github\makegameengineatnight_github\files\audio_wwise\firstDemo\Events\Factory Tencent GME.wwu" DateLow="1640793222" DateHigh="0"/>
+	<ValidationCacheItem File="F:\Github\makegameengineatnight_github\files\audio_wwise\firstDemo\Events\Default Work Unit.wwu" DateLow="1641228184" DateHigh="0"/>
+	<ValidationCacheItem File="F:\Github\makegameengineatnight_github\files\audio_wwise\firstDemo\Effects\Factory Reflect.wwu" DateLow="1640792412" DateHigh="0"/>
+	<ValidationCacheItem File="F:\Github\makegameengineatnight_github\files\audio_wwise\firstDemo\Effects\Factory McDSP Effects.wwu" DateLow="1640792410" DateHigh="0"/>
+	<ValidationCacheItem File="F:\Github\makegameengineatnight_github\files\audio_wwise\firstDemo\Effects\Factory Mastering Suite.wwu" DateLow="1640792415" DateHigh="0"/>
+	<ValidationCacheItem File="F:\Github\makegameengineatnight_github\files\audio_wwise\firstDemo\Effects\Factory iZotope Singleband Distortion.wwu" DateLow="1640792410" DateHigh="0"/>
+	<ValidationCacheItem File="F:\Github\makegameengineatnight_github\files\audio_wwise\firstDemo\Effects\Factory iZotope Multiband Distortion.wwu" DateLow="1640792410" DateHigh="0"/>
+	<ValidationCacheItem File="F:\Github\makegameengineatnight_github\files\audio_wwise\firstDemo\Effects\Factory iZotope Hybrid Reverb Effects.wwu" DateLow="1640792410" DateHigh="0"/>
+	<ValidationCacheItem File="F:\Github\makegameengineatnight_github\files\audio_wwise\firstDemo\Effects\Factory iZotope Filters.wwu" DateLow="1640792410" DateHigh="0"/>
+	<ValidationCacheItem File="F:\Github\makegameengineatnight_github\files\audio_wwise\firstDemo\Effects\Factory iZotope Dynamics.wwu" DateLow="1640792410" DateHigh="0"/>
+	<ValidationCacheItem File="F:\Github\makegameengineatnight_github\files\audio_wwise\firstDemo\Effects\Factory iZotope Delay.wwu" DateLow="1640792410" DateHigh="0"/>
+	<ValidationCacheItem File="F:\Github\makegameengineatnight_github\files\audio_wwise\firstDemo\Effects\Factory iZotope Box Modeler.wwu" DateLow="1640792410" DateHigh="0"/>
+	<ValidationCacheItem File="F:\Github\makegameengineatnight_github\files\audio_wwise\firstDemo\Effects\Factory Effects.wwu" DateLow="1640792375" DateHigh="0"/>
+	<ValidationCacheItem File="F:\Github\makegameengineatnight_github\files\audio_wwise\firstDemo\Effects\Factory Auro Headphone.wwu" DateLow="1640792401" DateHigh="0"/>
+	<ValidationCacheItem File="F:\Github\makegameengineatnight_github\files\audio_wwise\firstDemo\Effects\Default Work Unit.wwu" DateLow="1640793216" DateHigh="0"/>
+	<ValidationCacheItem File="F:\Github\makegameengineatnight_github\files\audio_wwise\firstDemo\Dynamic Dialogue\Default Work Unit.wwu" DateLow="1640793216" DateHigh="0"/>
+	<ValidationCacheItem File="F:\Github\makegameengineatnight_github\files\audio_wwise\firstDemo\Conversion Settings\Factory Conversion Settings.wwu" DateLow="1640792375" DateHigh="0"/>
+	<ValidationCacheItem File="F:\Github\makegameengineatnight_github\files\audio_wwise\firstDemo\Conversion Settings\Default Work Unit.wwu" DateLow="1640793216" DateHigh="0"/>
+	<ValidationCacheItem File="F:\Github\makegameengineatnight_github\files\audio_wwise\firstDemo\Control Surface Sessions\Default Work Unit.wwu" DateLow="1640793216" DateHigh="0"/>
+	<ValidationCacheItem File="F:\Github\makegameengineatnight_github\files\audio_wwise\firstDemo\Audio Devices\Default Work Unit.wwu" DateLow="1640793222" DateHigh="0"/>
+	<ValidationCacheItem File="F:\Github\makegameengineatnight_github\files\audio_wwise\firstDemo\Attenuations\Default Work Unit.wwu" DateLow="1641132447" DateHigh="0"/>
+	<ValidationCacheItem File="F:\Github\makegameengineatnight_github\files\audio_wwise\firstDemo\Actor-Mixer Hierarchy\Factory Tencent GME.wwu" DateLow="1640793222" DateHigh="0"/>
+	<ValidationCacheItem File="F:\Github\makegameengineatnight_github\files\audio_wwise\firstDemo\Actor-Mixer Hierarchy\Factory Synth One.wwu" DateLow="1640792375" DateHigh="0"/>
+	<ValidationCacheItem File="F:\Github\makegameengineatnight_github\files\audio_wwise\firstDemo\Actor-Mixer Hierarchy\Factory SoundSeed Air Objects.wwu" DateLow="1640792413" DateHigh="0"/>
+	<ValidationCacheItem File="F:\Github\makegameengineatnight_github\files\audio_wwise\firstDemo\Actor-Mixer Hierarchy\Factory Motion.wwu" DateLow="1641187534" DateHigh="0"/>
+	<ValidationCacheItem File="F:\Github\makegameengineatnight_github\files\audio_wwise\firstDemo\Actor-Mixer Hierarchy\Default Work Unit.wwu" DateLow="1641228366" DateHigh="0"/>
 	<ValidationCacheItem File="C:\Users\captain\Documents\WwiseProjects\firstDemo\Virtual Acoustics\Factory Acoustic Textures.wwu" DateLow="1640792375" DateHigh="0"/>
 	<ValidationCacheItem File="C:\Users\captain\Documents\WwiseProjects\firstDemo\Virtual Acoustics\Default Work Unit.wwu" DateLow="1640793216" DateHigh="0"/>
 	<ValidationCacheItem File="C:\Users\captain\Documents\WwiseProjects\firstDemo\Triggers\Default Work Unit.wwu" DateLow="1640793216" DateHigh="0"/>
