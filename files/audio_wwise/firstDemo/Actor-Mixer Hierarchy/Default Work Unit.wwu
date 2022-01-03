@@ -1,0 +1,791 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WwiseDocument Type="WorkUnit" ID="{A5B78178-82E9-4546-9A51-2F1DDAB8CA68}" SchemaVersion="103">
+	<AudioObjects>
+		<WorkUnit Name="Default Work Unit" ID="{A5B78178-82E9-4546-9A51-2F1DDAB8CA68}" PersistMode="Standalone">
+			<ChildrenList>
+				<RandomSequenceContainer Name="开场" ID="{64095E05-1A8F-45C2-8F12-BA50EFD219B6}" ShortID="927157816">
+					<PropertyList>
+						<Property Name="PlayMechanismStepOrContinuous" Type="int16" Value="0"/>
+						<Property Name="RandomOrSequence" Type="int16" Value="0"/>
+					</PropertyList>
+					<ReferenceList>
+						<Reference Name="Conversion">
+							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{CF635164-7CA4-4908-867D-CF1D31C3A03B}"/>
+						</Reference>
+						<Reference Name="OutputBus">
+							<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{EDE71B29-70AE-48D0-96BA-3DA2FA729F14}"/>
+						</Reference>
+					</ReferenceList>
+					<ChildrenList>
+						<Sound Name="开场对白_97767623017497331641007151535" ID="{080A8C9B-CBFF-4AD0-8E70-2E7B8A84D2F5}" ShortID="754497668">
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{CF635164-7CA4-4908-867D-CF1D31C3A03B}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{EDE71B29-70AE-48D0-96BA-3DA2FA729F14}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<AudioFileSource Name="开场对白_97767623017497331641007151535" ID="{57544624-C1A0-4139-92B8-8B3A511D3386}">
+									<Language>SFX</Language>
+									<AudioFile>开场对白_97767623017497331641007151535.wav</AudioFile>
+									<MediaIDList>
+										<MediaID ID="680168181"/>
+									</MediaIDList>
+								</AudioFileSource>
+							</ChildrenList>
+							<ObjectLists/>
+							<ActiveSourceList>
+								<ActiveSource Name="开场对白_97767623017497331641007151535" ID="{57544624-C1A0-4139-92B8-8B3A511D3386}" Platform="Linked"/>
+							</ActiveSourceList>
+						</Sound>
+						<Sound Name="硬地板走路" ID="{BBDAE74C-37FF-4E35-9669-148BCD84BF52}" ShortID="385501653">
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{CF635164-7CA4-4908-867D-CF1D31C3A03B}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{EDE71B29-70AE-48D0-96BA-3DA2FA729F14}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<AudioFileSource Name="硬地板走路" ID="{DFF46CC4-4AED-424F-ADAE-04D52DED5B5B}">
+									<Language>SFX</Language>
+									<AudioFile>硬地板走路.wav</AudioFile>
+									<MediaIDList>
+										<MediaID ID="575645192"/>
+									</MediaIDList>
+								</AudioFileSource>
+							</ChildrenList>
+							<ObjectLists/>
+							<ActiveSourceList>
+								<ActiveSource Name="硬地板走路" ID="{DFF46CC4-4AED-424F-ADAE-04D52DED5B5B}" Platform="Linked"/>
+							</ActiveSourceList>
+						</Sound>
+						<Sound Name="open_door" ID="{634A8274-13DF-4CCA-9018-D6E0E226F285}" ShortID="516296922">
+							<PropertyList>
+								<Property Name="Pitch" Type="int32">
+									<ValueList>
+										<Value>1200</Value>
+									</ValueList>
+								</Property>
+								<Property Name="Volume" Type="Real64">
+									<ValueList>
+										<Value>20</Value>
+									</ValueList>
+								</Property>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{CF635164-7CA4-4908-867D-CF1D31C3A03B}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{EDE71B29-70AE-48D0-96BA-3DA2FA729F14}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<AudioFileSource Name="open_door" ID="{A8A484A0-8B21-4D4E-B1D2-632AD9618002}">
+									<Language>SFX</Language>
+									<AudioFile>open_door.wav</AudioFile>
+									<MediaIDList>
+										<MediaID ID="298074970"/>
+									</MediaIDList>
+								</AudioFileSource>
+							</ChildrenList>
+							<ObjectLists/>
+							<ActiveSourceList>
+								<ActiveSource Name="open_door" ID="{A8A484A0-8B21-4D4E-B1D2-632AD9618002}" Platform="Linked"/>
+							</ActiveSourceList>
+						</Sound>
+						<Sound Name="car_in" ID="{AF08A6FF-3F5C-47DE-AFBE-EB993754C2E5}" ShortID="780080981">
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{CF635164-7CA4-4908-867D-CF1D31C3A03B}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{EDE71B29-70AE-48D0-96BA-3DA2FA729F14}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<AudioFileSource Name="car_in" ID="{C20B8996-611D-4785-8401-FB5B0524DB3A}">
+									<Language>SFX</Language>
+									<AudioFile>car_in.wav</AudioFile>
+									<MediaIDList>
+										<MediaID ID="721376288"/>
+									</MediaIDList>
+								</AudioFileSource>
+							</ChildrenList>
+							<ObjectLists/>
+							<ActiveSourceList>
+								<ActiveSource Name="car_in" ID="{C20B8996-611D-4785-8401-FB5B0524DB3A}" Platform="Linked"/>
+							</ActiveSourceList>
+						</Sound>
+						<Sound Name="car_lock" ID="{57209A9C-66FC-4DD5-9081-A7393900EBF9}" ShortID="797639343">
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{CF635164-7CA4-4908-867D-CF1D31C3A03B}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{EDE71B29-70AE-48D0-96BA-3DA2FA729F14}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<AudioFileSource Name="car_lock" ID="{AAC06FB1-5D56-4EF9-B9E2-68F951BE3867}">
+									<Language>SFX</Language>
+									<AudioFile>car_lock.wav</AudioFile>
+									<MediaIDList>
+										<MediaID ID="116244705"/>
+									</MediaIDList>
+								</AudioFileSource>
+							</ChildrenList>
+							<ObjectLists/>
+							<ActiveSourceList>
+								<ActiveSource Name="car_lock" ID="{AAC06FB1-5D56-4EF9-B9E2-68F951BE3867}" Platform="Linked"/>
+							</ActiveSourceList>
+						</Sound>
+						<Sound Name="car_open_door" ID="{517597AE-E54A-40BF-B45F-99FFC158377D}" ShortID="140208088">
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{CF635164-7CA4-4908-867D-CF1D31C3A03B}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{EDE71B29-70AE-48D0-96BA-3DA2FA729F14}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<AudioFileSource Name="car_open_door" ID="{CDA65ACD-4F19-400B-A6E6-89687BEA5D90}">
+									<Language>SFX</Language>
+									<AudioFile>car_open_door.wav</AudioFile>
+									<MediaIDList>
+										<MediaID ID="610461410"/>
+									</MediaIDList>
+								</AudioFileSource>
+							</ChildrenList>
+							<ObjectLists/>
+							<ActiveSourceList>
+								<ActiveSource Name="car_open_door" ID="{CDA65ACD-4F19-400B-A6E6-89687BEA5D90}" Platform="Linked"/>
+							</ActiveSourceList>
+						</Sound>
+						<BlendContainer Name="森林走路听到狼叫" ID="{3C4F1A3C-ABB4-4991-A579-180A2DEFEA64}" ShortID="910612277">
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{CF635164-7CA4-4908-867D-CF1D31C3A03B}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{EDE71B29-70AE-48D0-96BA-3DA2FA729F14}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<Sound Name="wolf_far" ID="{0292AA56-CCEA-480C-ACC7-E03A458E338A}" ShortID="757054601">
+									<PropertyList>
+										<Property Name="InitialDelay" Type="Real64">
+											<ValueList>
+												<Value>3</Value>
+											</ValueList>
+										</Property>
+									</PropertyList>
+									<ReferenceList>
+										<Reference Name="Conversion">
+											<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{CF635164-7CA4-4908-867D-CF1D31C3A03B}"/>
+										</Reference>
+										<Reference Name="OutputBus">
+											<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{EDE71B29-70AE-48D0-96BA-3DA2FA729F14}"/>
+										</Reference>
+									</ReferenceList>
+									<ChildrenList>
+										<AudioFileSource Name="wolf_far" ID="{B71D2951-55EB-4654-9761-E72E022B457E}">
+											<PropertyList>
+												<Property Name="LoopBegin" Type="Real64" Value="0"/>
+												<Property Name="OverrideWavLoop" Type="bool" Value="True"/>
+												<Property Name="TrimEnd" Type="Real64" Value="11.3520217843235"/>
+											</PropertyList>
+											<Language>SFX</Language>
+											<AudioFile>wolf_far.wav</AudioFile>
+											<MediaIDList>
+												<MediaID ID="1027935603"/>
+											</MediaIDList>
+										</AudioFileSource>
+									</ChildrenList>
+									<ObjectLists/>
+									<ActiveSourceList>
+										<ActiveSource Name="wolf_far" ID="{B71D2951-55EB-4654-9761-E72E022B457E}" Platform="Linked"/>
+									</ActiveSourceList>
+								</Sound>
+								<Sound Name="森林走路" ID="{9EDE1F0D-FF42-4571-937A-E286A02CF0DB}" ShortID="1037642926">
+									<ReferenceList>
+										<Reference Name="Conversion">
+											<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{CF635164-7CA4-4908-867D-CF1D31C3A03B}"/>
+										</Reference>
+										<Reference Name="OutputBus">
+											<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{EDE71B29-70AE-48D0-96BA-3DA2FA729F14}"/>
+										</Reference>
+									</ReferenceList>
+									<ChildrenList>
+										<AudioFileSource Name="森林走路" ID="{009DD59D-E96F-4E7F-98F5-F8DFB104E82A}">
+											<PropertyList>
+												<Property Name="FadeInDuration" Type="Real64" Value="2.81880056087476"/>
+												<Property Name="FadeOutDuration" Type="Real64" Value="4.52071788064819"/>
+												<Property Name="OverrideWavLoop" Type="bool" Value="True"/>
+												<Property Name="TrimEnd" Type="Real64" Value="15.3172558779609"/>
+											</PropertyList>
+											<Language>SFX</Language>
+											<AudioFile>森林走路.wav</AudioFile>
+											<MediaIDList>
+												<MediaID ID="773237946"/>
+											</MediaIDList>
+										</AudioFileSource>
+									</ChildrenList>
+									<ObjectLists/>
+									<ActiveSourceList>
+										<ActiveSource Name="森林走路" ID="{009DD59D-E96F-4E7F-98F5-F8DFB104E82A}" Platform="Linked"/>
+									</ActiveSourceList>
+								</Sound>
+							</ChildrenList>
+							<ObjectLists/>
+						</BlendContainer>
+						<BlendContainer Name="启动车并按喇叭催促" ID="{A67C8FC1-EFBD-4520-93EB-C26A2B919569}" ShortID="328740966">
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{CF635164-7CA4-4908-867D-CF1D31C3A03B}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{EDE71B29-70AE-48D0-96BA-3DA2FA729F14}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<Sound Name="car_engine_start" ID="{02674710-7F40-45CA-A1BE-E590382D42D8}" ShortID="936847609">
+									<ReferenceList>
+										<Reference Name="Conversion">
+											<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{CF635164-7CA4-4908-867D-CF1D31C3A03B}"/>
+										</Reference>
+										<Reference Name="OutputBus">
+											<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{EDE71B29-70AE-48D0-96BA-3DA2FA729F14}"/>
+										</Reference>
+									</ReferenceList>
+									<ChildrenList>
+										<AudioFileSource Name="car_engine_start" ID="{66391B6B-255F-4EDF-B4EF-29CA237F4AAA}">
+											<Language>SFX</Language>
+											<AudioFile>car_engine_start.wav</AudioFile>
+											<MediaIDList>
+												<MediaID ID="843988375"/>
+											</MediaIDList>
+										</AudioFileSource>
+									</ChildrenList>
+									<ObjectLists/>
+									<ActiveSourceList>
+										<ActiveSource Name="car_engine_start" ID="{66391B6B-255F-4EDF-B4EF-29CA237F4AAA}" Platform="Linked"/>
+									</ActiveSourceList>
+								</Sound>
+								<Sound Name="car_beep" ID="{07164315-BC77-4613-ABEB-15C0E3F232C8}" ShortID="855923504">
+									<PropertyList>
+										<Property Name="InitialDelay" Type="Real64">
+											<ValueList>
+												<Value>1.5</Value>
+											</ValueList>
+										</Property>
+									</PropertyList>
+									<ReferenceList>
+										<Reference Name="Conversion">
+											<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{CF635164-7CA4-4908-867D-CF1D31C3A03B}"/>
+										</Reference>
+										<Reference Name="OutputBus">
+											<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{EDE71B29-70AE-48D0-96BA-3DA2FA729F14}"/>
+										</Reference>
+									</ReferenceList>
+									<ChildrenList>
+										<AudioFileSource Name="car_beep" ID="{F57E2400-908C-4351-BD1C-9BCE2F66BE3C}">
+											<PropertyList>
+												<Property Name="OverrideWavLoop" Type="bool" Value="True"/>
+												<Property Name="TrimEnd" Type="Real64" Value="4.82290867566538"/>
+											</PropertyList>
+											<Language>SFX</Language>
+											<AudioFile>car_beep.wav</AudioFile>
+											<MediaIDList>
+												<MediaID ID="497917684"/>
+											</MediaIDList>
+										</AudioFileSource>
+									</ChildrenList>
+									<ObjectLists/>
+									<ActiveSourceList>
+										<ActiveSource Name="car_beep" ID="{F57E2400-908C-4351-BD1C-9BCE2F66BE3C}" Platform="Linked"/>
+									</ActiveSourceList>
+								</Sound>
+							</ChildrenList>
+							<ObjectLists/>
+						</BlendContainer>
+					</ChildrenList>
+					<ObjectLists/>
+					<Playlist>
+						<ItemRef Name="open_door" ID="{634A8274-13DF-4CCA-9018-D6E0E226F285}"/>
+						<ItemRef Name="硬地板走路" ID="{BBDAE74C-37FF-4E35-9669-148BCD84BF52}"/>
+						<ItemRef Name="开场对白_97767623017497331641007151535" ID="{080A8C9B-CBFF-4AD0-8E70-2E7B8A84D2F5}"/>
+						<ItemRef Name="启动车并按喇叭催促" ID="{A67C8FC1-EFBD-4520-93EB-C26A2B919569}"/>
+						<ItemRef Name="car_in" ID="{AF08A6FF-3F5C-47DE-AFBE-EB993754C2E5}"/>
+						<ItemRef Name="car_lock" ID="{57209A9C-66FC-4DD5-9081-A7393900EBF9}"/>
+						<ItemRef Name="森林走路听到狼叫" ID="{3C4F1A3C-ABB4-4991-A579-180A2DEFEA64}"/>
+					</Playlist>
+				</RandomSequenceContainer>
+				<BlendContainer Name="开火" ID="{18E7AFB1-5CB4-4711-BAD2-2D4926A44452}" ShortID="412925006">
+					<PropertyList>
+						<Property Name="3DSpatialization" Type="int16" Value="2"/>
+						<Property Name="CenterPercentage" Type="int32">
+							<ValueList>
+								<Value>100</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
+					<ReferenceList>
+						<Reference Name="Attenuation">
+							<ObjectRef Name="3DAudio" ID="{27DB1859-B2F5-4989-BDEE-899FCC35D1C0}" WorkUnitID="{D55A1D09-FBD2-4780-9F1B-28D6835EF20C}"/>
+						</Reference>
+						<Reference Name="Conversion">
+							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{CF635164-7CA4-4908-867D-CF1D31C3A03B}"/>
+						</Reference>
+						<Reference Name="OutputBus">
+							<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{EDE71B29-70AE-48D0-96BA-3DA2FA729F14}"/>
+						</Reference>
+					</ReferenceList>
+					<ChildrenList>
+						<Sound Name="bullet_load" ID="{E19B8985-42C2-44AE-87D0-E68DCA61FFA5}" ShortID="950663858">
+							<PropertyList>
+								<Property Name="InitialDelay" Type="Real64">
+									<ValueList>
+										<Value>1</Value>
+									</ValueList>
+								</Property>
+								<Property Name="Pitch" Type="int32">
+									<ModifierList>
+										<ModifierInfo>
+											<Modifier Name="" ID="{659A6707-54FC-420E-9714-A1DD56BF473D}">
+												<PropertyList>
+													<Property Name="Enabled" Type="bool" Value="True"/>
+													<Property Name="Max" Type="Real64" Value="1200"/>
+												</PropertyList>
+											</Modifier>
+										</ModifierInfo>
+									</ModifierList>
+								</Property>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{CF635164-7CA4-4908-867D-CF1D31C3A03B}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{EDE71B29-70AE-48D0-96BA-3DA2FA729F14}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<AudioFileSource Name="bullet_load" ID="{0892F5B8-6CCC-4391-9CB5-5C4D83A6A09E}">
+									<Language>SFX</Language>
+									<AudioFile>bullet_load.wav</AudioFile>
+									<MediaIDList>
+										<MediaID ID="1065284327"/>
+									</MediaIDList>
+								</AudioFileSource>
+							</ChildrenList>
+							<ObjectLists/>
+							<ActiveSourceList>
+								<ActiveSource Name="bullet_load" ID="{0892F5B8-6CCC-4391-9CB5-5C4D83A6A09E}" Platform="Linked"/>
+							</ActiveSourceList>
+						</Sound>
+						<Sound Name="fire" ID="{CB23A2FB-57FE-4876-8CC1-FF9A48434D97}" ShortID="960082209">
+							<PropertyList>
+								<Property Name="3DSpatialization" Type="int16" Value="2"/>
+								<Property Name="CenterPercentage" Type="int32">
+									<ValueList>
+										<Value>100</Value>
+									</ValueList>
+								</Property>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Attenuation">
+									<ObjectRef Name="test" ID="{F8E984FC-7180-4906-A11C-388232005023}" WorkUnitID="{D55A1D09-FBD2-4780-9F1B-28D6835EF20C}"/>
+								</Reference>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{CF635164-7CA4-4908-867D-CF1D31C3A03B}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{EDE71B29-70AE-48D0-96BA-3DA2FA729F14}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<AudioFileSource Name="fire" ID="{94D5444A-C1C7-4B79-9275-8E55DEBA7243}">
+									<Language>SFX</Language>
+									<AudioFile>fire.wav</AudioFile>
+									<MediaIDList>
+										<MediaID ID="109112998"/>
+									</MediaIDList>
+								</AudioFileSource>
+							</ChildrenList>
+							<ObjectLists/>
+							<ActiveSourceList>
+								<ActiveSource Name="fire" ID="{94D5444A-C1C7-4B79-9275-8E55DEBA7243}" Platform="Linked"/>
+							</ActiveSourceList>
+						</Sound>
+					</ChildrenList>
+					<ObjectLists/>
+				</BlendContainer>
+				<BlendContainer Name="老虎" ID="{4B1B4BDE-9875-4ED8-9DF3-B2FAB797EF0E}" ShortID="438859309">
+					<PropertyList>
+						<Property Name="3DSpatialization" Type="int16" Value="2"/>
+						<Property Name="CenterPercentage" Type="int32">
+							<ValueList>
+								<Value>100</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
+					<ReferenceList>
+						<Reference Name="Attenuation">
+							<ObjectRef Name="3DAudio" ID="{27DB1859-B2F5-4989-BDEE-899FCC35D1C0}" WorkUnitID="{D55A1D09-FBD2-4780-9F1B-28D6835EF20C}"/>
+						</Reference>
+						<Reference Name="Conversion">
+							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{CF635164-7CA4-4908-867D-CF1D31C3A03B}"/>
+						</Reference>
+						<Reference Name="OutputBus">
+							<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{EDE71B29-70AE-48D0-96BA-3DA2FA729F14}"/>
+						</Reference>
+					</ReferenceList>
+					<ChildrenList>
+						<Sound Name="tiger_near" ID="{BF102092-3D7E-429E-BEAC-DDFACB06AD31}" ShortID="626477136">
+							<PropertyList>
+								<Property Name="3DSpatialization" Type="int16" Value="2"/>
+								<Property Name="CenterPercentage" Type="int32">
+									<ValueList>
+										<Value>100</Value>
+									</ValueList>
+								</Property>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Attenuation">
+									<ObjectRef Name="3DAudio" ID="{27DB1859-B2F5-4989-BDEE-899FCC35D1C0}" WorkUnitID="{D55A1D09-FBD2-4780-9F1B-28D6835EF20C}"/>
+								</Reference>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{CF635164-7CA4-4908-867D-CF1D31C3A03B}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{EDE71B29-70AE-48D0-96BA-3DA2FA729F14}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<AudioFileSource Name="tiger_near" ID="{36584477-E316-4747-99C3-B3EEEE02DE15}">
+									<PropertyList>
+										<Property Name="FadeOutDuration" Type="Real64" Value="1.13453926431283"/>
+										<Property Name="OverrideWavLoop" Type="bool" Value="True"/>
+										<Property Name="TrimEnd" Type="Real64" Value="2.58502617185202"/>
+									</PropertyList>
+									<Language>SFX</Language>
+									<AudioFile>tiger_near.wav</AudioFile>
+									<MediaIDList>
+										<MediaID ID="1007640561"/>
+									</MediaIDList>
+								</AudioFileSource>
+							</ChildrenList>
+							<ObjectLists/>
+							<ActiveSourceList>
+								<ActiveSource Name="tiger_near" ID="{36584477-E316-4747-99C3-B3EEEE02DE15}" Platform="Linked"/>
+							</ActiveSourceList>
+						</Sound>
+					</ChildrenList>
+					<ObjectLists/>
+				</BlendContainer>
+				<BlendContainer Name="狮子" ID="{1CAA9A41-A5E5-4098-8939-2C90E378B140}" ShortID="978704309">
+					<PropertyList>
+						<Property Name="3DSpatialization" Type="int16" Value="2"/>
+						<Property Name="CenterPercentage" Type="int32">
+							<ValueList>
+								<Value>100</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
+					<ReferenceList>
+						<Reference Name="Attenuation">
+							<ObjectRef Name="3DAudio" ID="{27DB1859-B2F5-4989-BDEE-899FCC35D1C0}" WorkUnitID="{D55A1D09-FBD2-4780-9F1B-28D6835EF20C}"/>
+						</Reference>
+						<Reference Name="Conversion">
+							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{CF635164-7CA4-4908-867D-CF1D31C3A03B}"/>
+						</Reference>
+						<Reference Name="OutputBus">
+							<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{EDE71B29-70AE-48D0-96BA-3DA2FA729F14}"/>
+						</Reference>
+					</ReferenceList>
+					<ChildrenList>
+						<Sound Name="lion" ID="{85EE69ED-EE5A-4D16-8DB0-2515C093F45E}" ShortID="386879342">
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{CF635164-7CA4-4908-867D-CF1D31C3A03B}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{EDE71B29-70AE-48D0-96BA-3DA2FA729F14}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<AudioFileSource Name="lion" ID="{360D5BCD-9CE9-4BB6-921E-B0C3EF721F8D}">
+									<Language>SFX</Language>
+									<AudioFile>lion.wav</AudioFile>
+									<MediaIDList>
+										<MediaID ID="238657489"/>
+									</MediaIDList>
+								</AudioFileSource>
+							</ChildrenList>
+							<ObjectLists/>
+							<ActiveSourceList>
+								<ActiveSource Name="lion" ID="{360D5BCD-9CE9-4BB6-921E-B0C3EF721F8D}" Platform="Linked"/>
+							</ActiveSourceList>
+						</Sound>
+					</ChildrenList>
+					<ObjectLists/>
+				</BlendContainer>
+				<BlendContainer Name="狼" ID="{DA352BA9-6F3D-4D9F-B74B-C4A96A2D14EA}" ShortID="177382472">
+					<PropertyList>
+						<Property Name="3DSpatialization" Type="int16" Value="2"/>
+						<Property Name="CenterPercentage" Type="int32">
+							<ValueList>
+								<Value>100</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
+					<ReferenceList>
+						<Reference Name="Attenuation">
+							<ObjectRef Name="3DAudio" ID="{27DB1859-B2F5-4989-BDEE-899FCC35D1C0}" WorkUnitID="{D55A1D09-FBD2-4780-9F1B-28D6835EF20C}"/>
+						</Reference>
+						<Reference Name="Conversion">
+							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{CF635164-7CA4-4908-867D-CF1D31C3A03B}"/>
+						</Reference>
+						<Reference Name="OutputBus">
+							<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{EDE71B29-70AE-48D0-96BA-3DA2FA729F14}"/>
+						</Reference>
+					</ReferenceList>
+					<ChildrenList>
+						<Sound Name="wolf_one" ID="{F260D634-4A56-435A-A7AF-C44E7FEAF000}" ShortID="382832382">
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{CF635164-7CA4-4908-867D-CF1D31C3A03B}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{EDE71B29-70AE-48D0-96BA-3DA2FA729F14}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<AudioFileSource Name="wolf_one" ID="{69EEE081-92AD-4B62-A9D0-13777D51B140}">
+									<PropertyList>
+										<Property Name="FadeOutDuration" Type="Real64" Value="0.982197390003071"/>
+										<Property Name="OverrideWavLoop" Type="bool" Value="True"/>
+										<Property Name="TrimEnd" Type="Real64" Value="2.53335058519084"/>
+									</PropertyList>
+									<Language>SFX</Language>
+									<AudioFile>wolf_one.wav</AudioFile>
+									<MediaIDList>
+										<MediaID ID="69722603"/>
+									</MediaIDList>
+								</AudioFileSource>
+							</ChildrenList>
+							<ObjectLists/>
+							<ActiveSourceList>
+								<ActiveSource Name="wolf_one" ID="{69EEE081-92AD-4B62-A9D0-13777D51B140}" Platform="Linked"/>
+							</ActiveSourceList>
+						</Sound>
+					</ChildrenList>
+					<ObjectLists/>
+				</BlendContainer>
+				<BlendContainer Name="猪" ID="{055BD8AB-CD05-4F53-86A8-03D0D30D3142}" ShortID="341720901">
+					<PropertyList>
+						<Property Name="3DSpatialization" Type="int16" Value="2"/>
+						<Property Name="CenterPercentage" Type="int32">
+							<ValueList>
+								<Value>100</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
+					<ReferenceList>
+						<Reference Name="Attenuation">
+							<ObjectRef Name="3DAudio" ID="{27DB1859-B2F5-4989-BDEE-899FCC35D1C0}" WorkUnitID="{D55A1D09-FBD2-4780-9F1B-28D6835EF20C}"/>
+						</Reference>
+						<Reference Name="Conversion">
+							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{CF635164-7CA4-4908-867D-CF1D31C3A03B}"/>
+						</Reference>
+						<Reference Name="OutputBus">
+							<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{EDE71B29-70AE-48D0-96BA-3DA2FA729F14}"/>
+						</Reference>
+					</ReferenceList>
+					<ChildrenList>
+						<Sound Name="pig" ID="{2F64A8FF-5CA6-41E0-9EEB-1B32B91AF899}" ShortID="164462821">
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{CF635164-7CA4-4908-867D-CF1D31C3A03B}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{EDE71B29-70AE-48D0-96BA-3DA2FA729F14}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<AudioFileSource Name="pig" ID="{9B35BEEA-AF61-4104-96E7-CEA33ED3D2F0}">
+									<PropertyList>
+										<Property Name="FadeOutDuration" Type="Real64" Value="0.590286289347631"/>
+										<Property Name="OverrideWavLoop" Type="bool" Value="True"/>
+										<Property Name="TrimEnd" Type="Real64" Value="2.74611447653029"/>
+									</PropertyList>
+									<Language>SFX</Language>
+									<AudioFile>pig.wav</AudioFile>
+									<MediaIDList>
+										<MediaID ID="411547133"/>
+									</MediaIDList>
+								</AudioFileSource>
+							</ChildrenList>
+							<ObjectLists/>
+							<ActiveSourceList>
+								<ActiveSource Name="pig" ID="{9B35BEEA-AF61-4104-96E7-CEA33ED3D2F0}" Platform="Linked"/>
+							</ActiveSourceList>
+						</Sound>
+					</ChildrenList>
+					<ObjectLists/>
+				</BlendContainer>
+				<BlendContainer Name="羊" ID="{250D31EA-4ED5-4C8F-B29C-6174DE52AC48}" ShortID="639318642">
+					<PropertyList>
+						<Property Name="3DSpatialization" Type="int16" Value="2"/>
+						<Property Name="CenterPercentage" Type="int32">
+							<ValueList>
+								<Value>100</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
+					<ReferenceList>
+						<Reference Name="Attenuation">
+							<ObjectRef Name="3DAudio" ID="{27DB1859-B2F5-4989-BDEE-899FCC35D1C0}" WorkUnitID="{D55A1D09-FBD2-4780-9F1B-28D6835EF20C}"/>
+						</Reference>
+						<Reference Name="Conversion">
+							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{CF635164-7CA4-4908-867D-CF1D31C3A03B}"/>
+						</Reference>
+						<Reference Name="OutputBus">
+							<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{EDE71B29-70AE-48D0-96BA-3DA2FA729F14}"/>
+						</Reference>
+					</ReferenceList>
+					<ChildrenList>
+						<Sound Name="sheep" ID="{FEF3544B-8B65-44E7-B33C-711D5DE08715}" ShortID="109553599">
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{CF635164-7CA4-4908-867D-CF1D31C3A03B}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{EDE71B29-70AE-48D0-96BA-3DA2FA729F14}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<AudioFileSource Name="sheep" ID="{8AFDA1FD-BE8A-4882-9CF2-7DEA48D9E90D}">
+									<Language>SFX</Language>
+									<AudioFile>sheep.wav</AudioFile>
+									<MediaIDList>
+										<MediaID ID="637533960"/>
+									</MediaIDList>
+								</AudioFileSource>
+							</ChildrenList>
+							<ObjectLists/>
+							<ActiveSourceList>
+								<ActiveSource Name="sheep" ID="{8AFDA1FD-BE8A-4882-9CF2-7DEA48D9E90D}" Platform="Linked"/>
+							</ActiveSourceList>
+						</Sound>
+					</ChildrenList>
+					<ObjectLists/>
+				</BlendContainer>
+				<BlendContainer Name="马" ID="{761E2B8C-9916-4BDF-94EC-06EE87A4E44B}" ShortID="49492555">
+					<PropertyList>
+						<Property Name="3DSpatialization" Type="int16" Value="2"/>
+						<Property Name="CenterPercentage" Type="int32">
+							<ValueList>
+								<Value>100</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
+					<ReferenceList>
+						<Reference Name="Attenuation">
+							<ObjectRef Name="3DAudio" ID="{27DB1859-B2F5-4989-BDEE-899FCC35D1C0}" WorkUnitID="{D55A1D09-FBD2-4780-9F1B-28D6835EF20C}"/>
+						</Reference>
+						<Reference Name="Conversion">
+							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{CF635164-7CA4-4908-867D-CF1D31C3A03B}"/>
+						</Reference>
+						<Reference Name="OutputBus">
+							<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{EDE71B29-70AE-48D0-96BA-3DA2FA729F14}"/>
+						</Reference>
+					</ReferenceList>
+					<ChildrenList>
+						<Sound Name="horse_die" ID="{F0A5AE62-F4B2-4D80-9550-B96FB994B31E}" ShortID="418600482">
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{CF635164-7CA4-4908-867D-CF1D31C3A03B}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{EDE71B29-70AE-48D0-96BA-3DA2FA729F14}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<AudioFileSource Name="horse_die" ID="{19C0544F-28A3-4131-A196-8A1475F8FC02}">
+									<PropertyList>
+										<Property Name="OverrideWavLoop" Type="bool" Value="True"/>
+										<Property Name="TrimEnd" Type="Real64" Value="2.22616714697407"/>
+									</PropertyList>
+									<Language>SFX</Language>
+									<AudioFile>horse_die.wav</AudioFile>
+									<MediaIDList>
+										<MediaID ID="240836405"/>
+									</MediaIDList>
+								</AudioFileSource>
+							</ChildrenList>
+							<ObjectLists/>
+							<ActiveSourceList>
+								<ActiveSource Name="horse_die" ID="{19C0544F-28A3-4131-A196-8A1475F8FC02}" Platform="Linked"/>
+							</ActiveSourceList>
+						</Sound>
+					</ChildrenList>
+					<ObjectLists/>
+				</BlendContainer>
+				<BlendContainer Name="猩猩" ID="{C2D0F86B-D184-4126-9999-7780E2351C15}" ShortID="186376514">
+					<PropertyList>
+						<Property Name="3DSpatialization" Type="int16" Value="2"/>
+						<Property Name="CenterPercentage" Type="int32">
+							<ValueList>
+								<Value>100</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
+					<ReferenceList>
+						<Reference Name="Attenuation">
+							<ObjectRef Name="3DAudio" ID="{27DB1859-B2F5-4989-BDEE-899FCC35D1C0}" WorkUnitID="{D55A1D09-FBD2-4780-9F1B-28D6835EF20C}"/>
+						</Reference>
+						<Reference Name="Conversion">
+							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{CF635164-7CA4-4908-867D-CF1D31C3A03B}"/>
+						</Reference>
+						<Reference Name="OutputBus">
+							<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{EDE71B29-70AE-48D0-96BA-3DA2FA729F14}"/>
+						</Reference>
+					</ReferenceList>
+					<ChildrenList>
+						<Sound Name="orangutan" ID="{EEFD4BD6-6296-45BF-BA88-82CD579A5E95}" ShortID="857507716">
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{CF635164-7CA4-4908-867D-CF1D31C3A03B}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{EDE71B29-70AE-48D0-96BA-3DA2FA729F14}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<AudioFileSource Name="orangutan" ID="{EEE7E0A7-CC27-4096-80A8-D87955BDA38E}">
+									<Language>SFX</Language>
+									<AudioFile>orangutan.wav</AudioFile>
+									<MediaIDList>
+										<MediaID ID="903751824"/>
+									</MediaIDList>
+								</AudioFileSource>
+							</ChildrenList>
+							<ObjectLists/>
+							<ActiveSourceList>
+								<ActiveSource Name="orangutan" ID="{EEE7E0A7-CC27-4096-80A8-D87955BDA38E}" Platform="Linked"/>
+							</ActiveSourceList>
+						</Sound>
+					</ChildrenList>
+					<ObjectLists/>
+				</BlendContainer>
+			</ChildrenList>
+		</WorkUnit>
+	</AudioObjects>
+</WwiseDocument>

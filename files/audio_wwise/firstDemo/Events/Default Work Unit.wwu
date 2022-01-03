@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WwiseDocument Type="WorkUnit" ID="{D67C4115-6345-4BAE-8F2E-476C3440F702}" SchemaVersion="103">
+	<Events>
+		<WorkUnit Name="Default Work Unit" ID="{D67C4115-6345-4BAE-8F2E-476C3440F702}" PersistMode="Standalone">
+			<ChildrenList>
+				<Event Name="New_Event" ID="{7604A168-432B-431E-9123-E2F542016868}">
+					<ChildrenList>
+						<Action Name="" ID="{7903D3DC-AE86-447D-BA8F-4A283343921B}" ShortID="108229142"/>
+					</ChildrenList>
+				</Event>
+				<Event Name="fire" ID="{6827CCF1-F53D-4B7C-8038-0DEC4A1AF8F2}">
+					<ChildrenList>
+						<Action Name="" ID="{E92398FD-9122-4E2E-8C2B-2345DF577622}" ShortID="830266319">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="开火" ID="{18E7AFB1-5CB4-4711-BAD2-2D4926A44452}" WorkUnitID="{A5B78178-82E9-4546-9A51-2F1DDAB8CA68}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="open_door_walk_in" ID="{79F37C21-008E-4454-821D-9AAEC1FAD31B}">
+					<ChildrenList>
+						<Action Name="" ID="{5FA6DA44-4042-4E8F-A4D6-F22CE19FCDEA}" ShortID="45129146">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="开场" ID="{64095E05-1A8F-45C2-8F12-BA50EFD219B6}" WorkUnitID="{A5B78178-82E9-4546-9A51-2F1DDAB8CA68}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="lion" ID="{9DE07AD6-CDCB-4E6B-80F4-E773829E858F}">
+					<ChildrenList>
+						<Action Name="" ID="{44CCF7FD-C900-47DF-B4F2-6E3D84E18BE9}" ShortID="89012168">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="狮子" ID="{1CAA9A41-A5E5-4098-8939-2C90E378B140}" WorkUnitID="{A5B78178-82E9-4546-9A51-2F1DDAB8CA68}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="wolf" ID="{A639553D-5DAA-4CBC-B2BB-BC82660D744B}">
+					<ChildrenList>
+						<Action Name="" ID="{47317755-9577-4000-B037-2AE3DA13D245}" ShortID="997393930">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="狼" ID="{DA352BA9-6F3D-4D9F-B74B-C4A96A2D14EA}" WorkUnitID="{A5B78178-82E9-4546-9A51-2F1DDAB8CA68}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="orangutan" ID="{B1798F6D-C9C3-4173-A6FA-9D66204263FC}">
+					<ChildrenList>
+						<Action Name="" ID="{DCCF2150-12D9-477C-9F5F-AA8AFBFFC62D}" ShortID="1064243392">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="猩猩" ID="{C2D0F86B-D184-4126-9999-7780E2351C15}" WorkUnitID="{A5B78178-82E9-4546-9A51-2F1DDAB8CA68}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="peg" ID="{B135EC2D-8E3C-4651-8BD9-EADD872B265A}">
+					<ChildrenList>
+						<Action Name="" ID="{A5488739-946F-4362-8979-7D1EADFC44A1}" ShortID="182102024">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="猪" ID="{055BD8AB-CD05-4F53-86A8-03D0D30D3142}" WorkUnitID="{A5B78178-82E9-4546-9A51-2F1DDAB8CA68}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="sheep" ID="{D654354D-D315-4C7C-AF1C-07C3C14C15FC}">
+					<ChildrenList>
+						<Action Name="" ID="{6D19F1CA-BA9A-4148-B7D5-AB72326C1F54}" ShortID="49086522">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="羊" ID="{250D31EA-4ED5-4C8F-B29C-6174DE52AC48}" WorkUnitID="{A5B78178-82E9-4546-9A51-2F1DDAB8CA68}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="tiger" ID="{69D0C23A-CB3E-4790-B217-91E97546A8BF}">
+					<ChildrenList>
+						<Action Name="" ID="{47CF478D-969C-4417-8224-92F56FB035DF}" ShortID="801259966">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="老虎" ID="{4B1B4BDE-9875-4ED8-9DF3-B2FAB797EF0E}" WorkUnitID="{A5B78178-82E9-4546-9A51-2F1DDAB8CA68}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="horse" ID="{2A7A9DE9-045C-4D9D-B275-62777D23D839}">
+					<ChildrenList>
+						<Action Name="" ID="{4807205E-7C06-4841-9E07-C09DA1151B4B}" ShortID="959004583">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="马" ID="{761E2B8C-9916-4BDF-94EC-06EE87A4E44B}" WorkUnitID="{A5B78178-82E9-4546-9A51-2F1DDAB8CA68}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+			</ChildrenList>
+		</WorkUnit>
+	</Events>
+</WwiseDocument>
