@@ -6,3 +6,5 @@ logs
 *.cache
 .DS_Store
 .doxygen
+.backup
+.cache
