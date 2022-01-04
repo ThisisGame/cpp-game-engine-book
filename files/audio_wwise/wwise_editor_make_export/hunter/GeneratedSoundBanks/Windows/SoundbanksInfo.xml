@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SoundBanksInfo Platform="Windows" BasePlatform="Windows" SchemaVersion="12" SoundbankVersion="140">
+	<RootPaths>
+		<ProjectRoot>C:\Users\captain\Documents\WwiseProjects\hunter\</ProjectRoot>
+		<SourceFilesRoot>C:\Users\captain\Documents\WwiseProjects\hunter\.cache\Windows\</SourceFilesRoot>
+		<SoundBanksRoot>C:\Users\captain\Documents\WwiseProjects\hunter\GeneratedSoundBanks\Windows\</SoundBanksRoot>
+		<ExternalSourcesInputFile></ExternalSourcesInputFile>
+		<ExternalSourcesOutputRoot>C:\Users\captain\Documents\WwiseProjects\hunter\GeneratedSoundBanks\Windows</ExternalSourcesOutputRoot>
+	</RootPaths>
+	<DialogueEvents/>
+	<StreamedFiles/>
+	<MediaFilesNotInAnyBank/>
+	<SoundBanks>
+		<SoundBank Id="514064485" Language="SFX" Hash="3657883408">
+			<ObjectPath>\SoundBanks\Default Work Unit\fight</ObjectPath>
+			<ShortName>fight</ShortName>
+			<Path>fight.bnk</Path>
+		</SoundBank>
+		<SoundBank Id="1355168291" Language="SFX" Hash="1958929096">
+			<ObjectPath>Init</ObjectPath>
+			<ShortName>Init</ShortName>
+			<Path>Init.bnk</Path>
+		</SoundBank>
+	</SoundBanks>
+</SoundBanksInfo>
