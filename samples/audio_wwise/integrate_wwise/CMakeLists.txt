@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.17)
-project(untitled)
+project(hunter)
 
 set(CMAKE_CXX_STANDARD 17)
 
@@ -47,4 +47,4 @@ file(GLOB_RECURSE engine_cpp source/*.cpp)
 file(GLOB_RECURSE rttr_cpp "depends/rttr/*.cpp")
 file(GLOB_RECURSE example_cpp example/*.cpp)
 
-add_executable(untitled ${glfw_sources} ${rttr_cpp} ${freetype_src} ${easy_profiler_core_source} ${lua_src} ${engine_cpp} ${example_cpp})
+add_executable(hunter ${glfw_sources} ${rttr_cpp} ${freetype_src} ${easy_profiler_core_source} ${lua_src} ${engine_cpp} ${example_cpp})
