@@ -9,6 +9,7 @@
 #include "component/transform.h"
 #include "utils/debug.h"
 
+rigtorp::SPSCQueue<AudioSource::MusicCallbackInfo> AudioSource::event_callback_queue_(1024);
 
 using namespace rttr;
 RTTR_REGISTRATION
@@ -30,17 +31,11 @@ void AudioSource::SetEvent(const std::string &event_name) {
     event_name_=event_name;
 }
 
+
 void AudioSource::MusicCallback(AkCallbackType in_eType,AkCallbackInfo* in_pCallbackInfo)
 {
-    AudioSource* audio_source=(AudioSource*)in_pCallbackInfo->pCookie;
-    if(in_eType == AK_EndOfEvent)
-    {
-        DEBUG_LOG_INFO("end event: {}",audio_source->event_name_);
-        if(audio_source->event_end_callback_)
-        {
-            audio_source->event_end_callback_();
-        }
-    }
+    MusicCallbackInfo music_callback_info(in_eType,*in_pCallbackInfo);
+    event_callback_queue_.push(music_callback_info);
 }
 
 void AudioSource::SetRTPCValue(const std::string &rtpc_name, float value) {
@@ -60,12 +55,11 @@ void AudioSource::Set3DMode(bool mode_3d) {
 }
 
 void AudioSource::Play() {
-    playing_id_ = AK::SoundEngine::PostEvent(event_name_.c_str(), audio_object_id_ );
+    playing_id_ = AK::SoundEngine::PostEvent(event_name_.c_str(),audio_object_id_,AK_EndOfEvent,&AudioSource::MusicCallback,this);
     if(playing_id_==AK_INVALID_PLAYING_ID){
         DEBUG_LOG_ERROR("AudioSource::Play() failed");
         return;
     }
-    AK::SoundEngine::PostEvent(event_name_.c_str(),audio_object_id_,AK_EndOfEvent,&AudioSource::MusicCallback,this);
 }
 
 void AudioSource::Pause() {
@@ -91,6 +85,21 @@ void AudioSource::SetLoop(bool mode_loop) {
 
 void AudioSource::Update() {
     Component::Update();
+
+    // 处理Event
+    while (event_callback_queue_.front()){
+        MusicCallbackInfo* music_callback_info = event_callback_queue_.front();
+
+        AudioSource* audio_source=(AudioSource*)music_callback_info->callback_info_.pCookie;
+        if(music_callback_info->callback_type_ == AK_EndOfEvent){
+            DEBUG_LOG_INFO("end event: {}",audio_source->event_name_);
+            if(audio_source->event_end_callback_){
+                audio_source->event_end_callback_();
+            }
+        }
+        event_callback_queue_.pop();
+    }
+
     auto component_transform=game_object()->GetComponent("Transform");
     auto transform=dynamic_cast<Transform*>(component_transform);
     if(!transform){

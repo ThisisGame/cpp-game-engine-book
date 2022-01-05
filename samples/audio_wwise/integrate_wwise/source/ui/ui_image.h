@@ -15,7 +15,15 @@ public:
     ~UIImage() override;
 
     Texture2D* texture2D(){return texture2D_;}
-    void set_texture(Texture2D* texture2D){texture2D_=texture2D;}
+    void set_texture(Texture2D* texture2D){
+        if (texture2D_ == texture2D){
+            return;
+        }
+        if (texture2D_!=nullptr){
+            dirty_=true;
+        }
+        texture2D_=texture2D;
+    }
 
 public:
     void Update() override;
@@ -25,7 +33,7 @@ public:
     void OnPostRender() override;
 private:
     Texture2D* texture2D_= nullptr;//Texture
-
+    bool        dirty_=false;//是否需要更新
 };
 
 

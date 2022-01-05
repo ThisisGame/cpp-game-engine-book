@@ -7,6 +7,7 @@
 #include <string>
 #include <functional>
 #include <AK/SoundEngine/Common/AkCallback.h>
+#include <spscqueue/include/rigtorp/SPSCQueue.h>
 #include "component/component.h"
 #include "wwise_audio.h"
 
@@ -34,6 +35,20 @@ public:
 
     bool Paused();
 
+    /// Event回调信息
+    class MusicCallbackInfo{
+    public:
+        MusicCallbackInfo(AkCallbackType callback_type, AkCallbackInfo callback_info)
+                :callback_type_(callback_type), callback_info_(callback_info){}
+        ~MusicCallbackInfo(){}
+
+        AkCallbackType callback_type_;
+        AkCallbackInfo callback_info_;
+    };
+
+    /// Event回调，静态函数
+    /// \param in_eType Event类型。
+    /// \param in_pCookie 回调参数，在PostEvent设置的，原样返回。
     static void MusicCallback(AkCallbackType in_eType,AkCallbackInfo* in_pCallbackInfo);
 
     void set_event_end_callback(std::function<void(void)> callback){
@@ -54,6 +69,7 @@ private:
 
     std::function<void()> event_end_callback_;
 
+    static rigtorp::SPSCQueue<MusicCallbackInfo> event_callback_queue_;
 };
 
 

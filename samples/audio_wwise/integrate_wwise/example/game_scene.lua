@@ -2,10 +2,14 @@ GameScene={
     go_camera_ui_,--摄像机UI
     go_ui_image_,--UI图片
 
-    logo_play_duration_=5,--logo显示时长
-    is_logo_play_finish_,--是否显示完毕logo
+    --need_head_phone_play_duration_=5,--佩戴耳机提示显示时长
+    --is_need_head_phone_play_finish_,--是否显示完毕佩戴耳机提示
+    is_enter_game_=false,--是否按空格进入了游戏
 
     second_callback_call_time_ = 0,--每秒回调调用的时间
+
+    is_enter_fight_=false,--是否进入战斗
+
     listener_go_,--Listener
     bgm_go_,--背景音乐
     hero_go_,--英雄
@@ -33,26 +37,9 @@ setmetatable(GameScene,{["__call"]=function(table,param)
     return instance
 end})
 
+
 -- public:
 function GameScene:Awake()
-    -- 创建UI相机 GameObject
-    self.go_camera_ui_=GameObject("ui_camera")
-    -- 挂上 Transform 组件
-    local transform_camera_ui=self.go_camera_ui_:AddComponent("Transform")
-    transform_camera_ui:set_position(glm.vec3(0, 0, 10))
-    -- 挂上 Camera 组件
-    local camera_ui=self.go_camera_ui_:AddComponent("UICamera")
-    -- 设置正交相机
-    camera_ui:SetView(glm.vec3(0, 0, 0), glm.vec3(0, 1, 0))
-    camera_ui:SetOrthographic(-Screen.width()/2,Screen.width()/2,-Screen.height()/2,Screen.height()/2,-100,100)
-
-    -- 创建 GameObject
-    self.go_ui_image_=GameObject("image")
-    self.go_ui_image_:AddComponent("Transform"):set_position(glm.vec3(-480, -320, 0))
-    -- 挂上 UIImage 组件
-    local ui_image_mod_bag=self.go_ui_image_:AddComponent("UIImage")
-    ui_image_mod_bag:set_texture(Texture2D.LoadFromFile("images/hunter_logo.cpt"))
-
 
     self.hero_pos_array_={
         glm.vec3(-5,0,10),
@@ -71,7 +58,7 @@ function GameScene:Awake()
         {name="peg",audio="peg",die_audio="little_die"},
         {name="sheep",audio="sheep",die_audio="little_die"},
         {name="tiger",audio="tiger",die_audio="middle_die"},
-        {name="horse",audio="horse",die_audio="big_die"}
+        {name="horse",audio="horse",die_audio="middle_die"}
     }
 
     -- 加载Init.bank文件
@@ -85,23 +72,27 @@ function GameScene:Awake()
     self.listener_go_:AddComponent("AudioListener")
     self.listener_go_:GetComponent("Transform"):set_position(glm.vec3(0,0,0))
 
+    self:CreateUI()
+
     --创建英雄
     self.hero_go_=GameObject("hero")
     self.hero_go_:AddComponent("Transform")
     self.hero_go_:AddComponent("AudioSource"):SetEvent("fire")
-    self.hero_go_:GetComponent("AudioSource"):set_event_end_callback(function()
+    self.fire_event_callback= function()
         print("fire end")
-    end)
+    end
+    self.hero_go_:GetComponent("AudioSource"):set_event_end_callback(self.fire_event_callback)
 
     -- 创建背景音乐
     self.bgm_go_=GameObject("bgm")
     self.bgm_go_:AddComponent("Transform")
     self.bgm_go_:AddComponent("AudioSource"):SetEvent("open_door_walk_in")
-    self.bgm_go_:GetComponent("AudioSource"):set_event_end_callback(function()
+    self.open_door_walk_in_event_callback= function()
         print("bgm end")
-        self:InitGame()
-    end)
-    self.bgm_go_:GetComponent("AudioSource"):Play()
+        self:EnterFight()
+    end
+    self.bgm_go_:GetComponent("AudioSource"):set_event_end_callback(self.open_door_walk_in_event_callback)
+    --self.bgm_go_:GetComponent("AudioSource"):Play()
 
     -- 创建怪物
     self.monster_go_=GameObject("monster")
@@ -123,9 +114,33 @@ function GameScene:set_game_object(game_object)
     self.game_object_=game_object
 end
 
+function GameScene:CreateUI()
+    -- 创建UI相机 GameObject
+    self.go_camera_ui_=GameObject("ui_camera")
+    -- 挂上 Transform 组件
+    local transform_camera_ui=self.go_camera_ui_:AddComponent("Transform")
+    transform_camera_ui:set_position(glm.vec3(0, 0, 10))
+    -- 挂上 Camera 组件
+    local camera_ui=self.go_camera_ui_:AddComponent("UICamera")
+    -- 设置正交相机
+    camera_ui:SetView(glm.vec3(0, 0, 0), glm.vec3(0, 1, 0))
+    camera_ui:SetOrthographic(-Screen.width()/2,Screen.width()/2,-Screen.height()/2,Screen.height()/2,-100,100)
+
+    -- 创建 UIImage
+    self.go_ui_image_=GameObject("image")
+    self.go_ui_image_:AddComponent("Transform"):set_position(glm.vec3(-480, -320, 0))
+    -- 挂上 UIImage 组件
+    local ui_image_mod_bag=self.go_ui_image_:AddComponent("UIImage")
+    ui_image_mod_bag:set_texture(Texture2D.LoadFromFile("images/need_head_phone.cpt"))
+
+    -- 播放游戏启动的背景音乐
+    self.go_ui_image_:AddComponent("AudioSource"):SetEvent("open_game")
+    self.go_ui_image_:GetComponent("AudioSource"):Play()
+end
 
 
-function GameScene:InitGame()
+function GameScene:EnterFight()
+    self.is_enter_fight_=true
     self:MonsterRefresh()
     self:SetHeroPosition()
 end
@@ -141,6 +156,20 @@ function GameScene:Update()
 
 
     if Input.GetKeyUp(KeyCode.KEY_CODE_SPACE) then
+        -- 按空格进入游戏
+        if self.is_enter_game_==false then
+            self.is_enter_game_=true
+            self.bgm_go_:GetComponent("AudioSource"):Play()
+            self.go_ui_image_:GetComponent("AudioSource"):Stop()
+            return
+        end
+
+        -- 剧情阶段不能开枪
+        if self.is_enter_fight_==false then
+            print("cannot fire in story")
+            return
+        end
+
         print("Time.TimeSinceStartup() " .. tostring(Time.TimeSinceStartup()))
         if Time.TimeSinceStartup() - self.hero_fire_time_ < self.hero_fire_cd_ then
             print("fire cd")
@@ -185,13 +214,6 @@ function GameScene:Update()
 end
 
 function GameScene:SecondCallback()
-    self.logo_play_duration_ = self.logo_play_duration_ - 1
-    print("GameScene:SecondCallback logo_play_duration_:" .. tostring(self.logo_play_duration_))
-    if self.logo_play_duration_==0 then
-        self.logo_play_duration_=9999999999999
-        self.go_ui_image_:GetComponent("UIImage"):set_texture(Texture2D.LoadFromFile("images/need_head_phone.cpt"))
-    end
-
     print("self.is_monster_die_:" .. tostring(self.is_monster_die_) .. " self.monster_die_time_:" .. tostring(self.monster_die_time_) .. " Time.TimeSinceStartup():" .. tostring(Time.TimeSinceStartup()))
     -- 计时刷新怪物
     if self.is_monster_die_ and (Time.TimeSinceStartup() - self.monster_die_time_ >=self.refresh_monster_delay_timer_) then

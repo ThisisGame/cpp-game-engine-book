@@ -55,6 +55,13 @@ void UIImage::Update() {
         //挂上 MeshRenderer 组件
         auto mesh_renderer=dynamic_cast<MeshRenderer*>(game_object()->AddComponent("MeshRenderer"));
         mesh_renderer->SetMaterial(material);
+    }else{
+        if(dirty_){
+            auto mesh_renderer=dynamic_cast<MeshRenderer*>(game_object()->GetComponent("MeshRenderer"));
+            auto material=mesh_renderer->material();
+            material->SetTexture("u_diffuse_texture", texture2D_);
+            dirty_=false;
+        }
     }
 }
 
