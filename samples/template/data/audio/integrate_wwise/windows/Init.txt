@@ -1,109 +1,25 @@
-Switch Group	ID	Name			Wwise Object Path	Notes
-	246300162	Footstep_Weight			\Footsteps With Multiple Variables\Footstep_Weight	This switch is driven by the Footstep_Weight RTPC
-	4202554577	Footstep_Gait			\Footsteps With Multiple Variables\Footstep_Gait	
-
-Switch	ID	Name	Switch Group			Notes
-	1935470627	Light	Footstep_Weight			
-	2732489590	Heavy	Footstep_Weight			
-	712161704	Run	Footstep_Gait			
-	2108779966	Walk	Footstep_Gait			
-
-State Group	ID	Name			Wwise Object Path	Notes
-	6899006	Objective			\Dialogue\Objective	
-	151362964	PlayerHealth			\Default Work Unit\PlayerHealth	
-	1176052424	Location			\Dialogue\Location	
-	1304109583	Unit			\Dialogue\Unit	
-	3299963692	ObjectiveStatus			\Dialogue\ObjectiveStatus	
-	3712907969	Hostile			\Dialogue\Hostile	
-	3991942870	Music			\Default Work Unit\Music	
-	4110439188	WalkieTalkie			\Dialogue\WalkieTalkie	
-
-State	ID	Name	State Group			Notes
-	141419130	NeutralizeHostile	Objective			
-	748895195	None	Objective			
-	3261872615	DefuseBomb	Objective			
-	3841112373	RescueHostage	Objective			
-	748895195	None	PlayerHealth			
-	868398962	Blasted	PlayerHealth			
-	1160234136	Normal	PlayerHealth			
-	672587556	Alley	Location			
-	748895195	None	Location			
-	2192450996	Hangar	Location			
-	4142189312	Street	Location			
-	748895195	None	Unit			
-	3004848132	Unit_B	Unit			
-	3004848135	Unit_A	Unit			
-	94054856	Completed	ObjectiveStatus			
-	748895195	None	ObjectiveStatus			
-	1655200910	Failed	ObjectiveStatus			
-	685704824	Gang	Hostile			
-	714721627	Bum	Hostile			
-	748895195	None	Hostile			
-	514064485	Fight	Music			
-	748895195	None	Music			
-	886139701	Fight_Damaged	Music			
-	1323211483	Winning_TheFight	Music			
-	1420167880	Fight_LowHealth	Music			
-	1823678183	Exploring	Music			
-	1852808225	Playing	Music			
-	4158285989	GameOver	Music			
-	4222988787	Fight_Dying	Music			
-	748895195	None	WalkieTalkie			
-	1553720736	Comm_Out	WalkieTalkie			
-	1856010785	Comm_In	WalkieTalkie			
-
-Custom State	ID	Name	State Group	Owner		Notes
-	416526659	Blasted	PlayerHealth	\Master-Mixer Hierarchy\Default Work Unit\Master Audio Bus		
-
 Game Parameter	ID	Name			Wwise Object Path	Notes
-	504532776	Brick			\Default Work Unit\Brick	
-	2451442924	Enable_Effect			\Default Work Unit\Enable_Effect	
-	3670307564	Drywall			\Default Work Unit\Drywall	
+	504532776	Brick			\Factory Acoustic Textures\Textures\Brick	
+	513139656	Mountain			\Factory Acoustic Textures\Textures\Mountain	
+	841620460	Concrete			\Factory Acoustic Textures\Textures\Concrete	
+	1755085759	Wood_Deep			\Factory Acoustic Textures\Textures\Wood_Deep	
+	1873957695	Anechoic			\Factory Acoustic Textures\Textures\Anechoic	
+	1970351858	Fabric			\Factory Acoustic Textures\Textures\Fabric	
+	2058049674	Wood			\Factory Acoustic Textures\Textures\Wood	
+	2412606308	Carpet			\Factory Acoustic Textures\Textures\Carpet	
+	2637588553	Tile			\Factory Acoustic Textures\Textures\Tile	
+	2928161104	Curtains			\Factory Acoustic Textures\Textures\Curtains	
+	3195498748	Cork_Tiles			\Factory Acoustic Textures\Textures\Cork_Tiles	
+	3670307564	Drywall			\Factory Acoustic Textures\Textures\Drywall	
+	4168643977	Acoustic_Banner			\Factory Acoustic Textures\Textures\Acoustic_Banner	
+	4262522749	Wood_Bright			\Factory Acoustic Textures\Textures\Wood_Bright	
 
 Audio Bus	ID	Name			Wwise Object Path	Notes
-	197057172	Voices_Radio			\Default Work Unit\Master Audio Bus\Voices_Radio	
-	461496087	Non Recordable Bus			\Default Work Unit\Non Recordable Bus	
-	838047381	Non-World			\Default Work Unit\Master Audio Bus\3D_Audio_Demo\Non-World	Used for music, UI effects, etc.  This bus is configured to inherit the audio device's passthrough mix configuration. When 3D Audio is enabled, the passthrough mix is stereo, and bypasses the system's binauralizer, and the channels are router directly to the physical L/R speakers of the headphones. When 3D Audio is not enabled, this bus will inherit the Master Bus configuration, so multichannel music will only be mixed down when necessitated by the endpoint's channel configuration.
-	1101487118	3D-Submix_Bus			\Default Work Unit\Master Audio Bus\3D_Bus_Demo\3D-Submix_Bus	
-	1410202225	Wet_Path_Omni			\Default Work Unit\Master Audio Bus\3D_Bus_Demo\Wet_Path_Omni	
-	1492361653	Sounds			\Default Work Unit\Master Audio Bus\3D_Audio_Demo\World\Sounds	Bus for all 3D point sources in the world.  This bus is configured as "Same as parent", same as all its ancestors up to the Master Audio Bus. When 3D Audio is enabled, it will be configured to process Audio Objects. When 3D Audio is not enabled, it will produce a mix in the same configuration as the Master Audio Bus, which is more efficient for CPU usage.
-	1673180298	Dry_Path			\Default Work Unit\Master Audio Bus\3D_Bus_Demo\Dry_Path	
-	1949198961	Muted for User Music			\Default Work Unit\Non Recordable Bus\Muted for User Music	
-	2017263062	Portals			\Default Work Unit\Master Audio Bus\3D_Bus_Demo\Portals	
-	2281484271	Wet_Path_3D			\Default Work Unit\Master Audio Bus\3D_Bus_Demo\Wet_Path_3D	
-	2609808943	World			\Default Work Unit\Master Audio Bus\3D_Audio_Demo\World	
-	3313685232	Voices			\Default Work Unit\Master Audio Bus\Voices	
-	3596053402	Game Pad Bus			\Default Work Unit\Game Pad Bus	
-	3600197733	Environmental Bus			\Default Work Unit\Master Audio Bus\Environmental Bus	
-	3742896575	3D_Audio_Demo			\Default Work Unit\Master Audio Bus\3D_Audio_Demo	
-	3761286811	Environments			\Default Work Unit\Master Audio Bus\3D_Audio_Demo\World\Environments	Diffuse ambiences in the world.  This bus will inherit the channel configuration of the audio device's Main Mix. When 3D Audio is enabled, this will be a configuration suitable for binauralization (typically either 7.1.4 or higher-order Ambisonics, depending on the platform). When 3D Audio is not enabled, it should inherit the configuration of the Master Bus, which is more efficient for CPU usage.  Note that this bus forces its output to be router to the audio device's Main Mix by using the Wwise System Output Settings metadata plug-in.
+	985987111	Motion Factory Bus			\Default Work Unit\Motion Factory Bus	
 	3803692087	Master Audio Bus			\Default Work Unit\Master Audio Bus	
-	3991942870	Music			\Default Work Unit\Master Audio Bus\Music	
-	4083517055	3D_Bus_Demo			\Default Work Unit\Master Audio Bus\3D_Bus_Demo	
-
-Auxiliary Bus	ID	Name			Wwise Object Path	Notes
-	438105790	Outside			\Default Work Unit\Master Audio Bus\3D_Bus_Demo\Portals\Outside	Because it is more prominent (in terms of length), it sends less in Room than Room sends in it.
-	924456902	ListenerEnv			\Default Work Unit\Master Audio Bus\3D_Bus_Demo\Wet_Path_Omni\ListenerEnv	
-	1359360137	Room1			\Default Work Unit\Master Audio Bus\3D_Bus_Demo\Wet_Path_3D\Room1	
-	1359360138	Room2			\Default Work Unit\Master Audio Bus\3D_Bus_Demo\Wet_Path_3D\Room2	
-	2077253480	Room			\Default Work Unit\Master Audio Bus\3D_Bus_Demo\Portals\Room	Room has more character so we exaggerate coupling into Outside by having a large "Game-Defined Send" level compared to the direct output ("Output Bus Volume").
-	2112490296	Hangar_Env			\Default Work Unit\Master Audio Bus\Environmental Bus\Hangar_Env	
-
-Effect plug-ins	ID	Name	Type				Notes
-	88356853	Huge_Space_Garage	Wwise RoomVerb			
-	204868897	Wwise Stereo Delay (Custom)	Wwise Stereo Delay			
-	668148182	_BigReverb (Define custom)	Wwise RoomVerb			
-	1159390747	Room_Medium_Tiled	Wwise RoomVerb			
-	2112490296	Hangar_Env	Wwise RoomVerb			
-	3752477165	Bright_Small_Hall	Wwise RoomVerb			
-
-Metadata plug-ins	ID	Name	Type				Notes
-	2077473410	RouteToMainMix	Wwise System Output Settings			
 
 Audio Devices	ID	Name	Type				Notes
-	666305828	Pad_Output	Controller Speaker			
 	2317455096	No_Output	No Output			
-	2868300805	Controller_Headphones	Controller Headphones			
 	3859886410	System	System			
-	3884583641	Communication_Output	Communication			
+	4230635974	Default_Motion_Device	Wwise Motion			
 
