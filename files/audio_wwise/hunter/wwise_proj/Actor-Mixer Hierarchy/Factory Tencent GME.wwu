@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WwiseDocument Type="WorkUnit" ID="{D4726262-E090-441D-87BF-E875DC3BF2BF}" SchemaVersion="103">
+	<AudioObjects>
+		<WorkUnit Name="Factory Tencent GME" ID="{D4726262-E090-441D-87BF-E875DC3BF2BF}" PersistMode="Standalone">
+			<ChildrenList>
+				<Sound Name="GME Send" ID="{27786AED-5C2E-42F6-BB7A-9D230E8FE113}" ShortID="745673146">
+					<ReferenceList>
+						<Reference Name="Conversion">
+							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{CF635164-7CA4-4908-867D-CF1D31C3A03B}"/>
+						</Reference>
+						<Reference Name="Effect3">
+							<Custom>
+								<Effect Name="Tencent GME Send (Custom)" ID="{8C7312F6-2591-4F27-8819-5CA0BC29A0E3}" ShortID="1033216726" PluginName="Tencent GME Send" CompanyID="289" PluginID="9004" PluginType="3"/>
+							</Custom>
+						</Reference>
+						<Reference Name="OutputBus">
+							<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{EDE71B29-70AE-48D0-96BA-3DA2FA729F14}"/>
+						</Reference>
+					</ReferenceList>
+					<ChildrenList>
+						<SourcePlugin Name="Tencent GME Source" ID="{701F3751-9594-4A33-A619-2FEEEDF04DA6}" ShortID="403148069" PluginName="Tencent GME Source" CompanyID="289" PluginID="9001">
+							<Language>SFX</Language>
+						</SourcePlugin>
+					</ChildrenList>
+					<ObjectLists/>
+					<ActiveSourceList>
+						<ActiveSource Name="Tencent GME Source" ID="{701F3751-9594-4A33-A619-2FEEEDF04DA6}" Platform="Linked"/>
+					</ActiveSourceList>
+				</Sound>
+				<Sound Name="GME Receive" ID="{2C246068-6A57-4DB8-B53E-D17A55F0679F}" ShortID="75742271">
+					<ReferenceList>
+						<Reference Name="Conversion">
+							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{CF635164-7CA4-4908-867D-CF1D31C3A03B}"/>
+						</Reference>
+						<Reference Name="OutputBus">
+							<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{EDE71B29-70AE-48D0-96BA-3DA2FA729F14}"/>
+						</Reference>
+					</ReferenceList>
+					<ChildrenList>
+						<SourcePlugin Name="Tencent GME Receive" ID="{D23B1C35-7200-4304-823C-7BC29061CADC}" ShortID="312778980" PluginName="Tencent GME Receive" CompanyID="289" PluginID="9003">
+							<Language>SFX</Language>
+						</SourcePlugin>
+					</ChildrenList>
+					<ObjectLists/>
+					<ActiveSourceList>
+						<ActiveSource Name="Tencent GME Receive" ID="{D23B1C35-7200-4304-823C-7BC29061CADC}" Platform="Linked"/>
+					</ActiveSourceList>
+				</Sound>
+			</ChildrenList>
+		</WorkUnit>
+	</AudioObjects>
+</WwiseDocument>
