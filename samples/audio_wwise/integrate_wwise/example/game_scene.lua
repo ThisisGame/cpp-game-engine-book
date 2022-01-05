@@ -1,9 +1,9 @@
 GameScene={
-    go_camera_, --相机物体
-    camera_ = nil, --相机
-    go_skeleton_, --骨骼蒙皮动画物体
-    material_, --材质
-    last_frame_mouse_position_,--上一帧的鼠标位置
+    go_camera_ui_,--摄像机UI
+    go_ui_image_,--UI图片
+
+    logo_play_duration_=5,--logo显示时长
+    is_logo_play_finish_,--是否显示完毕logo
 
     second_callback_call_time_ = 0,--每秒回调调用的时间
     listener_go_,--Listener
@@ -35,29 +35,23 @@ end})
 
 -- public:
 function GameScene:Awake()
+    -- 创建UI相机 GameObject
+    self.go_camera_ui_=GameObject("ui_camera")
+    -- 挂上 Transform 组件
+    local transform_camera_ui=self.go_camera_ui_:AddComponent("Transform")
+    transform_camera_ui:set_position(glm.vec3(0, 0, 10))
+    -- 挂上 Camera 组件
+    local camera_ui=self.go_camera_ui_:AddComponent("UICamera")
+    -- 设置正交相机
+    camera_ui:SetView(glm.vec3(0, 0, 0), glm.vec3(0, 1, 0))
+    camera_ui:SetOrthographic(-Screen.width()/2,Screen.width()/2,-Screen.height()/2,Screen.height()/2,-100,100)
 
-    --创建相机1 GameObject
-    self.go_camera_= GameObject("main_camera")
-    --挂上 Transform 组件
-    self.go_camera_:AddComponent("Transform"):set_position(glm.vec3(0, 0, 100))
-    --挂上 Camera 组件
-    self.camera_=self.go_camera_:AddComponent("Camera")
-    self.camera_:set_depth(0)
-
-    --创建骨骼蒙皮动画
-    self.go_skeleton_=GameObject("skeleton")
-    self.go_skeleton_:AddComponent("Transform"):set_position(glm.vec3(0, 0, 0))
-    self.go_skeleton_:GetComponent("Transform"):set_rotation(glm.vec3(-90, 0, 0))
-
-    local mesh_filter=self.go_skeleton_:AddComponent("MeshFilter")
-    mesh_filter:LoadMesh("model/export.mesh")--加载Mesh
-    --手动创建Material
-    self.material_ = Material()--设置材质
-    self.material_:Parse("material/cube.mat")
-
-    --挂上 MeshRenderer 组件
-    local skinned_mesh_renderer= self.go_skeleton_:AddComponent("MeshRenderer")
-    skinned_mesh_renderer:SetMaterial(self.material_)
+    -- 创建 GameObject
+    self.go_ui_image_=GameObject("image")
+    self.go_ui_image_:AddComponent("Transform"):set_position(glm.vec3(-480, -320, 0))
+    -- 挂上 UIImage 组件
+    local ui_image_mod_bag=self.go_ui_image_:AddComponent("UIImage")
+    ui_image_mod_bag:set_texture(Texture2D.LoadFromFile("images/hunter_logo.cpt"))
 
 
     self.hero_pos_array_={
@@ -129,6 +123,8 @@ function GameScene:set_game_object(game_object)
     self.game_object_=game_object
 end
 
+
+
 function GameScene:InitGame()
     self:MonsterRefresh()
     self:SetHeroPosition()
@@ -137,16 +133,6 @@ end
 
 function GameScene:Update()
     --print("GameScene:Update")
-
-    self.camera_:set_depth(0)
-    self.camera_:SetView(glm.vec3(0.0,0.0,0.0), glm.vec3(0.0,1.0,0.0))
-    self.camera_:SetPerspective(60, Screen.aspect_ratio(), 1, 1000)
-
-    self.last_frame_mouse_position_=Input.mousePosition()
-    --鼠标滚轮控制相机远近
-    self.go_camera_:GetComponent("Transform"):set_position(self.go_camera_:GetComponent("Transform"):position() *(10 - Input.mouse_scroll())/10)
-
-
     -- 每秒回调
     if Time.TimeSinceStartup() - self.second_callback_call_time_ >=1 then
         self.second_callback_call_time_=Time.TimeSinceStartup()
@@ -199,6 +185,13 @@ function GameScene:Update()
 end
 
 function GameScene:SecondCallback()
+    self.logo_play_duration_ = self.logo_play_duration_ - 1
+    print("GameScene:SecondCallback logo_play_duration_:" .. tostring(self.logo_play_duration_))
+    if self.logo_play_duration_==0 then
+        self.logo_play_duration_=9999999999999
+        self.go_ui_image_:GetComponent("UIImage"):set_texture(Texture2D.LoadFromFile("images/need_head_phone.cpt"))
+    end
+
     print("self.is_monster_die_:" .. tostring(self.is_monster_die_) .. " self.monster_die_time_:" .. tostring(self.monster_die_time_) .. " Time.TimeSinceStartup():" .. tostring(Time.TimeSinceStartup()))
     -- 计时刷新怪物
     if self.is_monster_die_ and (Time.TimeSinceStartup() - self.monster_die_time_ >=self.refresh_monster_delay_timer_) then

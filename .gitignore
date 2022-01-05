@@ -8,3 +8,4 @@ logs
 .doxygen
 .backup
 .cache
+cmake-build-release

@@ -23,6 +23,8 @@
 #include "renderer/texture2d.h"
 #include "renderer/animation_clip.h"
 #include "renderer/animation.h"
+#include "ui/ui_image.h"
+#include "ui/ui_camera.h"
 #include "utils/application.h"
 #include "utils/debug.h"
 #include "utils/screen.h"
@@ -439,6 +441,17 @@ void LuaBinding::BindLua() {
                                               "current_animation_clip", &Animation::current_animation_clip
         );
 
+    }
+
+    // ui
+    {
+        sol_state_.new_usertype<UICamera>("UICamera",sol::call_constructor,sol::constructors<UICamera()>(),
+                                                     sol::base_classes,sol::bases<Camera,Component>()
+        );
+        sol_state_.new_usertype<UIImage>("UIImage",sol::call_constructor,sol::constructors<UIImage()>(),
+                                           sol::base_classes,sol::bases<Component>(),
+                                           "set_texture", &UIImage::set_texture
+        );
     }
 
     // utils

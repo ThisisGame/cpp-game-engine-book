@@ -30,14 +30,12 @@ file(COPY "../../template/depends/easy_profiler-2.1.0/easy_profiler_core/" DESTI
 
 
 #拷贝data文件
-file(COPY "../../template/data/images/urban.cpt" DESTINATION "../data/images/")
-file(COPY "../../template/data/material/cube.mat" DESTINATION "../data/material/")
+file(COPY "../../template/data/images/need_head_phone.cpt" DESTINATION "../data/images/")
+file(COPY "../../template/data/images/hunter_logo.cpt" DESTINATION "../data/images/")
+file(COPY "../../template/data/material/ui_image.mat" DESTINATION "../data/material/")
 file(GLOB unlit_shaders "../../template/data/shader/unlit.*")
 file(COPY ${unlit_shaders} DESTINATION "../data/shader/")
-file(COPY "../../template/data/animation/load_skeleton_animation/export.skeleton_anim" DESTINATION "../data/animation/")
-file(COPY "../../template/data/model/load_weight_file/export.mesh" DESTINATION "../data/model/")
-file(COPY "../../template/data/model/load_weight_file/export.weight" DESTINATION "../data/model/")
-file(COPY "../../template/data/audio/integrate_wwise/windows/" DESTINATION "../data/audio/")
+file(COPY "../../template/data/audio/hunter/windows/" DESTINATION "../data/audio/")
 
 #头文件目录
 include_directories("depends")

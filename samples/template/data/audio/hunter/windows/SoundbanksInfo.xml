@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SoundBanksInfo Platform="Windows" BasePlatform="Windows" SchemaVersion="12" SoundbankVersion="140">
+	<RootPaths>
+		<ProjectRoot>E:\makegameengineatnight\Github\files\audio_wwise\hunter\wwise_proj\</ProjectRoot>
+		<SourceFilesRoot>E:\makegameengineatnight\Github\files\audio_wwise\hunter\wwise_proj\.cache\Windows\</SourceFilesRoot>
+		<SoundBanksRoot>E:\makegameengineatnight\Github\files\audio_wwise\hunter\wwise_proj\GeneratedSoundBanks\Windows\</SoundBanksRoot>
+		<ExternalSourcesInputFile></ExternalSourcesInputFile>
+		<ExternalSourcesOutputRoot>E:\makegameengineatnight\Github\files\audio_wwise\hunter\wwise_proj\GeneratedSoundBanks\Windows</ExternalSourcesOutputRoot>
+	</RootPaths>
+	<DialogueEvents/>
+	<StreamedFiles/>
+	<MediaFilesNotInAnyBank/>
+	<SoundBanks>
+		<SoundBank Id="702482391" Language="SFX" Hash="3496620304">
+			<ObjectPath>\SoundBanks\Default Work Unit\game</ObjectPath>
+			<ShortName>game</ShortName>
+			<Path>game.bnk</Path>
+			<IncludedEvents>
+				<Event Id="1044246946" Name="big_die" ObjectPath="\Events\Default Work Unit\big_die">
+					<IncludedMemoryFiles>
+						<File Id="45669304" Language="SFX">
+							<ShortName>巨型怪物死亡倒地.wav</ShortName>
+							<Path>SFX\巨型怪物死亡倒地_10C4C929.wem</Path>
+						</File>
+						<File Id="94269076" Language="SFX">
+							<ShortName>树形怪物死亡.wav</ShortName>
+							<Path>SFX\树形怪物死亡_10C4C929.wem</Path>
+						</File>
+						<File Id="192046997" Language="SFX">
+							<ShortName>恶魔怪物死亡痛苦的声音.wav</ShortName>
+							<Path>SFX\恶魔怪物死亡痛苦的声音_10C4C929.wem</Path>
+						</File>
+						<File Id="242684069" Language="SFX">
+							<ShortName>庞然大物倒地死亡.wav</ShortName>
+							<Path>SFX\庞然大物倒地死亡_10C4C929.wem</Path>
+						</File>
+						<File Id="965182816" Language="SFX">
+							<ShortName>山怪死亡.wav</ShortName>
+							<Path>SFX\山怪死亡_10C4C929.wem</Path>
+						</File>
+					</IncludedMemoryFiles>
+				</Event>
+				<Event Id="2678880713" Name="fire" ObjectPath="\Events\Default Work Unit\fire">
+					<IncludedMemoryFiles>
+						<File Id="109112998" Language="SFX">
+							<ShortName>fire.wav</ShortName>
+							<Path>SFX\fire_10C4C929.wem</Path>
+						</File>
+						<File Id="1065284327" Language="SFX">
+							<ShortName>bullet_load.wav</ShortName>
+							<Path>SFX\bullet_load_10C4C929.wem</Path>
+						</File>
+					</IncludedMemoryFiles>
+				</Event>
+				<Event Id="1116398592" Name="hit" ObjectPath="\Events\Default Work Unit\hit">
+					<IncludedMemoryFiles>
+						<File Id="579748507" Language="SFX">
+							<ShortName>打中了-天明-悲伤.wav</ShortName>
+							<Path>SFX\打中了-天明-悲伤_10C4C929.wem</Path>
+						</File>
+						<File Id="768695328" Language="SFX">
+							<ShortName>打中了-女声.wav</ShortName>
+							<Path>SFX\打中了-女声_10C4C929.wem</Path>
+						</File>
+					</IncludedMemoryFiles>
+				</Event>
+				<Event Id="3854847584" Name="horse" ObjectPath="\Events\Default Work Unit\horse">
+					<IncludedMemoryFiles>
+						<File Id="240836405" Language="SFX">
+							<ShortName>horse_die.wav</ShortName>
+							<Path>SFX\horse_die_E0F7E806.wem</Path>
+						</File>
+					</IncludedMemoryFiles>
+				</Event>
+				<Event Id="153136435" Name="lion" ObjectPath="\Events\Default Work Unit\lion">
+					<IncludedMemoryFiles>
+						<File Id="238657489" Language="SFX">
+							<ShortName>lion.wav</ShortName>
+							<Path>SFX\lion_10C4C929.wem</Path>
+						</File>
+					</IncludedMemoryFiles>
+				</Event>
+				<Event Id="185173510" Name="little_die" ObjectPath="\Events\Default Work Unit\little_die">
+					<IncludedMemoryFiles>
+						<File Id="581855935" Language="SFX">
+							<ShortName>小怪死亡.wav</ShortName>
+							<Path>SFX\小怪死亡_10C4C929.wem</Path>
+						</File>
+					</IncludedMemoryFiles>
+				</Event>
+				<Event Id="3372056997" Name="middle_die" ObjectPath="\Events\Default Work Unit\middle_die">
+					<IncludedMemoryFiles>
+						<File Id="353800492" Language="SFX">
+							<ShortName>死亡.wav</ShortName>
+							<Path>SFX\死亡_10C4C929.wem</Path>
+						</File>
+						<File Id="415587178" Language="SFX">
+							<ShortName>游戏中僵尸死亡前的吼叫声.wav</ShortName>
+							<Path>SFX\游戏中僵尸死亡前的吼叫声_10C4C929.wem</Path>
+						</File>
+						<File Id="496309304" Language="SFX">
+							<ShortName>中型怪物死亡倒地.wav</ShortName>
+							<Path>SFX\中型怪物死亡倒地_20C67795.wem</Path>
+						</File>
+					</IncludedMemoryFiles>
+				</Event>
+				<Event Id="3050945240" Name="New_Event" ObjectPath="\Events\Default Work Unit\New_Event"/>
+				<Event Id="2857840038" Name="not_hit" ObjectPath="\Events\Default Work Unit\not_hit">
+					<IncludedMemoryFiles>
+						<File Id="946134818" Language="SFX">
+							<ShortName>没打中小心它来了-小俊.wav</ShortName>
+							<Path>SFX\没打中小心它来了-小俊_10C4C929.wem</Path>
+						</File>
+					</IncludedMemoryFiles>
+				</Event>
+				<Event Id="3761376310" Name="open_door_walk_in" ObjectPath="\Events\Default Work Unit\open_door_walk_in">
+					<IncludedMemoryFiles>
+						<File Id="116244705" Language="SFX">
+							<ShortName>car_lock.wav</ShortName>
+							<Path>SFX\car_lock_10C4C929.wem</Path>
+						</File>
+						<File Id="133443536" Language="SFX">
+							<ShortName>希望不要遇到它.wav</ShortName>
+							<Path>SFX\希望不要遇到它_10C4C929.wem</Path>
+						</File>
+						<File Id="234840562" Language="SFX">
+							<ShortName>闹市.wav</ShortName>
+							<Path>SFX\闹市_D79FB2B7.wem</Path>
+						</File>
+						<File Id="259719128" Language="SFX">
+							<ShortName>注意听声音位置.wav</ShortName>
+							<Path>SFX\注意听声音位置_10C4C929.wem</Path>
+						</File>
+						<File Id="298074970" Language="SFX">
+							<ShortName>open_door.wav</ShortName>
+							<Path>SFX\open_door_10C4C929.wem</Path>
+						</File>
+						<File Id="314258591" Language="SFX">
+							<ShortName>客人早上好-小露.wav</ShortName>
+							<Path>SFX\客人早上好-小露_10C4C929.wem</Path>
+						</File>
+						<File Id="464349162" Language="SFX">
+							<ShortName>这么远都能听到狼的声音.wav</ShortName>
+							<Path>SFX\这么远都能听到狼的声音_10C4C929.wem</Path>
+						</File>
+						<File Id="497917684" Language="SFX">
+							<ShortName>car_beep.wav</ShortName>
+							<Path>SFX\car_beep_3F5F9639.wem</Path>
+						</File>
+						<File Id="575645192" Language="SFX">
+							<ShortName>硬地板走路.wav</ShortName>
+							<Path>SFX\硬地板走路_10C4C929.wem</Path>
+						</File>
+						<File Id="610461410" Language="SFX">
+							<ShortName>car_open_door.wav</ShortName>
+							<Path>SFX\car_open_door_10C4C929.wem</Path>
+						</File>
+						<File Id="655469199" Language="SFX">
+							<ShortName>野兽来了.wav</ShortName>
+							<Path>SFX\野兽来了_158990F1.wem</Path>
+						</File>
+						<File Id="668157738" Language="SFX">
+							<ShortName>按方向键左右移动.wav</ShortName>
+							<Path>SFX\按方向键左右移动_10C4C929.wem</Path>
+						</File>
+						<File Id="680168181" Language="SFX">
+							<ShortName>开场对白_97767623017497331641007151535.wav</ShortName>
+							<Path>SFX\开场对白_97767623017497331641007151535_10C4C929.wem</Path>
+						</File>
+						<File Id="721376288" Language="SFX">
+							<ShortName>car_in.wav</ShortName>
+							<Path>SFX\car_in_10C4C929.wem</Path>
+						</File>
+						<File Id="773237946" Language="SFX">
+							<ShortName>森林走路.wav</ShortName>
+							<Path>SFX\森林走路_18C9A6FF.wem</Path>
+						</File>
+						<File Id="831213746" Language="SFX">
+							<ShortName>按空格键开火.wav</ShortName>
+							<Path>SFX\按空格键开火_10C4C929.wem</Path>
+						</File>
+						<File Id="843988375" Language="SFX">
+							<ShortName>car_engine_start.wav</ShortName>
+							<Path>SFX\car_engine_start_10C4C929.wem</Path>
+						</File>
+						<File Id="858699135" Language="SFX">
+							<ShortName>野兽出现.wav</ShortName>
+							<Path>SFX\野兽出现_10C4C929.wem</Path>
+						</File>
+						<File Id="1027935603" Language="SFX">
+							<ShortName>wolf_far.wav</ShortName>
+							<Path>SFX\wolf_far_E7408233.wem</Path>
+						</File>
+					</IncludedMemoryFiles>
+				</Event>
+				<Event Id="1544370296" Name="orangutan" ObjectPath="\Events\Default Work Unit\orangutan">
+					<IncludedMemoryFiles>
+						<File Id="903751824" Language="SFX">
+							<ShortName>orangutan.wav</ShortName>
+							<Path>SFX\orangutan_10C4C929.wem</Path>
+						</File>
+					</IncludedMemoryFiles>
+				</Event>
+				<Event Id="1182229359" Name="peg" ObjectPath="\Events\Default Work Unit\peg">
+					<IncludedMemoryFiles>
+						<File Id="411547133" Language="SFX">
+							<ShortName>pig.wav</ShortName>
+							<Path>SFX\pig_5D992E6D.wem</Path>
+						</File>
+					</IncludedMemoryFiles>
+				</Event>
+				<Event Id="2935967122" Name="sheep" ObjectPath="\Events\Default Work Unit\sheep">
+					<IncludedMemoryFiles>
+						<File Id="637533960" Language="SFX">
+							<ShortName>sheep.wav</ShortName>
+							<Path>SFX\sheep_10C4C929.wem</Path>
+						</File>
+					</IncludedMemoryFiles>
+				</Event>
+				<Event Id="3854606522" Name="tiger" ObjectPath="\Events\Default Work Unit\tiger">
+					<IncludedMemoryFiles>
+						<File Id="1007640561" Language="SFX">
+							<ShortName>tiger_near.wav</ShortName>
+							<Path>SFX\tiger_near_EBBB2882.wem</Path>
+						</File>
+					</IncludedMemoryFiles>
+				</Event>
+				<Event Id="2041272125" Name="wolf" ObjectPath="\Events\Default Work Unit\wolf">
+					<IncludedMemoryFiles>
+						<File Id="69722603" Language="SFX">
+							<ShortName>wolf_one.wav</ShortName>
+							<Path>SFX\wolf_one_CE0C2250.wem</Path>
+						</File>
+					</IncludedMemoryFiles>
+				</Event>
+			</IncludedEvents>
+		</SoundBank>
+		<SoundBank Id="1355168291" Language="SFX" Hash="1958929096">
+			<ObjectPath>Init</ObjectPath>
+			<ShortName>Init</ShortName>
+			<Path>Init.bnk</Path>
+		</SoundBank>
+	</SoundBanks>
+</SoundBanksInfo>
