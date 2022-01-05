@@ -12,6 +12,7 @@
 						<ObjectRef Name="not_hit" ID="{540D6C2C-2195-445F-8074-79DFD131E68E}" WorkUnitID="{D67C4115-6345-4BAE-8F2E-476C3440F702}" Origin="Manual" Filter="7"/>
 						<ObjectRef Name="peg" ID="{B135EC2D-8E3C-4651-8BD9-EADD872B265A}" WorkUnitID="{D67C4115-6345-4BAE-8F2E-476C3440F702}" Origin="Manual" Filter="7"/>
 						<ObjectRef Name="tiger" ID="{69D0C23A-CB3E-4790-B217-91E97546A8BF}" WorkUnitID="{D67C4115-6345-4BAE-8F2E-476C3440F702}" Origin="Manual" Filter="7"/>
+						<ObjectRef Name="open_game" ID="{BA7B32B3-E44F-4A85-95B6-D450ED327B6C}" WorkUnitID="{D67C4115-6345-4BAE-8F2E-476C3440F702}" Origin="Manual" Filter="7"/>
 						<ObjectRef Name="fire" ID="{6827CCF1-F53D-4B7C-8038-0DEC4A1AF8F2}" WorkUnitID="{D67C4115-6345-4BAE-8F2E-476C3440F702}" Origin="Manual" Filter="7"/>
 						<ObjectRef Name="hit" ID="{74231BB9-1439-4BB7-B5D7-7238712310B3}" WorkUnitID="{D67C4115-6345-4BAE-8F2E-476C3440F702}" Origin="Manual" Filter="7"/>
 						<ObjectRef Name="big_die" ID="{5E5BEB32-7B80-4C78-8EA6-D02D2413C8DA}" WorkUnitID="{D67C4115-6345-4BAE-8F2E-476C3440F702}" Origin="Manual" Filter="7"/>

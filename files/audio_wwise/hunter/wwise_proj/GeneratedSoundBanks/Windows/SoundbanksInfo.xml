@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <SoundBanksInfo Platform="Windows" BasePlatform="Windows" SchemaVersion="12" SoundbankVersion="140">
 	<RootPaths>
-		<ProjectRoot>E:\makegameengineatnight\Github\files\audio_wwise\hunter\wwise_proj\</ProjectRoot>
-		<SourceFilesRoot>E:\makegameengineatnight\Github\files\audio_wwise\hunter\wwise_proj\.cache\Windows\</SourceFilesRoot>
-		<SoundBanksRoot>E:\makegameengineatnight\Github\files\audio_wwise\hunter\wwise_proj\GeneratedSoundBanks\Windows\</SoundBanksRoot>
+		<ProjectRoot>F:\Github\makegameengineatnight_github\files\audio_wwise\hunter\wwise_proj\</ProjectRoot>
+		<SourceFilesRoot>F:\Github\makegameengineatnight_github\files\audio_wwise\hunter\wwise_proj\.cache\Windows\</SourceFilesRoot>
+		<SoundBanksRoot>F:\Github\makegameengineatnight_github\files\audio_wwise\hunter\wwise_proj\GeneratedSoundBanks\Windows\</SoundBanksRoot>
 		<ExternalSourcesInputFile></ExternalSourcesInputFile>
-		<ExternalSourcesOutputRoot>E:\makegameengineatnight\Github\files\audio_wwise\hunter\wwise_proj\GeneratedSoundBanks\Windows</ExternalSourcesOutputRoot>
+		<ExternalSourcesOutputRoot>F:\Github\makegameengineatnight_github\files\audio_wwise\hunter\wwise_proj\GeneratedSoundBanks\Windows</ExternalSourcesOutputRoot>
 	</RootPaths>
 	<DialogueEvents/>
 	<StreamedFiles/>
 	<MediaFilesNotInAnyBank/>
 	<SoundBanks>
-		<SoundBank Id="702482391" Language="SFX" Hash="3496620304">
+		<SoundBank Id="702482391" Language="SFX" Hash="1131841852">
 			<ObjectPath>\SoundBanks\Default Work Unit\game</ObjectPath>
 			<ShortName>game</ShortName>
 			<Path>game.bnk</Path>
@@ -190,6 +190,14 @@
 						<File Id="1027935603" Language="SFX">
 							<ShortName>wolf_far.wav</ShortName>
 							<Path>SFX\wolf_far_E7408233.wem</Path>
+						</File>
+					</IncludedMemoryFiles>
+				</Event>
+				<Event Id="347299850" Name="open_game" ObjectPath="\Events\Default Work Unit\open_game">
+					<IncludedMemoryFiles>
+						<File Id="656421665" Language="SFX">
+							<ShortName>开始音乐-诗人与野兽.wav</ShortName>
+							<Path>SFX\开始音乐-诗人与野兽_10C4C929.wem</Path>
 						</File>
 					</IncludedMemoryFiles>
 				</Event>
