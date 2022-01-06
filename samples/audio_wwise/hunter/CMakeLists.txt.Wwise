@@ -6,6 +6,9 @@ add_definitions(-D USE_WWISE_AUDIO)
 
 #拷贝depends目录
 if(WIN32)
+    #解压wwise.7z
+    execute_process(COMMAND cmd /c "..\\..\\template\\depends\\extra.bat")
+
     file(COPY "../../template/depends/wwise/x64_vc160/Debug/" DESTINATION "../depends/wwise/")
 else()
     file(COPY "../../template/depends/wwise/Mac/Debug/" DESTINATION "../depends/wwise/")
