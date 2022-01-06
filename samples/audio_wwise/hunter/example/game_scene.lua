@@ -140,6 +140,9 @@ end
 
 
 function GameScene:EnterFight()
+    local ui_image_mod_bag=self.go_ui_image_:GetComponent("UIImage")
+    ui_image_mod_bag:set_texture(Texture2D.LoadFromFile("images/western_jungle_deep.cpt"))
+
     self.is_enter_fight_=true
     self:MonsterRefresh()
     self:SetHeroPosition()
@@ -159,7 +162,12 @@ function GameScene:Update()
         -- 按空格进入游戏
         if self.is_enter_game_==false then
             self.is_enter_game_=true
+            -- 切换图片
+            local ui_image_mod_bag=self.go_ui_image_:GetComponent("UIImage")
+            ui_image_mod_bag:set_texture(Texture2D.LoadFromFile("images/western_jungle_tavern.cpt"))
+            -- 播放引导音乐
             self.bgm_go_:GetComponent("AudioSource"):Play()
+            -- 停止打开游戏的音乐
             self.go_ui_image_:GetComponent("AudioSource"):Stop()
             return
         end

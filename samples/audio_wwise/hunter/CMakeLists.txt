@@ -32,7 +32,8 @@ file(COPY "../../template/depends/SPSCQueue-1.1/" DESTINATION "../depends/spscqu
 
 #拷贝data文件
 file(COPY "../../template/data/images/need_head_phone.cpt" DESTINATION "../data/images/")
-file(COPY "../../template/data/images/hunter_logo.cpt" DESTINATION "../data/images/")
+file(COPY "../../template/data/images/western_jungle_deep.cpt" DESTINATION "../data/images/")
+file(COPY "../../template/data/images/western_jungle_tavern.cpt" DESTINATION "../data/images/")
 file(COPY "../../template/data/material/ui_image.mat" DESTINATION "../data/material/")
 file(GLOB unlit_shaders "../../template/data/shader/unlit.*")
 file(COPY ${unlit_shaders} DESTINATION "../data/shader/")
