@@ -19,12 +19,11 @@ written agreement between you and Audiokinetic Inc.
 #pragma once
 
 //#define RELATIVE_PATH L"..\\..\\..\\..\\samples\\IntegrationDemo\\WwiseProject\\GeneratedSoundBanks\\Windows\\"
-#define RELATIVE_PATH L"..\\data\\audio\\"
+//#define RELATIVE_PATH L"..\\data\\audio\\"
 
 #include <AK/SoundEngine/Platforms/Windows/AkTypes.h>
 
-#define SOUND_BANK_PATH GetSoundBanksPath()
-AkOSChar* GetSoundBanksPath();
+AkOSChar* GetSoundBanksPath(const wchar_t* in_pRelativePath);
 
 #define AK_ENABLE_RESOURCE_MONITOR
 

@@ -14,8 +14,11 @@
 #ifndef AK_OPTIMIZED
 #include <AK/Comm/AkCommunication.h>	// Communication between Wwise and the game (excluded in release build)
 #endif
+#ifdef WIN32
 #include "SoundEngine/Win32/AkFilePackageLowLevelIODeferred.h"
 #include "SoundEngine/Win32/Platform.h"
+#define RELATIVE_PATH L"..\\data\\audio\\"
+#endif
 #include "utils/debug.h"
 #include "utils/time.h"
 
@@ -112,7 +115,7 @@ void WwiseAudio::Init() {
 #endif
 
     // 最后设置 SoundBank 文件的路径。最后一个基本路径总是第一个查询文件。
-    lowLevelIoDeferred->SetBasePath(SOUND_BANK_PATH);
+    lowLevelIoDeferred->SetBasePath(GetSoundBanksPath(RELATIVE_PATH));
 
     // 设置全局语言。 低级 I/O 设备可以使用此字符串来查找特定于语言的资产。
     if (AK::StreamMgr::SetCurrentLanguage(AKTEXT("English(US)")) != AK_Success){

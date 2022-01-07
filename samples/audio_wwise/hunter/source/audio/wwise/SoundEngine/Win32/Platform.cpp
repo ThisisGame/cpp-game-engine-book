@@ -52,7 +52,7 @@ void ShortenPath(AkOSChar* io_Path)
 	}
 }
 
-AkOSChar* GetSoundBanksPath()
+AkOSChar* GetSoundBanksPath(const wchar_t* in_pRelativePath)
 {
 	static AkOSChar soundBanksPath[MAX_PATH];
 	static size_t pathLen = 0;
@@ -77,7 +77,7 @@ AkOSChar* GetSoundBanksPath()
 			// Copy the path to its final destination
 			AKPLATFORM::SafeStrCpy(soundBanksPath, path, MAX_PATH);
 			// Concatenate the soundbanks path
-			AKPLATFORM::SafeStrCat(soundBanksPath, RELATIVE_PATH, MAX_PATH);
+			AKPLATFORM::SafeStrCat(soundBanksPath, in_pRelativePath, MAX_PATH);
 			// Shorten the path as much as possible by removing the "\.."
 			ShortenPath(soundBanksPath);
 			pathLen = AKPLATFORM::OsStrLen(soundBanksPath);
