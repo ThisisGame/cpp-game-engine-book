@@ -3,22 +3,19 @@
 [![GitHub license](https://img.shields.io/badge/license-GPL-blue.svg?style=for-the-badge)](https://github.com/ThisisGame/makegameengineatnight/blob/main/LICENSE) [![GitHub license](https://img.shields.io/badge/Windows-Success-brightgreen.svg?style=for-the-badge)](https://github.com/ThisisGame/makegameengineatnight/blob/main/LICENSE) [![GitHub license](https://img.shields.io/badge/macOS-Success-brightgreen.svg?style=for-the-badge)](https://github.com/ThisisGame/makegameengineatnight/blob/main/LICENSE)
 
 
-<font color=red>
+```diff
 
-注意 Git LFS:
+- 注意 Git LFS:
 
-引入Wwise之后，库文件的大小超过了Github 100M的上限，所以中途开启了Git LFS。
+- 引入Wwise之后，库文件的大小超过了Github 100M的上限，所以中途开启了Git LFS。
 
-这可能会造成之前Clone到本地的工程无法使用，如果出现无法更新的情况，建议安装Git LFS后，重新Clone。
+- 这可能会造成之前Clone到本地的工程无法使用，如果出现无法更新的情况，建议安装Git LFS后，重新Clone。
 
-全新Clone的用户则不受此影响，不过也需要安装Git LFS。
++ 全新Clone的用户则不受此影响，不过也需要安装Git LFS。
 
++ Git LFS下载：`https://github.com/git-lfs/git-lfs/releases`
+```
 
-Git LFS下载：`https://github.com/git-lfs/git-lfs/releases`
-
-</font>
-
-:blush::blush::blush::blush::blush::blush::blush::blush::blush::blush::blush::blush::blush::blush::blush::blush::blush::blush::blush::blush::blush::blush::blush::blush::blush:
 
 其实做游戏开发的，每天与游戏引擎打交道，都会心痒痒想了解游戏引擎是怎么做的。
 
