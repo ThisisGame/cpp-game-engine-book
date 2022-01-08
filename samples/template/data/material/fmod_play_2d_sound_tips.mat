@@ -1,3 +1,0 @@
-<material shader="shader/unlit">
-    <texture name="u_diffuse_texture" image="images/fmod_play_2d_sound_tips.cpt"/>
-</material>

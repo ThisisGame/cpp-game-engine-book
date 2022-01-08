@@ -1,3 +1,0 @@
-<material shader="shader/font">
-    <texture name="u_diffuse_texture" image=""/>
-</material>

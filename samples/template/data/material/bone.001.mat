@@ -1,3 +1,0 @@
-<material shader="shader/unlit">
-    <texture name="u_diffuse_texture" image="images/bone.001.cpt"/>
-</material>

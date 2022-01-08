@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<PluginInfo Project="firstDemo" Platform="Windows" BasePlatform="Windows">
-	<Plugins>
-		<Plugin Name="System" ID="11403271"/>
-		<Plugin Name="No Output" ID="11862023"/>
-		<Plugin Name="Wwise Motion" ID="33226759" DLL="AkMotion" StaticLib="AkMotionSink"/>
-	</Plugins>
-</PluginInfo>

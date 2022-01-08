@@ -1,3 +1,0 @@
-<material shader="shader/unlit">
-    <texture name="u_diffuse_texture" image="images/listen.cpt"/>
-</material>
