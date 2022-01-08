@@ -1,0 +1,13 @@
+#链接目录
+link_directories("depends/fmod/api/core/lib/x64")
+
+if(WIN32)
+    #链接lib文件
+    link_libraries(fmod_vc)
+
+    #拷贝dll到exe目录
+    file(COPY "depends/fmod/api/core/lib/x64/fmod.dll" DESTINATION "./")
+else()
+    #链接lib文件
+    link_libraries(fmod)
+endif()
