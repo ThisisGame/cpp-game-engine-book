@@ -1,0 +1,33 @@
+tinyfsm-0.3.2
+
+  * Add TINYFSM_NOSTDLIB compile option.
+  * Remove static asserts on transit functions.
+  * Fix elevator example.
+
+tinyfsm-0.3.1
+
+  * Bugfix (workaround) for compiler bug in gcc < 7.0: define template
+    specialization for FSM_INITIAL_STATE in "namespace tinyfsm" block.
+
+tinyfsm-0.3.0
+
+  * Bugfix: set initial state on all state machines before entering
+    states in FsmList::start().
+  * Add Fsm::start() function (identical interface as FsmList).
+  * Add reset() functionality to Fsm and FsmList class.
+  * Add MooreMachine and MealyMachine class.
+  * Add API examples: simple_switch, resetting_switch, multiple_switch,
+    debugging_switch, mealy_machine, moore_machine.
+  * Relax access specifiers for Fsm::state<S>() access function.
+  * Remove debug code.
+
+tinyfsm-0.2.0
+
+  * Use Fsm<F>::initialize() for initialization (instead of
+    Fsm<F>::initial_state).
+  * Change license to MIT
+
+tinyfsm-0.1.0
+
+  * Initial revision
+  * Note that this release was originally named "v0.10"

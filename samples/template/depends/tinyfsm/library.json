@@ -1,0 +1,24 @@
+{
+    "name": "tinyfsm",
+    "description": "A simple C++ finite state machine library",
+    "version": "0.3.2",
+    "repository": {
+        "type": "git",
+        "url": "https://dev.tty0.ch/tinyfsm.git"
+    },
+    "homepage": "https://digint.ch/tinyfsm/",
+    "authors": {
+        "name": "Axel Burri",
+        "email": "axel@tty0.ch",
+        "url": "http://digint.ch",
+        "maintainer": true
+    },
+    "license": "MIT",
+    "platforms": "*",
+    "frameworks": "*",
+    "build": {
+        "flags": [
+            "-I include/"
+        ]
+    }
+}
