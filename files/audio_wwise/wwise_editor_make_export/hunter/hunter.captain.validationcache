@@ -1,5 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ValidationCache Version="1" SchemaVersion="103">
+	<ValidationCacheItem File="F:\Github\makegameengineatnight\files\audio_wwise\wwise_editor_make_export\hunter\Virtual Acoustics\Factory Acoustic Textures.wwu" DateLow="1641640199" DateHigh="0"/>
+	<ValidationCacheItem File="F:\Github\makegameengineatnight\files\audio_wwise\wwise_editor_make_export\hunter\Virtual Acoustics\Default Work Unit.wwu" DateLow="1641640199" DateHigh="0"/>
+	<ValidationCacheItem File="F:\Github\makegameengineatnight\files\audio_wwise\wwise_editor_make_export\hunter\Triggers\Default Work Unit.wwu" DateLow="1641640199" DateHigh="0"/>
+	<ValidationCacheItem File="F:\Github\makegameengineatnight\files\audio_wwise\wwise_editor_make_export\hunter\Switches\Default Work Unit.wwu" DateLow="1641640199" DateHigh="0"/>
+	<ValidationCacheItem File="F:\Github\makegameengineatnight\files\audio_wwise\wwise_editor_make_export\hunter\States\Default Work Unit.wwu" DateLow="1641640199" DateHigh="0"/>
+	<ValidationCacheItem File="F:\Github\makegameengineatnight\files\audio_wwise\wwise_editor_make_export\hunter\Soundcaster Sessions\Factory Tencent GME.wwu" DateLow="1641640199" DateHigh="0"/>
+	<ValidationCacheItem File="F:\Github\makegameengineatnight\files\audio_wwise\wwise_editor_make_export\hunter\Soundcaster Sessions\Default Work Unit.wwu" DateLow="1641640199" DateHigh="0"/>
+	<ValidationCacheItem File="F:\Github\makegameengineatnight\files\audio_wwise\wwise_editor_make_export\hunter\SoundBanks\Default Work Unit.wwu" DateLow="1641640199" DateHigh="0"/>
+	<ValidationCacheItem File="F:\Github\makegameengineatnight\files\audio_wwise\wwise_editor_make_export\hunter\Queries\Factory Queries.wwu" DateLow="1641640199" DateHigh="0"/>
+	<ValidationCacheItem File="F:\Github\makegameengineatnight\files\audio_wwise\wwise_editor_make_export\hunter\Queries\Default Work Unit.wwu" DateLow="1641640199" DateHigh="0"/>
+	<ValidationCacheItem File="F:\Github\makegameengineatnight\files\audio_wwise\wwise_editor_make_export\hunter\Presets\Factory Spatial Audio.wwu" DateLow="1641640199" DateHigh="0"/>
+	<ValidationCacheItem File="F:\Github\makegameengineatnight\files\audio_wwise\wwise_editor_make_export\hunter\Presets\Factory Reflect.wwu" DateLow="1641640199" DateHigh="0"/>
+	<ValidationCacheItem File="F:\Github\makegameengineatnight\files\audio_wwise\wwise_editor_make_export\hunter\Presets\Default Work Unit.wwu" DateLow="1641640199" DateHigh="0"/>
+	<ValidationCacheItem File="F:\Github\makegameengineatnight\files\audio_wwise\wwise_editor_make_export\hunter\Modulators\Default Work Unit.wwu" DateLow="1641640199" DateHigh="0"/>
+	<ValidationCacheItem File="F:\Github\makegameengineatnight\files\audio_wwise\wwise_editor_make_export\hunter\Mixing Sessions\Default Work Unit.wwu" DateLow="1641640199" DateHigh="0"/>
+	<ValidationCacheItem File="F:\Github\makegameengineatnight\files\audio_wwise\wwise_editor_make_export\hunter\Metadata\Default Work Unit.wwu" DateLow="1641640199" DateHigh="0"/>
+	<ValidationCacheItem File="F:\Github\makegameengineatnight\files\audio_wwise\wwise_editor_make_export\hunter\Master-Mixer Hierarchy\Default Work Unit.wwu" DateLow="1641640199" DateHigh="0"/>
+	<ValidationCacheItem File="F:\Github\makegameengineatnight\files\audio_wwise\wwise_editor_make_export\hunter\Interactive Music Hierarchy\Default Work Unit.wwu" DateLow="1641640199" DateHigh="0"/>
+	<ValidationCacheItem File="F:\Github\makegameengineatnight\files\audio_wwise\wwise_editor_make_export\hunter\hunter.wproj" DateLow="1641640199" DateHigh="0"/>
+	<ValidationCacheItem File="F:\Github\makegameengineatnight\files\audio_wwise\wwise_editor_make_export\hunter\hunter.captain.wsettings" DateLow="1641640199" DateHigh="0"/>
+	<ValidationCacheItem File="F:\Github\makegameengineatnight\files\audio_wwise\wwise_editor_make_export\hunter\Game Parameters\Factory SoundSeed Air Game Syncs.wwu" DateLow="1641640199" DateHigh="0"/>
+	<ValidationCacheItem File="F:\Github\makegameengineatnight\files\audio_wwise\wwise_editor_make_export\hunter\Game Parameters\Factory Motion.wwu" DateLow="1641640199" DateHigh="0"/>
+	<ValidationCacheItem File="F:\Github\makegameengineatnight\files\audio_wwise\wwise_editor_make_export\hunter\Game Parameters\Default Work Unit.wwu" DateLow="1641640199" DateHigh="0"/>
+	<ValidationCacheItem File="F:\Github\makegameengineatnight\files\audio_wwise\wwise_editor_make_export\hunter\Events\Factory Tencent GME.wwu" DateLow="1641640199" DateHigh="0"/>
+	<ValidationCacheItem File="F:\Github\makegameengineatnight\files\audio_wwise\wwise_editor_make_export\hunter\Events\Default Work Unit.wwu" DateLow="1641640199" DateHigh="0"/>
+	<ValidationCacheItem File="F:\Github\makegameengineatnight\files\audio_wwise\wwise_editor_make_export\hunter\Effects\Factory Reflect.wwu" DateLow="1641640199" DateHigh="0"/>
+	<ValidationCacheItem File="F:\Github\makegameengineatnight\files\audio_wwise\wwise_editor_make_export\hunter\Effects\Factory McDSP Effects.wwu" DateLow="1641640199" DateHigh="0"/>
+	<ValidationCacheItem File="F:\Github\makegameengineatnight\files\audio_wwise\wwise_editor_make_export\hunter\Effects\Factory Mastering Suite.wwu" DateLow="1641640199" DateHigh="0"/>
+	<ValidationCacheItem File="F:\Github\makegameengineatnight\files\audio_wwise\wwise_editor_make_export\hunter\Effects\Factory iZotope Singleband Distortion.wwu" DateLow="1641640199" DateHigh="0"/>
+	<ValidationCacheItem File="F:\Github\makegameengineatnight\files\audio_wwise\wwise_editor_make_export\hunter\Effects\Factory iZotope Multiband Distortion.wwu" DateLow="1641640199" DateHigh="0"/>
+	<ValidationCacheItem File="F:\Github\makegameengineatnight\files\audio_wwise\wwise_editor_make_export\hunter\Effects\Factory iZotope Hybrid Reverb Effects.wwu" DateLow="1641640199" DateHigh="0"/>
+	<ValidationCacheItem File="F:\Github\makegameengineatnight\files\audio_wwise\wwise_editor_make_export\hunter\Effects\Factory iZotope Filters.wwu" DateLow="1641640199" DateHigh="0"/>
+	<ValidationCacheItem File="F:\Github\makegameengineatnight\files\audio_wwise\wwise_editor_make_export\hunter\Effects\Factory iZotope Dynamics.wwu" DateLow="1641640199" DateHigh="0"/>
+	<ValidationCacheItem File="F:\Github\makegameengineatnight\files\audio_wwise\wwise_editor_make_export\hunter\Effects\Factory iZotope Delay.wwu" DateLow="1641640199" DateHigh="0"/>
+	<ValidationCacheItem File="F:\Github\makegameengineatnight\files\audio_wwise\wwise_editor_make_export\hunter\Effects\Factory iZotope Box Modeler.wwu" DateLow="1641640199" DateHigh="0"/>
+	<ValidationCacheItem File="F:\Github\makegameengineatnight\files\audio_wwise\wwise_editor_make_export\hunter\Effects\Factory Effects.wwu" DateLow="1641640199" DateHigh="0"/>
+	<ValidationCacheItem File="F:\Github\makegameengineatnight\files\audio_wwise\wwise_editor_make_export\hunter\Effects\Factory Auro Headphone.wwu" DateLow="1641640199" DateHigh="0"/>
+	<ValidationCacheItem File="F:\Github\makegameengineatnight\files\audio_wwise\wwise_editor_make_export\hunter\Effects\Default Work Unit.wwu" DateLow="1641640199" DateHigh="0"/>
+	<ValidationCacheItem File="F:\Github\makegameengineatnight\files\audio_wwise\wwise_editor_make_export\hunter\Dynamic Dialogue\Default Work Unit.wwu" DateLow="1641640199" DateHigh="0"/>
+	<ValidationCacheItem File="F:\Github\makegameengineatnight\files\audio_wwise\wwise_editor_make_export\hunter\Conversion Settings\Factory Conversion Settings.wwu" DateLow="1641640199" DateHigh="0"/>
+	<ValidationCacheItem File="F:\Github\makegameengineatnight\files\audio_wwise\wwise_editor_make_export\hunter\Conversion Settings\Default Work Unit.wwu" DateLow="1641640199" DateHigh="0"/>
+	<ValidationCacheItem File="F:\Github\makegameengineatnight\files\audio_wwise\wwise_editor_make_export\hunter\Control Surface Sessions\Default Work Unit.wwu" DateLow="1641640199" DateHigh="0"/>
+	<ValidationCacheItem File="F:\Github\makegameengineatnight\files\audio_wwise\wwise_editor_make_export\hunter\Audio Devices\Default Work Unit.wwu" DateLow="1641640199" DateHigh="0"/>
+	<ValidationCacheItem File="F:\Github\makegameengineatnight\files\audio_wwise\wwise_editor_make_export\hunter\Attenuations\Default Work Unit.wwu" DateLow="1641640199" DateHigh="0"/>
+	<ValidationCacheItem File="F:\Github\makegameengineatnight\files\audio_wwise\wwise_editor_make_export\hunter\Actor-Mixer Hierarchy\Factory Tencent GME.wwu" DateLow="1641640199" DateHigh="0"/>
+	<ValidationCacheItem File="F:\Github\makegameengineatnight\files\audio_wwise\wwise_editor_make_export\hunter\Actor-Mixer Hierarchy\Factory Synth One.wwu" DateLow="1641640199" DateHigh="0"/>
+	<ValidationCacheItem File="F:\Github\makegameengineatnight\files\audio_wwise\wwise_editor_make_export\hunter\Actor-Mixer Hierarchy\Factory SoundSeed Air Objects.wwu" DateLow="1641640199" DateHigh="0"/>
+	<ValidationCacheItem File="F:\Github\makegameengineatnight\files\audio_wwise\wwise_editor_make_export\hunter\Actor-Mixer Hierarchy\Factory Motion.wwu" DateLow="1641640199" DateHigh="0"/>
+	<ValidationCacheItem File="F:\Github\makegameengineatnight\files\audio_wwise\wwise_editor_make_export\hunter\Actor-Mixer Hierarchy\Default Work Unit.wwu" DateLow="1641640199" DateHigh="0"/>
 	<ValidationCacheItem File="C:\Users\captain\Documents\WwiseProjects\hunter\Virtual Acoustics\Factory Acoustic Textures.wwu" DateLow="1640792375" DateHigh="0"/>
 	<ValidationCacheItem File="C:\Users\captain\Documents\WwiseProjects\hunter\Virtual Acoustics\Default Work Unit.wwu" DateLow="1641313302" DateHigh="0"/>
 	<ValidationCacheItem File="C:\Users\captain\Documents\WwiseProjects\hunter\Triggers\Default Work Unit.wwu" DateLow="1641313302" DateHigh="0"/>

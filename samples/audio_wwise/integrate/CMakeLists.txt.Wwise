@@ -1,0 +1,50 @@
+#使用Wwise播放音效
+add_definitions(-D USE_WWISE_AUDIO)
+
+#是否输出wwise占用系统资源
+#add_definitions(-D PRINT_DATA_SUMMARY)
+
+#解压wwise.7z
+if(WIN32)
+    execute_process(COMMAND cmd /c "..\\..\\..\\template\\depends\\extra.bat")
+else()
+endif()
+
+#拷贝多平台通用代码
+file(COPY "../../template/depends/wwise/include" DESTINATION "../depends/wwise/")
+file(COPY "../../template/depends/wwise/SoundEngine/Common" DESTINATION "../depends/wwise/SoundEngine/")
+
+#拷贝平台专属代码、lib
+if(WIN32)
+    file(COPY "../../template/depends/wwise/SoundEngine/Win32" DESTINATION "../depends/wwise/SoundEngine/")
+    file(COPY "../../template/depends/wwise/x64_vc160/Debug/" DESTINATION "../depends/wwise/")
+else()
+    file(COPY "../../template/depends/wwise/SoundEngine/POSIX" DESTINATION "../depends/wwise/SoundEngine/")
+    file(COPY "../../template/depends/wwise/Mac/Debug/" DESTINATION "../depends/wwise/")
+endif()
+
+#头文件目录
+include_directories("depends/wwise")
+include_directories("depends/wwise/include")
+if(WIN32)
+    include_directories("depends/wwise/SoundEngine/Win32")
+else()
+endif()
+
+
+#链接目录
+link_directories("depends/wwise/lib")
+
+if(WIN32)
+    #链接lib文件
+    link_libraries(AkSoundEngine AkStreamMgr AkMemoryMgr AkMusicEngine AkSpatialAudio CommunicationCentral AkMotionGeneratorSource AkMotionSink AkMotionSourceSource)
+    #拷贝dll到exe目录
+    file(COPY "depends/wwise/bin/AkSoundEngineDLL.dll" DESTINATION "./")
+    file(COPY "depends/wwise/bin/AkMotion.dll" DESTINATION "./")
+else()
+    #链接lib文件
+    link_libraries(AkSoundEngine)
+endif()
+
+#源文件
+file(GLOB_RECURSE wwise_src depends/wwise/SoundEngine/*.cpp)
