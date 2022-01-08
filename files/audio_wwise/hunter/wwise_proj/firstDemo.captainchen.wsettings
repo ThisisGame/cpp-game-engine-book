@@ -4,6 +4,7 @@
 		<UserProjectSettings Name="" ID="{8ADEFBEA-5E40-468C-8568-05877D22C5BC}">
 			<PropertyList>
 				<Property Name="AudioFilesImporter\Path" Type="string" Value="C:\Users\captainchen\Downloads\音效\"/>
+				<Property Name="Event Action List\{5E5BEB32-7B80-4C78-8EA6-D02D2413C8DA}\x64_Expand States" Type="string" Value=""/>
 				<Property Name="Event Action List\{79F37C21-008E-4454-821D-9AAEC1FAD31B}\x64_Expand States" Type="string" Value=""/>
 				<Property Name="Event Action List\{B1798F6D-C9C3-4173-A6FA-9D66204263FC}\x64_Expand States" Type="string" Value=""/>
 				<Property Name="Event Action List\{BA7B32B3-E44F-4A85-95B6-D450ED327B6C}\x64_Expand States" Type="string" Value=""/>
