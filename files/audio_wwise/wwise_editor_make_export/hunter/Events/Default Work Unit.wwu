@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WwiseDocument Type="WorkUnit" ID="{EAA3F804-09D6-44A2-B24A-3CF9B74CFD88}" SchemaVersion="103">
+	<Events>
+		<WorkUnit Name="Default Work Unit" ID="{EAA3F804-09D6-44A2-B24A-3CF9B74CFD88}" PersistMode="Standalone">
+			<ChildrenList>
+				<Event Name="die" ID="{31177503-B8B7-4F0D-8804-C79ACA8F7C02}">
+					<ChildrenList>
+						<Action Name="" ID="{70003341-8DAF-4F2B-BCF9-922A8F1BEA81}" ShortID="945425634">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="小怪死亡" ID="{F8CD8143-A6C5-4DF4-ABAC-3368484D0B79}" WorkUnitID="{0E398672-78B5-4A95-AC8C-6A83C4E5230A}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+			</ChildrenList>
+		</WorkUnit>
+	</Events>
+</WwiseDocument>
