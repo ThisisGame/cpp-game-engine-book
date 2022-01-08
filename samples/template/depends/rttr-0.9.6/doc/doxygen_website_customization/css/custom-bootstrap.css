@@ -1,0 +1,38 @@
+/* flat style */
+.nav-pills > li > a {
+  border-radius: 0px;
+}
+
+.panel {
+  margin-bottom: 0;
+  border-radius: 0;
+}
+
+td > .btn-default {
+  font-weight: bold;
+}
+
+.memname  td {
+    padding: 0 1px;
+}
+
+.panel-body > dl > dd {
+  margin-left: 40px;
+}
+
+html {
+    font-size: 1rem;
+}
+
+code, kbd, pre, samp {
+    font-family: "SourceCodeProRegular", monospace,monospace;
+    font-size: 0.9rem;
+}
+
+ .page-header{
+    margin-top:0px;
+}
+
+.doxy-button {
+    margin-right: 10px;
+}

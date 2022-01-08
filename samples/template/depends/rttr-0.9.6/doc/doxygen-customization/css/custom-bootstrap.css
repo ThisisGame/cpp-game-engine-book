@@ -1,0 +1,42 @@
+/* flat style */
+.nav-pills > li > a {
+  border-radius: 0px;
+}
+body{
+  background-color: #e9e9e9;
+}
+
+.container{
+  background-color: #fafafa;
+  box-shadow: 0 0 4px 2px #888;
+}
+
+.panel {
+  margin-bottom: 0;
+  border-radius: 0;
+}
+
+td > .btn-default {
+  font-weight: bold;
+}
+
+.memname  td {
+    padding: 0 1px;
+}
+
+.panel-body > dl > dd {
+  margin-left: 40px;
+}
+
+html {
+    font-size: 1rem;
+}
+
+code, kbd, pre, samp {
+    font-family: "SourceCodeProRegular", monospace,monospace;
+    font-size: 0.9rem;
+}
+
+.doxy-button {
+    margin-right: 10px;
+}

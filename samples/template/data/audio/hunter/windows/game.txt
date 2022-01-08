@@ -1,0 +1,61 @@
+Event	ID	Name			Wwise Object Path	Notes
+	153136435	lion			\Default Work Unit\lion	
+	185173510	little_die			\Default Work Unit\little_die	
+	347299850	open_game			\Default Work Unit\open_game	
+	1044246946	big_die			\Default Work Unit\big_die	
+	1116398592	hit			\Default Work Unit\hit	
+	1182229359	peg			\Default Work Unit\peg	
+	1544370296	orangutan			\Default Work Unit\orangutan	
+	2041272125	wolf			\Default Work Unit\wolf	
+	2678880713	fire			\Default Work Unit\fire	
+	2857840038	not_hit			\Default Work Unit\not_hit	
+	2935967122	sheep			\Default Work Unit\sheep	
+	3050945240	New_Event			\Default Work Unit\New_Event	
+	3372056997	middle_die			\Default Work Unit\middle_die	
+	3761376310	open_door_walk_in			\Default Work Unit\open_door_walk_in	
+	3854606522	tiger			\Default Work Unit\tiger	
+	3854847584	horse			\Default Work Unit\horse	
+
+In Memory Audio	ID	Name	Audio source file		Wwise Object Path	Notes	Data Size
+	45669304	巨型怪物死亡倒地	F:\Github\makegameengineatnight_github\files\audio_wwise\hunter\wwise_proj\.cache\Windows\SFX\巨型怪物死亡倒地_10C4C929.wem		\Actor-Mixer Hierarchy\Default Work Unit\大型怪物死亡\巨型怪物死亡倒地		150206
+	69722603	wolf_one	F:\Github\makegameengineatnight_github\files\audio_wwise\hunter\wwise_proj\.cache\Windows\SFX\wolf_one_CE0C2250.wem		\Actor-Mixer Hierarchy\Default Work Unit\狼\wolf_one		111784
+	94269076	树形怪物死亡	F:\Github\makegameengineatnight_github\files\audio_wwise\hunter\wwise_proj\.cache\Windows\SFX\树形怪物死亡_10C4C929.wem		\Actor-Mixer Hierarchy\Default Work Unit\大型怪物死亡\树形怪物死亡		516016
+	109112998	fire	F:\Github\makegameengineatnight_github\files\audio_wwise\hunter\wwise_proj\.cache\Windows\SFX\fire_10C4C929.wem		\Actor-Mixer Hierarchy\Default Work Unit\开火\fire		70316
+	116244705	car_lock	F:\Github\makegameengineatnight_github\files\audio_wwise\hunter\wwise_proj\.cache\Windows\SFX\car_lock_10C4C929.wem		\Actor-Mixer Hierarchy\Default Work Unit\开场\car_lock		27806
+	133443536	希望不要遇到它	F:\Github\makegameengineatnight_github\files\audio_wwise\hunter\wwise_proj\.cache\Windows\SFX\希望不要遇到它_10C4C929.wem		\Actor-Mixer Hierarchy\Default Work Unit\这么远都能听到狼的声音,希望不要遇到它\希望不要遇到它		56384
+	192046997	恶魔怪物死亡痛苦的声音	F:\Github\makegameengineatnight_github\files\audio_wwise\hunter\wwise_proj\.cache\Windows\SFX\恶魔怪物死亡痛苦的声音_10C4C929.wem		\Actor-Mixer Hierarchy\Default Work Unit\大型怪物死亡\恶魔怪物死亡痛苦的声音		103016
+	234840562	闹市	F:\Github\makegameengineatnight_github\files\audio_wwise\hunter\wwise_proj\.cache\Windows\SFX\闹市_D79FB2B7.wem		\Actor-Mixer Hierarchy\Default Work Unit\闹市\闹市		481694
+	238657489	lion	F:\Github\makegameengineatnight_github\files\audio_wwise\hunter\wwise_proj\.cache\Windows\SFX\lion_10C4C929.wem		\Actor-Mixer Hierarchy\Default Work Unit\狮子\lion		200032
+	240836405	horse_die	F:\Github\makegameengineatnight_github\files\audio_wwise\hunter\wwise_proj\.cache\Windows\SFX\horse_die_E0F7E806.wem		\Actor-Mixer Hierarchy\Default Work Unit\马\horse_die		392760
+	242684069	庞然大物倒地死亡	F:\Github\makegameengineatnight_github\files\audio_wwise\hunter\wwise_proj\.cache\Windows\SFX\庞然大物倒地死亡_10C4C929.wem		\Actor-Mixer Hierarchy\Default Work Unit\大型怪物死亡\庞然大物倒地死亡		152640
+	259719128	注意听声音位置	F:\Github\makegameengineatnight_github\files\audio_wwise\hunter\wwise_proj\.cache\Windows\SFX\注意听声音位置_10C4C929.wem		\Actor-Mixer Hierarchy\Default Work Unit\操作指引\注意听声音位置		48064
+	298074970	open_door	F:\Github\makegameengineatnight_github\files\audio_wwise\hunter\wwise_proj\.cache\Windows\SFX\open_door_10C4C929.wem		\Actor-Mixer Hierarchy\Default Work Unit\开场\open_door		408832
+	314258591	客人早上好-小露	F:\Github\makegameengineatnight_github\files\audio_wwise\hunter\wwise_proj\.cache\Windows\SFX\客人早上好-小露_10C4C929.wem		\Actor-Mixer Hierarchy\Default Work Unit\客人早上好\客人早上好-小露		46144
+	353800492	死亡	F:\Github\makegameengineatnight_github\files\audio_wwise\hunter\wwise_proj\.cache\Windows\SFX\死亡_10C4C929.wem		\Actor-Mixer Hierarchy\Default Work Unit\中型怪物死亡\死亡		135616
+	411547133	pig	F:\Github\makegameengineatnight_github\files\audio_wwise\hunter\wwise_proj\.cache\Windows\SFX\pig_5D992E6D.wem		\Actor-Mixer Hierarchy\Default Work Unit\猪\pig		121168
+	415587178	游戏中僵尸死亡前的吼叫声	F:\Github\makegameengineatnight_github\files\audio_wwise\hunter\wwise_proj\.cache\Windows\SFX\游戏中僵尸死亡前的吼叫声_10C4C929.wem		\Actor-Mixer Hierarchy\Default Work Unit\中型怪物死亡\游戏中僵尸死亡前的吼叫声		92376
+	464349162	这么远都能听到狼的声音	F:\Github\makegameengineatnight_github\files\audio_wwise\hunter\wwise_proj\.cache\Windows\SFX\这么远都能听到狼的声音_10C4C929.wem		\Actor-Mixer Hierarchy\Default Work Unit\这么远都能听到狼的声音,希望不要遇到它\这么远都能听到狼的声音		64704
+	496309304	中型怪物死亡倒地	F:\Github\makegameengineatnight_github\files\audio_wwise\hunter\wwise_proj\.cache\Windows\SFX\中型怪物死亡倒地_20C67795.wem		\Actor-Mixer Hierarchy\Default Work Unit\中型怪物死亡\中型怪物死亡倒地		31228
+	497917684	car_beep	F:\Github\makegameengineatnight_github\files\audio_wwise\hunter\wwise_proj\.cache\Windows\SFX\car_beep_3F5F9639.wem		\Actor-Mixer Hierarchy\Default Work Unit\开场\启动车并按喇叭催促\car_beep		850824
+	575645192	硬地板走路	F:\Github\makegameengineatnight_github\files\audio_wwise\hunter\wwise_proj\.cache\Windows\SFX\硬地板走路_10C4C929.wem		\Actor-Mixer Hierarchy\Default Work Unit\开场\硬地板走路		373312
+	579748507	打中了-天明-悲伤	F:\Github\makegameengineatnight_github\files\audio_wwise\hunter\wwise_proj\.cache\Windows\SFX\打中了-天明-悲伤_10C4C929.wem		\Actor-Mixer Hierarchy\Default Work Unit\打中了\打中了-天明-悲伤		31424
+	581855935	小怪死亡	F:\Github\makegameengineatnight_github\files\audio_wwise\hunter\wwise_proj\.cache\Windows\SFX\小怪死亡_10C4C929.wem		\Actor-Mixer Hierarchy\Default Work Unit\小东西死亡\小怪死亡		67712
+	610461410	car_open_door	F:\Github\makegameengineatnight_github\files\audio_wwise\hunter\wwise_proj\.cache\Windows\SFX\car_open_door_10C4C929.wem		\Actor-Mixer Hierarchy\Default Work Unit\开场\car_open_door		41144
+	637533960	sheep	F:\Github\makegameengineatnight_github\files\audio_wwise\hunter\wwise_proj\.cache\Windows\SFX\sheep_10C4C929.wem		\Actor-Mixer Hierarchy\Default Work Unit\羊\sheep		215872
+	655469199	野兽来了	F:\Github\makegameengineatnight_github\files\audio_wwise\hunter\wwise_proj\.cache\Windows\SFX\野兽来了_158990F1.wem		\Actor-Mixer Hierarchy\Default Work Unit\操作指引\野兽来了		29348
+	656421665	开始音乐-诗人与野兽	F:\Github\makegameengineatnight_github\files\audio_wwise\hunter\wwise_proj\.cache\Windows\SFX\开始音乐-诗人与野兽_10C4C929.wem		\Actor-Mixer Hierarchy\Default Work Unit\游戏开始\开始音乐-诗人与野兽		20367176
+	668157738	按方向键左右移动	F:\Github\makegameengineatnight_github\files\audio_wwise\hunter\wwise_proj\.cache\Windows\SFX\按方向键左右移动_10C4C929.wem		\Actor-Mixer Hierarchy\Default Work Unit\操作指引\按方向键左右移动		55744
+	680168181	开场对白_97767623017497331641007151535	F:\Github\makegameengineatnight_github\files\audio_wwise\hunter\wwise_proj\.cache\Windows\SFX\开场对白_97767623017497331641007151535_10C4C929.wem		\Actor-Mixer Hierarchy\Default Work Unit\开场\开场对白_97767623017497331641007151535		584384
+	721376288	car_in	F:\Github\makegameengineatnight_github\files\audio_wwise\hunter\wwise_proj\.cache\Windows\SFX\car_in_10C4C929.wem		\Actor-Mixer Hierarchy\Default Work Unit\开场\car_in		1760320
+	768695328	打中了-普通	F:\Github\makegameengineatnight_github\files\audio_wwise\hunter\wwise_proj\.cache\Windows\SFX\打中了-女声_10C4C929.wem		\Actor-Mixer Hierarchy\Default Work Unit\打中了\打中了-普通		30144
+	773237946	森林走路	F:\Github\makegameengineatnight_github\files\audio_wwise\hunter\wwise_proj\.cache\Windows\SFX\森林走路_18C9A6FF.wem		\Actor-Mixer Hierarchy\Default Work Unit\开场\森林走路听到狼叫\森林走路		1351044
+	831213746	按空格键开火	F:\Github\makegameengineatnight_github\files\audio_wwise\hunter\wwise_proj\.cache\Windows\SFX\按空格键开火_10C4C929.wem		\Actor-Mixer Hierarchy\Default Work Unit\操作指引\按空格键开火		48064
+	843988375	car_engine_start	F:\Github\makegameengineatnight_github\files\audio_wwise\hunter\wwise_proj\.cache\Windows\SFX\car_engine_start_10C4C929.wem		\Actor-Mixer Hierarchy\Default Work Unit\开场\启动车并按喇叭催促\car_engine_start		1967680
+	858699135	野兽出现	F:\Github\makegameengineatnight_github\files\audio_wwise\hunter\wwise_proj\.cache\Windows\SFX\野兽出现_10C4C929.wem		\Actor-Mixer Hierarchy\Default Work Unit\操作指引\野兽出现		217946
+	903751824	orangutan	F:\Github\makegameengineatnight_github\files\audio_wwise\hunter\wwise_proj\.cache\Windows\SFX\orangutan_10C4C929.wem		\Actor-Mixer Hierarchy\Default Work Unit\猩猩\orangutan		511552
+	946134818	没打中小心它来了-小俊	F:\Github\makegameengineatnight_github\files\audio_wwise\hunter\wwise_proj\.cache\Windows\SFX\没打中小心它来了-小俊_10C4C929.wem		\Actor-Mixer Hierarchy\Default Work Unit\没打中\没打中小心它来了-小俊		74944
+	965182816	山怪死亡	F:\Github\makegameengineatnight_github\files\audio_wwise\hunter\wwise_proj\.cache\Windows\SFX\山怪死亡_10C4C929.wem		\Actor-Mixer Hierarchy\Default Work Unit\大型怪物死亡\山怪死亡		239278
+	1007640561	tiger_near	F:\Github\makegameengineatnight_github\files\audio_wwise\hunter\wwise_proj\.cache\Windows\SFX\tiger_near_EBBB2882.wem		\Actor-Mixer Hierarchy\Default Work Unit\老虎\tiger_near		456064
+	1027935603	wolf_far	F:\Github\makegameengineatnight_github\files\audio_wwise\hunter\wwise_proj\.cache\Windows\SFX\wolf_far_E7408233.wem		\Actor-Mixer Hierarchy\Default Work Unit\开场\森林走路听到狼叫\wolf_far		2002560
+	1065284327	bullet_load	F:\Github\makegameengineatnight_github\files\audio_wwise\hunter\wwise_proj\.cache\Windows\SFX\bullet_load_10C4C929.wem		\Actor-Mixer Hierarchy\Default Work Unit\开火\bullet_load		267328
+
