@@ -4,7 +4,9 @@
 		<WorkUnit Name="Default Work Unit" ID="{AF676418-D500-43D0-A047-1C9C30F3F1F3}" PersistMode="Standalone">
 			<ChildrenList>
 				<SoundBank Name="fight" ID="{2FBE6FC2-9277-4B87-B938-942BAE47A6A8}">
-					<ObjectInclusionList/>
+					<ObjectInclusionList>
+						<ObjectRef Name="die" ID="{31177503-B8B7-4F0D-8804-C79ACA8F7C02}" WorkUnitID="{EAA3F804-09D6-44A2-B24A-3CF9B74CFD88}" Origin="Manual" Filter="7"/>
+					</ObjectInclusionList>
 					<ObjectExclusionList/>
 					<GameSyncExclusionList/>
 				</SoundBank>

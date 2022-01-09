@@ -37,7 +37,7 @@ file(COPY "../../template/data/images/western_jungle_tavern.cpt" DESTINATION "..
 file(COPY "../../template/data/material/ui_image.mat" DESTINATION "../data/material/")
 file(GLOB unlit_shaders "../../template/data/shader/unlit.*")
 file(COPY ${unlit_shaders} DESTINATION "../data/shader/")
-file(COPY "../../template/data/audio/hunter/windows/" DESTINATION "../data/audio/")
+file(COPY "../../template/data/audio/wwise/wwise_editor_make_export/windows/" DESTINATION "../data/audio/")
 
 #头文件目录
 include_directories("depends")

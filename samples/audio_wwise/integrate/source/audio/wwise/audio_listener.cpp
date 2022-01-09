@@ -34,6 +34,6 @@ void AudioListener::Update() {
         return;
     }
     auto pos=transform->position();
-
+    // 设置Wwise GameObject位置、朝向
     WwiseAudio::SetPosition(audio_listener_object_id_,pos,glm::vec3(0,0,1),glm::vec3(0,1,0));
 }
