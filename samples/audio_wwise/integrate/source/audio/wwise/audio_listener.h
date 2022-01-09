@@ -5,8 +5,8 @@
 #ifndef UNTITLED_AUDIOLISTENER_H
 #define UNTITLED_AUDIOLISTENER_H
 
+#include "AK/SoundEngine/Common/AkTypes.h"
 #include "component/component.h"
-#include "wwise_audio.h"
 
 class AudioListener:public Component {
 public:

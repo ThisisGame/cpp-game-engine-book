@@ -7,6 +7,7 @@
 #include "spdlog/spdlog.h"
 #include "component/game_object.h"
 #include "component/transform.h"
+#include "wwise_audio.h"
 
 using namespace rttr;
 RTTR_REGISTRATION
