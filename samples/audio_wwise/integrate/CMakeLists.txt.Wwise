@@ -4,11 +4,23 @@ add_definitions(-D USE_WWISE_AUDIO)
 #是否输出wwise占用系统资源
 #add_definitions(-D PRINT_DATA_SUMMARY)
 
-#解压wwise.7z
-if(WIN32)
-    execute_process(COMMAND cmd /c "..\\..\\..\\template\\depends\\extra.bat")
+#下载wwise.7z
+if(EXISTS "../../../template/depends/wwise.7z")
+    MESSAGE("found wwise.7z")
 else()
+    MESSAGE("Download wwise.7z")
+    file(DOWNLOAD "https://github.com/ThisisGame/makegameengineatnight/releases/download/v2022.1.10.1/wwise.7z" "../../../template/depends/wwise.7z" SHOW_PROGRESS)
 endif()
+
+
+#解压wwise.7z
+if(EXISTS "../../../template/depends/wwise/")
+    MESSAGE("found wwise")
+else()
+    MESSAGE("not find wwise,extract wwise.7z")
+    file(ARCHIVE_EXTRACT INPUT "../../../template/depends/wwise.7z" DESTINATION "../../../template/depends/" VERBOSE)
+endif()
+
 
 #拷贝多平台通用代码
 file(COPY "../../template/depends/wwise/include" DESTINATION "../depends/wwise/")
