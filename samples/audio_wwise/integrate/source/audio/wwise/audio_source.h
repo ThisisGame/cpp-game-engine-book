@@ -29,6 +29,8 @@ public:
     /// 停止
     void Stop();
 
+    /// 设置音效播放完成回调
+    /// @param callback 回调函数，如果是lua传入，使用普通function就行
     void set_event_end_callback(std::function<void(void)> callback){
         event_end_callback_ = callback;
     }
