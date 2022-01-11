@@ -2,5 +2,5 @@ Event	ID	Name			Wwise Object Path	Notes
 	445985469	die			\Default Work Unit\die	
 
 In Memory Audio	ID	Name	Audio source file		Wwise Object Path	Notes	Data Size
-	615961088	小怪死亡	F:\Github\makegameengineatnight\files\audio_wwise\wwise_editor_make_export\hunter\.cache\Windows\SFX\小怪死亡_10C4C929.wem		\Actor-Mixer Hierarchy\Default Work Unit\小怪死亡		67712
+	615961088	小怪死亡	E:\makegameengineatnight\Github_LFS\files\audio_wwise\wwise_editor_make_export\hunter\.cache\Windows\SFX\小怪死亡_10C4C929.wem		\Actor-Mixer Hierarchy\Default Work Unit\小怪死亡		67712
 
