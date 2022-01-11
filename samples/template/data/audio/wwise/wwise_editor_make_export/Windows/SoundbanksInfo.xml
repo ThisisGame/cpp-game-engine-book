@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <SoundBanksInfo Platform="Windows" BasePlatform="Windows" SchemaVersion="12" SoundbankVersion="140">
 	<RootPaths>
-		<ProjectRoot>F:\Github\makegameengineatnight\files\audio_wwise\wwise_editor_make_export\hunter\</ProjectRoot>
-		<SourceFilesRoot>F:\Github\makegameengineatnight\files\audio_wwise\wwise_editor_make_export\hunter\.cache\Windows\</SourceFilesRoot>
-		<SoundBanksRoot>F:\Github\makegameengineatnight\files\audio_wwise\wwise_editor_make_export\hunter\GeneratedSoundBanks\Windows\</SoundBanksRoot>
+		<ProjectRoot>E:\makegameengineatnight\Github_LFS\files\audio_wwise\wwise_editor_make_export\hunter\</ProjectRoot>
+		<SourceFilesRoot>E:\makegameengineatnight\Github_LFS\files\audio_wwise\wwise_editor_make_export\hunter\.cache\Windows\</SourceFilesRoot>
+		<SoundBanksRoot>E:\makegameengineatnight\Github_LFS\files\audio_wwise\wwise_editor_make_export\hunter\GeneratedSoundBanks\Windows\</SoundBanksRoot>
 		<ExternalSourcesInputFile></ExternalSourcesInputFile>
-		<ExternalSourcesOutputRoot>F:\Github\makegameengineatnight\files\audio_wwise\wwise_editor_make_export\hunter\GeneratedSoundBanks\Windows</ExternalSourcesOutputRoot>
+		<ExternalSourcesOutputRoot>E:\makegameengineatnight\Github_LFS\files\audio_wwise\wwise_editor_make_export\hunter\GeneratedSoundBanks\Windows</ExternalSourcesOutputRoot>
 	</RootPaths>
 	<DialogueEvents/>
 	<StreamedFiles/>
 	<MediaFilesNotInAnyBank/>
 	<SoundBanks>
-		<SoundBank Id="514064485" Language="SFX" Hash="579412030">
+		<SoundBank Id="514064485" Language="SFX" Hash="2505948336">
 			<ObjectPath>\SoundBanks\Default Work Unit\fight</ObjectPath>
 			<ShortName>fight</ShortName>
 			<Path>fight.bnk</Path>
