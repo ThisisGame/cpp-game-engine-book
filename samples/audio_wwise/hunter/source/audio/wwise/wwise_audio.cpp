@@ -154,6 +154,7 @@ void WwiseAudio::Update() {
     AKRESULT result = AK::SoundEngine::RenderAudio();
     if (result != AK_Success){
         DEBUG_LOG_ERROR("AK::SoundEngine::RenderAudio() failed.result:{}",result);
+        return;
     }
 }
 
@@ -194,4 +195,25 @@ void WwiseAudio::SetPosition(AkGameObjectID game_object_id, glm::vec3 position, 
     soundPos.Set(akPosition,akFront,akUp);
 
     AK::SoundEngine::SetPosition(game_object_id, soundPos);
+}
+
+AkPlayingID WwiseAudio::PostEvent(const char *event_name, AkGameObjectID audio_object_id, AkUInt32 flags,
+                           AkCallbackFunc callback, void *user_data) {
+    AkPlayingID playing_id = AK::SoundEngine::PostEvent(event_name,audio_object_id,flags,callback,user_data);
+    if(playing_id==AK_INVALID_PLAYING_ID){
+        DEBUG_LOG_ERROR("AudioSource::Play() failed");
+    }
+    return playing_id;
+}
+
+void WwiseAudio::SetRTPCValue(const char *realtime_parameter_control_name, AkRtpcValue value,
+                              AkGameObjectID audio_object_id) {
+    AKRESULT result = AK::SoundEngine::SetRTPCValue(realtime_parameter_control_name, value, audio_object_id);
+    if (result != AK_Success) {
+        DEBUG_LOG_ERROR("Set RealTime Parameter Control value failed,parameter name:{} ,value:{}", realtime_parameter_control_name, value);
+    }
+}
+
+void WwiseAudio::StopEvent(AkPlayingID playing_id) {
+    AK::SoundEngine::ExecuteActionOnPlayingID(AK::SoundEngine::AkActionOnEventType::AkActionOnEventType_Stop,playing_id);
 }
