@@ -5,10 +5,9 @@
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
 #include <glm/gtx/string_cast_beauty.hpp>
-#include <assimp/Importer.hpp>      // C++ importer interface
-#include <assimp/scene.h>           // Output data structure
-#include <assimp/postprocess.h>     // Post processing flags
 #include "debug.h"
+#include "fbxsdk.h"
+#include "Common/Common.h"
 
 namespace Engine{
     //顶点
@@ -61,169 +60,207 @@ namespace Engine{
     };
 }
 
-
+void ParseNode(FbxNode * pNode);
+void ParseMesh(const FbxMesh* pMesh);
 
 int main(void){
     Debug::Init();
+    const char* mFileName="../data/model/assimp_extra.fbx";
 
-    //实例化Assimp Importer
-    Assimp::Importer importer;
-
-    // And have it read the given file with some example postprocessing
-    // Usually - if speed is not the most important aspect for you - you'll
-    // probably to request more postprocessing than we do in this example.
-    const aiScene* scene = importer.ReadFile( "../data/model/assimp_extra.fbx",aiProcess_CalcTangentSpace|aiProcess_Triangulate|aiProcess_JoinIdenticalVertices|aiProcess_SortByPType);
-
-    // 读取文件失败
-    if (nullptr == scene) {
-        DEBUG_LOG_ERROR(importer.GetErrorString());
-        return false;
+    FbxManager * mSdkManager;
+    FbxScene * mScene;
+    FbxImporter * mImporter;
+    // 初始化FBX SDKManager，并创建一个Scene，用来容纳从FBX中解析的所有对象
+    InitializeSdkObjects(mSdkManager, mScene);
+    if (!mSdkManager) {
+        DEBUG_LOG_ERROR("Failed to create FBX SDK manager.");
+        return -1;
+    }
+    // 创建一个Importer，用来解析FBX文件
+    int lFileFormat = -1;
+    mImporter = FbxImporter::Create(mSdkManager, "");
+    if (!mSdkManager->GetIOPluginRegistry()->DetectReaderFileFormat(mFileName, lFileFormat)) {
+        // 未能识别文件格式
+        DEBUG_LOG_ERROR("Unrecognizable file format.");
+        return -1;
     }
 
-
-//    for (int i = 0; i < scene->mMetaData->mNumProperties; ++i) {
-//        DEBUG_LOG_INFO("MetaData: {}", scene->mMetaData->mKeys[i].C_Str());
-//
-//        if(scene->mMetaData->mValues[i].mType == AI_AISTRING){
-//            aiString value;
-//            scene->mMetaData->Get<aiString>(scene->mMetaData->mKeys[i], value);
-//            DEBUG_LOG_INFO("MetaData: {}", value.C_Str());
-//        } else if(scene->mMetaData->mValues[i].mType == AI_INT32){
-//            int value;
-//            scene->mMetaData->Get<int>(scene->mMetaData->mKeys[i], value);
-//            DEBUG_LOG_INFO("MetaData: {}", value);
-//        } else if(scene->mMetaData->mValues[i].mType == AI_UINT64){
-//            unsigned long long value;
-//            scene->mMetaData->Get<unsigned long long>(scene->mMetaData->mKeys[i], value);
-//            DEBUG_LOG_INFO("MetaData: {}", value);
-//        } else if(scene->mMetaData->mValues[i].mType == AI_FLOAT){
-//            float value;
-//            scene->mMetaData->Get<float>(scene->mMetaData->mKeys[i], value);
-//            DEBUG_LOG_INFO("MetaData: {}", value);
-//        } else if(scene->mMetaData->mValues[i].mType == AI_BOOL){
-//            bool value;
-//            scene->mMetaData->Get<bool>(scene->mMetaData->mKeys[i], value);
-//            DEBUG_LOG_INFO("MetaData: {}", value);
-//        }
-//    }
-
-    // 获取向上的轴属性，0表示右 1表示上 2表示向前
-    int upAxis = 0;
-    scene->mMetaData->Get<int>("UpAxis", upAxis);
-    int upAxisSign = 0;
-    scene->mMetaData->Get<int>("upAxisSign", upAxisSign);
-    int frontAxis = 0;
-    scene->mMetaData->Get<int>("frontAxis", frontAxis);
-    int frontAxisSign = 0;
-    scene->mMetaData->Get<int>("frontAxisSign", frontAxisSign);
-    int coordAxis = 0;
-    scene->mMetaData->Get<int>("coordAxis", coordAxis);
-    int coordAxisSign = 0;
-    scene->mMetaData->Get<int>("coordAxisSign", coordAxisSign);
-
-    aiVector3D upVec = upAxis == 0 ? aiVector3D(upAxisSign,0,0) : upAxis == 1 ? aiVector3D(0, upAxisSign,0) : aiVector3D(0, 0, upAxisSign);
-    aiVector3D forwardVec = frontAxis == 0 ? aiVector3D(frontAxisSign, 0, 0) : frontAxis == 1 ? aiVector3D(0, frontAxisSign, 0) : aiVector3D(0, 0, frontAxisSign);
-    aiVector3D rightVec = coordAxis == 0 ? aiVector3D(coordAxisSign, 0, 0) : coordAxis == 1 ? aiVector3D(0, coordAxisSign, 0) : aiVector3D(0, 0, coordAxisSign);
-    aiMatrix4x4 mat(rightVec.x, rightVec.y, rightVec.z, 0.0f,
-                    upVec.x, upVec.y, upVec.z, 0.0f,
-                    forwardVec.x, forwardVec.y, forwardVec.z, 0.0f,
-                    0.0f, 0.0f, 0.0f, 1.0f);
-
-    scene->mRootNode->mTransformation=mat * scene->mRootNode->mTransformation;
-
-    // 遍历Material
-    for(unsigned int i = 0; i < scene->mNumMaterials; i++){
-        aiMaterial* material = scene->mMaterials[i];
-        aiString name;
-        material->Get(AI_MATKEY_NAME, name);
-        DEBUG_LOG_INFO("Material name: {}", name.C_Str());
-
-        // 遍历 Texture
-        for(unsigned int j = 0; j < material->GetTextureCount(aiTextureType_DIFFUSE); j++){
-            aiString path;
-            material->GetTexture(aiTextureType_DIFFUSE, j, &path);
-            DEBUG_LOG_INFO("Texture path: {}", path.C_Str());
-
-            // 加载EmbeddedTexture
-            auto texture = scene->GetEmbeddedTexture(path.C_Str());
-            if(texture != nullptr){
-                DEBUG_LOG_INFO("EmbeddedTexture width:{} height:{}" , texture->mWidth, texture->mHeight);
-                // 将EmbeddedTexture写入文件
-                std::ofstream texture_file(texture->mFilename.C_Str(), std::ios::binary);
-                if(texture_file.is_open()){
-                    texture_file.write(reinterpret_cast<char*>(texture->pcData), texture->mWidth * texture->mHeight * 4);
-                    texture_file.close();
-                }
-            }else{
-                DEBUG_LOG_ERROR("Texture {} is not EmbeddedTexture",path.C_Str());
-            }
-        }
+    // 初始化Importer，设置文件路径
+    if (mImporter->Initialize(mFileName, lFileFormat) == false) {
+        DEBUG_LOG_ERROR("Call to FbxImporter::Initialize() failed.Error reported: {}", mImporter->GetStatus().GetErrorString());
+        return -1;
     }
 
-    // 遍历Mesh，一个FBX里面可能有多个Mesh。
-    for (int i = 0; i < scene->mNumMeshes; ++i) {
-        Engine::MeshFile mesh_file;
-
-        aiMesh* mesh = scene->mMeshes[i]; // 获取Mesh
-
-        DEBUG_LOG_INFO("Mesh {} has {} vertices",mesh->mName.C_Str() ,mesh->mNumVertices);
-
-        // 构造引擎Mesh结构
-        strcpy(mesh_file.head_.type_,"Mesh");
-        strcpy(mesh_file.head_.name_,mesh->mName.C_Str());
-        mesh_file.head_.vertex_num_ = mesh->mNumVertices;
-        mesh_file.head_.vertex_index_num_ = mesh->mNumFaces * 3;
-        mesh_file.vertex_ = new Engine::Vertex[mesh_file.head_.vertex_num_];
-        mesh_file.index_ = new unsigned short[mesh_file.head_.vertex_index_num_];
-
-        // 遍历顶点
-        for (int j = 0; j < mesh->mNumVertices; ++j) {
-            // 顶点坐标
-            aiVector3D& v = mesh->mVertices[j];
-//            DEBUG_LOG_INFO("Vertex {} has position {}",j ,glm::to_string(glm::vec3(v.x, v.y, v.z)));
-
-            // 顶点颜色
-            glm::vec4 color(1.0f, 1.0f, 1.0f, 1.0f);
-            if(mesh->mColors!=nullptr && mesh->mColors[0]!=nullptr){
-                aiColor4D& c = mesh->mColors[0][j];//一个顶点有多套顶点颜色，暂时只使用第一套。
-                color = glm::vec4(c.r, c.g, c.b, c.a);
-//                DEBUG_LOG_INFO("Vertex {} has color {}",j ,glm::to_string(color));
-            }
-
-            // 顶点法线
-            aiVector3D& n = mesh->mNormals[j];//暂时不使用法线
-
-            // 顶点纹理坐标
-            aiVector3D& t = mesh->mTextureCoords[0][j];
-//            DEBUG_LOG_INFO("Vertex {} has texture coordinate {}",j ,glm::to_string(glm::vec2(t.x, t.y)));
-
-            mesh_file.vertex_[j].position_ = glm::vec3(v.x, v.y, v.z);
-            mesh_file.vertex_[j].color_ = color;
-            mesh_file.vertex_[j].uv_ = glm::vec2(t.x, t.y);
-        }
-
-        // 获取模型的索引数据
-        DEBUG_LOG_INFO("Mesh {} has {} indices",i ,mesh->mNumFaces);
-        for (int j = 0; j < mesh->mNumFaces; ++j) {
-            aiFace& face = mesh->mFaces[j];
-//            DEBUG_LOG_INFO("Face {} has {} indices",j ,face.mNumIndices);
-            if(face.mNumIndices!=3){
-//                DEBUG_LOG_ERROR("Face {} has {} indices",j ,face.mNumIndices);
-                assert(false);
-            }
-            for (int k = 0; k < face.mNumIndices; ++k) {
-//                DEBUG_LOG_INFO("  Index {} is {}",k ,face.mIndices[k]);
-                mesh_file.index_[j * 3 + k] = face.mIndices[k];
-            }
-        }
-
-        // 写入文件
-        mesh_file.Write(fmt::format("../data/model/assimp_extra_{}.mesh", mesh_file.head_.name_).c_str());
+    // 将FBX文件解析导入到Scene中
+    bool lResult = mImporter->Import(mScene);
+    if (!lResult) {
+        DEBUG_LOG_ERROR("Call to FbxImporter::Import() failed.Error reported: {}", mImporter->GetStatus().GetErrorString());
     }
+
+    // 检查Scene完整性
+    FbxStatus status;
+    FbxArray<FbxString *> details;
+    FbxSceneCheckUtility sceneCheck(FbxCast<FbxScene>(mScene), &status, &details);
+    bool lNotify = (!sceneCheck.Validate(FbxSceneCheckUtility::eCkeckData) && details.GetCount() > 0) ||
+                   (mImporter->GetStatus().GetCode() != FbxStatus::eSuccess);
+    if (lNotify) {
+        DEBUG_LOG_ERROR("\n");
+        DEBUG_LOG_ERROR("********************************************************************************\n");
+        if (details.GetCount()) {
+            DEBUG_LOG_ERROR("Scene integrity verification failed with the following errors:\n");
+
+            for (int i = 0; i < details.GetCount(); i++)
+                DEBUG_LOG_ERROR("   %s\n", details[i]->Buffer());
+
+            FbxArrayDelete<FbxString *>(details);
+        }
+
+        if (mImporter->GetStatus().GetCode() != FbxStatus::eSuccess) {
+            DEBUG_LOG_ERROR("\n");
+            DEBUG_LOG_ERROR("WARNING:\n");
+            DEBUG_LOG_ERROR("   The importer was able to read the file but with errors.\n");
+            DEBUG_LOG_ERROR("   Loaded scene may be incomplete.\n\n");
+            DEBUG_LOG_ERROR("   Last error message:'%s'\n", mImporter->GetStatus().GetErrorString());
+        }
+
+        DEBUG_LOG_ERROR("********************************************************************************\n");
+        DEBUG_LOG_ERROR("\n");
+        return -1;
+    }
+
+    // 转换坐标系为右手坐标系。
+    FbxAxisSystem SceneAxisSystem = mScene->GetGlobalSettings().GetAxisSystem();
+    FbxAxisSystem OurAxisSystem(FbxAxisSystem::eYAxis, FbxAxisSystem::eParityOdd, FbxAxisSystem::eRightHanded);
+    if (SceneAxisSystem != OurAxisSystem) {
+        OurAxisSystem.ConvertScene(mScene);
+    }
+
+    // 转换单元长度
+    FbxSystemUnit SceneSystemUnit = mScene->GetGlobalSettings().GetSystemUnit();
+    if (SceneSystemUnit.GetScaleFactor() != 1.0) {
+        // 例子中用的是厘米，所以这里也要转换
+        FbxSystemUnit::cm.ConvertScene(mScene);
+    }
+
+    // 转换曲面到三角形
+    FbxGeometryConverter lGeomConverter(mSdkManager);
+    try {
+        lGeomConverter.Triangulate(mScene, /*replace*/true);
+    }
+    catch (std::runtime_error) {
+        DEBUG_LOG_ERROR("Scene integrity verification failed.\n");
+        return -1;
+    }
+
+    ParseNode(mScene->GetRootNode());
 
     DEBUG_LOG_INFO("extra mesh success");
 
     return 0;
 }
 
+/// 递归解析节点
+/// @param pNode 节点
+void ParseNode(FbxNode * pNode){
+    // 获取节点属性
+    FbxNodeAttribute* lNodeAttribute = pNode->GetNodeAttribute();
+    if (lNodeAttribute){
+        // 节点是Mesh
+        if (lNodeAttribute->GetAttributeType() == FbxNodeAttribute::eMesh) {
+            FbxMesh * lMesh = pNode->GetMesh();
+            if (lMesh && !lMesh->GetUserDataPtr()) {
+                ParseMesh(lMesh);
+            }
+        }
+    }
+
+    // 递归解析子节点
+    const int lChildCount = pNode->GetChildCount();
+    for (int lChildIndex = 0; lChildIndex < lChildCount; ++lChildIndex) {
+        ParseNode(pNode->GetChild(lChildIndex));
+    }
+}
+
+/// 解析Mesh
+/// @param pMesh Mesh 对象
+void ParseMesh(const FbxMesh* pMesh){
+    FbxNode* lNode = pMesh->GetNode();
+    if (!lNode){
+        DEBUG_LOG_ERROR("Mesh has no node.");
+        return;
+    }
+    DEBUG_LOG_INFO("Mesh name: {}", lNode->GetName());
+
+    // 获取Mesh多边形个数，对游戏来说就是三角形面数。
+    const int lPolygonCount = pMesh->GetPolygonCount();
+    // 是否有UV数据？
+    bool mHasUV = pMesh->GetElementUVCount() > 0;
+    bool mAllByControlPoint = true;
+    FbxGeometryElement::EMappingMode lUVMappingMode = FbxGeometryElement::eNone;
+    if (mHasUV) {
+        lUVMappingMode = pMesh->GetElementUV(0)->GetMappingMode();
+        if (lUVMappingMode == FbxGeometryElement::eNone) {
+            mHasUV = false;
+        }
+        if (mHasUV && lUVMappingMode != FbxGeometryElement::eByControlPoint) {
+            mAllByControlPoint = false;
+        }
+    }
+
+    // 最终顶点个数到底是多少？
+    // 如果只有一套UV，即UV映射方式是按实际顶点个数(FbxGeometryElement::eByControlPoint)，那么就是实际顶点个数。
+    // 如果有多套UV，那么一个顶点在不同的多边形里，会对应不同的UV坐标，即UV映射方式是按多边形(eByPolygonVertex)，那么顶点个数是多边形数*3.
+    int lPolygonVertexCount = mAllByControlPoint?pMesh->GetControlPointsCount():lPolygonCount * 3;
+    // 创建数组存放所有顶点坐标。
+    float * lVertices = new float[lPolygonVertexCount * 4];
+    // 创建数组存放索引数据，数组长度=面数*3.
+    unsigned int * lIndices = new unsigned int[lPolygonCount * 3];
+    // 获取多套UV名字
+    float * lUVs = NULL;
+    FbxStringList lUVNames;
+    pMesh->GetUVSetNames(lUVNames);
+    const char * lUVName = NULL;
+    if (mHasUV && lUVNames.GetCount()) {
+        // 创建数组存放UV数据
+        lUVs = new float[lPolygonVertexCount * 2];
+        // 暂时只使用第一套UV。
+        lUVName = lUVNames[0];
+    }
+    // 实际顶点数据。
+    const FbxVector4 * lControlPoints = pMesh->GetControlPoints();
+
+    // 遍历所有三角面，遍历每个面的三个顶点，解析顶点坐标、UV坐标数据。
+    int lVertexCount = 0;
+    for (int lPolygonIndex = 0; lPolygonIndex < lPolygonCount; ++lPolygonIndex) {
+        // 三角面，3个顶点
+        for (int lVerticeIndex = 0; lVerticeIndex < 3; ++lVerticeIndex) {
+            // 传入面索引，以及当前面的第几个顶点，获取顶点索引。
+            const int lControlPointIndex = pMesh->GetPolygonVertex(lPolygonIndex, lVerticeIndex);
+            if (lControlPointIndex >= 0) {
+                // 因为设定一个顶点有多套UV，所以每个三角面与其他面相邻的共享的顶点，尽管实际上是同一个点(ControlPoint),因为有不同的UV，所以还是算不同的顶点。
+                lIndices[lVertexCount] = static_cast<unsigned int>(lVertexCount);
+                // 获取当前顶点索引对应的实际顶点。
+                FbxVector4 lCurrentVertex = lControlPoints[lControlPointIndex];
+                // 将顶点坐标从FbxVector4转为float数组
+                lVertices[lVertexCount * 3] = static_cast<float>(lCurrentVertex[0]);
+                lVertices[lVertexCount * 3 + 1] = static_cast<float>(lCurrentVertex[1]);
+                lVertices[lVertexCount * 3 + 2] = static_cast<float>(lCurrentVertex[2]);
+                lVertices[lVertexCount * 3 + 3] = 1;
+
+                if (mHasUV) {
+                    // 获取当前顶点在指定UV层的UV坐标，前面说过，一个顶点可能有多套UV。
+                    bool lUnmappedUV;
+                    FbxVector2 lCurrentUV;
+                    pMesh->GetPolygonVertexUV(lPolygonIndex, lVerticeIndex, lUVName, lCurrentUV, lUnmappedUV);
+                    // 将UV坐标从FbxVector2转为float数组
+                    lUVs[lVertexCount * 2] = static_cast<float>(lCurrentUV[0]);
+                    lUVs[lVertexCount * 2 + 1] = static_cast<float>(lCurrentUV[1]);
+                }
+            }
+            ++lVertexCount;
+        }
+    }
+
+
+}
 

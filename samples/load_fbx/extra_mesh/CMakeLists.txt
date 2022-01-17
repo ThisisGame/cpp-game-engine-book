@@ -14,30 +14,30 @@ endif ()
 file(COPY "../../template/depends/glm/" DESTINATION "../depends/glm/")
 file(COPY "../../template/depends/glm_ext/" DESTINATION "../depends/glm/")
 file(COPY "../../template/depends/spdlog/include/spdlog/" DESTINATION "../depends/spdlog/")
-file(COPY "../../template/depends/assimp-5.0.1/win/" DESTINATION "../depends/assimp-5.0.1/")
+file(COPY "../../template/depends/fbx_sdk_2020.2.1/win/" DESTINATION "../depends/fbx_sdk/")
 
 #拷贝data文件
 file(COPY "../../template/data/model/assimp_extra.fbx" DESTINATION "../data/model/")
 
 #头文件目录
 include_directories("depends")
-include_directories("depends/assimp-5.0.1/include")
+include_directories("depends/fbx_sdk/include")
 include_directories("source")
 
 
 #链接目录
-link_directories("depends/assimp-5.0.1/lib")
+link_directories("depends/fbx_sdk/lib/vs2019/x64/debug")
 
 if(WIN32)
     #链接lib文件
-    link_libraries(assimp-vc142-mtd)
+    link_libraries(libfbxsdk-md libxml2-md zlib-md)
 
     #拷贝dll到exe目录
-    file(COPY "depends/assimp-5.0.1/bin/assimp-vc142-mtd.dll" DESTINATION "./")
+    file(COPY "depends/fbx_sdk/lib/vs2019/x64/debug/libfbxsdk.dll" DESTINATION "./")
 else()
 
 endif()
 
-file(GLOB_RECURSE example_cpp example/*.cpp)
+file(GLOB_RECURSE example_cpp example/*.cpp example/Common/*.cxx)
 
 add_executable(untitled ${example_cpp})
