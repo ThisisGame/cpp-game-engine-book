@@ -10,6 +10,39 @@ if (MSVC)
     add_compile_options(/wd4819)#忽略保存为unicode警告
 endif ()
 
+
+#下载 fbx_sdk_2020.2.1.7z
+function(Download7Z)
+    MESSAGE("Download fbx_sdk_2020.2.1.7z")
+    file(DOWNLOAD "https://github.com/ThisisGame/makegameengineatnight/releases/download/fbx_sdk_2020.2.1/fbx_sdk_2020.2.1.7z" "../../../template/depends/fbx_sdk_2020.2.1.7z" SHOW_PROGRESS)
+endfunction()
+
+#检测 fbx_sdk_2020.2.1.7z 是否存在，不存在则下载
+if(EXISTS "../../../template/depends/fbx_sdk_2020.2.1.7z")
+    MESSAGE("found fbx_sdk_2020.2.1.7z")
+    file(SIZE "../../../template/depends/fbx_sdk_2020.2.1.7z" SIZE_7Z)
+    MESSAGE("size of fbx_sdk_2020.2.1.7z: ${SIZE_7Z}")
+    #检查大小是否匹配
+    if(${SIZE_7Z} EQUAL 67274821)
+        MESSAGE("fbx_sdk_2020.2.1.7z is valid")
+    else()
+        MESSAGE("fbx_sdk_2020.2.1.7z is invalid")
+        Download7Z()
+    endif()
+else()
+    Download7Z()
+endif()
+
+
+
+#解压 fbx_sdk_2020.2.1.7z
+if(EXISTS "../../../template/depends/fbx_sdk_2020.2.1/")
+    MESSAGE("found fbx_sdk_2020.2.1")
+else()
+    MESSAGE("not find fbx_sdk_2020.2.1,extract fbx_sdk_2020.2.1.7z")
+    file(ARCHIVE_EXTRACT INPUT "../../../template/depends/fbx_sdk_2020.2.1.7z" DESTINATION "../../../template/depends/" VERBOSE)
+endif()
+
 #拷贝depends目录
 file(COPY "../../template/depends/glm/" DESTINATION "../depends/glm/")
 file(COPY "../../template/depends/glm_ext/" DESTINATION "../depends/glm/")
@@ -17,7 +50,7 @@ file(COPY "../../template/depends/spdlog/include/spdlog/" DESTINATION "../depend
 file(COPY "../../template/depends/fbx_sdk_2020.2.1/win/" DESTINATION "../depends/fbx_sdk/")
 
 #拷贝data文件
-file(COPY "../../template/data/model/assimp_extra.fbx" DESTINATION "../data/model/")
+file(COPY "../../template/data/model/fbx_extra.fbx" DESTINATION "../data/model/")
 
 #头文件目录
 include_directories("depends")

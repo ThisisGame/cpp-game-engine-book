@@ -65,7 +65,7 @@ void ParseMesh(const FbxMesh* pMesh);
 
 int main(void){
     Debug::Init();
-    const char* mFileName="../data/model/assimp_extra.fbx";
+    const char* mFileName="../data/model/fbx_extra.fbx";
 
     FbxManager * mSdkManager;
     FbxScene * mScene;
@@ -103,6 +103,7 @@ int main(void){
     FbxSceneCheckUtility sceneCheck(FbxCast<FbxScene>(mScene), &status, &details);
     bool lNotify = (!sceneCheck.Validate(FbxSceneCheckUtility::eCkeckData) && details.GetCount() > 0) ||
                    (mImporter->GetStatus().GetCode() != FbxStatus::eSuccess);
+    //输出错误信息
     if (lNotify) {
         DEBUG_LOG_ERROR("\n");
         DEBUG_LOG_ERROR("********************************************************************************\n");
@@ -146,12 +147,12 @@ int main(void){
     FbxGeometryConverter lGeomConverter(mSdkManager);
     try {
         lGeomConverter.Triangulate(mScene, /*replace*/true);
-    }
-    catch (std::runtime_error) {
+    } catch (std::runtime_error) {
         DEBUG_LOG_ERROR("Scene integrity verification failed.\n");
         return -1;
     }
 
+    // 递归解析节点
     ParseNode(mScene->GetRootNode());
 
     DEBUG_LOG_INFO("extra mesh success");
@@ -212,9 +213,9 @@ void ParseMesh(const FbxMesh* pMesh){
     // 如果有多套UV，那么一个顶点在不同的多边形里，会对应不同的UV坐标，即UV映射方式是按多边形(eByPolygonVertex)，那么顶点个数是多边形数*3.
     int lPolygonVertexCount = mAllByControlPoint?pMesh->GetControlPointsCount():lPolygonCount * 3;
     // 创建数组存放所有顶点坐标。
-    float * lVertices = new float[lPolygonVertexCount * 4];
+    float * lVertices = new float[lPolygonVertexCount * 3];
     // 创建数组存放索引数据，数组长度=面数*3.
-    unsigned int * lIndices = new unsigned int[lPolygonCount * 3];
+    unsigned short * lIndices = new unsigned short[lPolygonCount * 3];
     // 获取多套UV名字
     float * lUVs = NULL;
     FbxStringList lUVNames;
@@ -238,14 +239,13 @@ void ParseMesh(const FbxMesh* pMesh){
             const int lControlPointIndex = pMesh->GetPolygonVertex(lPolygonIndex, lVerticeIndex);
             if (lControlPointIndex >= 0) {
                 // 因为设定一个顶点有多套UV，所以每个三角面与其他面相邻的共享的顶点，尽管实际上是同一个点(ControlPoint),因为有不同的UV，所以还是算不同的顶点。
-                lIndices[lVertexCount] = static_cast<unsigned int>(lVertexCount);
+                lIndices[lVertexCount] = static_cast<unsigned short>(lVertexCount);
                 // 获取当前顶点索引对应的实际顶点。
                 FbxVector4 lCurrentVertex = lControlPoints[lControlPointIndex];
                 // 将顶点坐标从FbxVector4转为float数组
                 lVertices[lVertexCount * 3] = static_cast<float>(lCurrentVertex[0]);
                 lVertices[lVertexCount * 3 + 1] = static_cast<float>(lCurrentVertex[1]);
                 lVertices[lVertexCount * 3 + 2] = static_cast<float>(lCurrentVertex[2]);
-                lVertices[lVertexCount * 3 + 3] = 1;
 
                 if (mHasUV) {
                     // 获取当前顶点在指定UV层的UV坐标，前面说过，一个顶点可能有多套UV。
@@ -262,5 +262,24 @@ void ParseMesh(const FbxMesh* pMesh){
     }
 
 
+    // 创建引擎Mesh文件，从FBX中解析数据填充到里面。
+    Engine::MeshFile mesh_file;
+    // 构造引擎Mesh结构，设置文件头
+    strcpy(mesh_file.head_.type_,"Mesh");
+    strcpy(mesh_file.head_.name_,lNode->GetName());
+    mesh_file.head_.vertex_num_ = lVertexCount;
+    mesh_file.head_.vertex_index_num_ = lVertexCount;
+    mesh_file.vertex_ = new Engine::Vertex[mesh_file.head_.vertex_num_];
+    mesh_file.index_ = new unsigned short[mesh_file.head_.vertex_index_num_];
+    // 填充顶点坐标、color、UV坐标。
+    for (int i = 0; i < lVertexCount; ++i) {
+        mesh_file.vertex_[i].position_ = glm::vec3(lVertices[lVertexCount * 3], lVertices[lVertexCount * 3+1], lVertices[lVertexCount * 3+2]);
+        mesh_file.vertex_[i].color_ = glm::vec4(1.0f);
+        mesh_file.vertex_[i].uv_ = glm::vec2(lUVs[lVertexCount * 2], lUVs[lVertexCount * 2 + 1]);
+    }
+    // 填充索引
+    mesh_file.index_=lIndices;
+    // 写入文件
+    mesh_file.Write(fmt::format("../data/model/fbx_extra_{}.mesh", mesh_file.head_.name_).c_str());
 }
 
