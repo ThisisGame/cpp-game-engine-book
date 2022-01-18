@@ -273,9 +273,9 @@ void ParseMesh(const FbxMesh* pMesh){
     mesh_file.index_ = new unsigned short[mesh_file.head_.vertex_index_num_];
     // 填充顶点坐标、color、UV坐标。
     for (int i = 0; i < lVertexCount; ++i) {
-        mesh_file.vertex_[i].position_ = glm::vec3(lVertices[lVertexCount * 3], lVertices[lVertexCount * 3+1], lVertices[lVertexCount * 3+2]);
+        mesh_file.vertex_[i].position_ = glm::vec3(lVertices[i * 3], lVertices[i * 3+1], lVertices[i * 3+2]);
         mesh_file.vertex_[i].color_ = glm::vec4(1.0f);
-        mesh_file.vertex_[i].uv_ = glm::vec2(lUVs[lVertexCount * 2], lUVs[lVertexCount * 2 + 1]);
+        mesh_file.vertex_[i].uv_ = glm::vec2(lUVs[i * 2], lUVs[i * 2 + 1]);
     }
     // 填充索引
     mesh_file.index_=lIndices;

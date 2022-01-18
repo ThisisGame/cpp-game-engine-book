@@ -26,12 +26,12 @@ function LoginScene:Awake()
     --self.go_mesh_:GetComponent("Transform"):set_rotation(glm.vec3(-90, 0, 0))
 
     local mesh_filter=self.go_mesh_:AddComponent("MeshFilter")
-    mesh_filter:LoadMesh("model/assimp_extra_jiulian.mesh")--加载Mesh
+    mesh_filter:LoadMesh("model/fbx_extra_jiulian.mesh")--加载Mesh
     mesh_filter:game_object():set_name(mesh_filter:GetMeshName())
 
     --手动创建Material
     self.material_ = Material()--设置材质
-    self.material_:Parse("material/assimp_extra_jiulian.mat")
+    self.material_:Parse("material/fbx_extra_jiulian.mat")
 
     --挂上 MeshRenderer 组件
     local mesh_renderer= self.go_mesh_:AddComponent("MeshRenderer")
