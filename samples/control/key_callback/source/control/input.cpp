@@ -4,29 +4,34 @@
 
 #include "input.h"
 #include <iostream>
+#include <assert.h>
 #include "key_code.h"
 
 std::unordered_map<unsigned short,unsigned char> Input::key_event_map_;
 
-bool Input::GetKey(unsigned char key_code) {
+bool Input::GetKey(unsigned short key_code) {
     return key_event_map_.count(key_code)>0;
 }
 
-bool Input::GetKeyDown(unsigned char key_code) {
+bool Input::GetKeyDown(unsigned short key_code) {
     if(key_event_map_.count(key_code)==0){
         return false;
     }
     return key_event_map_[key_code]!=KEY_ACTION_UP;
 }
 
-bool Input::GetKeyUp(unsigned char key_code) {
+bool Input::GetKeyUp(unsigned short key_code) {
     if(key_event_map_.count(key_code)==0){
         return false;
     }
     return key_event_map_[key_code]==KEY_ACTION_UP;
 }
 
-void Input::RecordKey(unsigned short key_code, unsigned char key_action) {
+void Input::RecordKey(int key_code, unsigned char key_action) {
+    if (key_code<0) {
+        assert(false);
+        return;
+    }
     key_event_map_[key_code]=key_action;
 }
 

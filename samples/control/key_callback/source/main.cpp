@@ -126,7 +126,7 @@ int main(void)
         camera_2->SetProjection(60.f, ratio, 1.f, 1000.f);
 
         //旋转物体
-        if(Input::GetKeyDown(KEY_CODE_R)){
+        if(Input::GetKeyDown(KEY_CODE_R) || Input::GetKeyDown(KEY_CODE_RIGHT_ALT)){
             static float rotate_eulerAngle=0.f;
             rotate_eulerAngle+=0.1f;
             glm::vec3 rotation=transform->rotation();
