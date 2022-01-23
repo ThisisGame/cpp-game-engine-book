@@ -62,12 +62,17 @@ namespace Engine{
 
 void ParseNode(FbxNode * pNode);
 void ParseMesh(const FbxMesh* pMesh);
+void ParseAnimStack(int pIndex);
+
+void DrawNodeRecursive(FbxNode* pNode,FbxTime& pTime,FbxAMatrix& pParentGlobalPosition);
+void DrawMesh();
 
 const char* mFileName="../data/model/fbx_extra.fbx";
 
 FbxManager * mSdkManager;
 FbxScene * mScene;
 FbxImporter * mImporter;
+FbxTime mCurrentTime;
 
 int main(void){
     Debug::Init();
@@ -159,20 +164,23 @@ int main(void){
     mFrameTime.SetTime(0, 0, 0, 1, 0, mScene->GetGlobalSettings().GetTimeMode());
 
     // 当前时间
-    FbxTime mCurrentTime;
     mCurrentTime += mFrameTime;
 
     // 解析动画
-    ParseAnimStack();
+    ParseAnimStack(0);
 
     // 递归解析节点
     ParseNode(mScene->GetRootNode());
+
+    FbxAMatrix lDummyGlobalPosition;
+    DrawNodeRecursive(mScene->GetRootNode(),mCurrentTime,lDummyGlobalPosition);
 
     DEBUG_LOG_INFO("extra mesh success");
 
     return 0;
 }
 
+/// 解析动画片段
 void ParseAnimStack(int pIndex){
     // 获取所有的动画片段
     FbxArray<FbxString*> mAnimStackNameArray;
@@ -190,6 +198,46 @@ void ParseAnimStack(int pIndex){
     // 设置当前Animation Stack
     auto mCurrentAnimLayer = lCurrentAnimationStack->GetMember<FbxAnimLayer>();
     mScene->SetCurrentAnimationStack(lCurrentAnimationStack);
+    // 获取动画片段的时间范围
+    FbxTime mStart,mStop;
+    FbxTakeInfo* lCurrentTakeInfo = mScene->GetTakeInfo(*(mAnimStackNameArray[pIndex]));
+    if (lCurrentTakeInfo)
+    {
+        mStart = lCurrentTakeInfo->mLocalTimeSpan.GetStart();
+        mStop = lCurrentTakeInfo->mLocalTimeSpan.GetStop();
+    }
+    // 将当前时间设置为动画片段的开始时间
+    mCurrentTime=mStart;
+
+}
+
+/// 解析骨骼蒙皮动画矩阵、顶点权重。
+void DrawMesh(){
+
+}
+
+void DrawNodeRecursive(FbxNode* pNode,FbxTime& pTime,FbxAMatrix& pParentGlobalPosition){
+    // 首先获取当前节点的全局坐标
+    FbxAMatrix lGlobalPosition = pNode->EvaluateGlobalTransform(pTime);
+
+    FbxNodeAttribute* lNodeAttribute = pNode->GetNodeAttribute();
+    if (lNodeAttribute)
+    {
+        // 计算几何偏移量
+        FbxAMatrix lGeometryOffset = GetGeometry(pNode);
+        FbxAMatrix lGlobalOffPosition = lGlobalPosition * lGeometryOffset;
+
+        if (lNodeAttribute->GetAttributeType() == FbxNodeAttribute::eMesh)
+        {
+            DrawMesh(pNode, pTime, pAnimLayer, pGlobalPosition, pPose, pShadingMode);
+        }
+    }
+    // 遍历子节点，递归
+    const int lChildCount = pNode->GetChildCount();
+    for (int lChildIndex = 0; lChildIndex < lChildCount; ++lChildIndex)
+    {
+        DrawNodeRecursive(pNode->GetChild(lChildIndex), pTime,pParentGlobalPosition);
+    }
 }
 
 /// 递归解析节点
