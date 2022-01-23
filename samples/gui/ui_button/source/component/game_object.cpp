@@ -12,7 +12,7 @@ using namespace rttr;
 
 Tree GameObject::game_object_tree_;//用树存储所有的GameObject。
 
-GameObject::GameObject(std::string name): Tree::Node(),layer_(0x01) {
+GameObject::GameObject(std::string name): Tree::Node(),layer_(0x01),active_(true) {
     set_name(name);
     game_object_tree_.root_node()->AddChild(this);
 }

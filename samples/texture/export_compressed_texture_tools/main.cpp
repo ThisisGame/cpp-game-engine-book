@@ -130,6 +130,7 @@ int main(int argc,char** argv)
     cpt_file_path.replace(last_index_of_point, cpt_file_path.size()-last_index_of_point, ".cpt");
     Texture2D::CompressImageFile(src_image_file_path,cpt_file_path);
 
+    spdlog::info("finish");
     glfwDestroyWindow(window);
     glfwTerminate();
     exit(EXIT_SUCCESS);

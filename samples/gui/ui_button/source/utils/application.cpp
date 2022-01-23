@@ -166,8 +166,11 @@ void Application::Run() {
 }
 
 void Application::UpdateScreenSize() {
-    int width, height;
-    glfwGetFramebufferSize(glfw_window_, &width, &height);
-    glViewport(0, 0, width, height);
-    Screen::set_width_height(width,height);
+    int view_port_width,view_port_height;
+    glfwGetFramebufferSize(glfw_window_,&view_port_width,&view_port_height);
+    glViewport(0, 0, view_port_width, view_port_height);
+
+    int window_width, window_height;
+    glfwGetWindowSize(glfw_window_, &window_width, &window_height);
+    Screen::set_width_height(window_width, window_height);
 }
