@@ -49,8 +49,8 @@ void UIButton::Update() {
         mouse_position.x=mouse_position.x-Screen::width()/2;
         mouse_position.y=Screen::height()/2-mouse_position.y;
         //获取按钮图片宽高
-        float image_normal_width=image_normal_->texture2D()->width();
-        float image_normal_height=image_normal_->texture2D()->height();
+        float image_normal_width=image_normal_->width();
+        float image_normal_height=image_normal_->height();
         //计算鼠标点击是否在按钮图片范围内
         if((mouse_position.x>transform_position.x && mouse_position.x<transform_position.x+image_normal_width)&&
             (mouse_position.y>transform_position.y && mouse_position.y<transform_position.y+image_normal_height)){

@@ -18,7 +18,7 @@ RTTR_REGISTRATION{
             .constructor<>()(rttr::policy::ctor::as_raw_ptr);
 }
 
-UIImage::UIImage() {
+UIImage::UIImage():Component(),texture2D_(nullptr),width_(0),height_(0) {
 
 }
 
