@@ -30,7 +30,7 @@ void MeshFilter::LoadMesh(string mesh_file_path) {
     MeshFileHead mesh_file_head;
     input_file_stream.read((char*)&mesh_file_head,sizeof(mesh_file_head));
     //读取顶点数据
-    unsigned char* vertex_data =(unsigned char*)malloc(mesh_file_head.vertex_num_*sizeof(Vertex));
+    char* vertex_data =(char*)malloc(mesh_file_head.vertex_num_*sizeof(Vertex));
     input_file_stream.read((char*)vertex_data,mesh_file_head.vertex_num_*sizeof(Vertex));
     //读取顶点索引数据
     unsigned short* vertex_index_data=(unsigned short*)malloc(mesh_file_head.vertex_index_num_*sizeof(unsigned short));

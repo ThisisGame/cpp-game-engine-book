@@ -5,6 +5,7 @@
 #ifndef UNTITLED_ANIMATION_H
 #define UNTITLED_ANIMATION_H
 
+#include <string>
 #include <unordered_map>
 #include "component/component.h"
 
