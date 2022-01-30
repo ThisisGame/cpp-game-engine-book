@@ -212,7 +212,7 @@ void ParseAnimStack(int pIndex){
 }
 
 /// 解析骨骼蒙皮动画矩阵、顶点权重。
-void DrawMesh(){
+void DrawMesh(FbxNode* pNode, FbxTime& pTime, FbxAnimLayer* pAnimLayer,FbxAMatrix& pGlobalPosition, FbxPose* pPose){
 
 }
 
@@ -223,9 +223,12 @@ void DrawNodeRecursive(FbxNode* pNode,FbxTime& pTime,FbxAMatrix& pParentGlobalPo
     FbxNodeAttribute* lNodeAttribute = pNode->GetNodeAttribute();
     if (lNodeAttribute)
     {
-        // 计算几何偏移量
-        FbxAMatrix lGeometryOffset = GetGeometry(pNode);
-        FbxAMatrix lGlobalOffPosition = lGlobalPosition * lGeometryOffset;
+        // 获取pNode相对于锚点的offset
+        const FbxVector4 lT = pNode->GetGeometricTranslation(FbxNode::eSourcePivot);
+        const FbxVector4 lR = pNode->GetGeometricRotation(FbxNode::eSourcePivot);
+        const FbxVector4 lS = pNode->GetGeometricScaling(FbxNode::eSourcePivot);
+        FbxAMatrix lGeometryOffset = FbxAMatrix(lT, lR, lS);
+        FbxAMatrix lGlobalOffPosition = lGlobalPosition * lGeometryOffset;//相乘获得pNode在当前时间相对原点的坐标。
 
         if (lNodeAttribute->GetAttributeType() == FbxNodeAttribute::eMesh)
         {
@@ -236,7 +239,7 @@ void DrawNodeRecursive(FbxNode* pNode,FbxTime& pTime,FbxAMatrix& pParentGlobalPo
     const int lChildCount = pNode->GetChildCount();
     for (int lChildIndex = 0; lChildIndex < lChildCount; ++lChildIndex)
     {
-        DrawNodeRecursive(pNode->GetChild(lChildIndex), pTime,pParentGlobalPosition);
+        DrawNodeRecursive(pNode->GetChild(lChildIndex), pTime,lGlobalPosition);
     }
 }
 
