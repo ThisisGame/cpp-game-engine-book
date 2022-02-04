@@ -23,7 +23,7 @@ function LoginScene:Awake()
     --创建骨骼蒙皮动画
     self.go_mesh_=GameObject("mesh")
     self.go_mesh_:AddComponent("Transform"):set_position(glm.vec3(0, 0, 0))
-    --self.go_mesh_:GetComponent("Transform"):set_rotation(glm.vec3(-90, 0, 0))
+    self.go_mesh_:GetComponent("Transform"):set_rotation(glm.vec3(-90, 0, 0))
 
     local mesh_filter=self.go_mesh_:AddComponent("MeshFilter")
     mesh_filter:LoadMesh("model/fbx_extra_jiulian.mesh")--加载Mesh
