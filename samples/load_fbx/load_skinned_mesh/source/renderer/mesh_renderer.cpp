@@ -8,6 +8,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/transform2.hpp>
 #include <glm/gtx/euler_angles.hpp>
+#include "timetool/stopwatch.h"
 #include "material.h"
 #include "mesh_filter.h"
 #include "texture2d.h"
@@ -17,6 +18,7 @@
 #include "component/transform.h"
 #include "utils/debug.h"
 
+using timetool::StopWatch;
 using namespace rttr;
 RTTR_REGISTRATION
 {
@@ -120,8 +122,12 @@ void MeshRenderer::Render() {
     }
     else{
         glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer_object_);__CHECK_GL_ERROR__
+        StopWatch stopwatch;
+        stopwatch.start();
         //更新Buffer数据
         glBufferSubData(GL_ARRAY_BUFFER,0,mesh->vertex_num_ * sizeof(MeshFilter::Vertex),mesh->vertex_data_);__CHECK_GL_ERROR__
+        stopwatch.stop();
+        DEBUG_LOG_INFO("glBufferSubData cost {}",stopwatch.microseconds());
     }
 
     glUseProgram(gl_program_id);
@@ -164,7 +170,11 @@ void MeshRenderer::Render() {
 
         glBindVertexArray(vertex_array_object_);
         {
+            StopWatch stopwatch;
+            stopwatch.start();
             glDrawElements(GL_TRIANGLES,mesh->vertex_index_num_,GL_UNSIGNED_SHORT,0);//使用顶点索引进行绘制，最后的0表示数据偏移量。
+            stopwatch.stop();
+            DEBUG_LOG_INFO("glDrawElements cost {}",stopwatch.microseconds());
         }
         glBindVertexArray(0);__CHECK_GL_ERROR__
 
