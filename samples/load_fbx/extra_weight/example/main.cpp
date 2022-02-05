@@ -160,20 +160,15 @@ void ParseNodeRecursive(FbxNode* pNode){
         const FbxVector4 lS = pNode->GetGeometricScaling(FbxNode::eSourcePivot);
         FbxAMatrix lGeometryOffset = FbxAMatrix(lT, lR, lS);
 
-        DEBUG_LOG_INFO(" node translation: ({},{},{},{})", lT[0], lT[1], lT[2], lT[3]);
-        DEBUG_LOG_INFO(" node rotation: ({},{},{},{})", lR[0], lR[1], lR[2], lR[3]);
-        DEBUG_LOG_INFO(" node scaling: ({},{},{},{})", lS[0], lS[1], lS[2], lS[3]);
-
         if (lNodeAttribute->GetAttributeType() == FbxNodeAttribute::eMesh)
         {
             FbxMesh* pMesh = pNode->GetMesh();
             // 获取蒙皮数量，一般来说一个Mesh对应一个蒙皮修改器。
 //            int lSkinCount = pMesh->GetDeformerCount(FbxDeformer::eSkin);
-            Engine::Animation animation;
-            animation.name_=mCurrentAnimationStack->GetName();
+            FbxMesh* lMesh = pNode->GetMesh();
+            const int lVertexCount = lMesh->GetControlPointsCount();//实际顶点数量
 
-            FbxTime::EMode lTimeMode = mScene->GetGlobalSettings().GetTimeMode();
-            animation.frame_per_second_=fbxsdk::FbxTime::GetFrameRate(lTimeMode);
+            Engine::VertexRelateBoneInfo* vertex_relate_bone_infos_=new Engine::VertexRelateBoneInfo[lVertexCount];
 
             // 获取蒙皮修改器
             int lSkinIndex=0;
@@ -184,34 +179,58 @@ void ParseNodeRecursive(FbxNode* pNode){
             for ( int lClusterIndex=0; lClusterIndex<lClusterCount; ++lClusterIndex) {
                 // 获取骨骼的顶点组
                 FbxCluster *lCluster = lSkinDeformer->GetCluster(lClusterIndex);
-                animation.bone_name_vec_.push_back(lCluster->GetName());
+
+                // 获取这个簇影响的顶点索引数量
+                int lVertexIndexCount = lCluster->GetControlPointIndicesCount();
+                for (int k = 0; k < lVertexIndexCount; ++k) {
+                    //拿到顶点索引
+                    int lIndex = lCluster->GetControlPointIndices()[k];
+                    //拿到这个簇中对这个顶点的权重
+                    double lWeight = lCluster->GetControlPointWeights()[k];
+
+                    vertex_relate_bone_infos_[lIndex].Push(lClusterIndex,(int)(lWeight*100));
+                }
             }
 
-            // 每一帧的时间
-            FbxTime mFrameTime;
-            mFrameTime.SetTime(0, 0, 0, 1, 0, mScene->GetGlobalSettings().GetTimeMode());
-            for(FbxTime pTime=mStart;pTime<mStop;pTime+=mFrameTime){
-                // 首先获取当前节点的全局坐标
-                FbxAMatrix lGlobalPosition = pNode->EvaluateGlobalTransform(pTime);
-                FbxAMatrix lGlobalOffPosition = lGlobalPosition * lGeometryOffset;//相乘获得pNode在当前时间相对原点的坐标。
+            //上面记录了所有实际顶点的权重，下面要设置到逻辑顶点上。
+            const FbxVector4 * lControlPoints = pMesh->GetControlPoints();
 
-                std::vector<glm::mat4> one_frame_bone_matrix_vec;//一帧的所有骨骼变换矩阵
-                for ( int lClusterIndex=0; lClusterIndex<lClusterCount; ++lClusterIndex) {
-                    // 获取骨骼的顶点组
-                    FbxCluster *lCluster = lSkinDeformer->GetCluster(lClusterIndex);
-                    // 计算这个骨骼的形变，前面pNode是指计算到Mesh节点的形变，而这是是计算骨骼节点，后面会作用到顶点。
-                    FbxAMatrix lVertexTransformMatrix;
-                    ComputeClusterDeformation(lGlobalOffPosition, pMesh, lCluster, lVertexTransformMatrix, pTime);
-
-                    glm::mat4 bone_matrix= FbxMatrixToGlmMat4(lVertexTransformMatrix);
-                    one_frame_bone_matrix_vec.push_back(bone_matrix);
+            // 是否有UV数据？
+            bool mHasUV = pMesh->GetElementUVCount() > 0;
+            bool mAllByControlPoint = true;
+            FbxGeometryElement::EMappingMode lUVMappingMode = FbxGeometryElement::eNone;
+            if (mHasUV) {
+                lUVMappingMode = pMesh->GetElementUV(0)->GetMappingMode();
+                if (lUVMappingMode == FbxGeometryElement::eNone) {
+                    mHasUV = false;
                 }
-                animation.frame_bones_matrix_vec_.push_back(one_frame_bone_matrix_vec);
-            }//lClusterCount
+                if (mHasUV && lUVMappingMode != FbxGeometryElement::eByControlPoint) {
+                    mAllByControlPoint = false;
+                }
+            }
+            // 获取Mesh多边形个数，对游戏来说就是三角形面数。
+            const int lPolygonCount = pMesh->GetPolygonCount();
+            int lPolygonVertexCount = mAllByControlPoint?pMesh->GetControlPointsCount():lPolygonCount * 3;
 
-            animation.frame_count_=animation.frame_bones_matrix_vec_.size();
+            Engine::WeightFile weightFile(lPolygonVertexCount);
 
-            animation.Write(fmt::format("../data/animation/fbx_extra_{}.skeleton_anim", animation.name_).c_str());
+            // 遍历所有三角面，遍历每个面的三个顶点，解析顶点坐标、UV坐标数据。
+            for (int lPolygonIndex = 0; lPolygonIndex < lPolygonCount; ++lPolygonIndex) {
+                // 三角面，3个顶点
+                for (int lVerticeIndex = 0; lVerticeIndex < 3; ++lVerticeIndex) {
+                    // 传入面索引，以及当前面的第几个顶点，获取顶点索引。
+                    const int lControlPointIndex = pMesh->GetPolygonVertex(lPolygonIndex, lVerticeIndex);
+                    if (lControlPointIndex >= 0) {
+                        Engine::VertexRelateBoneInfo vertex_relate_bone_info=vertex_relate_bone_infos_[lControlPointIndex];
+                        for (int i = 0; i < 4; ++i) {
+                            char bone_index=vertex_relate_bone_info.bone_index_[i];
+                            char weight=vertex_relate_bone_info.bone_weight_[i];
+                            weightFile.Push(lPolygonIndex*3+lVerticeIndex,bone_index,weight);
+                        }
+                    }
+                }
+            }
+            weightFile.Write(fmt::format("../data/model/fbx_extra_{}.weight", name).c_str());
         }
     }
     // 遍历子节点，递归

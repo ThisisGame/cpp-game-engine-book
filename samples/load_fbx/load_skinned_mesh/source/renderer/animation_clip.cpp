@@ -66,27 +66,6 @@ void AnimationClip::LoadFromFile(const char *file_path) {
         bone_names_.push_back(bone_name);
         delete[] bone_name;
     }
-    //读取骨骼子节点
-    for(unsigned short bone_index=0; bone_index < bone_count; bone_index++) {
-        //读取骨骼子节点数量
-        unsigned short child_count=0;
-        input_file_stream.read(reinterpret_cast<char *>(&child_count), sizeof(unsigned short));
-        //读取骨骼子节点名字，在名字数组的序号。
-        std::vector<unsigned short> child_indexes;
-        for(unsigned short j=0;j<child_count;j++) {
-            unsigned short child_index=0;
-            input_file_stream.read(reinterpret_cast<char *>(&child_index), sizeof(unsigned short));
-            child_indexes.push_back(child_index);
-        }
-        bone_children_vector_.push_back(child_indexes);
-    }
-    //读取骨骼T-pose
-    for(unsigned short bone_index=0; bone_index < bone_count; bone_index++) {
-        //读取骨骼T-pose
-        glm::mat4 bone_t_pose;
-        input_file_stream.read(reinterpret_cast<char *>(&bone_t_pose), sizeof(float) * 16);
-        bone_t_pose_vector_.push_back(bone_t_pose);
-    }
     //读取骨骼动画
     for (int frame_index = 0; frame_index < frame_count_; frame_index++) {
         //读取一帧的骨骼矩阵
@@ -99,31 +78,6 @@ void AnimationClip::LoadFromFile(const char *file_path) {
         bone_matrix_frames_vector_.push_back(bone_matrices);
     }
     input_file_stream.close();
-
-    Bake();
-}
-
-void AnimationClip::Bake() {
-    for (int i = 0; i < frame_count_; ++i) {
-        DEBUG_LOG_INFO("AnimationClip::Bake: frame_index:{}",i);
-        //计算当前帧的骨骼矩阵
-        std::vector<glm::mat4>& current_frame_bone_matrices=bone_matrix_frames_vector_[i];
-        CalculateBoneMatrix(current_frame_bone_matrices,0,glm::mat4(1.0f));
-    }
-}
-
-void AnimationClip::CalculateBoneMatrix(std::vector<glm::mat4>& current_frame_bone_matrices,unsigned short bone_index, const glm::mat4 &parent_matrix) {
-    glm::mat4 bone_matrix=current_frame_bone_matrices[bone_index];
-    glm::mat4 bone_t_pos_matrix=bone_t_pose_vector_[bone_index];
-    glm::mat4 bone_matrix_with_parent=parent_matrix*bone_t_pos_matrix*bone_matrix;
-
-    DEBUG_LOG_INFO("{} bone_matrix:{}",bone_names_[bone_index],glm::to_string_beauty(bone_matrix_with_parent));
-
-    current_frame_bone_matrices[bone_index]=bone_matrix_with_parent;
-    std::vector<unsigned short> child_indexes=bone_children_vector_[bone_index];
-    for(unsigned short child_index:child_indexes) {
-        CalculateBoneMatrix(current_frame_bone_matrices,child_index,bone_matrix_with_parent);
-    }
 }
 
 void AnimationClip::Play() {
@@ -143,10 +97,6 @@ void AnimationClip::Update() {
     unsigned short current_frame_index=static_cast<unsigned short>(current_time*SKELETON_ANIMATION_FRAME_RATE);
     current_frame_=current_frame_index%frame_count_;
 //    current_frame_=19;
-}
-
-glm::mat4& AnimationClip::GetBoneTPose(unsigned char bone_index){
-    return this->bone_t_pose_vector_[bone_index];
 }
 
 std::vector<glm::mat4>& AnimationClip::GetCurrentFrameBoneMatrix(){

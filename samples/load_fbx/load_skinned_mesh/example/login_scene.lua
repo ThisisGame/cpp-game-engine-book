@@ -18,24 +18,24 @@ function LoginScene:Awake()
     --创建相机1 GameObject
     self.go_camera_= GameObject("main_camera")
     --挂上 Transform 组件
-    self.go_camera_:AddComponent("Transform"):set_position(glm.vec3(0, 0, 10))
+    self.go_camera_:AddComponent("Transform"):set_position(glm.vec3(0, 0, 5))
     --挂上 Camera 组件
     self.camera_=self.go_camera_:AddComponent("Camera")
     self.camera_:set_depth(0)
 
     --创建骨骼蒙皮动画
     self.go_skeleton_=GameObject("skeleton")
-    self.go_skeleton_:AddComponent("Transform"):set_position(glm.vec3(0, 0, 0))
+    self.go_skeleton_:AddComponent("Transform"):set_position(glm.vec3(0, -1, 0))
     self.go_skeleton_:GetComponent("Transform"):set_rotation(glm.vec3(-90, 0, 0))
-    self.go_skeleton_:AddComponent("Animation"):LoadAnimationClipFromFile("animation/assimp_extra_take_001.skeleton_anim","idle")
+    self.go_skeleton_:AddComponent("Animation"):LoadAnimationClipFromFile("animation/fbx_extra_bip001|bip001|take_001|baselayer.skeleton_anim","idle")
 
     local mesh_filter=self.go_skeleton_:AddComponent("MeshFilter")
-    mesh_filter:LoadMesh("model/assimp_extra_jiulian.mesh")--加载Mesh
-    mesh_filter:LoadWeight("model/assimp_extra_jiulian.weight")--加载权重文件
+    mesh_filter:LoadMesh("model/fbx_extra_jiulian.mesh")--加载Mesh
+    mesh_filter:LoadWeight("model/fbx_extra_jiulian.weight")--加载权重文件
 
     --手动创建Material
     self.material_ = Material()--设置材质
-    self.material_:Parse("material/assimp_extra_jiulian.mat")
+    self.material_:Parse("material/fbx_extra_jiulian.mat")
 
     --挂上 MeshRenderer 组件
     local skinned_mesh_renderer= self.go_skeleton_:AddComponent("SkinnedMeshRenderer")
