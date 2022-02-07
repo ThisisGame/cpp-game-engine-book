@@ -120,15 +120,19 @@ int main(int argc,char** argv)
 
     init_opengl();
 
-    //从GPU中，将显存中保存的压缩好的纹理数据，下载到内存，并保存到硬盘。
+    for (int i = 1; i < argc; ++i) {
+        //从GPU中，将显存中保存的压缩好的纹理数据，下载到内存，并保存到硬盘。
 //    std::string src_image_file_path("../data/images/urban.jpg");
-    std::string src_image_file_path(argv[1]);
+        std::string src_image_file_path(argv[i]);
 //    src_image_file_path= ReplaceAll(src_image_file_path,"\\","/");
-    spdlog::info("src_image_file_path:{}",src_image_file_path);
-    std::string cpt_file_path=src_image_file_path;
-    auto last_index_of_point=cpt_file_path.find_last_of('.');
-    cpt_file_path.replace(last_index_of_point, cpt_file_path.size()-last_index_of_point, ".cpt");
-    Texture2D::CompressImageFile(src_image_file_path,cpt_file_path);
+        spdlog::info("src_image_file_path:{}",src_image_file_path);
+        std::string cpt_file_path=src_image_file_path;
+        auto last_index_of_point=cpt_file_path.find_last_of('.');
+        cpt_file_path.replace(last_index_of_point, cpt_file_path.size()-last_index_of_point, ".cpt");
+        Texture2D::CompressImageFile(src_image_file_path,cpt_file_path);
+    }
+
+
 
     spdlog::info("finish");
     glfwDestroyWindow(window);

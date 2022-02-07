@@ -16,7 +16,7 @@ file(COPY "../../template/depends/stb/" DESTINATION "../depends/stb/")
 file(COPY "../../template/depends/timetool/" DESTINATION "../depends/timetool/")
 
 #拷贝data文件
-file(COPY "../../template/data/images/urban.cpt" DESTINATION "../data/images/")
+file(COPY "../../template/data/images/urban_compress_auto_format.cpt" DESTINATION "../data/images/")
 
 include_directories("depends")
 

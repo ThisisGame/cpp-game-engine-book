@@ -1,6 +1,5 @@
 //
 // Created by captain on 2021/4/6.
-// 图片加载与解析 https://www.linuxidc.com/linux/2015-02/114021.htm
 //
 #include "texture2d.h"
 #include "stb/stb_image.h"

@@ -1,6 +1,5 @@
 //
 // Created by captain on 2021/4/6.
-// 图片加载与解析 https://www.linuxidc.com/linux/2015-02/114021.htm https://docs.gl/gl4/glCompressedTexImage2D
 //
 #define STB_TRUETYPE_IMPLEMENTATION
 #include "texture2d.h"

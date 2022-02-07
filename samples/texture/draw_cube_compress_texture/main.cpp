@@ -83,7 +83,7 @@ int main(void)
 {
     init_opengl();
 
-    CreateTexture("../data/images/urban.cpt");
+    CreateTexture("../data/images/urban_compress_auto_format.cpt");
 
     compile_shader();
 

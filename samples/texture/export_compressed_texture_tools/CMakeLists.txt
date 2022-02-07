@@ -22,4 +22,4 @@ file(COPY "../../template/data/images/urban.jpg" DESTINATION "../data/images/")
 
 include_directories("depends")
 
-add_executable(load_image ${glfw_sources} main.cpp texture2d.cpp)
+add_executable(compress_tex ${glfw_sources} main.cpp texture2d.cpp)

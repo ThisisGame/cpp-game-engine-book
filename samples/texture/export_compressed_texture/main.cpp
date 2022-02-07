@@ -86,8 +86,8 @@ int main(void)
     init_opengl();
 
     //从GPU中，将显存中保存的压缩好的纹理数据，下载到内存，并保存到硬盘。
-    std::string src_image_file_path("../data/images/urban.jpg");
-    std::string cpt_file_path("../data/images/urban.cpt");
+    std::string src_image_file_path("../data/images/urban_compress_auto_format.jpg");
+    std::string cpt_file_path("../data/images/urban_compress_auto_format.cpt");
     Texture2D::CompressImageFile(src_image_file_path,cpt_file_path);
 
     glfwDestroyWindow(window);

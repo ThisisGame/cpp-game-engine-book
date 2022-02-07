@@ -10,6 +10,7 @@
 
 #include <iostream>
 #include <glad/gl.h>
+#include <glad/glext.h>
 
 class Texture2D
 {

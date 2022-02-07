@@ -1,6 +1,5 @@
 //
 // Created by captain on 2021/4/6.
-// 图片加载与解析 https://www.linuxidc.com/linux/2015-02/114021.htm https://www.informit.com/articles/article.aspx?p=770639&seqNum=3
 //
 #include "texture2d.h"
 #include <fstream>
@@ -40,13 +39,13 @@ Texture2D* Texture2D::LoadFromFile(std::string& image_file_path)
             case 3:
             {
                 image_data_format = GL_RGB;
-                texture2d->gl_texture_format_=GL_COMPRESSED_RGB;
+                texture2d->gl_texture_format_=GL_COMPRESSED_RGB_S3TC_DXT1_EXT;
                 break;
             }
             case 4:
             {
                 image_data_format = GL_RGBA;
-                texture2d->gl_texture_format_=GL_COMPRESSED_RGBA;
+                texture2d->gl_texture_format_=GL_COMPRESSED_RGBA_S3TC_DXT5_EXT;
                 break;
             }
         }
