@@ -7,6 +7,8 @@
 
 #include <thread>
 #include <glad/gl.h>
+#define GLFW_INCLUDE_NONE
+#include <GLFW/glfw3.h>
 #include <spscqueue/include/rigtorp/SPSCQueue.h>
 #include <glm/glm.hpp>
 

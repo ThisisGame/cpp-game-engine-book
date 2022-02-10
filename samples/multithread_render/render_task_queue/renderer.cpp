@@ -4,8 +4,6 @@
 
 #include "renderer.h"
 #include <iostream>
-#define GLFW_INCLUDE_NONE
-#include <GLFW/glfw3.h>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/transform2.hpp>
 #include <glm/gtx/euler_angles.hpp>
@@ -101,11 +99,11 @@ void DrawArray(RenderCommandParamBase* param_base, glm::mat4& projection, glm::m
 
     //启用顶点Shader属性(a_pos)，指定与顶点坐标数据进行关联
     glEnableVertexAttribArray(vpos_location);
-    glVertexAttribPointer(vpos_location, 3, GL_FLOAT, false, sizeof(glm::vec3), kPositions);
+    glVertexAttribPointer(vpos_location, 3, GL_FLOAT, false, param->positions_stride_, param->positions_);
 
     //启用顶点Shader属性(a_color)，指定与顶点颜色数据进行关联
     glEnableVertexAttribArray(vcol_location);
-    glVertexAttribPointer(vcol_location, 3, GL_FLOAT, false, sizeof(glm::vec4), kColors);
+    glVertexAttribPointer(vcol_location, 3, GL_FLOAT, false, param->colors_stride_, param->colors_);
 
     //上传mvp矩阵
     glUniformMatrix4fv(mvp_location, 1, GL_FALSE, &mvp[0][0]);
