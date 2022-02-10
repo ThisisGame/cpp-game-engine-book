@@ -27,7 +27,7 @@ function LoginScene:Awake()
     self.go_skeleton_=GameObject("skeleton")
     self.go_skeleton_:AddComponent("Transform"):set_position(glm.vec3(0, -1, 0))
     self.go_skeleton_:GetComponent("Transform"):set_rotation(glm.vec3(-90, 0, 0))
-    self.go_skeleton_:AddComponent("Animation"):LoadAnimationClipFromFile("animation/fbx_extra_bip001|bip001|take_001|baselayer.skeleton_anim","idle")
+    self.go_skeleton_:AddComponent("Animation"):LoadAnimationClipFromFile("animation/fbx_extra_bip001_bip001_take_001_baselayer.skeleton_anim","idle")
 
     local mesh_filter=self.go_skeleton_:AddComponent("MeshFilter")
     mesh_filter:LoadMesh("model/fbx_extra_jiulian.mesh")--加载Mesh

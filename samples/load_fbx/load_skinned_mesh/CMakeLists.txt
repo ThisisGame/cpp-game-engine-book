@@ -32,7 +32,7 @@ file(COPY "../../template/depends/easy_profiler-2.1.0/easy_profiler_core/" DESTI
 file(COPY "../../template/data/images/fbx_extra_jiulian.cpt" DESTINATION "../data/images/")
 file(COPY "../../template/data/model/fbx_extra_jiulian.mesh" DESTINATION "../data/model/")
 file(COPY "../../template/data/model/fbx_extra_jiulian.weight" DESTINATION "../data/model/")
-file(COPY "../../template/data/animation/fbx_extra_bip001|bip001|take_001|baselayer.skeleton_anim" DESTINATION "../data/animation/")
+file(COPY "../../template/data/animation/fbx_extra_bip001_bip001_take_001_baselayer.skeleton_anim" DESTINATION "../data/animation/")
 file(COPY "../../template/data/shader/unlit.vs" DESTINATION "../data/shader/")
 file(COPY "../../template/data/shader/unlit.fs" DESTINATION "../data/shader/")
 file(COPY "../../template/data/material/fbx_extra_jiulian.mat" DESTINATION "../data/material/")

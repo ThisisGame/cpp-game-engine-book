@@ -7,6 +7,7 @@
 
 #include <iostream>
 #include <fstream>
+#include <filesystem>
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
 #include <glm/gtx/string_cast_beauty.hpp>
@@ -89,6 +90,14 @@ namespace Engine{
             return -1;
         }
 
+        std::string ReplaceChar(std::string file_name, char old_char, char new_char){
+            if(file_name.find(old_char) != std::string::npos){
+                DEBUG_LOG_WARN("Animation::Write file_name:{} contains invalid char,will replace with _", file_name.c_str());
+                std::replace(file_name.begin(), file_name.end(), old_char, new_char);
+            }
+            return file_name;
+        }
+
         // 写入文件
         void Write(std::string filePath){
             // 路径转小写
@@ -96,13 +105,12 @@ namespace Engine{
             // 替换文件名中的空格为_
             std::filesystem::path path(filePath);
             std::string file_name = path.filename().string();
-            // 判断文件名中是否存在空格，替换为_
-            if(file_name.find(" ") != std::string::npos){
-                DEBUG_LOG_ERROR("Animation::Write filePath:%s contains blank,will replace with _", filePath.c_str());
-                std::replace(file_name.begin(), file_name.end(), ' ', '_');
-                path.replace_filename(file_name);
-                filePath = path.string();
-            }
+            // 判断文件名中是否存在空格、|，替换为_
+            file_name=ReplaceChar(file_name,' ','_');
+            file_name=ReplaceChar(file_name,'|','_');
+            path.replace_filename(file_name);
+            filePath = path.string();
+
             // 创建文件夹
             if (std::filesystem::exists(path)==false){
                 DEBUG_LOG_INFO("{} not exist,will create.",filePath);
