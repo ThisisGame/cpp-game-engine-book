@@ -1,7 +1,7 @@
 function main()
     require("login_scene")
 
-    Application.set_title("[load_extra_mesh]WASD to move camera")
+    Application.set_title("[load_skinned_mesh]")
     Application.set_data_path("../data/")--设置资源目录
     Application.Init()--初始化引擎
 
