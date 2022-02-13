@@ -63,6 +63,8 @@ namespace Engine{
 void ParseNode(FbxNode * pNode);
 void ParseMesh(const FbxMesh* pMesh);
 
+int LogSceneCheckError(FbxImporter *mImporter, FbxArray<FbxString *> &details);
+
 int main(void){
     Debug::Init();
     const char* mFileName="../data/model/fbx_extra.fbx";
@@ -105,28 +107,7 @@ int main(void){
                    (mImporter->GetStatus().GetCode() != FbxStatus::eSuccess);
     //输出错误信息
     if (lNotify) {
-        DEBUG_LOG_ERROR("\n");
-        DEBUG_LOG_ERROR("********************************************************************************\n");
-        if (details.GetCount()) {
-            DEBUG_LOG_ERROR("Scene integrity verification failed with the following errors:\n");
-
-            for (int i = 0; i < details.GetCount(); i++)
-                DEBUG_LOG_ERROR("   %s\n", details[i]->Buffer());
-
-            FbxArrayDelete<FbxString *>(details);
-        }
-
-        if (mImporter->GetStatus().GetCode() != FbxStatus::eSuccess) {
-            DEBUG_LOG_ERROR("\n");
-            DEBUG_LOG_ERROR("WARNING:\n");
-            DEBUG_LOG_ERROR("   The importer was able to read the file but with errors.\n");
-            DEBUG_LOG_ERROR("   Loaded scene may be incomplete.\n\n");
-            DEBUG_LOG_ERROR("   Last error message:'%s'\n", mImporter->GetStatus().GetErrorString());
-        }
-
-        DEBUG_LOG_ERROR("********************************************************************************\n");
-        DEBUG_LOG_ERROR("\n");
-        return -1;
+        return LogSceneCheckError(mImporter, details);
     }
 
     // 转换坐标系为右手坐标系。
@@ -158,6 +139,31 @@ int main(void){
     DEBUG_LOG_INFO("extra mesh success");
 
     return 0;
+}
+
+int LogSceneCheckError(FbxImporter *mImporter, FbxArray<FbxString *> &details) {
+    ("\n");
+    ("********************************************************************************\n");
+    if (details.GetCount()) {
+        DEBUG_LOG_ERROR("Scene integrity verification failed with the following errors:\n");
+
+        for (int i = 0; i < details.GetCount(); i++)
+            DEBUG_LOG_ERROR("   %s\n", details[i]->Buffer());
+
+        FbxArrayDelete<FbxString *>(details);
+    }
+
+    if (mImporter->GetStatus().GetCode() != FbxStatus::eSuccess) {
+        DEBUG_LOG_ERROR("\n");
+        DEBUG_LOG_ERROR("WARNING:\n");
+        DEBUG_LOG_ERROR("   The importer was able to read the file but with errors.\n");
+        DEBUG_LOG_ERROR("   Loaded scene may be incomplete.\n\n");
+        DEBUG_LOG_ERROR("   Last error message:'%s'\n", mImporter->GetStatus().GetErrorString());
+    }
+
+    ("********************************************************************************\n");
+    ("\n");
+    return -1;
 }
 
 /// 递归解析节点
