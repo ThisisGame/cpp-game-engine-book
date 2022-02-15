@@ -168,8 +168,8 @@ void ParseNodeRecursive(FbxNode* pNode){
             FbxMesh* lMesh = pNode->GetMesh();
             const int lVertexCount = lMesh->GetControlPointsCount();//实际顶点数量
 
+            // 实际顶点权重数据
             Engine::VertexRelateBoneInfo* vertex_relate_bone_infos_=new Engine::VertexRelateBoneInfo[lVertexCount];
-
             // 获取蒙皮修改器
             int lSkinIndex=0;
             FbxSkin * lSkinDeformer = (FbxSkin *)pMesh->GetDeformer(lSkinIndex, FbxDeformer::eSkin);
@@ -180,7 +180,7 @@ void ParseNodeRecursive(FbxNode* pNode){
                 // 获取骨骼的顶点组
                 FbxCluster *lCluster = lSkinDeformer->GetCluster(lClusterIndex);
 
-                // 获取这个簇影响的顶点索引数量
+                // 获取这个顶点组影响的顶点索引数量
                 int lVertexIndexCount = lCluster->GetControlPointIndicesCount();
                 for (int k = 0; k < lVertexIndexCount; ++k) {
                     //拿到顶点索引
@@ -238,64 +238,5 @@ void ParseNodeRecursive(FbxNode* pNode){
     for (int lChildIndex = 0; lChildIndex < lChildCount; ++lChildIndex)
     {
         ParseNodeRecursive(pNode->GetChild(lChildIndex));
-    }
-}
-
-/// Compute the transform matrix that the cluster will transform the vertex.
-/// \param pGlobalPosition 节点在当前帧的全局坐标 几何矩阵
-/// \param pMesh Mesh
-/// \param pCluster 顶点组，一般是一个 Bone一个顶点组，就当成是一个Bone吧。
-/// \param pVertexTransformMatrix 存储顶点形变矩阵
-/// \param pTime 当前帧时间
-/// \param pPose 当前选择的Pose，应该是指动画片段
-void ComputeClusterDeformation(FbxAMatrix& pGlobalPosition,FbxMesh* pMesh,FbxCluster* pCluster,FbxAMatrix& pVertexTransformMatrix,FbxTime pTime)
-{
-    // 链接模式。链接模式设置链接如何影响控制点的位置以及分配给控制点的权重之间的关系。分配给控制点的权重分布在与 FbxGeometry 类实例相关联的一组链接中。
-    FbxCluster::ELinkMode lClusterMode = pCluster->GetLinkMode();
-
-    if (lClusterMode == FbxCluster::eNormalize)
-    {
-        //在 eNormalize 模式下，分配给控制点的权重的总和标准化为 1.0。在此模式下设置关联模型无关紧要。链接的影响是链接节点相对于包含控制点的节点的位移的函数。
-        FbxAMatrix lReferenceGlobalInitPosition;
-        FbxAMatrix lAssociateGlobalInitPosition;
-        FbxAMatrix lAssociateGlobalCurrentPosition;
-        FbxAMatrix lClusterGlobalInitPosition;
-        FbxAMatrix lClusterGlobalCurrentPosition;
-
-        FbxAMatrix lAssociateGeometry;
-        FbxAMatrix lClusterGeometry;
-
-        FbxAMatrix lClusterRelativeInitPosition;
-        FbxAMatrix lClusterRelativeCurrentPositionInverse;
-
-        // 获取与包含链接的节点关联的矩阵。包含链接的节点，就是骨骼吧
-        // 集群的链接节点指定影响集群控制点的节点（FbxNode）。如果节点是动画的，控制点将相应地移动。
-        pCluster->GetTransformMatrix(lReferenceGlobalInitPosition);//获取当前骨骼的几何矩阵，全局还是局部？？？
-        // Multiply lReferenceGlobalInitPosition by Geometric Transformation
-        const FbxVector4 lT = pMesh->GetNode()->GetGeometricTranslation(FbxNode::eSourcePivot);
-        const FbxVector4 lR = pMesh->GetNode()->GetGeometricRotation(FbxNode::eSourcePivot);
-        const FbxVector4 lS = pMesh->GetNode()->GetGeometricScaling(FbxNode::eSourcePivot);
-        FbxAMatrix lReferenceGeometry = FbxAMatrix(lT, lR, lS);//当前Mesh所在节点的全局几何矩阵，这个是固定的。
-
-        //将当前Mesh所在节点的全局几何矩阵，作用到当前骨骼的几何矩阵，就是计算当前帧最新的顶点位置时，不仅需要考虑到骨骼的影响，也要考虑到Mesh所在节点的全局坐标。
-        lReferenceGlobalInitPosition *= lReferenceGeometry;//现在它包含了骨骼的几何矩阵 和 Mesh所在节点的几何矩阵，应该是全局的。
-
-        // Get the link initial global position and the link current global position.
-        pCluster->GetTransformLinkMatrix(lClusterGlobalInitPosition);//骨骼T-Pose全局几何矩阵？
-
-        //骨骼当前帧当前动画片段的全局几何矩阵？pCluster不等于骨骼，pCluster->GetLink()才是骨骼。为什么会有pCluster->GetTransformMatrix，Cluster又不是节点。
-        lClusterGlobalCurrentPosition = pCluster->GetLink()->EvaluateGlobalTransform(pTime);
-
-        // Compute the initial position of the link relative to the reference.
-        // 骨骼的几何矩阵 和 Mesh所在节点的几何矩阵之和，减去，骨骼T-Pose全局几何矩阵的逆矩阵，得到骨骼相对的几何矩阵。
-        lClusterRelativeInitPosition = lClusterGlobalInitPosition.Inverse() * lReferenceGlobalInitPosition;
-
-        // Compute the current position of the link relative to the reference.
-        // 骨骼当前帧的全局几何矩阵  去除 节点在当前帧的全局几何矩阵 = 骨骼相对全局几何矩阵
-        lClusterRelativeCurrentPositionInverse = pGlobalPosition.Inverse() * lClusterGlobalCurrentPosition;
-
-        // Compute the shift of the link relative to the reference.
-        // 骨骼相对全局几何矩阵 * 骨骼相对几何矩阵 = 顶点位移矩阵
-        pVertexTransformMatrix = lClusterRelativeCurrentPositionInverse * lClusterRelativeInitPosition;
     }
 }
