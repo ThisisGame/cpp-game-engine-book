@@ -14,7 +14,7 @@ endif ()
 #下载 fbx_sdk_2020.2.1.7z
 function(Download7Z)
     MESSAGE("Download fbx_sdk_2020.2.1.7z")
-    file(DOWNLOAD "https://github.com/ThisisGame/makegameengineatnight/releases/download/fbx_sdk_2020.2.1_mac_win/fbx_sdk_2020.2.1.7z" "../../../template/depends/fbx_sdk_2020.2.1.7z" SHOW_PROGRESS)
+    file(DOWNLOAD "https://github.com/ThisisGame/cpp-game-engine-book/releases/download/fbx_sdk_2020.2.1_mac_win/fbx_sdk_2020.2.1.7z" "../../../template/depends/fbx_sdk_2020.2.1.7z" SHOW_PROGRESS)
 endfunction()
 
 #检测 fbx_sdk_2020.2.1.7z 是否存在，不存在则下载

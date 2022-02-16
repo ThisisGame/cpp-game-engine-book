@@ -8,7 +8,9 @@
         "lightbox",
         "anchor-navigation-ex",
         "katex",
-        "search-pro"],
+        "search-pro",
+        "code",
+        "github"],
     "pluginsConfig":{
         "theme-default": {
             "showLevel": false
@@ -20,6 +22,12 @@
         "anchor-navigation-ex": {
             "showLevel": false,
             "showGoTop": false
+        },
+        "code": {
+            "copyButtons": true
+        },
+        "github": {
+            "url": "https://github.com/ThisisGame/cpp-game-engine-book"
         }
     },
 	"styles": {

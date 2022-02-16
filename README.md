@@ -1,6 +1,6 @@
 ## 游戏引擎 浅入浅出
 
-[![GitHub license](https://img.shields.io/badge/license-GPL-blue.svg?style=for-the-badge)](https://github.com/ThisisGame/makegameengineatnight/blob/main/LICENSE) [![GitHub license](https://img.shields.io/badge/Windows-Success-brightgreen.svg?style=for-the-badge)](https://github.com/ThisisGame/makegameengineatnight/blob/main/LICENSE) [![GitHub license](https://img.shields.io/badge/macOS-Success-brightgreen.svg?style=for-the-badge)](https://github.com/ThisisGame/makegameengineatnight/blob/main/LICENSE)
+[![GitHub license](https://img.shields.io/badge/license-GPL-blue.svg?style=for-the-badge)](https://github.com/ThisisGame/cpp-game-engine-book/blob/main/LICENSE) [![GitHub license](https://img.shields.io/badge/Windows-Success-brightgreen.svg?style=for-the-badge)](https://github.com/ThisisGame/cpp-game-engine-book/blob/main/LICENSE) [![GitHub license](https://img.shields.io/badge/macOS-Success-brightgreen.svg?style=for-the-badge)](https://github.com/ThisisGame/cpp-game-engine-book/blob/main/LICENSE)
 
 其实做游戏开发的，每天与游戏引擎打交道，都会心痒痒想了解游戏引擎是怎么做的。
 
@@ -14,9 +14,9 @@
 
 :blue_book: [在线阅读](http://www.thisisgame.com.cn/book/makegameengineatnight/)
 
-:orange_book: [随书项目实例](https://github.com/ThisisGame/makegameengineatnight/tree/main/samples)
+:orange_book: [随书项目实例](https://github.com/ThisisGame/cpp-game-engine-book/tree/main/samples)
 
-:green_book: [Markdown](https://github.com/ThisisGame/makegameengineatnight/tree/main/pages)
+:green_book: [Markdown](https://github.com/ThisisGame/cpp-game-engine-book/tree/main/pages)
 
 
 ## Directory
@@ -104,7 +104,7 @@
 
 本书Markdown以及章节配套项目托管在Github上，读书过程中有疑问、发现错误都可以提Issues。
 
-    Github：https://github.com/ThisisGame/makegameengineatnight
+    Github：https://github.com/ThisisGame/cpp-game-engine-book
 
 本书使用到的其他工具，都在GameDevTools中集成。
 
@@ -135,7 +135,7 @@
             <sub><b>陈鹏</b></sub>
         </a>
         <br />
-        <a href="https://github.com/ThisisGame/makegameengineatnight/commits?author=ThisisGame" title="Creator / Code">
+        <a href="https://github.com/ThisisGame/cpp-game-engine-book/commits?author=ThisisGame" title="Creator / Code">
         </a>
     </td>
   </tr>

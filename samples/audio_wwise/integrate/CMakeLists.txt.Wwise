@@ -7,7 +7,7 @@ add_definitions(-D USE_WWISE_AUDIO)
 #下载wwise.7z
 function(DownloadWwise)
     MESSAGE("Download wwise.7z")
-    file(DOWNLOAD "https://github.com/ThisisGame/makegameengineatnight/releases/download/v2022.1.10.1/wwise.7z" "../../../template/depends/wwise.7z" SHOW_PROGRESS)
+    file(DOWNLOAD "https://github.com/ThisisGame/cpp-game-engine-book/releases/download/v2022.1.10.1/wwise.7z" "../../../template/depends/wwise.7z" SHOW_PROGRESS)
 endfunction()
 
 #检测wwise.7z是否存在，不存在则下载
