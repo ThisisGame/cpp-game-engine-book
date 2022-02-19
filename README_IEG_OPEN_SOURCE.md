@@ -84,5 +84,110 @@
 
 从最简单的三角形绘制，到骨骼动画渲染、灯光阴影、多线程、物理、寻路AI、音频解析都会进行介绍。
 
-![](./imgs/opengl_draw_polygon/draw_triangle/draw_triangle.png)
-![](./imgs/texture_make_beautiful/draw_cube_texture/draw_cube_urban.gif)
+<table>
+    <tr>
+        <td><img src="imgs/opengl_draw_polygon/draw_triangle/draw_triangle.png" width=300></td>
+        <td><img src="imgs/texture_make_beautiful/draw_cube_texture/draw_cube_urban.gif" width=300></td>
+        <td><img src="imgs/ieg_open_source/draw_blender_mesh.jpg" width=300></td>
+    </tr>
+    <tr>
+        <td><img src="imgs/ieg_open_source/draw_ttf_font_freetype_color.jpg" width=300></td>
+        <td><img src="imgs/ieg_open_source/gui.gif" width=300></td>
+        <td><img src="imgs/ieg_open_source/fbx_skinned_mesh.gif" width=300></td>
+    </tr>
+</table>
+
+#### 引擎生态
+
+这应该是首次在引擎书里教如何建模、音频编辑。
+
+Blender建模、FMOD、WWise音频制作，我都录制了视频。
+
+其他的Substance、Toolbag插件开发，Renderdoc DrawCall分析都有简单介绍。
+
+<table>
+    <tr>
+        <td><img src="imgs/ieg_open_source/blender_1_hq720.jpg" width=300></td>
+        <td><img src="imgs/ieg_open_source/substance_painter_1_hq720.jpg" width=300></td>
+        <td><img src="imgs/ieg_open_source/toolbag_1_hq720.jpg" width=300></td>
+    </tr>
+    <tr>
+        <td><img src="imgs/ieg_open_source/fmod_2_hq720.jpg" width=300></td>
+        <td><img src="imgs/ieg_open_source/wwise_1_hq720.jpg" width=300></td>
+        <td><img src="imgs/ieg_open_source/renderdoc_hq720.jpg" width=300></td>
+    </tr>
+</table>
+
+#### 短期目标
+
+渲染的模型动画用美女、帅哥、色彩丰富的物体，更有成就感。
+
+有了一定功能后，就会基于现有功能开发一个小游戏，阶段性成就才能长时间坚持。
+
+<table>
+    <tr>
+        <td><img src="imgs/ieg_open_source/hunter_need_head_phone.jpg" width=300></td>
+        <td><img src="imgs/ieg_open_source/empty_960_640.jpg" width=300></td>
+        <td><img src="imgs/ieg_open_source/empty_960_640.jpg" width=300></td>
+    </tr>
+</table>
+
+### 快速上手 Getting Start
+
+#### 阅读图书
+
+在线阅读：`http://www.thisisgame.com.cn/book/cpp-game-engine-book/`
+
+本地阅读，按照下面步骤：
+
+1. 安装`GitBook`
+
+2. 克隆项目:`git clone https://github.com/ThisisGame/cpp-game-engine-book.git`
+
+3. 双击`gitbook_serve.bat`启动本地GitBook服务器，成功后，打开浏览器访问`http://localhost:4000`，即可阅读。
+
+#### 随书项目调试
+
+1. 安装CLion。
+2. 在每小节开头找到CLion项目目录，用CLion打开。
+
+### 常见问题 FAQ
+
+#### 书中讲述的引擎技术适用哪些系统平台？
+
+目前适配Windows与MacOS。
+
+```diff
+- 由于Arm版Mac只支持OpenGL Core，所以《6.2 OpenGL Core Profile》之前的章节实例无法在Arm版Mac运行。
+```
+
+#### 为何不使用VisualStudio？
+
+为了简单，CLion支持Windows与Mac。
+
+VisualStudio C++只支持Windows，Mac上就需要XCode，增加了学习成本。
+
+### 行为准则 Code Of Conduct
+
+* 引擎使用C++开发，遵从Google C++规范，贡献代码时，需要先熟悉代码风格。
+  ![](imgs/ieg_open_source/google_cpp_style.png)
+  
+* 贡献代码时，请先fork本项目到你的名下，然后修改代码，通过合并请求来提交。
+* 目前适配Windows和Mac，同样，你可以在这两个系统上开发。代码提交前，请确保功能在这两个系统上都是正常且一致的。
+
+### 如何加入 How To Join
+
+* 你可以直接打开在线阅读：`http://www.thisisgame.com.cn/book/cpp-game-engine-book/`
+* 本书是开源的，你可以fork本项目，然后修改代码，然后提交合并请求。
+* 欢迎大家提Issue，反馈遇到的问题。内网可以直接联系我。也可以加入q群(879187705)讨论，得到答案后，更新issue，方便其他人查询。
+  <table>
+  <tr>
+    <td align="center">
+    <img src="imgs/readme/qq_qrcode.png" alt="游戏引擎 浅入浅出 QQ群" class="transparent">
+    </td>
+  </tr>
+  </table>
+
+### 团队介绍 Members
+
+* captainchen:作者
