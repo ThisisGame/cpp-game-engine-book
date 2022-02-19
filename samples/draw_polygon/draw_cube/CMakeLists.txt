@@ -10,8 +10,8 @@ endif ()
 include(CMakeLists.txt.glfw)
 
 #拷贝depends目录
-file(COPY "../../../template/depends/glfw-3.3-3.4/" DESTINATION "../depends/glfw-3.3-3.4/")
-file(COPY "../../../template/depends/glm/" DESTINATION "../depends/glm/")
+file(COPY "../../template/depends/glfw-3.3-3.4/" DESTINATION "../depends/glfw-3.3-3.4/")
+file(COPY "../../template/depends/glm/" DESTINATION "../depends/glm/")
 
 include_directories("depends")
 
