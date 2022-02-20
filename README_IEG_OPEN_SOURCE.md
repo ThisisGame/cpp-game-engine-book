@@ -1,12 +1,12 @@
-## 游戏引擎 浅入浅出
+# [游戏引擎 浅入浅出](http://action.woa.com/)
 
-### 项目介绍 README
+## 项目介绍 README
 
 本书完整介绍一个游戏引擎的所有模块，从最基础的OpenGL环境搭建，到骨骼动画、多线程渲染、阴影实现等等，最后实现一个完整的游戏引擎。
 
 ![](imgs/ieg_open_source/book_chapter.gif)
 
-### 章节内容 Chapter
+## 章节内容 Chapter
 
 第 1 章介绍游戏引擎框架，以Unity为例，介绍游戏引擎组成。
 
@@ -52,7 +52,7 @@
 
 第 22 章介绍不定时更新。
 
-### 特性列表 Feature
+## 特性列表 Feature
 
 写这本书的目的是普及游戏引擎基础知识，面向的读者有一定的Unity经验，对引擎某些点感兴趣即可。
 
@@ -77,6 +77,7 @@
 
 * 每一小节开头就贴上了这一节项目地址，把文件夹拖到CLion里面立即可以调试。
   ![](imgs/ieg_open_source/project_dir_line.jpg)
+  <br>
 * 代码片段开头标注这个代码所在文件以及行数。
   ![](imgs/ieg_open_source/code_file_line.jpg)
 
@@ -132,7 +133,7 @@ Blender建模、FMOD、WWise音频制作，我都录制了视频。
     </tr>
 </table>
 
-### 快速上手 Getting Start
+## 快速上手 Getting Start
 
 #### 阅读图书
 
@@ -151,7 +152,7 @@ Blender建模、FMOD、WWise音频制作，我都录制了视频。
 1. 安装CLion。
 2. 在每小节开头找到CLion项目目录，用CLion打开。
 
-### 常见问题 FAQ
+## 常见问题 FAQ
 
 #### 书中讲述的引擎技术适用哪些系统平台？
 
@@ -167,7 +168,7 @@ Blender建模、FMOD、WWise音频制作，我都录制了视频。
 
 VisualStudio C++只支持Windows，Mac上就需要XCode，增加了学习成本。
 
-### 行为准则 Code Of Conduct
+## 行为准则 Code Of Conduct
 
 * 引擎使用C++开发，遵从Google C++规范，贡献代码时，需要先熟悉代码风格。
   ![](imgs/ieg_open_source/google_cpp_style.png)
@@ -175,7 +176,7 @@ VisualStudio C++只支持Windows，Mac上就需要XCode，增加了学习成本�
 * 贡献代码时，请先fork本项目到你的名下，然后修改代码，通过合并请求来提交。
 * 目前适配Windows和Mac，同样，你可以在这两个系统上开发。代码提交前，请确保功能在这两个系统上都是正常且一致的。
 
-### 如何加入 How To Join
+## 如何加入 How To Join
 
 * 你可以直接打开在线阅读：`http://www.thisisgame.com.cn/book/cpp-game-engine-book/`
 * 本书是开源的，你可以fork本项目，然后修改代码，然后提交合并请求。
@@ -188,6 +189,6 @@ VisualStudio C++只支持Windows，Mac上就需要XCode，增加了学习成本�
   </tr>
   </table>
 
-### 团队介绍 Members
+## 团队介绍 Members
 
 * captainchen:作者
