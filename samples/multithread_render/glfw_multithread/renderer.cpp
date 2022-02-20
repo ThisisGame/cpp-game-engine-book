@@ -4,9 +4,6 @@
 
 #include "renderer.h"
 #include <iostream>
-#include <glad/gl.h>
-#define GLFW_INCLUDE_NONE
-#include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/transform2.hpp>
@@ -16,7 +13,7 @@
 #include "ShaderSource.h"
 
 Renderer::Renderer(GLFWwindow *window):window_(window) {
-    render_thread_ = std::thread(&Renderer::RenderMain, this);
+    render_thread_ = std::thread(&Renderer::RenderMain, this);//创建渲染线程，并指定渲染函数入口。
     render_thread_.detach();
 }
 

@@ -15,4 +15,4 @@ file(COPY "../../template/depends/glm/" DESTINATION "../depends/glm/")
 
 include_directories("depends")
 
-add_executable(untitled ${glfw_sources} main.cpp renderer.cpp renderer.h)
+add_executable(untitled ${glfw_sources} main.cpp renderer.cpp)
