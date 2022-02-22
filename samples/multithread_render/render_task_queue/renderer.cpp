@@ -22,10 +22,10 @@ Renderer::~Renderer() {
 }
 
 /// 编译、链接Shader
-void CompileShader(RenderCommandParamBase* param_base){
-    auto param=dynamic_cast<RenderCommandParamCompileShader*>(param_base);
-    const char* vertex_shader_text=param->vertex_shader_source_;
-    const char* fragment_shader_text=param->fragment_shader_source_;
+void CompileShader(RenderTaskBase* task_base){
+    RenderTaskCompileShader* task= dynamic_cast<RenderTaskCompileShader*>(task_base);
+    const char* vertex_shader_text=task->vertex_shader_source_;
+    const char* fragment_shader_text=task->fragment_shader_source_;
     //创建顶点Shader
     GLuint vertex_shader = glCreateShader(GL_VERTEX_SHADER);
     //指定Shader源码
@@ -76,12 +76,12 @@ void CompileShader(RenderCommandParamBase* param_base){
         std::cout<<"link error:"<<message<<std::endl;
     }
     //设置返回结果
-    param->result_program_id_=program;
+    task->result_program_id_=program;
 }
 
 /// 绘制
-void DrawArray(RenderCommandParamBase* param_base, glm::mat4& projection, glm::mat4& view){
-    auto param=dynamic_cast<RenderCommandParamDrawArray*>(param_base);
+void DrawArray(RenderTaskBase* task_base, glm::mat4& projection, glm::mat4& view){
+    RenderTaskDrawArray* task= dynamic_cast<RenderTaskDrawArray*>(task_base);
     //坐标系变换
     glm::mat4 trans = glm::translate(glm::vec3(0,0,0)); //不移动顶点坐标;
     glm::mat4 rotation = glm::eulerAngleYXZ(glm::radians(0.f), glm::radians(0.f), glm::radians(0.f)); //使用欧拉角旋转;
@@ -91,19 +91,19 @@ void DrawArray(RenderCommandParamBase* param_base, glm::mat4& projection, glm::m
     glm::mat4 mvp=projection*view*model;
 
     //指定GPU程序(就是指定顶点着色器、片段着色器)
-    glUseProgram(param->program_id_);
+    glUseProgram(task->program_id_);
     //获取shader属性ID
-    GLint mvp_location = glGetUniformLocation(param->program_id_, "u_mvp");
-    GLint vpos_location = glGetAttribLocation(param->program_id_, "a_pos");
-    GLint vcol_location = glGetAttribLocation(param->program_id_, "a_color");
+    GLint mvp_location = glGetUniformLocation(task->program_id_, "u_mvp");
+    GLint vpos_location = glGetAttribLocation(task->program_id_, "a_pos");
+    GLint vcol_location = glGetAttribLocation(task->program_id_, "a_color");
 
     //启用顶点Shader属性(a_pos)，指定与顶点坐标数据进行关联
     glEnableVertexAttribArray(vpos_location);
-    glVertexAttribPointer(vpos_location, 3, GL_FLOAT, false, param->positions_stride_, param->positions_);
+    glVertexAttribPointer(vpos_location, 3, GL_FLOAT, false, task->positions_stride_, task->positions_);
 
     //启用顶点Shader属性(a_color)，指定与顶点颜色数据进行关联
     glEnableVertexAttribArray(vcol_location);
-    glVertexAttribPointer(vcol_location, 3, GL_FLOAT, false, param->colors_stride_, param->colors_);
+    glVertexAttribPointer(vcol_location, 3, GL_FLOAT, false, task->colors_stride_, task->colors_);
 
     //上传mvp矩阵
     glUniformMatrix4fv(mvp_location, 1, GL_FALSE, &mvp[0][0]);
@@ -138,24 +138,24 @@ void Renderer::RenderMain() {
         projection=glm::perspective(glm::radians(60.f),ratio,1.f,1000.f);
 
         if(render_task_queue_.empty()==false){
-            RenderTask* render_task = *(render_task_queue_.front());
-            switch (render_task->render_command_) {
+            RenderTaskBase* render_task = *(render_task_queue_.front());
+            switch (render_task->render_command_) {//根据主线程发来的命令，做不同的处理
                 case RenderCommand::COMPILE_SHADER:{
-                    CompileShader(render_task->param_);
+                    CompileShader(render_task);
                     break;
                 }
                 case RenderCommand::DRAW_ARRAY:
-                    DrawArray(render_task->param_, projection, view);
+                    DrawArray(render_task, projection, view);
                     break;
             }
             render_task_queue_.pop();
             //如果这个任务不需要返回参数，那么用完就删掉。
-            if(render_task->param_!=nullptr && render_task->param_->need_return_result==false){
+            if(render_task->need_return_result==false){
                 delete render_task;
             }
         }
 
         std::cout<<"task in queue:"<<render_task_queue_.size()<<std::endl;
-        glfwSwapBuffers(window_);
+        glfwSwapBuffers(window_);//这里有问题，每个Draw都执行了一次Swap？？
     }
 }

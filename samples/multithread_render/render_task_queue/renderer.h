@@ -18,21 +18,28 @@ enum RenderCommand {
     DRAW_ARRAY,//绘制
 };
 
-//渲染命令参数基类
-class RenderCommandParamBase{
+/// 渲染任务基类
+class RenderTaskBase{
 public:
-    RenderCommandParamBase(){}
-    virtual ~RenderCommandParamBase(){}
-
+    RenderTaskBase(){}
+    virtual ~RenderTaskBase(){}
 public:
+    RenderCommand render_command_;//渲染命令
     bool need_return_result = false;//是否需要返回结果
 };
 
-/// 编译着色器任务参数
-class RenderCommandParamCompileShader: public RenderCommandParamBase{
+/// 需要结果的阻塞性任务
+class RenderTaskNeedReturnResult: public RenderTaskBase{
 public:
-    RenderCommandParamCompileShader(){}
-    ~RenderCommandParamCompileShader(){}
+    RenderTaskNeedReturnResult(){need_return_result=true;}
+    ~RenderTaskNeedReturnResult(){}
+};
+
+/// 编译着色器任务
+class RenderTaskCompileShader: public RenderTaskNeedReturnResult{
+public:
+    RenderTaskCompileShader(){}
+    ~RenderTaskCompileShader(){}
 public:
     const char* vertex_shader_source_= nullptr;
     const char* fragment_shader_source_= nullptr;
@@ -40,11 +47,11 @@ public:
     GLuint result_program_id_=0;//存储编译Shader结果的ProgramID
 };
 
-/// 绘制任务参数
-class RenderCommandParamDrawArray: public RenderCommandParamBase {
+/// 绘制任务
+class RenderTaskDrawArray: public RenderTaskBase {
 public:
-    RenderCommandParamDrawArray(){}
-    ~RenderCommandParamDrawArray(){}
+    RenderTaskDrawArray(){}
+    ~RenderTaskDrawArray(){}
 public:
     GLuint program_id_=0;//着色器ProgramID
     const void* positions_=nullptr;//顶点位置
@@ -53,20 +60,6 @@ public:
     GLsizei   colors_stride_=0;//颜色数据大小
 };
 
-/// 渲染任务
-class RenderTask{
-public:
-    RenderTask(){}
-    ~RenderTask(){
-        if(param_){
-            delete param_;
-            param_ = nullptr;
-        }
-    }
-public:
-    RenderCommand render_command_;//渲染命令
-    RenderCommandParamBase* param_= nullptr;//渲染命令所需的参数
-};
 
 class GLFWwindow;
 class Renderer {
@@ -74,7 +67,7 @@ public:
     Renderer(GLFWwindow* window);
     ~Renderer();
 
-    void PushRenderTask(RenderTask* render_task){
+    void PushRenderTask(RenderTaskBase* render_task){
         render_task_queue_.push(render_task);
     }
 
@@ -87,7 +80,7 @@ private:
 private:
     GLFWwindow* window_;
     std::thread render_thread_;//渲染线程
-    rigtorp::SPSCQueue<RenderTask*> render_task_queue_;//渲染任务队列
+    rigtorp::SPSCQueue<RenderTaskBase*> render_task_queue_;//渲染任务队列
 };
 
 
