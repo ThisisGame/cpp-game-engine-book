@@ -151,7 +151,7 @@ int main(void)
 
             glDrawElements(GL_TRIANGLES,36,GL_UNSIGNED_SHORT,(float*)(&kVertexIndexVector[0]));//使用顶点索引进行绘制。
         }
-        glUseProgram(-1);
+        
 
         glfwSwapBuffers(window);
         glfwPollEvents();

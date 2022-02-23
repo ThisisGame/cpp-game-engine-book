@@ -177,7 +177,7 @@ int main(void)
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, kEBO);
             glDrawElements(GL_TRIANGLES,36,GL_UNSIGNED_SHORT,0);//使用顶点索引进行绘制，最后的0表示数据偏移量。
         }
-        glUseProgram(-1);
+        
 
         glfwSwapBuffers(window);
         glfwPollEvents();

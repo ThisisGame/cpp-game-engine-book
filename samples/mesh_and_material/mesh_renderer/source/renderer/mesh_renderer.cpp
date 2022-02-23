@@ -100,5 +100,4 @@ void MeshRenderer::Render() {
         }
         glBindVertexArray(0);
     }
-    glUseProgram(-1);
 }

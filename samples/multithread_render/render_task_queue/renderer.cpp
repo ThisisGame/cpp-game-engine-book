@@ -110,7 +110,7 @@ void DrawArray(RenderTaskBase* task_base, glm::mat4& projection, glm::mat4& view
 
     //上传顶点数据并进行绘制
     glDrawArrays(GL_TRIANGLES, 0, 3);
-    glUseProgram(-1);
+    
 }
 
 void Renderer::RenderMain() {

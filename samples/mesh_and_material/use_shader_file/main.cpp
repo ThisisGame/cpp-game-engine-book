@@ -174,7 +174,7 @@ int main(void)
             }
             glBindVertexArray(0);
         }
-        glUseProgram(-1);
+        
 
         glfwSwapBuffers(window);
         glfwPollEvents();
