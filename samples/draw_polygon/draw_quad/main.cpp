@@ -160,8 +160,6 @@ int main(void)
         //上传顶点数据并进行绘制
         glDrawArrays(GL_TRIANGLES, 0, 6);
 
-        glUseProgram(-1);
-
         glfwSwapBuffers(window);
         glfwPollEvents();
     }

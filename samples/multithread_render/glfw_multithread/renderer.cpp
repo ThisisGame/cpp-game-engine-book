@@ -125,6 +125,7 @@ void Renderer::RenderMain() {
 
         //指定GPU程序(就是指定顶点着色器、片段着色器)
         glUseProgram(program);
+        {
             //启用顶点Shader属性(a_pos)，指定与顶点坐标数据进行关联
             glEnableVertexAttribArray(vpos_location);
             glVertexAttribPointer(vpos_location, 3, GL_FLOAT, false, sizeof(glm::vec3), kPositions);
@@ -138,7 +139,7 @@ void Renderer::RenderMain() {
 
             //上传顶点数据并进行绘制
             glDrawArrays(GL_TRIANGLES, 0, 3);
-        glUseProgram(-1);
+        }
 
         glfwSwapBuffers(window_);
     }

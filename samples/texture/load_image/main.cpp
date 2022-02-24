@@ -136,7 +136,7 @@ int main(void)
             //void glDrawArrays(GLenum mode,GLint first,GLsizei count);
             glDrawArrays(GL_TRIANGLES, 0, 6*6);//表示从第0个顶点开始画，总共画6个面，每个面6个顶点。
         }
-        glUseProgram(-1);
+        
 
         glfwSwapBuffers(window);
         glfwPollEvents();

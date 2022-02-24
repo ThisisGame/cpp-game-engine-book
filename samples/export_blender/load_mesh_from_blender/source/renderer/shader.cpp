@@ -112,6 +112,6 @@ void Shader::Active() {
 }
 
 void Shader::InActive() {
-    glUseProgram(-1);
+    
 }
 

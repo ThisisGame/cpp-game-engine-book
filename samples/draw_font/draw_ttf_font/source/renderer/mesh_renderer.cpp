@@ -140,7 +140,7 @@ void MeshRenderer::Render() {
         //指定当前使用的顶点索引缓冲区对象
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_buffer_object);
         glDrawElements(GL_TRIANGLES, mesh_filter->mesh()->vertex_index_num_, GL_UNSIGNED_SHORT, 0);//使用顶点索引进行绘制，最后的0表示数据偏移量。
-        glUseProgram(-1);
+        
     }
 }
 
