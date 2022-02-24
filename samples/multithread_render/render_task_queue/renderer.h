@@ -60,6 +60,15 @@ public:
     GLsizei   colors_stride_=0;//颜色数据大小
 };
 
+/// 特殊任务：帧结束标志，渲染线程收到这个任务后，刷新缓冲区，设置帧结束。
+class RenderTaskFrameEnd: public RenderTaskBase {
+public:
+    RenderTaskFrameEnd(){}
+    ~RenderTaskFrameEnd(){}
+public:
+    bool render_thread_end_frame_=false;//渲染线程结束一帧
+};
+
 
 class GLFWwindow;
 class Renderer {

@@ -53,11 +53,16 @@ int main(void)
     {
         Render();
 
+        //发出特殊任务：渲染结束
+        RenderTaskFrameEnd* render_task_frame_end=new RenderTaskFrameEnd();
+        renderer->PushRenderTask(render_task_frame_end);
+        //等待渲染线程结束帧
+        while(!render_task_frame_end->render_thread_end_frame_)
+        {
+        }
+
         //非渲染相关的API，例如处理系统事件，就放到主线程中。
         glfwPollEvents();
-
-        //判断渲染线程完成了这一帧所有的渲染任务
-        while(renderer->IsQueueEmpty()==false){}
     }
 
     delete renderer;
