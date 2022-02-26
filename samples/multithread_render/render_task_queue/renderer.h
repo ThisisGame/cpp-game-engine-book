@@ -16,6 +16,7 @@
 enum RenderCommand {
     COMPILE_SHADER,//编译着色器
     DRAW_ARRAY,//绘制
+    END_FRAME,//帧结束
 };
 
 /// 渲染任务基类
@@ -31,14 +32,19 @@ public:
 /// 需要结果的阻塞性任务
 class RenderTaskNeedReturnResult: public RenderTaskBase{
 public:
-    RenderTaskNeedReturnResult(){need_return_result=true;}
+    RenderTaskNeedReturnResult(){
+        render_command_=RenderCommand::END_FRAME;
+        need_return_result=true;
+    }
     ~RenderTaskNeedReturnResult(){}
 };
 
 /// 编译着色器任务
 class RenderTaskCompileShader: public RenderTaskNeedReturnResult{
 public:
-    RenderTaskCompileShader(){}
+    RenderTaskCompileShader(){
+        render_command_=RenderCommand::COMPILE_SHADER;
+    }
     ~RenderTaskCompileShader(){}
 public:
     const char* vertex_shader_source_= nullptr;
@@ -50,7 +56,9 @@ public:
 /// 绘制任务
 class RenderTaskDrawArray: public RenderTaskBase {
 public:
-    RenderTaskDrawArray(){}
+    RenderTaskDrawArray(){
+        render_command_=RenderCommand::DRAW_ARRAY;
+    }
     ~RenderTaskDrawArray(){}
 public:
     GLuint program_id_=0;//着色器ProgramID
@@ -61,12 +69,14 @@ public:
 };
 
 /// 特殊任务：帧结束标志，渲染线程收到这个任务后，刷新缓冲区，设置帧结束。
-class RenderTaskFrameEnd: public RenderTaskBase {
+class RenderTaskEndFrame: public RenderTaskNeedReturnResult {
 public:
-    RenderTaskFrameEnd(){}
-    ~RenderTaskFrameEnd(){}
+    RenderTaskEndFrame(){
+        render_command_=RenderCommand::END_FRAME;
+    }
+    ~RenderTaskEndFrame(){}
 public:
-    bool render_thread_end_frame_=false;//渲染线程结束一帧
+    bool render_thread_frame_end_=false;//渲染线程结束一帧
 };
 
 
@@ -85,7 +95,22 @@ public:
         return render_task_queue_.empty();
     }
 private:
+    /// 渲染主函数
     void RenderMain();
+
+    /// 编译、链接Shader
+    /// \param task_base
+    void CompileShader(RenderTaskBase *task_base);
+
+    /// 绘制
+    /// \param task_base
+    /// \param projection
+    /// \param view
+    void DrawArray(RenderTaskBase *task_base, glm::mat4 &projection, glm::mat4 &view);
+
+    /// 结束一帧
+    /// \param task_base
+    void EndFrame(RenderTaskBase *task_base);
 private:
     GLFWwindow* window_;
     std::thread render_thread_;//渲染线程

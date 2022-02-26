@@ -22,7 +22,8 @@ Renderer::~Renderer() {
 }
 
 /// 编译、链接Shader
-void CompileShader(RenderTaskBase* task_base){
+/// \param task_base
+void Renderer::CompileShader(RenderTaskBase* task_base){
     RenderTaskCompileShader* task= dynamic_cast<RenderTaskCompileShader*>(task_base);
     const char* vertex_shader_text=task->vertex_shader_source_;
     const char* fragment_shader_text=task->fragment_shader_source_;
@@ -80,7 +81,10 @@ void CompileShader(RenderTaskBase* task_base){
 }
 
 /// 绘制
-void DrawArray(RenderTaskBase* task_base, glm::mat4& projection, glm::mat4& view){
+/// \param task_base
+/// \param projection
+/// \param view
+void Renderer::DrawArray(RenderTaskBase* task_base, glm::mat4& projection, glm::mat4& view){
     RenderTaskDrawArray* task= dynamic_cast<RenderTaskDrawArray*>(task_base);
     //坐标系变换
     glm::mat4 trans = glm::translate(glm::vec3(0,0,0)); //不移动顶点坐标;
@@ -110,7 +114,13 @@ void DrawArray(RenderTaskBase* task_base, glm::mat4& projection, glm::mat4& view
 
     //上传顶点数据并进行绘制
     glDrawArrays(GL_TRIANGLES, 0, 3);
-    
+}
+
+/// 结束一帧
+/// \param task_base
+void Renderer::EndFrame(RenderTaskBase* task_base) {
+    RenderTaskEndFrame *task = dynamic_cast<RenderTaskEndFrame *>(task_base);
+    task->render_thread_frame_end_=true;
 }
 
 void Renderer::RenderMain() {
@@ -137,25 +147,34 @@ void Renderer::RenderMain() {
 
         projection=glm::perspective(glm::radians(60.f),ratio,1.f,1000.f);
 
-        if(render_task_queue_.empty()==false){
+        while(true){
+            if(render_task_queue_.empty()){//渲染线程一直等待主线程发出任务。
+                continue;
+            }
             RenderTaskBase* render_task = *(render_task_queue_.front());
             switch (render_task->render_command_) {//根据主线程发来的命令，做不同的处理
                 case RenderCommand::COMPILE_SHADER:{
                     CompileShader(render_task);
                     break;
                 }
-                case RenderCommand::DRAW_ARRAY:
+                case RenderCommand::DRAW_ARRAY:{
                     DrawArray(render_task, projection, view);
                     break;
+                }
             }
             render_task_queue_.pop();
             //如果这个任务不需要返回参数，那么用完就删掉。
             if(render_task->need_return_result==false){
                 delete render_task;
             }
-        }
 
+            //如果是帧结束任务，就交换缓冲区。
+            if(render_task->render_command_==RenderCommand::END_FRAME){
+                EndFrame(render_task);
+                glfwSwapBuffers(window_);
+                break;
+            }
+        }
         std::cout<<"task in queue:"<<render_task_queue_.size()<<std::endl;
-        glfwSwapBuffers(window_);//这里有问题，每个Draw都执行了一次Swap？？
     }
 }
