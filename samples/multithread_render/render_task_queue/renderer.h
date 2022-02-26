@@ -14,6 +14,7 @@
 
 /// 渲染命令
 enum RenderCommand {
+    NONE,
     COMPILE_SHADER,//编译着色器
     DRAW_ARRAY,//绘制
     END_FRAME,//帧结束
@@ -26,17 +27,22 @@ public:
     virtual ~RenderTaskBase(){}
 public:
     RenderCommand render_command_;//渲染命令
-    bool need_return_result = false;//是否需要返回结果
+    bool need_return_result = false;//是否需要回传结果
+    bool return_result_set = false;//是否设置好了回传结果
 };
 
-/// 需要结果的阻塞性任务
+/// 需要回传结果的阻塞性任务
 class RenderTaskNeedReturnResult: public RenderTaskBase{
 public:
     RenderTaskNeedReturnResult(){
-        render_command_=RenderCommand::END_FRAME;
+        render_command_=RenderCommand::NONE;
         need_return_result=true;
     }
     ~RenderTaskNeedReturnResult(){}
+    /// 等待任务在渲染线程执行完毕，并设置回传结果。主线程拿到结果后才能执行下一步代码。
+    virtual void Wait(){
+        while(return_result_set==false){}
+    }
 };
 
 /// 编译着色器任务
@@ -90,10 +96,6 @@ public:
         render_task_queue_.push(render_task);
     }
 
-    /// 渲染任务队列是否空，用来判定这一帧渲染完成.
-    bool IsQueueEmpty(){
-        return render_task_queue_.empty();
-    }
 private:
     /// 渲染主函数
     void RenderMain();

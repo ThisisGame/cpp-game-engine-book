@@ -59,7 +59,6 @@ void Renderer::CompileShader(RenderTaskBase* task_base){
         std::cout<<"compile fs error:"<<message<<std::endl;
     }
 
-
     //创建GPU程序
     GLuint program = glCreateProgram();
     //附加Shader
@@ -76,8 +75,9 @@ void Renderer::CompileShader(RenderTaskBase* task_base){
         glGetProgramInfoLog(program, sizeof(message), 0, message);
         std::cout<<"link error:"<<message<<std::endl;
     }
-    //设置返回结果
+    //设置回传结果
     task->result_program_id_=program;
+    task->return_result_set=true;
 }
 
 /// 绘制
@@ -121,6 +121,7 @@ void Renderer::DrawArray(RenderTaskBase* task_base, glm::mat4& projection, glm::
 void Renderer::EndFrame(RenderTaskBase* task_base) {
     RenderTaskEndFrame *task = dynamic_cast<RenderTaskEndFrame *>(task_base);
     task->render_thread_frame_end_=true;
+    task->return_result_set=true;
 }
 
 void Renderer::RenderMain() {
