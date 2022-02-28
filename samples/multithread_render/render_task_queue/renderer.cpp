@@ -154,6 +154,7 @@ void Renderer::RenderMain() {
             }
             RenderTaskBase* render_task = *(render_task_queue_.front());
             switch (render_task->render_command_) {//根据主线程发来的命令，做不同的处理
+                case RenderCommand::NONE:break;
                 case RenderCommand::COMPILE_SHADER:{
                     CompileShader(render_task);
                     break;
@@ -162,6 +163,7 @@ void Renderer::RenderMain() {
                     DrawArray(render_task, projection, view);
                     break;
                 }
+                case RenderCommand::END_FRAME:break;
             }
             render_task_queue_.pop();
             //如果这个任务不需要返回参数，那么用完就删掉。
