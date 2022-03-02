@@ -8,8 +8,6 @@
 #include <glm/gtx/transform2.hpp>
 #include <glm/gtx/euler_angles.hpp>
 
-#include "VertexData.h"
-
 Renderer::Renderer(GLFWwindow *window):window_(window), render_task_queue_(1024) {
     render_thread_ = std::thread(&Renderer::RenderMain, this);
     render_thread_.detach();
