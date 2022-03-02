@@ -27,6 +27,7 @@ file(COPY "../../template/depends/stb/" DESTINATION "../depends/stb/")
 file(COPY "../../template/depends/spdlog/include/spdlog/" DESTINATION "../depends/spdlog/")
 file(COPY "../../template/depends/rttr-0.9.6/src/rttr/" DESTINATION "../depends/rttr/")
 file(COPY "../../template/depends/easy_profiler-2.1.0/easy_profiler_core/" DESTINATION "../depends/easy_profiler_core/")
+file(COPY "../../template/depends/SPSCQueue-1.1/" DESTINATION "../depends/spscqueue/")
 
 #拷贝data文件
 file(COPY "../../template/data/images/fbx_extra_jiulian.cpt" DESTINATION "../data/images/")

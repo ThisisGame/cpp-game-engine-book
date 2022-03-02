@@ -2,26 +2,39 @@
 // Created by captainchen on 2022/2/7.
 //
 
-#include "renderer.h"
+#include "render_task_consumer.h"
 #include <iostream>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/transform2.hpp>
 #include <glm/gtx/euler_angles.hpp>
 
-Renderer::Renderer(GLFWwindow *window):window_(window), render_task_queue_(1024) {
-    render_thread_ = std::thread(&Renderer::RenderMain, this);
+#include "VertexData.h"
+
+RenderTaskConsumer::RenderTaskConsumer(GLFWwindow *window): window_(window), render_task_queue_(1024) {
+    render_thread_ = std::thread(&RenderTaskConsumer::ProcessTask, this);
     render_thread_.detach();
 }
 
-Renderer::~Renderer() {
+RenderTaskConsumer::~RenderTaskConsumer() {
     if (render_thread_.joinable()) {
         render_thread_.join();//等待渲染线程结束
     }
 }
 
+/// 更新游戏画面尺寸
+void RenderTaskConsumer::UpdateScreenSize(RenderTaskBase* task_base) {
+    RenderTaskUpdateScreenSize* task= dynamic_cast<RenderTaskUpdateScreenSize*>(task_base);
+    int width, height;
+    glfwGetFramebufferSize(window_, &width, &height);
+    glViewport(0, 0, width, height);
+    task->width_=width;
+    task->height_=height;
+    task->return_result_set=true;
+}
+
 /// 编译、链接Shader
 /// \param task_base
-void Renderer::CompileShader(RenderTaskBase* task_base){
+void RenderTaskConsumer::CompileShader(RenderTaskBase* task_base){
     RenderTaskCompileShader* task= dynamic_cast<RenderTaskCompileShader*>(task_base);
     const char* vertex_shader_text=task->vertex_shader_source_;
     const char* fragment_shader_text=task->fragment_shader_source_;
@@ -82,7 +95,7 @@ void Renderer::CompileShader(RenderTaskBase* task_base){
 /// \param task_base
 /// \param projection
 /// \param view
-void Renderer::DrawArray(RenderTaskBase* task_base, glm::mat4& projection, glm::mat4& view){
+void RenderTaskConsumer::DrawArray(RenderTaskBase* task_base, glm::mat4& projection, glm::mat4& view){
     RenderTaskDrawArray* task= dynamic_cast<RenderTaskDrawArray*>(task_base);
     //坐标系变换
     glm::mat4 trans = glm::translate(glm::vec3(0,0,0)); //不移动顶点坐标;
@@ -116,13 +129,13 @@ void Renderer::DrawArray(RenderTaskBase* task_base, glm::mat4& projection, glm::
 
 /// 结束一帧
 /// \param task_base
-void Renderer::EndFrame(RenderTaskBase* task_base) {
+void RenderTaskConsumer::EndFrame(RenderTaskBase* task_base) {
     RenderTaskEndFrame *task = dynamic_cast<RenderTaskEndFrame *>(task_base);
     task->render_thread_frame_end_=true;
     task->return_result_set=true;
 }
 
-void Renderer::RenderMain() {
+void RenderTaskConsumer::ProcessTask() {
     //渲染相关的API调用需要放到渲染线程中。
     glfwMakeContextCurrent(window_);
     gladLoadGL(glfwGetProcAddress);
@@ -153,6 +166,10 @@ void Renderer::RenderMain() {
             RenderTaskBase* render_task = *(render_task_queue_.front());
             switch (render_task->render_command_) {//根据主线程发来的命令，做不同的处理
                 case RenderCommand::NONE:break;
+                case RenderCommand::UPDATE_SCREEN_SIZE:{
+                    UpdateScreenSize(render_task);
+                    break;
+                }
                 case RenderCommand::COMPILE_SHADER:{
                     CompileShader(render_task);
                     break;

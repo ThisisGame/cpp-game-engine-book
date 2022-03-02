@@ -9,6 +9,7 @@
 
 
 class GLFWwindow;
+class RenderTaskConsumer;
 class Application {
 public:
     static void set_title(std::string title){title_=title;}
@@ -35,6 +36,8 @@ private:
     static std::string data_path_;//资源目录
 
     static GLFWwindow* glfw_window_;
+
+    static RenderTaskConsumer* render_task_consumer_;//渲染任务消费者(单独的渲染线程)
 
 };
 

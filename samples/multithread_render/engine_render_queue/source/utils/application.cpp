@@ -23,6 +23,7 @@
 #include "control/input.h"
 #include "screen.h"
 #include "render_device/render_device_opengl.h"
+#include "render_device/render_task_consumer.h"
 #include "audio/audio.h"
 #include "time.h"
 
@@ -32,7 +33,7 @@ GLFWwindow* Application::glfw_window_;
 
 static void error_callback(int error, const char* description)
 {
-    fprintf(stderr, "Error: %s\n", description);
+    DEBUG_LOG_ERROR("glfw error:{} description:{}",error,description);
 }
 
 /// 键盘回调
@@ -104,16 +105,14 @@ void Application::Init() {
         exit(EXIT_FAILURE);
     }
 
-    glfwMakeContextCurrent(glfw_window_);
-    gladLoadGL(glfwGetProcAddress);
-
-    UpdateScreenSize();
-    glfwSwapInterval(1);
-
     glfwSetKeyCallback(glfw_window_, key_callback);
     glfwSetMouseButtonCallback(glfw_window_,mouse_button_callback);
     glfwSetScrollCallback(glfw_window_,mouse_scroll_callback);
     glfwSetCursorPosCallback(glfw_window_,mouse_move_callback);
+
+    //创建渲染任务消费者(单独渲染线程)
+    render_task_consumer_=new RenderTaskConsumer(glfw_window_);
+    UpdateScreenSize();
 
     //初始化 fmod
     Audio::Init();
@@ -169,8 +168,7 @@ void Application::Render(){
 }
 
 void Application::Run() {
-    while (true)
-    {
+    while (true) {
         EASY_BLOCK("Frame"){
             if(glfwWindowShouldClose(glfw_window_)){
                 break;
@@ -178,10 +176,12 @@ void Application::Run() {
             Update();
             Render();
 
-            EASY_BLOCK("glfwSwapBuffers"){
-                glfwSwapBuffers(glfw_window_);
-            }
-            EASY_END_BLOCK;
+            //发出特殊任务：渲染结束
+            RenderTaskEndFrame* render_task_frame_end=new RenderTaskEndFrame();
+            render_task_consumer_->PushRenderTask(render_task_frame_end);
+            //等待渲染结束任务，说明渲染线程渲染完了这一帧所有的东西。
+            render_task_frame_end->Wait();
+            delete render_task_frame_end;//需要等待结果的任务，需要在获取结果后删除。
 
             EASY_BLOCK("glfwPollEvents"){
                 glfwPollEvents();
@@ -190,6 +190,8 @@ void Application::Run() {
         }EASY_END_BLOCK;
     }
 
+    delete render_task_consumer_;
+
     glfwDestroyWindow(glfw_window_);
 
     glfwTerminate();
@@ -197,8 +199,9 @@ void Application::Run() {
 }
 
 void Application::UpdateScreenSize() {
-    int width, height;
-    glfwGetFramebufferSize(glfw_window_, &width, &height);
-    glViewport(0, 0, width, height);
-    Screen::set_width_height(width,height);
+    RenderTaskUpdateScreenSize* task=new RenderTaskUpdateScreenSize();
+    render_task_consumer_->PushRenderTask(task);
+    task->Wait();
+    Screen::set_width_height(task->width_,task->height_);
+    delete task;
 }

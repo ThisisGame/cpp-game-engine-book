@@ -2,8 +2,8 @@
 // Created by captainchen on 2022/2/7.
 //
 
-#ifndef UNTITLED_RENDERER_H
-#define UNTITLED_RENDERER_H
+#ifndef UNTITLED_RENDER_TASK_CONSUMER_H
+#define UNTITLED_RENDER_TASK_CONSUMER_H
 
 #include <thread>
 #include <glad/gl.h>
@@ -15,6 +15,7 @@
 /// 渲染命令
 enum RenderCommand {
     NONE,
+    UPDATE_SCREEN_SIZE,//更新游戏画面尺寸
     COMPILE_SHADER,//编译着色器
     DRAW_ARRAY,//绘制
     END_FRAME,//帧结束
@@ -43,6 +44,18 @@ public:
     virtual void Wait(){
         while(return_result_set==false){}
     }
+};
+
+/// 更新游戏画面尺寸任务
+class RenderTaskUpdateScreenSize:public RenderTaskNeedReturnResult{
+public:
+    RenderTaskUpdateScreenSize(){
+        render_command_=RenderCommand::UPDATE_SCREEN_SIZE;
+    }
+    ~RenderTaskUpdateScreenSize(){}
+public:
+    int width_;//画面宽度
+    int height_;//画面高度
 };
 
 /// 编译着色器任务
@@ -87,18 +100,24 @@ public:
 
 
 class GLFWwindow;
-class Renderer {
+class RenderTaskConsumer {
 public:
-    Renderer(GLFWwindow* window);
-    ~Renderer();
+    RenderTaskConsumer(GLFWwindow* window);
+    ~RenderTaskConsumer();
 
+    /// 添加任务到队列
+    /// \param render_task
     void PushRenderTask(RenderTaskBase* render_task){
         render_task_queue_.push(render_task);
     }
 
 private:
-    /// 渲染主函数
-    void RenderMain();
+    /// 线程主函数：死循环处理渲染任务
+    void ProcessTask();
+
+    /// 更新游戏画面尺寸
+    /// \param task_base
+    void UpdateScreenSize(RenderTaskBase* task_base);
 
     /// 编译、链接Shader
     /// \param task_base
@@ -121,4 +140,4 @@ private:
 
 
 
-#endif //UNTITLED_RENDERER_H
+#endif //UNTITLED_RENDER_TASK_CONSUMER_H
