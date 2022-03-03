@@ -9,16 +9,24 @@
 #include <glm/gtx/euler_angles.hpp>
 
 #include "VertexData.h"
+#include "utils/debug.h"
+#include "render_task_type.h"
+#include "render_command.h"
 
-RenderTaskConsumer::RenderTaskConsumer(GLFWwindow *window): window_(window), render_task_queue_(1024) {
-    render_thread_ = std::thread(&RenderTaskConsumer::ProcessTask, this);
+void RenderTaskConsumer::Init(GLFWwindow *window) {
+    window_ = window;
+    render_thread_ = std::thread(&RenderTaskConsumer::ProcessTask);
     render_thread_.detach();
 }
 
-RenderTaskConsumer::~RenderTaskConsumer() {
+void RenderTaskConsumer::Exit() {
     if (render_thread_.joinable()) {
         render_thread_.join();//等待渲染线程结束
     }
+}
+
+void RenderTaskConsumer::PushRenderTask(RenderTaskBase* render_task) {
+    render_task_queue_.push(render_task);
 }
 
 /// 更新游戏画面尺寸
@@ -89,6 +97,22 @@ void RenderTaskConsumer::CompileShader(RenderTaskBase* task_base){
     //设置回传结果
     task->result_program_id_=program;
     task->return_result_set=true;
+}
+
+/// 删除Textures
+/// \param task_base
+void RenderTaskConsumer::DeleteTextures(RenderTaskBase *task_base) {
+    RenderTaskDeleteTextures* task= dynamic_cast<RenderTaskDeleteTextures*>(task_base);
+    glDeleteTextures(task->texture_count_,task->texture_ids_);__CHECK_GL_ERROR__
+}
+
+/// 局部更新纹理
+/// \param task_base
+void RenderTaskConsumer::UpdateTextureSubImage2D(RenderTaskBase *task_base) {
+    RenderTaskUpdateTextureSubImage2D* task= dynamic_cast<RenderTaskUpdateTextureSubImage2D*>(task_base);
+    glBindTexture(GL_TEXTURE_2D, task->gl_texture_id_);__CHECK_GL_ERROR__
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);__CHECK_GL_ERROR__
+    glTexSubImage2D(GL_TEXTURE_2D,0,task->x_,task->y_,task->width_,task->height_,task->client_format_,task->data_type_,task->data_);__CHECK_GL_ERROR__
 }
 
 /// 绘制
@@ -172,6 +196,14 @@ void RenderTaskConsumer::ProcessTask() {
                 }
                 case RenderCommand::COMPILE_SHADER:{
                     CompileShader(render_task);
+                    break;
+                }
+                case RenderCommand::DELETE_TEXTURES:{
+                    DeleteTextures(render_task);
+                    break;
+                }
+                case RenderCommand::UPDATE_TEXTURE_SUB_IMAGE2D:{
+                    UpdateTextureSubImage2D(render_task);
                     break;
                 }
                 case RenderCommand::DRAW_ARRAY:{

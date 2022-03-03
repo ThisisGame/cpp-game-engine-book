@@ -9,7 +9,7 @@
 #include "utils/debug.h"
 #include "glm/glm.hpp"
 #include "utils/application.h"
-
+#include "render_device/render_task_producer.h"
 
 
 using std::ifstream;
@@ -23,7 +23,7 @@ Texture2D::Texture2D() :mipmap_level_(0),width_(0),height_(0),gl_texture_format_
 
 Texture2D::~Texture2D() {
     if(gl_texture_id_>0){
-        glDeleteTextures(1,&gl_texture_id_);__CHECK_GL_ERROR__
+        RenderTaskProducer::ProduceRenderTaskDeleteTextures(1,&gl_texture_id_);
     }
 }
 
@@ -32,9 +32,7 @@ void Texture2D::UpdateSubImage(int x, int y, int width, int height, unsigned int
     if(width<=0 || height<=0){
         return;
     }
-    glBindTexture(GL_TEXTURE_2D, gl_texture_id_);__CHECK_GL_ERROR__
-    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);__CHECK_GL_ERROR__
-    glTexSubImage2D(GL_TEXTURE_2D,0,x,y,width,height,client_format,data_type,data);__CHECK_GL_ERROR__
+    RenderTaskProducer::ProduceRenderTaskUpdateTextureSubImage2D(gl_texture_id_,x,y,width,height,client_format,data_type,data);
 }
 
 Texture2D* Texture2D::LoadFromFile(std::string image_file_path)

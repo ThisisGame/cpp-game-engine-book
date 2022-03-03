@@ -26,6 +26,7 @@
 #include "render_device/render_task_consumer.h"
 #include "audio/audio.h"
 #include "time.h"
+#include "render_device/render_task_producer.h"
 
 std::string Application::title_;
 std::string Application::data_path_;
@@ -110,8 +111,9 @@ void Application::Init() {
     glfwSetScrollCallback(glfw_window_,mouse_scroll_callback);
     glfwSetCursorPosCallback(glfw_window_,mouse_move_callback);
 
-    //创建渲染任务消费者(单独渲染线程)
-    render_task_consumer_=new RenderTaskConsumer(glfw_window_);
+    //初始化渲染任务消费者(单独渲染线程)
+    RenderTaskConsumer::Init(glfw_window_);
+
     UpdateScreenSize();
 
     //初始化 fmod
@@ -177,11 +179,7 @@ void Application::Run() {
             Render();
 
             //发出特殊任务：渲染结束
-            RenderTaskEndFrame* render_task_frame_end=new RenderTaskEndFrame();
-            render_task_consumer_->PushRenderTask(render_task_frame_end);
-            //等待渲染结束任务，说明渲染线程渲染完了这一帧所有的东西。
-            render_task_frame_end->Wait();
-            delete render_task_frame_end;//需要等待结果的任务，需要在获取结果后删除。
+            RenderTaskProducer::ProduceRenderTaskEndFrame();
 
             EASY_BLOCK("glfwPollEvents"){
                 glfwPollEvents();
@@ -190,7 +188,7 @@ void Application::Run() {
         }EASY_END_BLOCK;
     }
 
-    delete render_task_consumer_;
+    RenderTaskConsumer::Exit();
 
     glfwDestroyWindow(glfw_window_);
 
@@ -199,9 +197,7 @@ void Application::Run() {
 }
 
 void Application::UpdateScreenSize() {
-    RenderTaskUpdateScreenSize* task=new RenderTaskUpdateScreenSize();
-    render_task_consumer_->PushRenderTask(task);
-    task->Wait();
-    Screen::set_width_height(task->width_,task->height_);
-    delete task;
+    int width,height;
+    RenderTaskProducer::ProduceRenderTaskUpdateScreenSize(width,height);
+    Screen::set_width_height(width,height);
 }
