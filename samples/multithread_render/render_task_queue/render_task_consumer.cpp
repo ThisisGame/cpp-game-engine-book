@@ -9,13 +9,20 @@
 #include <glm/gtx/euler_angles.hpp>
 
 #include "VertexData.h"
+#include "render_task_type.h"
+#include "render_command.h"
+#include "render_task_queue.h"
 
-RenderTaskConsumer::RenderTaskConsumer(GLFWwindow *window): window_(window), render_task_queue_(1024) {
-    render_thread_ = std::thread(&RenderTaskConsumer::ProcessTask, this);
+GLFWwindow* RenderTaskConsumer::window_;
+std::thread RenderTaskConsumer::render_thread_;//渲染线程
+
+void RenderTaskConsumer::Init(GLFWwindow *window) {
+    window_ = window;
+    render_thread_ = std::thread(&RenderTaskConsumer::ProcessTask);
     render_thread_.detach();
 }
 
-RenderTaskConsumer::~RenderTaskConsumer() {
+void RenderTaskConsumer::Exit() {
     if (render_thread_.joinable()) {
         render_thread_.join();//等待渲染线程结束
     }
@@ -149,10 +156,11 @@ void RenderTaskConsumer::ProcessTask() {
         projection=glm::perspective(glm::radians(60.f),ratio,1.f,1000.f);
 
         while(true){
-            if(render_task_queue_.empty()){//渲染线程一直等待主线程发出任务。
+            if(RenderTaskQueue::Empty()){//渲染线程一直等待主线程发出任务。没有了任务Sleep 1微秒。
+                std::this_thread::sleep_for(std::chrono::microseconds(1));
                 continue;
             }
-            RenderTaskBase* render_task = *(render_task_queue_.front());
+            RenderTaskBase* render_task = RenderTaskQueue::Front();
             switch (render_task->render_command_) {//根据主线程发来的命令，做不同的处理
                 case RenderCommand::NONE:break;
                 case RenderCommand::COMPILE_SHADER:{
@@ -165,7 +173,7 @@ void RenderTaskConsumer::ProcessTask() {
                 }
                 case RenderCommand::END_FRAME:break;
             }
-            render_task_queue_.pop();
+            RenderTaskQueue::Pop();
             //如果这个任务不需要返回参数，那么用完就删掉。
             if(render_task->need_return_result==false){
                 delete render_task;
@@ -178,6 +186,6 @@ void RenderTaskConsumer::ProcessTask() {
                 break;
             }
         }
-        std::cout<<"task in queue:"<<render_task_queue_.size()<<std::endl;
+        std::cout<<"task in queue:"<<RenderTaskQueue::Size()<<std::endl;
     }
 }
