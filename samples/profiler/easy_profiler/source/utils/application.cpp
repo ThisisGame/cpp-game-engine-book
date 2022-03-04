@@ -108,7 +108,7 @@ void Application::Init() {
     gladLoadGL(glfwGetProcAddress);
 
     UpdateScreenSize();
-    glfwSwapInterval(1);
+    glfwSwapInterval(2);//垂直同步，0关闭 1：每帧交换，帧率=显示器刷新率 2：每2帧交换，帧率=显示器刷新率/2
 
     glfwSetKeyCallback(glfw_window_, key_callback);
     glfwSetMouseButtonCallback(glfw_window_,mouse_button_callback);

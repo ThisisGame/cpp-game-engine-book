@@ -1,3 +1,6 @@
+#拷贝depends目录
+file(COPY "../../template/depends/fmod/" DESTINATION "../depends/fmod/")
+
 #头文件目录
 include_directories("depends/fmod/api/core/inc")
 
