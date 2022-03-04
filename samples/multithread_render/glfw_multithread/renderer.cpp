@@ -24,7 +24,8 @@ Renderer::~Renderer() {
 }
 
 GLuint vertex_shader, fragment_shader, program;
-GLint mvp_location, vpos_location, vcol_location;
+GLint vpos_location, vcol_location;
+GLuint vbo_pos,vbo_color, vao;
 
 
 /// 编译、链接Shader
@@ -82,6 +83,27 @@ void compile_shader()
 }
 
 
+/// 创建缓冲区
+void create_buffer(){
+    glGenVertexArrays(1, &vao);
+    glGenBuffers(1, &vbo_pos);
+    glGenBuffers(1, &vbo_color);
+
+    glBindVertexArray(vao);
+    glBindBuffer(GL_ARRAY_BUFFER, vbo_pos);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(kPositions), kPositions, GL_STATIC_DRAW);
+    glVertexAttribPointer(vpos_location, 3, GL_FLOAT, false, sizeof(glm::vec3), (void*)0);
+    glEnableVertexAttribArray(vpos_location);//启用顶点Shader属性(a_pos)，指定与顶点坐标数据进行关联
+
+    glBindBuffer(GL_ARRAY_BUFFER, vbo_color);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(kColors), kColors, GL_STATIC_DRAW);
+    glVertexAttribPointer(vcol_location, 3, GL_FLOAT, false, sizeof(glm::vec4), (void*)0);
+    glEnableVertexAttribArray(vcol_location);//启用顶点Shader属性(a_color)，指定与顶点颜色数据进行关联
+
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);
+}
+
 void Renderer::RenderMain() {
     //渲染相关的API调用需要放到渲染线程中。
     glfwMakeContextCurrent(window_);
@@ -92,9 +114,10 @@ void Renderer::RenderMain() {
     compile_shader();
 
     //获取shader属性ID
-    mvp_location = glGetUniformLocation(program, "u_mvp");
     vpos_location = glGetAttribLocation(program, "a_pos");
     vcol_location = glGetAttribLocation(program, "a_color");
+
+    create_buffer();
 
     while (!glfwWindowShouldClose(window_))
     {
@@ -111,31 +134,10 @@ void Renderer::RenderMain() {
         glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
         glClearColor(49.f/255,77.f/255,121.f/255,1.f);
 
-        //坐标系变换
-        glm::mat4 trans = glm::translate(glm::vec3(0,0,0)); //不移动顶点坐标;
-        glm::mat4 rotation = glm::eulerAngleYXZ(glm::radians(0.f), glm::radians(0.f), glm::radians(0.f)); //使用欧拉角旋转;
-        glm::mat4 scale = glm::scale(glm::vec3(2.0f, 2.0f, 2.0f)); //缩放;
-        model = trans*scale*rotation;
-
-        view = glm::lookAt(glm::vec3(0, 0, 10), glm::vec3(0, 0,0), glm::vec3(0, 1, 0));
-
-        projection=glm::perspective(glm::radians(60.f),ratio,1.f,1000.f);
-
-        mvp=projection*view*model;
-
         //指定GPU程序(就是指定顶点着色器、片段着色器)
         glUseProgram(program);
         {
-            //启用顶点Shader属性(a_pos)，指定与顶点坐标数据进行关联
-            glEnableVertexAttribArray(vpos_location);
-            glVertexAttribPointer(vpos_location, 3, GL_FLOAT, false, sizeof(glm::vec3), kPositions);
-
-            //启用顶点Shader属性(a_color)，指定与顶点颜色数据进行关联
-            glEnableVertexAttribArray(vcol_location);
-            glVertexAttribPointer(vcol_location, 3, GL_FLOAT, false, sizeof(glm::vec4), kColors);
-
-            //上传mvp矩阵
-            glUniformMatrix4fv(mvp_location, 1, GL_FALSE, &mvp[0][0]);
+            glBindVertexArray(vao);
 
             //上传顶点数据并进行绘制
             glDrawArrays(GL_TRIANGLES, 0, 3);

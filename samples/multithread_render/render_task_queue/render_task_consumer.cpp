@@ -87,40 +87,53 @@ void RenderTaskConsumer::CompileShader(RenderTaskBase* task_base){
     task->return_result_set=true;
 }
 
+/// 创建缓冲区
+/// \param task_base
+void RenderTaskConsumer::CreateBuffer(RenderTaskBase* task_base){
+    RenderTaskCreateBuffer* task= dynamic_cast<RenderTaskCreateBuffer*>(task_base);
+    GLuint vbo_pos,vbo_color,vao;
+
+    glGenVertexArrays(1, &vao);
+    glGenBuffers(1, &vbo_pos);
+    glGenBuffers(1, &vbo_color);
+
+    GLint vpos_location = glGetAttribLocation(task->program_id_, "a_pos");
+    GLint vcol_location = glGetAttribLocation(task->program_id_, "a_color");
+
+    glBindVertexArray(vao);
+    glBindBuffer(GL_ARRAY_BUFFER, vbo_pos);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(kPositions), kPositions, GL_STATIC_DRAW);
+    glVertexAttribPointer(vpos_location, 3, GL_FLOAT, false, sizeof(glm::vec3), (void*)0);
+    glEnableVertexAttribArray(vpos_location);//启用顶点Shader属性(a_pos)，指定与顶点坐标数据进行关联
+
+    glBindBuffer(GL_ARRAY_BUFFER, vbo_color);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(kColors), kColors, GL_STATIC_DRAW);
+    glVertexAttribPointer(vcol_location, 3, GL_FLOAT, false, sizeof(glm::vec4), (void*)0);
+    glEnableVertexAttribArray(vcol_location);//启用顶点Shader属性(a_color)，指定与顶点颜色数据进行关联
+
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);
+
+    //设置回传结果
+    task->result_vao_=vao;
+    task->return_result_set=true;
+}
+
 /// 绘制
 /// \param task_base
 /// \param projection
 /// \param view
 void RenderTaskConsumer::DrawArray(RenderTaskBase* task_base, glm::mat4& projection, glm::mat4& view){
     RenderTaskDrawArray* task= dynamic_cast<RenderTaskDrawArray*>(task_base);
-    //坐标系变换
-    glm::mat4 trans = glm::translate(glm::vec3(0,0,0)); //不移动顶点坐标;
-    glm::mat4 rotation = glm::eulerAngleYXZ(glm::radians(0.f), glm::radians(0.f), glm::radians(0.f)); //使用欧拉角旋转;
-    glm::mat4 scale = glm::scale(glm::vec3(2.0f, 2.0f, 2.0f)); //缩放;
-    glm::mat4 model = trans*scale*rotation;
-
-    glm::mat4 mvp=projection*view*model;
 
     //指定GPU程序(就是指定顶点着色器、片段着色器)
     glUseProgram(task->program_id_);
-    //获取shader属性ID
-    GLint mvp_location = glGetUniformLocation(task->program_id_, "u_mvp");
-    GLint vpos_location = glGetAttribLocation(task->program_id_, "a_pos");
-    GLint vcol_location = glGetAttribLocation(task->program_id_, "a_color");
+    {
+        glBindVertexArray(task->vao_);
 
-    //启用顶点Shader属性(a_pos)，指定与顶点坐标数据进行关联
-    glEnableVertexAttribArray(vpos_location);
-    glVertexAttribPointer(vpos_location, 3, GL_FLOAT, false, task->positions_stride_, task->positions_);
-
-    //启用顶点Shader属性(a_color)，指定与顶点颜色数据进行关联
-    glEnableVertexAttribArray(vcol_location);
-    glVertexAttribPointer(vcol_location, 3, GL_FLOAT, false, task->colors_stride_, task->colors_);
-
-    //上传mvp矩阵
-    glUniformMatrix4fv(mvp_location, 1, GL_FALSE, &mvp[0][0]);
-
-    //上传顶点数据并进行绘制
-    glDrawArrays(GL_TRIANGLES, 0, 3);
+        //上传顶点数据并进行绘制
+        glDrawArrays(GL_TRIANGLES, 0, 3);
+    }
 }
 
 /// 结束一帧
@@ -165,6 +178,10 @@ void RenderTaskConsumer::ProcessTask() {
                 case RenderCommand::NONE:break;
                 case RenderCommand::COMPILE_SHADER:{
                     CompileShader(render_task);
+                    break;
+                }
+                case RenderCommand::CREATE_BUFFER:{
+                    CreateBuffer(render_task);
                     break;
                 }
                 case RenderCommand::DRAW_ARRAY:{

@@ -15,6 +15,7 @@ static void error_callback(int error, const char* description)
 }
 
 GLuint program_id_=0;
+GLuint vao_=0;
 int main(void)
 {
     //设置错误回调
@@ -23,8 +24,12 @@ int main(void)
     if (!glfwInit())
         exit(EXIT_FAILURE);
 
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+#ifdef __APPLE__
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+#endif
 
     //创建窗口
     GLFWwindow* window = glfwCreateWindow(960, 640, "Simple example", NULL, NULL);
@@ -39,6 +44,9 @@ int main(void)
 
     //编译Shader任务
     RenderTaskProducer::ProduceRenderTaskCompileShader(vertex_shader_text,fragment_shader_text,program_id_);
+
+    //创建缓冲区任务
+    RenderTaskProducer::ProduceRenderTaskCreateBuffer(program_id_,kPositions,sizeof(glm::vec3),kColors,sizeof(glm::vec4),vao_);
 
     //主线程 渲染循环逻辑
     while (!glfwWindowShouldClose(window))
@@ -61,5 +69,5 @@ int main(void)
 
 void Render(){
     //绘制任务
-    RenderTaskProducer::ProduceRenderTaskDrawArray(program_id_,kPositions,sizeof(glm::vec3),kColors,sizeof(glm::vec4));
+    RenderTaskProducer::ProduceRenderTaskDrawArray(program_id_,vao_);
 }

@@ -29,6 +29,10 @@ private:
     /// \param task_base
     static void CompileShader(RenderTaskBase *task_base);
 
+    /// 创建缓冲区
+    /// \param task_base
+    static void RenderTaskConsumer::CreateBuffer(RenderTaskBase* task_base);
+
     /// 绘制
     /// \param task_base
     /// \param projection
