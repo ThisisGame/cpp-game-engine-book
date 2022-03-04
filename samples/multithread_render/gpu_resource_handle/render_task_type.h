@@ -5,6 +5,7 @@
 #ifndef UNTITLED_RENDER_TASK_TYPE_H
 #define UNTITLED_RENDER_TASK_TYPE_H
 
+#include <thread>
 #include "render_command.h"
 
 /// 渲染任务基类
@@ -28,13 +29,15 @@ public:
     ~RenderTaskNeedReturnResult(){}
     /// 等待任务在渲染线程执行完毕，并设置回传结果。主线程拿到结果后才能执行下一步代码。
     virtual void Wait(){
-        while(return_result_set==false){}
+        while(return_result_set==false){
+            std::this_thread::sleep_for(std::chrono::microseconds(1));
+        }
     }
 };
 
 
 /// 编译着色器任务
-class RenderTaskCompileShader: public RenderTaskNeedReturnResult{
+class RenderTaskCompileShader: public RenderTaskBase{
 public:
     RenderTaskCompileShader(){
         render_command_=RenderCommand::COMPILE_SHADER;
@@ -43,8 +46,23 @@ public:
 public:
     const char* vertex_shader_source_= nullptr;
     const char* fragment_shader_source_= nullptr;
+    unsigned int shader_program_handle_= 0;
+};
+
+/// 创建VAO任务
+class RenderTaskCreateVAO: public RenderTaskBase{
 public:
-    GLuint result_program_id_=0;//存储编译Shader结果的ProgramID
+    RenderTaskCreateVAO(){
+        render_command_=RenderCommand::CREATE_VAO;
+    }
+    ~RenderTaskCreateVAO(){}
+public:
+    unsigned int shader_program_handle_=0;//着色器程序句柄
+    const void* positions_=nullptr;//顶点位置
+    GLsizei   positions_stride_=0;//顶点数据大小
+    const void* colors_=nullptr;//顶点颜色
+    GLsizei   colors_stride_=0;//颜色数据大小
+    unsigned int vao_handle_=0;//VAO句柄
 };
 
 /// 绘制任务
@@ -55,11 +73,8 @@ public:
     }
     ~RenderTaskDrawArray(){}
 public:
-    GLuint program_id_=0;//着色器ProgramID
-    const void* positions_=nullptr;//顶点位置
-    GLsizei   positions_stride_=0;//顶点数据大小
-    const void* colors_=nullptr;//顶点颜色
-    GLsizei   colors_stride_=0;//颜色数据大小
+    GLuint shader_program_handle_=0;//着色器程序句柄
+    GLuint vao_handle_=0;//VAO句柄
 };
 
 /// 特殊任务：帧结束标志，渲染线程收到这个任务后，刷新缓冲区，设置帧结束。

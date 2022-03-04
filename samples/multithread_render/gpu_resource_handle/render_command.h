@@ -9,6 +9,7 @@
 enum RenderCommand {
     NONE,
     COMPILE_SHADER,//编译着色器
+    CREATE_VAO,//创建VAO
     DRAW_ARRAY,//绘制
     END_FRAME,//帧结束
 };

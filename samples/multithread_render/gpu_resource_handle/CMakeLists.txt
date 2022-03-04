@@ -16,4 +16,4 @@ file(COPY "../../template/depends/SPSCQueue-1.1/" DESTINATION "../depends/spscqu
 
 include_directories("depends")
 
-add_executable(untitled ${glfw_sources} main.cpp render_task_queue.cpp render_task_consumer.cpp render_task_producer.cpp)
+add_executable(untitled ${glfw_sources} main.cpp render_task_queue.cpp render_task_consumer.cpp render_task_producer.cpp gpu_resource_mapper.cpp)

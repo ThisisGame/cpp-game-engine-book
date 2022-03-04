@@ -4,6 +4,7 @@
 #include <GLFW/glfw3.h>
 #include "render_task_consumer.h"
 #include "render_task_producer.h"
+#include "gpu_resource_mapper.h"
 #include "VertexData.h"
 #include "ShaderSource.h"
 
@@ -14,7 +15,8 @@ static void error_callback(int error, const char* description)
     fprintf(stderr, "GLFW Error: %s\n", description);
 }
 
-GLuint program_id_=0;
+unsigned int shader_program_handle_=0;
+unsigned int vao_handle_=0;
 int main(void)
 {
     //设置错误回调
@@ -23,8 +25,12 @@ int main(void)
     if (!glfwInit())
         exit(EXIT_FAILURE);
 
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+#ifdef __APPLE__
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+#endif
 
     //创建窗口
     GLFWwindow* window = glfwCreateWindow(960, 640, "Simple example", NULL, NULL);
@@ -38,7 +44,13 @@ int main(void)
     RenderTaskConsumer::Init(window);
 
     //编译Shader任务
-    RenderTaskProducer::ProduceRenderTaskCompileShader(vertex_shader_text,fragment_shader_text,program_id_);
+    shader_program_handle_=GPUResourceMapper::GenerateShaderProgramHandle();
+    RenderTaskProducer::ProduceRenderTaskCompileShader(vertex_shader_text, fragment_shader_text, shader_program_handle_);
+
+    //创建缓冲区任务
+    vao_handle_=GPUResourceMapper::GenerateVAOHandle();
+    RenderTaskProducer::ProduceRenderTaskCreateVAO(shader_program_handle_, kPositions, sizeof(glm::vec3), kColors,
+                                                   sizeof(glm::vec4), vao_handle_);
 
     //主线程 渲染循环逻辑
     while (!glfwWindowShouldClose(window))
@@ -61,5 +73,5 @@ int main(void)
 
 void Render(){
     //绘制任务
-    RenderTaskProducer::ProduceRenderTaskDrawArray(program_id_,kPositions,sizeof(glm::vec3),kColors,sizeof(glm::vec4));
+    RenderTaskProducer::ProduceRenderTaskDrawArray(shader_program_handle_, vao_handle_);
 }

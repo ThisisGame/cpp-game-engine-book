@@ -1,0 +1,26 @@
+version: '{build}'
+
+environment:
+  matrix:
+    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+      CMAKE_GENERATOR: Visual Studio 15 2017
+      CMAKE_GENERATOR_PLATFORM: Win32
+
+    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+      CMAKE_GENERATOR: Visual Studio 15 2017
+      CMAKE_GENERATOR_PLATFORM: x64
+      CMAKE_CLI_FLAGS: -DUUID_SYSTEM_GENERATOR=ON -DUUID_TIME_GENERATOR=ON
+
+init:
+  - cmake --version
+  - msbuild /version
+
+before_build:
+  - cmake %CMAKE_CLI_FLAGS% -S . -B build
+  - cd build
+
+build_script:
+  - cmake --build . --config Release
+
+test_script:
+  - ctest -C Release -V -j
