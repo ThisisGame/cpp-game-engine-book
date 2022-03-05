@@ -46,7 +46,8 @@ int main(void)
     RenderTaskProducer::ProduceRenderTaskCompileShader(vertex_shader_text,fragment_shader_text,program_id_);
 
     //创建缓冲区任务
-    RenderTaskProducer::ProduceRenderTaskCreateBuffer(program_id_,kPositions,sizeof(glm::vec3),kColors,sizeof(glm::vec4),vao_);
+    RenderTaskProducer::ProduceRenderTaskCreateVAO(program_id_, kPositions, sizeof(glm::vec3), kColors,
+                                                   sizeof(glm::vec4), vao_);
 
     //主线程 渲染循环逻辑
     while (!glfwWindowShouldClose(window))

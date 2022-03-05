@@ -10,27 +10,66 @@
 /// 渲染任务生产者
 class RenderTaskProducer {
 public:
-    /// 发出任务：更新游戏窗口尺寸，并将渲染线程返回的最新的尺寸设置到传入的参数
-    /// \param width 被设置的宽
-    /// \param height 被设置的高
-    static void ProduceRenderTaskUpdateScreenSize(int& width, int& height);
+    /// 发出任务：更新游戏窗口尺寸
+    static void ProduceRenderTaskUpdateScreenSize();
+
+    /// 发出任务：编译Shader
+    /// \param vertex_shader_source 顶点shader源码
+    /// \param fragment_shader_source 片段shader源码
+    /// \param shader_program_handle Shader程序句柄
+    static void ProduceRenderTaskCompileShader(const char* vertex_shader_source,const char* fragment_shader_source,unsigned int shader_program_handle);
+
+    /// 发出任务：使用Shader程序
+    static void ProduceRenderTaskUseShaderProgram(unsigned int shader_program_handle);
+
+    /// 发出任务：创建压缩纹理
+    /// \param texture_handle 纹理句柄
+    /// \param width
+    /// \param height
+    /// \param texture_format 压缩纹理格式
+    /// \param compress_size
+    /// \param data 压缩纹理数据，注意函数里是拷贝内存块。
+    static void ProduceRenderTaskCreateCompressedTexImage2D(unsigned int texture_handle, int width, int height, unsigned int texture_format, unsigned int compress_size,
+                                                            unsigned char *data);
+
+    /// 发出任务：创建纹理
+    /// \param texture_handle
+    /// \param width
+    /// \param height
+    /// \param gl_texture_format
+    /// \param client_format
+    /// \param data_type
+    /// \param data_size
+    /// \param data
+    static void ProduceRenderTaskCreateTexImage2D(unsigned int texture_handle, int width, int height, unsigned int gl_texture_format, unsigned int client_format,unsigned int data_type, unsigned int data_size, unsigned char *data);
 
     /// 发出任务：删除一个或多个Texture
     /// \param size
-    /// \param gl_texture_ids
-    static void ProduceRenderTaskDeleteTextures(int size,GLuint* gl_texture_ids);
+    /// \param texture_handle_array 指定要删除的Texture的句柄数组，注意函数里是拷贝内存块。
+    static void ProduceRenderTaskDeleteTextures(int size,unsigned int* texture_handle_array);
 
     /// 发出任务：局部更新Texture
-    /// \param gl_texture_id
+    /// \param texture_handle 纹理句柄
     /// \param x
     /// \param y
     /// \param width
     /// \param height
     /// \param client_format
     /// \param data_type
-    /// \param data
-    static void ProduceRenderTaskUpdateTextureSubImage2D(GLuint gl_texture_id,int x, int y, int width, int height, unsigned int client_format, unsigned int data_type,
-                                                         unsigned char *data);
+    /// \param data 指定要更新的数据，注意函数里是拷贝内存块。
+    /// \param data_size
+    static void ProduceRenderTaskUpdateTextureSubImage2D(unsigned int texture_handle, int x, int y, int width, int height, unsigned int client_format, unsigned int data_type,
+                                                         unsigned char *data,unsigned int data_size);
+
+    /// 发出任务：创建VAO
+    /// \param shader_program_handle
+    /// \param vao_handle
+    /// \param vertex_data_size
+    /// \param vertex_data_stride
+    /// \param vertex_data
+    /// \param vertex_index_data_size
+    /// \param vertex_index_data
+    static void ProduceRenderTaskCreateVAO(unsigned int shader_program_handle,unsigned int vao_handle,unsigned int vertex_data_size,unsigned int vertex_data_stride,void* vertex_data,unsigned int vertex_index_data_size,void* vertex_index_data);
 
     /// 发出特殊任务：渲染结束
     static void ProduceRenderTaskEndFrame();

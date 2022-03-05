@@ -11,8 +11,8 @@
 /// 发出阻塞型任务：编译Shader
 /// \param vertex_shader_source 顶点shader源码
 /// \param fragment_shader_source 片段shader源码
-/// \param result_program_id 回传的GPUProgramID
-void RenderTaskProducer::ProduceRenderTaskCompileShader(const char* vertex_shader_source,const char* fragment_shader_source,GLuint& result_program_id){
+/// \param result_shader_program_id 回传的Shader程序ID
+void RenderTaskProducer::ProduceRenderTaskCompileShader(const char* vertex_shader_source,const char* fragment_shader_source,GLuint& result_shader_program_id){
     RenderTaskCompileShader* render_task_compile_shader=new RenderTaskCompileShader();
     render_task_compile_shader->vertex_shader_source_=vertex_shader_source;
     render_task_compile_shader->fragment_shader_source_=fragment_shader_source;
@@ -20,38 +20,38 @@ void RenderTaskProducer::ProduceRenderTaskCompileShader(const char* vertex_shade
     RenderTaskQueue::Push(render_task_compile_shader);
     //等待编译Shader任务结束并设置回传结果
     render_task_compile_shader->Wait();
-    result_program_id=render_task_compile_shader->result_program_id_;
+    result_shader_program_id=render_task_compile_shader->result_shader_program_id_;
     delete render_task_compile_shader;//需要等待结果的渲染任务，需要在获取结果后删除。
 }
 
-/// 发出任务：创建缓冲区
-/// \param program_id 使用的GPUProgramID
+/// 发出任务：创建VAO
+/// \param shader_program_id 使用的Shader程序ID
 /// \param positions 绘制的顶点位置
 /// \param positions_stride 顶点位置数组的stride
 /// \param colors 绘制的顶点颜色
 /// \param colors_stride 顶点颜色数组的stride
 /// \param result_vao 回传的VAO
-void RenderTaskProducer::ProduceRenderTaskCreateBuffer(GLuint program_id,const void *positions, GLsizei positions_stride,
-                                                       const void *colors, GLsizei colors_stride,GLuint& result_vao) {
-    RenderTaskCreateBuffer* render_task_create_buffer=new RenderTaskCreateBuffer();
-    render_task_create_buffer->program_id_=program_id;
-    render_task_create_buffer->positions_=positions;
-    render_task_create_buffer->positions_stride_=positions_stride;
-    render_task_create_buffer->colors_=colors;
-    render_task_create_buffer->colors_stride_=colors_stride;
-    RenderTaskQueue::Push(render_task_create_buffer);
+void RenderTaskProducer::ProduceRenderTaskCreateVAO(GLuint shader_program_id, const void *positions, GLsizei positions_stride,
+                                                    const void *colors, GLsizei colors_stride, GLuint& result_vao) {
+    RenderTaskCreateVAO* render_task_create_vao=new RenderTaskCreateVAO();
+    render_task_create_vao->shader_program_id_=shader_program_id;
+    render_task_create_vao->positions_=positions;
+    render_task_create_vao->positions_stride_=positions_stride;
+    render_task_create_vao->colors_=colors;
+    render_task_create_vao->colors_stride_=colors_stride;
+    RenderTaskQueue::Push(render_task_create_vao);
     //等待任务结束并设置回传结果
-    render_task_create_buffer->Wait();
-    result_vao=render_task_create_buffer->result_vao_;
-    delete render_task_create_buffer;
+    render_task_create_vao->Wait();
+    result_vao=render_task_create_vao->result_vao_;
+    delete render_task_create_vao;
 }
 
 /// 发出任务：绘制
-/// \param program_id 使用的GPUProgramID
+/// \param shader_program_id 使用的Shader程序ID
 /// \param vao
-void RenderTaskProducer::ProduceRenderTaskDrawArray(GLuint program_id,GLuint vao){
+void RenderTaskProducer::ProduceRenderTaskDrawArray(GLuint shader_program_id, GLuint vao){
     RenderTaskDrawArray* render_task_draw_array=new RenderTaskDrawArray();
-    render_task_draw_array->program_id_=program_id;
+    render_task_draw_array->shader_program_id_=shader_program_id;
     render_task_draw_array->vao_=vao;
     RenderTaskQueue::Push(render_task_draw_array);//普通非阻塞型任务，交由RenderTaskConsumer使用后删除。
 }

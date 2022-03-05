@@ -17,6 +17,8 @@
 #include "component/game_object.h"
 #include "component/transform.h"
 #include "utils/debug.h"
+#include "render_device/render_task_producer.h"
+#include "render_device/gpu_resource_mapper.h"
 
 using timetool::StopWatch;
 using namespace rttr;
@@ -76,49 +78,13 @@ void MeshRenderer::Render() {
     //当骨骼蒙皮动画生效时，渲染骨骼蒙皮Mesh
     MeshFilter::Mesh* mesh=mesh_filter->skinned_mesh()== nullptr?mesh_filter->mesh():mesh_filter->skinned_mesh();
 
-    //获取`Shader`的`gl_program_id`，指定为目标Shader程序。
-    GLuint gl_program_id=material_->shader()->gl_program_id();
+    //指定目标Shader程序。
+    GLuint shader_program_handle= material_->shader()->shader_program_handle();
 
-    if(vertex_array_object_ == 0){
-        GLint vpos_location = glGetAttribLocation(gl_program_id, "a_pos");
-        GLint vcol_location = glGetAttribLocation(gl_program_id, "a_color");
-        GLint a_uv_location = glGetAttribLocation(gl_program_id, "a_uv");
-
-        //在GPU上创建缓冲区对象
-        glGenBuffers(1,&vertex_buffer_object_);
-        //将缓冲区对象指定为顶点缓冲区对象
-        glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer_object_);
-        //上传顶点数据到缓冲区对象
-        glBufferData(GL_ARRAY_BUFFER, mesh->vertex_num_ * sizeof(MeshFilter::Vertex), mesh->vertex_data_, GL_DYNAMIC_DRAW);
-
-        //在GPU上创建缓冲区对象
-        glGenBuffers(1,&element_buffer_object_);
-        //将缓冲区对象指定为顶点索引缓冲区对象
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_buffer_object_);
-        //上传顶点索引数据到缓冲区对象
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, mesh->vertex_index_num_ * sizeof(unsigned short), mesh->vertex_index_data_, GL_STATIC_DRAW);
-
-        glGenVertexArrays(1,&vertex_array_object_);
-
-        //设置VAO
-        glBindVertexArray(vertex_array_object_);__CHECK_GL_ERROR__
-        {
-            //指定当前使用的VBO
-            glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer_object_);__CHECK_GL_ERROR__
-            //将Shader变量(a_pos)和顶点坐标VBO句柄进行关联，最后的0表示数据偏移量。
-            glVertexAttribPointer(vpos_location, 3, GL_FLOAT, false, sizeof(MeshFilter::Vertex), 0);__CHECK_GL_ERROR__
-            //启用顶点Shader属性(a_color)，指定与顶点颜色数据进行关联
-            glVertexAttribPointer(vcol_location, 4, GL_FLOAT, false, sizeof(MeshFilter::Vertex), (void*)(sizeof(float)*3));__CHECK_GL_ERROR__
-            //将Shader变量(a_uv)和顶点UV坐标VBO句柄进行关联，最后的0表示数据偏移量。
-            glVertexAttribPointer(a_uv_location, 2, GL_FLOAT, false, sizeof(MeshFilter::Vertex), (void*)(sizeof(float)*(3+4)));__CHECK_GL_ERROR__
-
-            glEnableVertexAttribArray(vpos_location);__CHECK_GL_ERROR__
-            glEnableVertexAttribArray(vcol_location);__CHECK_GL_ERROR__
-            glEnableVertexAttribArray(a_uv_location);__CHECK_GL_ERROR__
-
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_buffer_object_);__CHECK_GL_ERROR__
-        }
-        glBindBuffer(GL_ARRAY_BUFFER, 0);__CHECK_GL_ERROR__
+    if(vertex_array_object_handle_ == 0){
+        vertex_array_object_handle_=GPUResourceMapper::GenerateVAOHandle();
+        //发出任务：创建VAO
+        RenderTaskProducer::ProduceRenderTaskCreateVAO(shader_program_handle, vertex_array_object_handle_, mesh->vertex_num_ * sizeof(MeshFilter::Vertex), sizeof(MeshFilter::Vertex), mesh->vertex_data_, mesh->vertex_index_num_ * sizeof(unsigned short), mesh->vertex_index_data_);
     }
     else{
         glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer_object_);__CHECK_GL_ERROR__
@@ -130,7 +96,7 @@ void MeshRenderer::Render() {
         DEBUG_LOG_INFO("glBufferSubData cost {}",stopwatch.microseconds());
     }
 
-    glUseProgram(gl_program_id);
+    glUseProgram(shader_program_handle);
     {
         // PreRender
         game_object()->ForeachLuaComponent([](sol::table lua_component_instance_table){
@@ -154,21 +120,21 @@ void MeshRenderer::Render() {
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);__CHECK_GL_ERROR__
 
         //上传mvp矩阵
-        glUniformMatrix4fv(glGetUniformLocation(gl_program_id, "u_mvp"), 1, GL_FALSE, &mvp[0][0]);__CHECK_GL_ERROR__
+        glUniformMatrix4fv(glGetUniformLocation(shader_program_handle, "u_mvp"), 1, GL_FALSE, &mvp[0][0]);__CHECK_GL_ERROR__
 
         //从Pass节点拿到保存的Texture
         std::vector<std::pair<std::string,Texture2D*>> textures=material_->textures();
         for (int texture_index = 0; texture_index < textures.size(); ++texture_index) {
-            GLint u_texture_location= glGetUniformLocation(gl_program_id, textures[texture_index].first.c_str());
+            GLint u_texture_location= glGetUniformLocation(shader_program_handle, textures[texture_index].first.c_str());
             //激活纹理单元0
             glActiveTexture(GL_TEXTURE0+texture_index);
             //将加载的图片纹理句柄，绑定到纹理单元0的Texture2D上。
-            glBindTexture(GL_TEXTURE_2D,textures[texture_index].second->gl_texture_id());
+            glBindTexture(GL_TEXTURE_2D, textures[texture_index].second->texture_handle());
             //设置Shader程序从纹理单元0读取颜色数据
             glUniform1i(u_texture_location,texture_index);
         }
 
-        glBindVertexArray(vertex_array_object_);
+        glBindVertexArray(vertex_array_object_handle_);
         {
             StopWatch stopwatch;
             stopwatch.start();

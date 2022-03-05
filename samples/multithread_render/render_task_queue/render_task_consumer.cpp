@@ -66,7 +66,7 @@ void RenderTaskConsumer::CompileShader(RenderTaskBase* task_base){
         std::cout<<"compile fs error:"<<message<<std::endl;
     }
 
-    //创建GPU程序
+    //创建Shader程序
     GLuint program = glCreateProgram();
     //附加Shader
     glAttachShader(program, vertex_shader);
@@ -83,22 +83,22 @@ void RenderTaskConsumer::CompileShader(RenderTaskBase* task_base){
         std::cout<<"link error:"<<message<<std::endl;
     }
     //设置回传结果
-    task->result_program_id_=program;
+    task->result_shader_program_id_=program;
     task->return_result_set=true;
 }
 
-/// 创建缓冲区
+/// 创建VAO
 /// \param task_base
-void RenderTaskConsumer::CreateBuffer(RenderTaskBase* task_base){
-    RenderTaskCreateBuffer* task= dynamic_cast<RenderTaskCreateBuffer*>(task_base);
+void RenderTaskConsumer::CreateVAO(RenderTaskBase* task_base){
+    RenderTaskCreateVAO* task= dynamic_cast<RenderTaskCreateVAO*>(task_base);
     GLuint vbo_pos,vbo_color,vao;
 
     glGenVertexArrays(1, &vao);
     glGenBuffers(1, &vbo_pos);
     glGenBuffers(1, &vbo_color);
 
-    GLint vpos_location = glGetAttribLocation(task->program_id_, "a_pos");
-    GLint vcol_location = glGetAttribLocation(task->program_id_, "a_color");
+    GLint vpos_location = glGetAttribLocation(task->shader_program_id_, "a_pos");
+    GLint vcol_location = glGetAttribLocation(task->shader_program_id_, "a_color");
 
     glBindVertexArray(vao);
     glBindBuffer(GL_ARRAY_BUFFER, vbo_pos);
@@ -126,8 +126,8 @@ void RenderTaskConsumer::CreateBuffer(RenderTaskBase* task_base){
 void RenderTaskConsumer::DrawArray(RenderTaskBase* task_base, glm::mat4& projection, glm::mat4& view){
     RenderTaskDrawArray* task= dynamic_cast<RenderTaskDrawArray*>(task_base);
 
-    //指定GPU程序(就是指定顶点着色器、片段着色器)
-    glUseProgram(task->program_id_);
+    //指定Shader程序
+    glUseProgram(task->shader_program_id_);
     {
         glBindVertexArray(task->vao_);
 
@@ -180,8 +180,8 @@ void RenderTaskConsumer::ProcessTask() {
                     CompileShader(render_task);
                     break;
                 }
-                case RenderCommand::CREATE_BUFFER:{
-                    CreateBuffer(render_task);
+                case RenderCommand::CREATE_VAO:{
+                    CreateVAO(render_task);
                     break;
                 }
                 case RenderCommand::DRAW_ARRAY:{

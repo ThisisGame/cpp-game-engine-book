@@ -113,9 +113,9 @@ void GeneratorBufferObject()
         glBindBuffer(GL_ARRAY_BUFFER, kVBO);
         //将Shader变量(a_pos)和顶点坐标VBO句柄进行关联，最后的0表示数据偏移量。
         glVertexAttribPointer(vpos_location, 3, GL_FLOAT, false, sizeof(Vertex), 0);
-        //启用顶点Shader属性(a_color)，指定与顶点颜色数据进行关联
+        //启用顶点Shader属性(a_color)，指定与顶点颜色数据进行关联。
         glVertexAttribPointer(vcol_location, 4, GL_FLOAT, false, sizeof(Vertex), (void*)(sizeof(float)*3));
-        //将Shader变量(a_uv)和顶点UV坐标VBO句柄进行关联，最后的0表示数据偏移量。
+        //将Shader变量(a_uv)和顶点UV坐标VBO句柄进行关联。
         glVertexAttribPointer(a_uv_location, 2, GL_FLOAT, false, sizeof(Vertex), (void*)(sizeof(float)*(3+4)));
 
         glEnableVertexAttribArray(vpos_location);

@@ -501,10 +501,10 @@ void LuaBinding::BindLua() {
 
         sol_state_.new_usertype<Shader>("Shader",sol::call_constructor,sol::constructors<Shader()>(),
                                         "Parse", &Shader::Parse,
-                                        "CreateGPUProgram", &Shader::CreateGPUProgram,
+                                        "CreateShaderProgram", &Shader::CreateShaderProgram,
                                         "Active", &Shader::Active,
                                         "InActive", &Shader::InActive,
-                                        "gl_program_id", &Shader::gl_program_id,
+                                        "shader_program_handle", &Shader::shader_program_handle,
                                         "Find", &Shader::Find
         );
 
@@ -513,7 +513,7 @@ void LuaBinding::BindLua() {
                                            "width", &Texture2D::width,
                                            "height", &Texture2D::height,
                                            "gl_texture_format", &Texture2D::gl_texture_format,
-                                           "gl_texture_id", &Texture2D::gl_texture_id,
+                                           "texture_handle", &Texture2D::texture_handle,
                                            "LoadFromFile", &Texture2D::LoadFromFile
         );
 

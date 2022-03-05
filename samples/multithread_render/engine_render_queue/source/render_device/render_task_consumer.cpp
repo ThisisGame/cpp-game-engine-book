@@ -12,6 +12,8 @@
 #include "utils/debug.h"
 #include "render_task_type.h"
 #include "render_command.h"
+#include "gpu_resource_mapper.h"
+#include "utils/screen.h"
 
 void RenderTaskConsumer::Init(GLFWwindow *window) {
     window_ = window;
@@ -35,9 +37,7 @@ void RenderTaskConsumer::UpdateScreenSize(RenderTaskBase* task_base) {
     int width, height;
     glfwGetFramebufferSize(window_, &width, &height);
     glViewport(0, 0, width, height);
-    task->width_=width;
-    task->height_=height;
-    task->return_result_set=true;
+    Screen::set_width_height(width,height);
 }
 
 /// 编译、链接Shader
@@ -46,8 +46,9 @@ void RenderTaskConsumer::CompileShader(RenderTaskBase* task_base){
     RenderTaskCompileShader* task= dynamic_cast<RenderTaskCompileShader*>(task_base);
     const char* vertex_shader_text=task->vertex_shader_source_;
     const char* fragment_shader_text=task->fragment_shader_source_;
+
     //创建顶点Shader
-    GLuint vertex_shader = glCreateShader(GL_VERTEX_SHADER);
+    unsigned int vertex_shader = glCreateShader(GL_VERTEX_SHADER);
     //指定Shader源码
     glShaderSource(vertex_shader, 1, &vertex_shader_text, NULL);
     //编译Shader
@@ -59,11 +60,12 @@ void RenderTaskConsumer::CompileShader(RenderTaskBase* task_base){
     {
         GLchar message[256];
         glGetShaderInfoLog(vertex_shader, sizeof(message), 0, message);
-        std::cout<<"compile vs error:"<<message<<std::endl;
+        DEBUG_LOG_ERROR("compile vertex shader error:{}",message);
+        return;
     }
 
     //创建片段Shader
-    GLuint fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
+    unsigned int fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
     //指定Shader源码
     glShaderSource(fragment_shader, 1, &fragment_shader_text, NULL);
     //编译Shader
@@ -75,44 +77,150 @@ void RenderTaskConsumer::CompileShader(RenderTaskBase* task_base){
     {
         GLchar message[256];
         glGetShaderInfoLog(fragment_shader, sizeof(message), 0, message);
-        std::cout<<"compile fs error:"<<message<<std::endl;
+        DEBUG_LOG_ERROR("compile fragment shader error:{}",message);
+        return;
     }
 
-    //创建GPU程序
-    GLuint program = glCreateProgram();
+    //创建Shader程序
+    GLuint shader_program = glCreateProgram();
     //附加Shader
-    glAttachShader(program, vertex_shader);
-    glAttachShader(program, fragment_shader);
+    glAttachShader(shader_program, vertex_shader);
+    glAttachShader(shader_program, fragment_shader);
     //Link
-    glLinkProgram(program);
+    glLinkProgram(shader_program);
     //获取编译结果
     GLint link_status=GL_FALSE;
-    glGetProgramiv(program, GL_LINK_STATUS, &link_status);
+    glGetProgramiv(shader_program, GL_LINK_STATUS, &link_status);
     if (link_status == GL_FALSE)
     {
         GLchar message[256];
-        glGetProgramInfoLog(program, sizeof(message), 0, message);
-        std::cout<<"link error:"<<message<<std::endl;
+        glGetProgramInfoLog(shader_program, sizeof(message), 0, message);
+        DEBUG_LOG_ERROR("link shader error:{}",message);
+        return;
     }
-    //设置回传结果
-    task->result_program_id_=program;
-    task->return_result_set=true;
+    //将主线程中产生的Shader程序句柄 映射到 Shader程序
+    GPUResourceMapper::MapShaderProgram(task->shader_program_handle_, shader_program);
+}
+
+void RenderTaskConsumer::UseShaderProgram(RenderTaskBase *task_base) {
+    RenderTaskUseShaderProgram* task= dynamic_cast<RenderTaskUseShaderProgram*>(task_base);
+    GLuint shader_program = GPUResourceMapper::GetShaderProgram(task->shader_program_handle_);
+    glUseProgram(shader_program);
+}
+
+void RenderTaskConsumer::CreateCompressedTexImage2D(RenderTaskBase *task_base) {
+    RenderTaskCreateCompressedTexImage2D* task= dynamic_cast<RenderTaskCreateCompressedTexImage2D*>(task_base);
+
+    GLuint texture_id;
+
+    //1. 通知显卡创建纹理对象，返回句柄;
+    glGenTextures(1, &texture_id);__CHECK_GL_ERROR__
+
+    //2. 将纹理绑定到特定纹理目标;
+    glBindTexture(GL_TEXTURE_2D, texture_id);__CHECK_GL_ERROR__
+
+    //3. 将压缩纹理数据上传到GPU;
+    glCompressedTexImage2D(GL_TEXTURE_2D, 0, task->texture_format_, task->width_, task->height_, 0, task->compress_size_, task->data_);
+    __CHECK_GL_ERROR__
+
+    //4. 指定放大，缩小滤波方式，线性滤波，即放大缩小的插值方式;
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);__CHECK_GL_ERROR__
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);__CHECK_GL_ERROR__
+
+    //将主线程中产生的压缩纹理句柄 映射到 纹理
+    GPUResourceMapper::MapTexture(task->texture_handle_, texture_id);
+}
+
+void RenderTaskConsumer::CreateTexImage2D(RenderTaskBase *task_base) {
+    RenderTaskCreateTexImage2D* task= dynamic_cast<RenderTaskCreateTexImage2D*>(task_base);
+
+    GLuint texture_id;
+
+    //1. 通知显卡创建纹理对象，返回句柄;
+    glGenTextures(1, &texture_id);__CHECK_GL_ERROR__
+
+    //2. 将纹理绑定到特定纹理目标;
+    glBindTexture(GL_TEXTURE_2D, texture_id);__CHECK_GL_ERROR__
+
+    //3. 将图片rgb数据上传到GPU;
+    glTexImage2D(GL_TEXTURE_2D, 0, task->gl_texture_format_, task->width_, task->height_, 0, task->client_format_, task->data_type_, task->data_);__CHECK_GL_ERROR__
+
+    //4. 指定放大，缩小滤波方式，线性滤波，即放大缩小的插值方式;
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);__CHECK_GL_ERROR__
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);__CHECK_GL_ERROR__
+
+    //将主线程中产生的纹理句柄 映射到 纹理
+    GPUResourceMapper::MapTexture(task->texture_handle_, texture_id);
 }
 
 /// 删除Textures
 /// \param task_base
 void RenderTaskConsumer::DeleteTextures(RenderTaskBase *task_base) {
     RenderTaskDeleteTextures* task= dynamic_cast<RenderTaskDeleteTextures*>(task_base);
-    glDeleteTextures(task->texture_count_,task->texture_ids_);__CHECK_GL_ERROR__
+    //从句柄转换到纹理对象
+    GLuint* texture_id_array=new GLuint[task->texture_count_];
+    for (int i = 0; i < task->texture_count_; ++i) {
+        texture_id_array[i]=GPUResourceMapper::GetTexture(task->texture_handle_array_[i]);
+    }
+    glDeleteTextures(task->texture_count_,texture_id_array);__CHECK_GL_ERROR__
+    delete [] texture_id_array;
 }
 
 /// 局部更新纹理
 /// \param task_base
 void RenderTaskConsumer::UpdateTextureSubImage2D(RenderTaskBase *task_base) {
     RenderTaskUpdateTextureSubImage2D* task= dynamic_cast<RenderTaskUpdateTextureSubImage2D*>(task_base);
-    glBindTexture(GL_TEXTURE_2D, task->gl_texture_id_);__CHECK_GL_ERROR__
+    GLuint texture=GPUResourceMapper::GetTexture(task->texture_handle_);
+    glBindTexture(GL_TEXTURE_2D, texture);__CHECK_GL_ERROR__
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);__CHECK_GL_ERROR__
     glTexSubImage2D(GL_TEXTURE_2D,0,task->x_,task->y_,task->width_,task->height_,task->client_format_,task->data_type_,task->data_);__CHECK_GL_ERROR__
+}
+
+void RenderTaskConsumer::CreateVAO(RenderTaskBase *task_base) {
+    RenderTaskCreateVAO* task=dynamic_cast<RenderTaskCreateVAO*>(task_base);
+    GLuint shader_program=GPUResourceMapper::GetShaderProgram(task->shader_program_handle_);
+    GLint attribute_pos_location = glGetAttribLocation(shader_program, "a_pos");
+    GLint attribute_color_location = glGetAttribLocation(shader_program, "a_color");
+    GLint attribute_uv_location = glGetAttribLocation(shader_program, "a_uv");
+
+    GLuint vertex_buffer_object,element_buffer_object,vertex_array_object;
+    //在GPU上创建缓冲区对象
+    glGenBuffers(1,&vertex_buffer_object);
+    //将缓冲区对象指定为顶点缓冲区对象
+    glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer_object);
+    //上传顶点数据到缓冲区对象
+    glBufferData(GL_ARRAY_BUFFER, task->vertex_data_size_, task->vertex_data_, GL_DYNAMIC_DRAW);
+
+    //在GPU上创建缓冲区对象
+    glGenBuffers(1,&element_buffer_object);
+    //将缓冲区对象指定为顶点索引缓冲区对象
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_buffer_object);
+    //上传顶点索引数据到缓冲区对象
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, task->vertex_index_data_size_, task->vertex_index_data_, GL_STATIC_DRAW);
+
+    glGenVertexArrays(1,&vertex_array_object);
+
+    //设置VAO
+    glBindVertexArray(vertex_array_object);__CHECK_GL_ERROR__
+    {
+        //指定当前使用的VBO
+        glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer_object);__CHECK_GL_ERROR__
+        //将Shader变量(a_pos)和顶点坐标VBO句柄进行关联，最后的0表示数据偏移量。
+        glVertexAttribPointer(attribute_pos_location, 3, GL_FLOAT, false, task->vertex_data_stride_, 0);__CHECK_GL_ERROR__
+        //启用顶点Shader属性(a_color)，指定与顶点颜色数据进行关联
+        glVertexAttribPointer(attribute_color_location, 4, GL_FLOAT, false, task->vertex_data_stride_, (void*)(sizeof(float) * 3));__CHECK_GL_ERROR__
+        //将Shader变量(a_uv)和顶点UV坐标VBO句柄进行关联，最后的0表示数据偏移量。
+        glVertexAttribPointer(attribute_uv_location, 2, GL_FLOAT, false, task->vertex_data_stride_, (void*)(sizeof(float) * (3 + 4)));__CHECK_GL_ERROR__
+
+        glEnableVertexAttribArray(attribute_pos_location);__CHECK_GL_ERROR__
+        glEnableVertexAttribArray(attribute_color_location);__CHECK_GL_ERROR__
+        glEnableVertexAttribArray(attribute_uv_location);__CHECK_GL_ERROR__
+
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_buffer_object);__CHECK_GL_ERROR__
+    }
+    glBindBuffer(GL_ARRAY_BUFFER, 0);__CHECK_GL_ERROR__
+    //将主线程中产生的VAO句柄 映射到 VAO
+    GPUResourceMapper::MapTexture(task->vao_handle_, vertex_array_object);
 }
 
 /// 绘制
@@ -198,12 +306,27 @@ void RenderTaskConsumer::ProcessTask() {
                     CompileShader(render_task);
                     break;
                 }
+                case RenderCommand::USE_SHADER_PROGRAM:{
+                    break;
+                }
+                case RenderCommand::CREATE_COMPRESSED_TEX_IMAGE2D:{
+                    CreateCompressedTexImage2D(render_task);
+                    break;
+                }
+                case RenderCommand::CREATE_TEX_IMAGE2D:{
+                    CreateTexImage2D(render_task);
+                    break;
+                }
                 case RenderCommand::DELETE_TEXTURES:{
                     DeleteTextures(render_task);
                     break;
                 }
                 case RenderCommand::UPDATE_TEXTURE_SUB_IMAGE2D:{
                     UpdateTextureSubImage2D(render_task);
+                    break;
+                }
+                case RenderCommand::CREATE_VAO:{
+                    CreateVAO(render_task);
                     break;
                 }
                 case RenderCommand::DRAW_ARRAY:{

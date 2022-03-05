@@ -10,7 +10,7 @@
 /// 渲染任务生产者
 class RenderTaskProducer {
 public:
-    /// 发出阻塞型任务：编译Shader
+    /// 发出任务：编译Shader
     /// \param vertex_shader_source 顶点shader源码
     /// \param fragment_shader_source 片段shader源码
     /// \param shader_program_handle Shader程序句柄

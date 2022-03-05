@@ -197,7 +197,5 @@ void Application::Run() {
 }
 
 void Application::UpdateScreenSize() {
-    int width,height;
-    RenderTaskProducer::ProduceRenderTaskUpdateScreenSize(width,height);
-    Screen::set_width_height(width,height);
+    RenderTaskProducer::ProduceRenderTaskUpdateScreenSize();
 }

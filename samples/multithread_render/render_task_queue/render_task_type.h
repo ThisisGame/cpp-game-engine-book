@@ -47,18 +47,18 @@ public:
     const char* vertex_shader_source_= nullptr;
     const char* fragment_shader_source_= nullptr;
 public:
-    GLuint result_program_id_=0;//存储编译Shader结果的ProgramID
+    GLuint result_shader_program_id_=0;//存储编译Shader结果的程序ID
 };
 
-/// 创建缓冲区任务
-class RenderTaskCreateBuffer: public RenderTaskNeedReturnResult{
+/// 创建VAO
+class RenderTaskCreateVAO: public RenderTaskNeedReturnResult{
 public:
-    RenderTaskCreateBuffer(){
-        render_command_=RenderCommand::CREATE_BUFFER;
+    RenderTaskCreateVAO(){
+        render_command_=RenderCommand::CREATE_VAO;
     }
-    ~RenderTaskCreateBuffer(){}
+    ~RenderTaskCreateVAO(){}
 public:
-    GLuint program_id_=0;//着色器ProgramID
+    GLuint shader_program_id_=0;//着色器程序ID
     const void* positions_=nullptr;//顶点位置
     GLsizei   positions_stride_=0;//顶点数据大小
     const void* colors_=nullptr;//顶点颜色
@@ -75,7 +75,7 @@ public:
     }
     ~RenderTaskDrawArray(){}
 public:
-    GLuint program_id_=0;//着色器ProgramID
+    GLuint shader_program_id_=0;//着色器程序ID
     GLuint vao_=0;
 };
 

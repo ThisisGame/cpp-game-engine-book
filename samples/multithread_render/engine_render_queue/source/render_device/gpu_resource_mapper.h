@@ -23,6 +23,11 @@ public:
         return ++vao_index_;
     }
 
+    /// 生成Texture句柄
+    static unsigned int GenerateTextureHandle(){
+        return ++texture_index_;
+    }
+
     /// 映射Shader程序
     /// \param shader_program_handle
     /// \param shader_program_id
@@ -35,6 +40,11 @@ public:
     /// \param vao_id
     static void MapVAO(unsigned int vao_handle, GLuint vao_id){
         vao_map_[vao_handle] = vao_id;
+    }
+
+    /// 映射Texture
+    static void MapTexture(unsigned int texture_handle, GLuint texture_id){
+        texture_map_[texture_handle] = texture_id;
     }
 
     /// 获取Shader程序
@@ -51,12 +61,19 @@ public:
         return vao_map_[vao_handle];
     }
 
+    /// 获取Texture
+    static GLuint GetTexture(unsigned int texture_handle){
+        return texture_map_[texture_handle];
+    }
+
 private:
     static unsigned int shader_program_index_;//Shader程序索引
     static unsigned int vao_index_;//VAO索引
+    static unsigned int texture_index_;//Texture索引
 
     static std::unordered_map<unsigned int, GLuint> shader_program_map_;//Shader程序映射表
     static std::unordered_map<unsigned int, GLuint> vao_map_;//VAO映射表
+    static std::unordered_map<unsigned int, GLuint> texture_map_;//Texture映射表
 };
 
 

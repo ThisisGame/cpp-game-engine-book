@@ -27,7 +27,8 @@ public:
     /// \param client_format 可用的格式参照 https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glTexImage2D.xhtml
     /// \param data_type
     /// \param data
-    void UpdateSubImage(int x,int y,int width,int height,unsigned int client_format,unsigned int data_type,unsigned char* data);
+    /// \param data_size
+    void UpdateSubImage(int x,int y,int width,int height,unsigned int client_format,unsigned int data_type,unsigned char* data,unsigned int data_size);
 
 public:
     //cpt文件头
@@ -45,14 +46,14 @@ public:
     int width(){return width_;}
     int height(){return height_;}
     GLenum gl_texture_format(){return gl_texture_format_;}
-    GLuint gl_texture_id(){return gl_texture_id_;}
+    unsigned int texture_handle(){return texture_handle_;}
 
 private:
     int mipmap_level_;
     int width_;
     int height_;
     GLenum gl_texture_format_;
-    GLuint gl_texture_id_;//纹理ID
+    unsigned int texture_handle_;//纹理ID
 
 public:
     /// 加载一个图片文件
@@ -67,8 +68,9 @@ public:
     /// \param client_format 在内存中储存的格式  可用的格式参照 https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glTexImage2D.xhtml
     /// \param data_type 上传的数据类型
     /// \param data 上传的图像数据，函数里不会删除这份数据，需要自己管理。
+    /// \param data_size 上传的图像数据大小
     /// \return
-    static Texture2D* Create(unsigned short width,unsigned short height,unsigned int server_format,unsigned int client_format,unsigned int data_type,unsigned char* data);
+    static Texture2D* Create(unsigned short width,unsigned short height,unsigned int server_format,unsigned int client_format,unsigned int data_type,unsigned char* data,unsigned int data_size);
 };
 
 #endif //UNTITLED_TEXTURE2D_H

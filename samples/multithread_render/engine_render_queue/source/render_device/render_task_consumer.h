@@ -38,6 +38,18 @@ private:
     /// \param task_base
     static void CompileShader(RenderTaskBase *task_base);
 
+    /// 使用Shader程序
+    static void UseShaderProgram(RenderTaskBase *task_base);
+
+    /// 创建压缩纹理
+    /// \param task_base
+    static void CreateCompressedTexImage2D(RenderTaskBase *task_base);
+
+    /// 创建普通纹理
+    /// \param task_base
+    static void CreateTexImage2D(RenderTaskBase *task_base);
+
+
     /// 删除Textures
     /// \param task_base
     static void DeleteTextures(RenderTaskBase *task_base);
@@ -45,6 +57,10 @@ private:
     /// 局部更新纹理
     /// \param task_base
     static void UpdateTextureSubImage2D(RenderTaskBase *task_base);
+
+    /// 创建VAO
+    /// \param task_base
+    static void RenderTaskConsumer::CreateVAO(RenderTaskBase* task_base);
 
     /// 绘制
     /// \param task_base

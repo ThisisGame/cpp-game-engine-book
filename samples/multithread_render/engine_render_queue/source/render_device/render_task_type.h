@@ -33,19 +33,16 @@ public:
 };
 
 /// 更新游戏画面尺寸任务
-class RenderTaskUpdateScreenSize:public RenderTaskNeedReturnResult{
+class RenderTaskUpdateScreenSize:public RenderTaskBase{
 public:
     RenderTaskUpdateScreenSize(){
         render_command_=RenderCommand::UPDATE_SCREEN_SIZE;
     }
     ~RenderTaskUpdateScreenSize(){}
-public:
-    int width_;//画面宽度
-    int height_;//画面高度
 };
 
 /// 编译着色器任务
-class RenderTaskCompileShader: public RenderTaskNeedReturnResult{
+class RenderTaskCompileShader: public RenderTaskBase{
 public:
     RenderTaskCompileShader(){
         render_command_=RenderCommand::COMPILE_SHADER;
@@ -54,8 +51,55 @@ public:
 public:
     const char* vertex_shader_source_= nullptr;
     const char* fragment_shader_source_= nullptr;
+    unsigned int shader_program_handle_= 0;
+};
+
+/// 使用着色器程序任务
+class RenderTaskUseShaderProgram: public RenderTaskBase{
 public:
-    GLuint result_program_id_=0;//存储编译Shader结果的ProgramID
+    RenderTaskUseShaderProgram(){
+        render_command_=RenderCommand::USE_SHADER_PROGRAM;
+    }
+    ~RenderTaskUseShaderProgram(){}
+public:
+    unsigned int shader_program_handle_= 0;
+};
+
+/// 创建压缩纹理任务
+class RenderTaskCreateCompressedTexImage2D: public RenderTaskBase{
+public:
+    RenderTaskCreateCompressedTexImage2D(){
+        render_command_=RenderCommand::CREATE_COMPRESSED_TEX_IMAGE2D;
+    }
+    ~RenderTaskCreateCompressedTexImage2D(){
+        free(data_);
+    }
+public:
+    unsigned int texture_handle_= 0;
+    int width_;
+    int height_;
+    unsigned int texture_format_;
+    int compress_size_;
+    unsigned char* data_;
+};
+
+/// 创建纹理任务
+class RenderTaskCreateTexImage2D: public RenderTaskBase{
+public:
+    RenderTaskCreateTexImage2D(){
+        render_command_=RenderCommand::CREATE_TEX_IMAGE2D;
+    }
+    ~RenderTaskCreateTexImage2D(){
+        free(data_);
+    }
+public:
+    unsigned int texture_handle_= 0;
+    int width_;
+    int height_;
+    unsigned int gl_texture_format_;//GL内部纹理格式
+    unsigned int client_format_;//客户端纹理格式
+    unsigned int data_type_;
+    unsigned char* data_;
 };
 
 /// 删除Texture任务
@@ -65,11 +109,11 @@ public:
         render_command_=RenderCommand::DELETE_TEXTURES;
     }
     ~RenderTaskDeleteTextures(){
-        delete [] texture_ids_;
+        free(texture_handle_array_);
     }
 public:
-    GLuint* texture_ids_=nullptr;//存储TextureID的数组
-    int texture_count_=0;//Texture数量
+    unsigned int* texture_handle_array_=nullptr;//存储纹理句柄的数组
+    int texture_count_=0;//纹理数量
 };
 
 /// 局部更新Texture任务
@@ -78,14 +122,34 @@ public:
     RenderTaskUpdateTextureSubImage2D(){
         render_command_=RenderCommand::UPDATE_TEXTURE_SUB_IMAGE2D;
     }
-    ~RenderTaskUpdateTextureSubImage2D(){}
+    ~RenderTaskUpdateTextureSubImage2D(){
+        free(data_);
+    }
 
 public:
-    GLuint gl_texture_id_;//纹理ID
+    GLuint texture_handle_;//纹理句柄
     int x_,y_,width_,height_;
     unsigned int client_format_;
     unsigned int data_type_;
-    unsigned char *data_;
+    unsigned char* data_;
+    unsigned int data_size_;
+};
+
+/// 创建VAO任务
+class RenderTaskCreateVAO: public RenderTaskBase{
+public:
+    RenderTaskCreateVAO(){
+        render_command_=RenderCommand::CREATE_VAO;
+    }
+    ~RenderTaskCreateVAO(){}
+public:
+    unsigned int shader_program_handle_=0;//着色器程序句柄
+    unsigned int vao_handle_=0;//VAO句柄
+    unsigned int vertex_data_size_;//顶点数据大小
+    unsigned int vertex_data_stride_;
+    void* vertex_data_;//顶点数据
+    unsigned int vertex_index_data_size_;//顶点索引数据大小
+    void* vertex_index_data_;//顶点索引数据
 };
 
 /// 绘制任务
@@ -96,11 +160,8 @@ public:
     }
     ~RenderTaskDrawArray(){}
 public:
-    GLuint program_id_=0;//着色器ProgramID
-    const void* positions_=nullptr;//顶点位置
-    GLsizei   positions_stride_=0;//顶点数据大小
-    const void* colors_=nullptr;//顶点颜色
-    GLsizei   colors_stride_=0;//颜色数据大小
+    GLuint shader_program_handle_=0;//着色器程序句柄
+    GLuint vao_handle_=0;//VAO句柄
 };
 
 /// 特殊任务：帧结束标志，渲染线程收到这个任务后，刷新缓冲区，设置帧结束。
