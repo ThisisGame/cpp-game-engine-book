@@ -69,7 +69,21 @@ public:
     /// \param vertex_data
     /// \param vertex_index_data_size
     /// \param vertex_index_data
-    static void ProduceRenderTaskCreateVAO(unsigned int shader_program_handle,unsigned int vao_handle,unsigned int vertex_data_size,unsigned int vertex_data_stride,void* vertex_data,unsigned int vertex_index_data_size,void* vertex_index_data);
+    static void ProduceRenderTaskCreateVAO(unsigned int shader_program_handle,unsigned int vao_handle,unsigned int vbo_handle,unsigned int vertex_data_size,unsigned int vertex_data_stride,void* vertex_data,unsigned int vertex_index_data_size,void* vertex_index_data);
+
+    /// 发出任务：更新VBO
+    /// \param vbo_handle
+    /// \param vertex_data_size
+    /// \param vertex_data
+    static void ProduceRenderTaskUpdateVBOSubData(unsigned int vbo_handle,unsigned int vertex_data_size,void* vertex_data);
+
+    /// 发出任务：设置状态,开启或关闭
+    static void ProduceRenderTaskSetEnableState(unsigned int state,bool enable);
+
+    /// 发出任务：设置混合函数
+    /// \param source_blending_factor 源混合因子
+    /// \param destination_blending_factor 目标混合因子
+    static void ProduceRenderTaskSetBlenderFunc(unsigned int source_blending_factor,unsigned int destination_blending_factor);
 
     /// 发出特殊任务：渲染结束
     static void ProduceRenderTaskEndFrame();

@@ -146,6 +146,5 @@ void MeshRenderer::Render() {
         }
         glBindVertexArray(0);__CHECK_GL_ERROR__
     }
-    glUseProgram(GL_NONE);__CHECK_GL_ERROR__
 }
 

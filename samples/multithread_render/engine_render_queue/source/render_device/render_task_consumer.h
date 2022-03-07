@@ -60,7 +60,19 @@ private:
 
     /// 创建VAO
     /// \param task_base
-    static void RenderTaskConsumer::CreateVAO(RenderTaskBase* task_base);
+    static void CreateVAO(RenderTaskBase* task_base);
+
+    /// 更新VBO
+    /// \param task_base
+    static void UpdateVBOSubData(RenderTaskBase* task_base);
+
+    /// 设置状态,开启或关闭
+    /// \param task_base
+    static void SetEnableState(RenderTaskBase* task_base);
+
+    /// 设置混合函数
+    /// \param task_base
+    static void SetBlendingFunc(RenderTaskBase* task_base);
 
     /// 绘制
     /// \param task_base

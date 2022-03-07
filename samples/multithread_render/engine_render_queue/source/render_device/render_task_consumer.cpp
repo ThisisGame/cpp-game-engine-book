@@ -7,7 +7,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/transform2.hpp>
 #include <glm/gtx/euler_angles.hpp>
-
+#include "timetool/stopwatch.h"
 #include "VertexData.h"
 #include "utils/debug.h"
 #include "render_task_type.h"
@@ -190,6 +190,8 @@ void RenderTaskConsumer::CreateVAO(RenderTaskBase *task_base) {
     glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer_object);
     //上传顶点数据到缓冲区对象
     glBufferData(GL_ARRAY_BUFFER, task->vertex_data_size_, task->vertex_data_, GL_DYNAMIC_DRAW);
+    //将主线程中产生的VBO句柄 映射到 VBO
+    GPUResourceMapper::MapTexture(task->vbo_handle_, vertex_buffer_object);
 
     //在GPU上创建缓冲区对象
     glGenBuffers(1,&element_buffer_object);
@@ -221,6 +223,31 @@ void RenderTaskConsumer::CreateVAO(RenderTaskBase *task_base) {
     glBindBuffer(GL_ARRAY_BUFFER, 0);__CHECK_GL_ERROR__
     //将主线程中产生的VAO句柄 映射到 VAO
     GPUResourceMapper::MapTexture(task->vao_handle_, vertex_array_object);
+}
+
+void RenderTaskConsumer::UpdateVBOSubData(RenderTaskBase *task_base) {
+    RenderTaskUpdateVBOSubData* task=dynamic_cast<RenderTaskUpdateVBOSubData*>(task_base);
+    glBindBuffer(GL_ARRAY_BUFFER, task->vbo_handle_);__CHECK_GL_ERROR__
+    timetool::StopWatch stopwatch;
+    stopwatch.start();
+    //更新Buffer数据
+    glBufferSubData(GL_ARRAY_BUFFER,0,task->vertex_data_size_,task->vertex_data_);__CHECK_GL_ERROR__
+    stopwatch.stop();
+    DEBUG_LOG_INFO("glBufferSubData cost {}",stopwatch.microseconds());
+}
+
+void RenderTaskConsumer::SetEnableState(RenderTaskBase *task_base) {
+    RenderTaskSetEnableState* task= dynamic_cast<RenderTaskSetEnableState*>(task_base);
+    if(task->enable_){
+        glEnable(task->state_);__CHECK_GL_ERROR__
+    }else{
+        glDisable(task->state_);__CHECK_GL_ERROR__
+    }
+}
+
+void RenderTaskConsumer::SetBlendingFunc(RenderTaskBase *task_base) {
+    RenderTaskSetBlenderFunc* task= dynamic_cast<RenderTaskSetBlenderFunc*>(task_base);
+    glBlendFunc(task->source_blending_factor_, task->destination_blending_factor_);__CHECK_GL_ERROR__
 }
 
 /// 绘制
@@ -327,6 +354,10 @@ void RenderTaskConsumer::ProcessTask() {
                 }
                 case RenderCommand::CREATE_VAO:{
                     CreateVAO(render_task);
+                    break;
+                }
+                case RenderCommand::SET_ENABLE_STATE:{
+                    SetEnableState(render_task);
                     break;
                 }
                 case RenderCommand::DRAW_ARRAY:{

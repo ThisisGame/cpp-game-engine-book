@@ -159,6 +159,5 @@ void MeshRenderer::Render() {
             component->OnPostRender();
         });
     }
-    glUseProgram(GL_NONE);__CHECK_GL_ERROR__
 }
 

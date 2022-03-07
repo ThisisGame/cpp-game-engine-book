@@ -141,15 +141,58 @@ public:
     RenderTaskCreateVAO(){
         render_command_=RenderCommand::CREATE_VAO;
     }
-    ~RenderTaskCreateVAO(){}
+    ~RenderTaskCreateVAO(){
+        free(vertex_data_);
+        free(vertex_index_data_);
+    }
 public:
     unsigned int shader_program_handle_=0;//着色器程序句柄
     unsigned int vao_handle_=0;//VAO句柄
+    unsigned int vbo_handle_=0;//VBO句柄
     unsigned int vertex_data_size_;//顶点数据大小
     unsigned int vertex_data_stride_;
     void* vertex_data_;//顶点数据
     unsigned int vertex_index_data_size_;//顶点索引数据大小
     void* vertex_index_data_;//顶点索引数据
+};
+
+/// 更新VBO数据
+class RenderTaskUpdateVBOSubData:public RenderTaskBase{
+public:
+    RenderTaskUpdateVBOSubData(){
+        render_command_=RenderCommand::UPDATE_VBO_SUB_DATA;
+    }
+    ~RenderTaskUpdateVBOSubData(){
+        free(vertex_data_);
+    }
+public:
+    unsigned int vbo_handle_=0;//VBO句柄
+    unsigned int vertex_data_size_;//顶点数据大小
+    void* vertex_data_;//顶点数据
+};
+
+/// 设置状态，开启或关闭
+class RenderTaskSetEnableState: public RenderTaskBase{
+public:
+    RenderTaskSetEnableState(){
+        render_command_=RenderCommand::SET_ENABLE_STATE;
+    }
+    ~RenderTaskSetEnableState(){}
+public:
+    unsigned int state_;//OpenGL状态
+    bool enable_;//OpenGL状态值
+};
+
+/// 设置混合函数
+class RenderTaskSetBlenderFunc: public RenderTaskBase{
+public:
+    RenderTaskSetBlenderFunc(){
+        render_command_=RenderCommand::SET_BLENDER_FUNC;
+    }
+    ~RenderTaskSetBlenderFunc(){}
+public:
+    unsigned int source_blending_factor_;//源混合因子
+    unsigned int destination_blending_factor_;//目标混合因子
 };
 
 /// 绘制任务

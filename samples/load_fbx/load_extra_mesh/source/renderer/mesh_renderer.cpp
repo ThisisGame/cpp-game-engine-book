@@ -180,6 +180,5 @@ void MeshRenderer::Render() {
             }
         });
     }
-    glUseProgram(GL_NONE);__CHECK_GL_ERROR__
 }
 

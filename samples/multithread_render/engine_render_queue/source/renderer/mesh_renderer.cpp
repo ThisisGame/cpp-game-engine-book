@@ -83,17 +83,21 @@ void MeshRenderer::Render() {
 
     if(vertex_array_object_handle_ == 0){
         vertex_array_object_handle_=GPUResourceMapper::GenerateVAOHandle();
+        vertex_buffer_object_handle_=GPUResourceMapper::GenerateVBOHandle();
         //发出任务：创建VAO
-        RenderTaskProducer::ProduceRenderTaskCreateVAO(shader_program_handle, vertex_array_object_handle_, mesh->vertex_num_ * sizeof(MeshFilter::Vertex), sizeof(MeshFilter::Vertex), mesh->vertex_data_, mesh->vertex_index_num_ * sizeof(unsigned short), mesh->vertex_index_data_);
+        RenderTaskProducer::ProduceRenderTaskCreateVAO(shader_program_handle, vertex_array_object_handle_,vertex_buffer_object_handle_, mesh->vertex_num_ * sizeof(MeshFilter::Vertex), sizeof(MeshFilter::Vertex), mesh->vertex_data_, mesh->vertex_index_num_ * sizeof(unsigned short), mesh->vertex_index_data_);
     }
     else{
-        glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer_object_);__CHECK_GL_ERROR__
+        glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer_object_handle_);__CHECK_GL_ERROR__
         StopWatch stopwatch;
         stopwatch.start();
         //更新Buffer数据
         glBufferSubData(GL_ARRAY_BUFFER,0,mesh->vertex_num_ * sizeof(MeshFilter::Vertex),mesh->vertex_data_);__CHECK_GL_ERROR__
         stopwatch.stop();
         DEBUG_LOG_INFO("glBufferSubData cost {}",stopwatch.microseconds());
+
+        //发出任务：更新VBO
+        RenderTaskProducer::ProduceRenderTaskUpdateVBOSubData(vertex_buffer_object_handle_, mesh->vertex_num_ * sizeof(MeshFilter::Vertex),mesh->vertex_data_);
     }
 
     glUseProgram(shader_program_handle);
@@ -111,13 +115,13 @@ void MeshRenderer::Render() {
         });
 
         if(current_camera->camera_use_for()==Camera::CameraUseFor::SCENE){
-            glEnable(GL_DEPTH_TEST);__CHECK_GL_ERROR__
+            RenderTaskProducer::ProduceRenderTaskSetEnableState(GL_DEPTH_TEST,true);
         }else{
-            glDisable(GL_DEPTH_TEST);__CHECK_GL_ERROR__
+            RenderTaskProducer::ProduceRenderTaskSetEnableState(GL_DEPTH_TEST,false);
         }
-        glEnable(GL_CULL_FACE);__CHECK_GL_ERROR__//开启背面剔除
-        glEnable(GL_BLEND);__CHECK_GL_ERROR__
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);__CHECK_GL_ERROR__
+        RenderTaskProducer::ProduceRenderTaskSetEnableState(GL_CULL_FACE,true);
+        RenderTaskProducer::ProduceRenderTaskSetEnableState(GL_BLEND,true);
+        RenderTaskProducer::ProduceRenderTaskSetBlenderFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
         //上传mvp矩阵
         glUniformMatrix4fv(glGetUniformLocation(shader_program_handle, "u_mvp"), 1, GL_FALSE, &mvp[0][0]);__CHECK_GL_ERROR__
@@ -156,6 +160,5 @@ void MeshRenderer::Render() {
             }
         });
     }
-    glUseProgram(GL_NONE);__CHECK_GL_ERROR__
 }
 
