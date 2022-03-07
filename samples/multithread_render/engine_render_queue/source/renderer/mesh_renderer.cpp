@@ -88,14 +88,6 @@ void MeshRenderer::Render() {
         RenderTaskProducer::ProduceRenderTaskCreateVAO(shader_program_handle, vertex_array_object_handle_,vertex_buffer_object_handle_, mesh->vertex_num_ * sizeof(MeshFilter::Vertex), sizeof(MeshFilter::Vertex), mesh->vertex_data_, mesh->vertex_index_num_ * sizeof(unsigned short), mesh->vertex_index_data_);
     }
     else{
-        glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer_object_handle_);__CHECK_GL_ERROR__
-        StopWatch stopwatch;
-        stopwatch.start();
-        //更新Buffer数据
-        glBufferSubData(GL_ARRAY_BUFFER,0,mesh->vertex_num_ * sizeof(MeshFilter::Vertex),mesh->vertex_data_);__CHECK_GL_ERROR__
-        stopwatch.stop();
-        DEBUG_LOG_INFO("glBufferSubData cost {}",stopwatch.microseconds());
-
         //发出任务：更新VBO
         RenderTaskProducer::ProduceRenderTaskUpdateVBOSubData(vertex_buffer_object_handle_, mesh->vertex_num_ * sizeof(MeshFilter::Vertex),mesh->vertex_data_);
     }

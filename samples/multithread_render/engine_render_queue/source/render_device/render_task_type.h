@@ -195,6 +195,19 @@ public:
     unsigned int destination_blending_factor_;//目标混合因子
 };
 
+/// 上传4x4矩阵
+class RenderTaskUploadUniformMatrix4fv: public RenderTaskBase{
+public:
+    RenderTaskUploadUniformMatrix4fv(){
+        render_command_=RenderCommand::UPLOAD_UNIFORM_MATRIX_4FV;
+    }
+    ~RenderTaskUploadUniformMatrix4fv(){}
+public:
+    unsigned int shader_program_handle_=0;//着色器程序句柄
+    unsigned int uniform_location_=0;//uniform变量位置
+    float* matrix_data_=nullptr;//4x4矩阵数据
+};
+
 /// 绘制任务
 class RenderTaskDrawArray: public RenderTaskBase {
 public:

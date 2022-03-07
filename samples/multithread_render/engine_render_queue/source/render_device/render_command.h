@@ -19,6 +19,7 @@ enum RenderCommand {
     UPDATE_TEXTURE_SUB_IMAGE2D,//局部更新Texture
     SET_ENABLE_STATE,//设置状态,开启或关闭
     SET_BLENDER_FUNC,//设置混合函数
+    UPLOAD_UNIFORM_MATRIX_4FV,//上传4x4矩阵
     DRAW_ARRAY,//绘制
     END_FRAME,//帧结束
 };
