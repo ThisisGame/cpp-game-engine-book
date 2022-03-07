@@ -114,31 +114,19 @@ void MeshRenderer::Render() {
         RenderTaskProducer::ProduceRenderTaskSetEnableState(GL_CULL_FACE,true);
         RenderTaskProducer::ProduceRenderTaskSetEnableState(GL_BLEND,true);
         RenderTaskProducer::ProduceRenderTaskSetBlenderFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
         //上传mvp矩阵
-        glUniformMatrix4fv(glGetUniformLocation(shader_program_handle, "u_mvp"), 1, GL_FALSE, &mvp[0][0]);__CHECK_GL_ERROR__
+        RenderTaskProducer::ProduceRenderTaskSetUniformMatrix4fv(shader_program_handle, "u_mvp", false,&mvp[0][0],sizeof(mvp));
 
         //从Pass节点拿到保存的Texture
         std::vector<std::pair<std::string,Texture2D*>> textures=material_->textures();
         for (int texture_index = 0; texture_index < textures.size(); ++texture_index) {
-            GLint u_texture_location= glGetUniformLocation(shader_program_handle, textures[texture_index].first.c_str());
-            //激活纹理单元0
-            glActiveTexture(GL_TEXTURE0+texture_index);
-            //将加载的图片纹理句柄，绑定到纹理单元0的Texture2D上。
-            glBindTexture(GL_TEXTURE_2D, textures[texture_index].second->texture_handle());
-            //设置Shader程序从纹理单元0读取颜色数据
-            glUniform1i(u_texture_location,texture_index);
+            //激活纹理单元,将加载的图片纹理句柄，绑定到纹理单元上。
+            RenderTaskProducer::ProduceRenderTaskActiveAndBindTexture(GL_TEXTURE0+texture_index,textures[texture_index].second->texture_handle());
+            //设置Shader程序从纹理单元读取颜色数据
+            RenderTaskProducer::ProduceRenderTaskSetUniform1i(shader_program_handle,textures[texture_index].first.c_str(),texture_index);
         }
-
-        glBindVertexArray(vertex_array_object_handle_);
-        {
-            StopWatch stopwatch;
-            stopwatch.start();
-            glDrawElements(GL_TRIANGLES,mesh->vertex_index_num_,GL_UNSIGNED_SHORT,0);//使用顶点索引进行绘制，最后的0表示数据偏移量。
-            stopwatch.stop();
-            DEBUG_LOG_INFO("glDrawElements cost {}",stopwatch.microseconds());
-        }
-        glBindVertexArray(0);__CHECK_GL_ERROR__
+        // 绑定VAO并绘制
+        RenderTaskProducer::ProduceRenderTaskBindVAOAndDrawElements(vertex_array_object_handle_,mesh->vertex_index_num_);
 
         // PostRender
         game_object()->ForeachLuaComponent([](sol::table lua_component_instance_table){

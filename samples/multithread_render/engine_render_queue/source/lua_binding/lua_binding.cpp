@@ -457,7 +457,7 @@ void LuaBinding::BindLua() {
                                         "projection_mat4",&Camera::projection_mat4,
                                         "set_clear_color",&Camera::set_clear_color,
                                         "set_clear_flag",&Camera::set_clear_flag,
-                                        "Clear",&Camera::Clear,
+                                        "SetClearFlagAndClearColorBuffer",&Camera::Clear,
                                         "depth",&Camera::depth,
                                         "set_depth",&Camera::set_depth,
                                         "culling_mask",&Camera::culling_mask,

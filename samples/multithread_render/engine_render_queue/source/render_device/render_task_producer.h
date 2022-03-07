@@ -85,6 +85,54 @@ public:
     /// \param destination_blending_factor 目标混合因子
     static void ProduceRenderTaskSetBlenderFunc(unsigned int source_blending_factor,unsigned int destination_blending_factor);
 
+    /// 发出任务：设置4x4矩阵
+    /// \param shader_program_handle
+    /// \param uniform_name
+    /// \param transpose
+    /// \param value
+    /// \param value_data_size
+    static void ProduceRenderTaskSetUniformMatrix4fv(unsigned int shader_program_handle, const char* uniform_name, bool transpose, float* matrix_data, int matrix_data_size);
+
+    /// 激活并绑定纹理
+    /// \param texture_uint
+    /// \param texture_handle
+    static void ProduceRenderTaskActiveAndBindTexture(unsigned int texture_uint,unsigned int texture_handle);
+
+    /// 上传1个int值
+    /// \param shader_program_handle
+    /// \param uniform_name
+    /// \param value
+    static void ProduceRenderTaskSetUniform1i(unsigned int shader_program_handle, const char* uniform_name, int value);
+
+    /// 绑定VAO并绘制
+    /// \param vao_handle
+    /// \param inex_count
+    static void ProduceRenderTaskBindVAOAndDrawElements(unsigned int vao_handle,unsigned int vertex_index_num);
+
+    /// 设置clear_flag并且清除颜色缓冲
+    /// \param clear_flag
+    /// \param clear_color_r
+    /// \param clear_color_g
+    /// \param clear_color_b
+    /// \param clear_color_a
+    static void ProduceRenderTaskSetClearFlagAndClearColorBuffer(unsigned int clear_flag, float clear_color_r, float clear_color_g, float clear_color_b, float clear_color_a);
+
+    /// 设置模板测试函数
+    /// \param stencil_func
+    /// \param stencil_ref
+    /// \param stencil_mask
+    static void ProduceRenderTaskSetStencilFunc(unsigned int stencil_func,int stencil_ref,unsigned int stencil_mask);
+
+    /// 设置模板操作
+    /// \param fail_op_
+    /// \param z_test_fail_op_
+    /// \param z_test_pass_op_
+    static void ProduceRenderTaskSetStencilOp(unsigned int fail_op_,unsigned int z_test_fail_op_,unsigned int z_test_pass_op_);
+
+    /// 设置清除模板缓冲值
+    static void ProduceRenderTaskSetStencilBufferClearValue(int clear_value);
+
+
     /// 发出特殊任务：渲染结束
     static void ProduceRenderTaskEndFrame();
 };

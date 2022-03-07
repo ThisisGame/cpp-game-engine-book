@@ -5,6 +5,7 @@
 #ifndef UNTITLED_RENDER_TASK_TYPE_H
 #define UNTITLED_RENDER_TASK_TYPE_H
 
+#include <stdlib.h>
 #include "render_command.h"
 
 /// 渲染任务基类
@@ -127,7 +128,7 @@ public:
     }
 
 public:
-    GLuint texture_handle_;//纹理句柄
+    unsigned int texture_handle_;//纹理句柄
     int x_,y_,width_,height_;
     unsigned int client_format_;
     unsigned int data_type_;
@@ -196,28 +197,111 @@ public:
 };
 
 /// 上传4x4矩阵
-class RenderTaskUploadUniformMatrix4fv: public RenderTaskBase{
+class RenderTaskSetUniformMatrix4fv: public RenderTaskBase{
 public:
-    RenderTaskUploadUniformMatrix4fv(){
-        render_command_=RenderCommand::UPLOAD_UNIFORM_MATRIX_4FV;
+    RenderTaskSetUniformMatrix4fv(){
+        render_command_=RenderCommand::SET_UNIFORM_MATRIX_4FV;
     }
-    ~RenderTaskUploadUniformMatrix4fv(){}
+    ~RenderTaskSetUniformMatrix4fv(){
+        free(uniform_name_);
+        free(matrix_data_);
+    }
 public:
     unsigned int shader_program_handle_=0;//着色器程序句柄
-    unsigned int uniform_location_=0;//uniform变量位置
+    char* uniform_name_= nullptr;//uniform变量名
+    bool transpose_=false;//是否转置
     float* matrix_data_=nullptr;//4x4矩阵数据
 };
 
-/// 绘制任务
-class RenderTaskDrawArray: public RenderTaskBase {
+/// 激活并绑定纹理
+class RenderTaskActiveAndBindTexture:public RenderTaskBase{
 public:
-    RenderTaskDrawArray(){
-        render_command_=RenderCommand::DRAW_ARRAY;
+    RenderTaskActiveAndBindTexture(){
+        render_command_=RenderCommand::ACTIVE_AND_BIND_TEXTURE;
     }
-    ~RenderTaskDrawArray(){}
+    ~RenderTaskActiveAndBindTexture(){}
 public:
-    GLuint shader_program_handle_=0;//着色器程序句柄
-    GLuint vao_handle_=0;//VAO句柄
+    unsigned int texture_uint_;//纹理单元
+    unsigned int texture_handle_;//纹理句柄
+};
+
+/// 上传1个int值
+class RenderTaskSetUniform1i:public RenderTaskBase{
+public:
+    RenderTaskSetUniform1i(){
+        render_command_=RenderCommand::SET_UNIFORM_1I;
+    }
+    ~RenderTaskSetUniform1i(){
+        free(uniform_name_);
+    }
+public:
+    unsigned int shader_program_handle_;//shader程序句柄
+    char* uniform_name_=nullptr;//uniform变量名
+    int value_;//目标值
+};
+
+/// 绑定VAO并绘制
+class RenderTaskBindVAOAndDrawElements:public RenderTaskBase{
+public:
+    RenderTaskBindVAOAndDrawElements(){
+        render_command_=RenderCommand::BIND_VAO_AND_DRAW_ELEMENTS;
+    }
+    ~RenderTaskBindVAOAndDrawElements(){}
+public:
+    unsigned int vao_handle_;
+    unsigned int vertex_index_num_;//索引数量
+};
+
+/// 清除
+class RenderTaskClear:public RenderTaskBase{
+public:
+    RenderTaskClear(){
+        render_command_=RenderCommand::SET_CLEAR_FLAG_AND_CLEAR_COLOR_BUFFER;
+    }
+    ~RenderTaskClear(){}
+public:
+    unsigned int clear_flag_;
+    float clear_color_r_;
+    float clear_color_g_;
+    float clear_color_b_;
+    float clear_color_a_;
+};
+
+/// 设置模板测试函数
+class RenderTaskSetStencilFunc:public RenderTaskBase{
+public:
+    RenderTaskSetStencilFunc(){
+        render_command_=RenderCommand::SET_STENCIL_FUNC;
+    }
+    ~RenderTaskSetStencilFunc(){}
+public:
+    unsigned int stencil_func_;
+    int stencil_ref_;
+    unsigned int stencil_mask_;
+};
+
+/// 设置模板操作
+class RenderTaskSetStencilOp:public RenderTaskBase{
+public:
+    RenderTaskSetStencilOp(){
+        render_command_=RenderCommand::SET_STENCIL_OP;
+    }
+    ~RenderTaskSetStencilOp(){}
+public:
+    unsigned int fail_op_;
+    unsigned int z_test_fail_op_;
+    unsigned int z_test_pass_op_;
+};
+
+/// 设置清除模板缓冲值
+class RenderTaskSetStencilBufferClearValue:public RenderTaskBase{
+public:
+    RenderTaskSetStencilBufferClearValue(){
+        render_command_=RenderCommand::SET_STENCIL_BUFFER_CLEAR_VALUE;
+    }
+    ~RenderTaskSetStencilBufferClearValue(){}
+public:
+    int clear_value_;
 };
 
 /// 特殊任务：帧结束标志，渲染线程收到这个任务后，刷新缓冲区，设置帧结束。

@@ -22,6 +22,7 @@ void Debug::Init() {
         // you can even set multi_sink logger as default logger
         spdlog::set_default_logger(std::make_shared<spdlog::logger>("multi_sink", spdlog::sinks_init_list({console_sink, file_sink})));
         spdlog::set_pattern("[source %s] [function %!] [line %#] [%^%l%$] %v");
+        spdlog::flush_on(spdlog::level::trace);// flush on every log call.
 
         DEBUG_LOG_INFO("spdlog init success");
     }

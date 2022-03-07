@@ -4,16 +4,27 @@
 
 #include "render_task_consumer.h"
 #include <iostream>
+#ifdef WIN32
+// 避免出现APIENTRY重定义警告。
+// freetype引用了windows.h，里面定义了APIENTRY。
+// glfw3.h会判断是否APIENTRY已经定义然后再定义一次。
+// 但是从编译顺序来看glfw3.h在freetype之前被引用了，判断不到 Windows.h中的定义，所以会出现重定义。
+// 所以在 glfw3.h之前必须引用  Windows.h。
+#include <Windows.h>
+#endif
+#define GLFW_INCLUDE_NONE
+#include <GLFW/glfw3.h>
 #include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtx/transform2.hpp>
-#include <glm/gtx/euler_angles.hpp>
 #include "timetool/stopwatch.h"
-#include "VertexData.h"
 #include "utils/debug.h"
 #include "render_task_type.h"
 #include "render_command.h"
 #include "gpu_resource_mapper.h"
+#include "render_task_queue.h"
 #include "utils/screen.h"
+
+GLFWwindow* RenderTaskConsumer::window_;
+std::thread RenderTaskConsumer::render_thread_;
 
 void RenderTaskConsumer::Init(GLFWwindow *window) {
     window_ = window;
@@ -25,10 +36,6 @@ void RenderTaskConsumer::Exit() {
     if (render_thread_.joinable()) {
         render_thread_.join();//等待渲染线程结束
     }
-}
-
-void RenderTaskConsumer::PushRenderTask(RenderTaskBase* render_task) {
-    render_task_queue_.push(render_task);
 }
 
 /// 更新游戏画面尺寸
@@ -227,7 +234,8 @@ void RenderTaskConsumer::CreateVAO(RenderTaskBase *task_base) {
 
 void RenderTaskConsumer::UpdateVBOSubData(RenderTaskBase *task_base) {
     RenderTaskUpdateVBOSubData* task=dynamic_cast<RenderTaskUpdateVBOSubData*>(task_base);
-    glBindBuffer(GL_ARRAY_BUFFER, task->vbo_handle_);__CHECK_GL_ERROR__
+    GLuint vbo=GPUResourceMapper::GetVBO(task->vbo_handle_);
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);__CHECK_GL_ERROR__
     timetool::StopWatch stopwatch;
     stopwatch.start();
     //更新Buffer数据
@@ -250,40 +258,63 @@ void RenderTaskConsumer::SetBlendingFunc(RenderTaskBase *task_base) {
     glBlendFunc(task->source_blending_factor_, task->destination_blending_factor_);__CHECK_GL_ERROR__
 }
 
-/// 绘制
-/// \param task_base
-/// \param projection
-/// \param view
-void RenderTaskConsumer::DrawArray(RenderTaskBase* task_base, glm::mat4& projection, glm::mat4& view){
-    RenderTaskDrawArray* task= dynamic_cast<RenderTaskDrawArray*>(task_base);
-    //坐标系变换
-    glm::mat4 trans = glm::translate(glm::vec3(0,0,0)); //不移动顶点坐标;
-    glm::mat4 rotation = glm::eulerAngleYXZ(glm::radians(0.f), glm::radians(0.f), glm::radians(0.f)); //使用欧拉角旋转;
-    glm::mat4 scale = glm::scale(glm::vec3(2.0f, 2.0f, 2.0f)); //缩放;
-    glm::mat4 model = trans*scale*rotation;
-
-    glm::mat4 mvp=projection*view*model;
-
-    //指定GPU程序(就是指定顶点着色器、片段着色器)
-    glUseProgram(task->program_id_);
-    //获取shader属性ID
-    GLint mvp_location = glGetUniformLocation(task->program_id_, "u_mvp");
-    GLint vpos_location = glGetAttribLocation(task->program_id_, "a_pos");
-    GLint vcol_location = glGetAttribLocation(task->program_id_, "a_color");
-
-    //启用顶点Shader属性(a_pos)，指定与顶点坐标数据进行关联
-    glEnableVertexAttribArray(vpos_location);
-    glVertexAttribPointer(vpos_location, 3, GL_FLOAT, false, task->positions_stride_, task->positions_);
-
-    //启用顶点Shader属性(a_color)，指定与顶点颜色数据进行关联
-    glEnableVertexAttribArray(vcol_location);
-    glVertexAttribPointer(vcol_location, 3, GL_FLOAT, false, task->colors_stride_, task->colors_);
-
+void RenderTaskConsumer::SetUniformMatrix4fv(RenderTaskBase *task_base) {
+    RenderTaskSetUniformMatrix4fv* task=dynamic_cast<RenderTaskSetUniformMatrix4fv*>(task_base);
     //上传mvp矩阵
-    glUniformMatrix4fv(mvp_location, 1, GL_FALSE, &mvp[0][0]);
+    GLuint shader_program=GPUResourceMapper::GetShaderProgram(task->shader_program_handle_);
+    glUniformMatrix4fv(glGetUniformLocation(shader_program, task->uniform_name_), 1, task->transpose_, task->matrix_data_);__CHECK_GL_ERROR__
+}
 
-    //上传顶点数据并进行绘制
-    glDrawArrays(GL_TRIANGLES, 0, 3);
+void RenderTaskConsumer::ActiveAndBindTexture(RenderTaskBase *task_base) {
+    RenderTaskActiveAndBindTexture* task=dynamic_cast<RenderTaskActiveAndBindTexture*>(task_base);
+    //激活纹理单元
+    glActiveTexture(task->texture_uint_);
+    //将加载的图片纹理句柄，绑定到纹理单元0的Texture2D上。
+    GLuint texture=GPUResourceMapper::GetTexture(task->texture_handle_);
+    glBindTexture(GL_TEXTURE_2D, texture);
+}
+
+void RenderTaskConsumer::SetUniform1i(RenderTaskBase *task_base) {
+    RenderTaskSetUniform1i* task=dynamic_cast<RenderTaskSetUniform1i*>(task_base);
+    //设置Shader程序从纹理单元读取颜色数据
+    GLuint shader_program=GPUResourceMapper::GetShaderProgram(task->shader_program_handle_);
+    GLint uniform_location= glGetUniformLocation(shader_program, task->uniform_name_);
+    glUniform1i(uniform_location, task->value_);
+}
+
+void RenderTaskConsumer::BindVAOAndDrawElements(RenderTaskBase *task_base) {
+    RenderTaskBindVAOAndDrawElements* task=dynamic_cast<RenderTaskBindVAOAndDrawElements*>(task_base);
+    GLuint vao=GPUResourceMapper::GetVAO(task->vao_handle_);
+    glBindVertexArray(vao);
+    {
+        glDrawElements(GL_TRIANGLES,task->vertex_index_num_,GL_UNSIGNED_SHORT,0);//使用顶点索引进行绘制，最后的0表示数据偏移量。
+    }
+    glBindVertexArray(0);__CHECK_GL_ERROR__
+}
+
+/// 清除
+/// \param task_base
+void RenderTaskConsumer::SetClearFlagAndClearColorBuffer(RenderTaskBase* task_base){
+    RenderTaskClear* task=dynamic_cast<RenderTaskClear*>(task_base);
+    glClear(task->clear_flag_);__CHECK_GL_ERROR__
+    glClearColor(task->clear_color_r_,task->clear_color_g_,task->clear_color_b_,task->clear_color_a_);__CHECK_GL_ERROR__
+}
+
+/// 设置模板测试函数
+void RenderTaskConsumer::SetStencilFunc(RenderTaskBase* task_base){
+    RenderTaskSetStencilFunc* task=dynamic_cast<RenderTaskSetStencilFunc*>(task_base);
+    glStencilFunc(task->stencil_func_, task->stencil_ref_, task->stencil_mask_);__CHECK_GL_ERROR__
+}
+
+/// 设置模板操作
+void RenderTaskConsumer::SetStencilOp(RenderTaskBase* task_base){
+    RenderTaskSetStencilOp* task=dynamic_cast<RenderTaskSetStencilOp*>(task_base);
+    glStencilOp(task->fail_op_, task->z_test_fail_op_, task->z_test_pass_op_);__CHECK_GL_ERROR__
+}
+
+void RenderTaskConsumer::SetStencilBufferClearValue(RenderTaskBase* task_base){
+    RenderTaskSetStencilBufferClearValue* task=dynamic_cast<RenderTaskSetStencilBufferClearValue*>(task_base);
+    glClearStencil(task->clear_value_);__CHECK_GL_ERROR__
 }
 
 /// 结束一帧
@@ -319,10 +350,10 @@ void RenderTaskConsumer::ProcessTask() {
         projection=glm::perspective(glm::radians(60.f),ratio,1.f,1000.f);
 
         while(true){
-            if(render_task_queue_.empty()){//渲染线程一直等待主线程发出任务。
+            if(RenderTaskQueue::Empty()){//渲染线程一直等待主线程发出任务。
                 continue;
             }
-            RenderTaskBase* render_task = *(render_task_queue_.front());
+            RenderTaskBase* render_task = RenderTaskQueue::Front();
             switch (render_task->render_command_) {//根据主线程发来的命令，做不同的处理
                 case RenderCommand::NONE:break;
                 case RenderCommand::UPDATE_SCREEN_SIZE:{
@@ -360,13 +391,37 @@ void RenderTaskConsumer::ProcessTask() {
                     SetEnableState(render_task);
                     break;
                 }
-                case RenderCommand::DRAW_ARRAY:{
-                    DrawArray(render_task, projection, view);
+                case RenderCommand::SET_UNIFORM_MATRIX_4FV:{
+                    SetUniformMatrix4fv(render_task);
+                    break;
+                }
+                case RenderCommand::ACTIVE_AND_BIND_TEXTURE:{
+                    ActiveAndBindTexture(render_task);
+                    break;
+                }
+                case RenderCommand::SET_UNIFORM_1I:{
+                    SetUniform1i(render_task);
+                    break;
+                }
+                case RenderCommand::SET_CLEAR_FLAG_AND_CLEAR_COLOR_BUFFER:{
+                    SetClearFlagAndClearColorBuffer(render_task);
+                    break;
+                }
+                case RenderCommand::BIND_VAO_AND_DRAW_ELEMENTS:{
+                    BindVAOAndDrawElements(render_task);
+                    break;
+                }
+                case RenderCommand::SET_STENCIL_FUNC:{
+                    SetStencilFunc(render_task);
+                    break;
+                }
+                case RenderCommand::SET_STENCIL_OP:{
+                    SetStencilOp(render_task);
                     break;
                 }
                 case RenderCommand::END_FRAME:break;
             }
-            render_task_queue_.pop();
+            RenderTaskQueue::Pop();
             //如果这个任务不需要返回参数，那么用完就删掉。
             if(render_task->need_return_result==false){
                 delete render_task;
@@ -379,6 +434,6 @@ void RenderTaskConsumer::ProcessTask() {
                 break;
             }
         }
-        std::cout<<"task in queue:"<<render_task_queue_.size()<<std::endl;
+        std::cout<<"task in queue:"<<RenderTaskQueue::Size()<<std::endl;
     }
 }

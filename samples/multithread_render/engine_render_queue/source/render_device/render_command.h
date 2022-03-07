@@ -19,8 +19,14 @@ enum RenderCommand {
     UPDATE_TEXTURE_SUB_IMAGE2D,//局部更新Texture
     SET_ENABLE_STATE,//设置状态,开启或关闭
     SET_BLENDER_FUNC,//设置混合函数
-    UPLOAD_UNIFORM_MATRIX_4FV,//上传4x4矩阵
-    DRAW_ARRAY,//绘制
+    SET_UNIFORM_MATRIX_4FV,//上传4x4矩阵
+    ACTIVE_AND_BIND_TEXTURE,//激活并绑定纹理
+    SET_UNIFORM_1I,//上传1个int值
+    BIND_VAO_AND_DRAW_ELEMENTS,//绑定VAO并绘制
+    SET_CLEAR_FLAG_AND_CLEAR_COLOR_BUFFER,//设置clear_flag并且清除颜色缓冲
+    SET_STENCIL_FUNC,//设置模板测试函数
+    SET_STENCIL_OP,//设置模板操作
+    SET_STENCIL_BUFFER_CLEAR_VALUE,//设置清除模板缓冲值
     END_FRAME,//帧结束
 };
 

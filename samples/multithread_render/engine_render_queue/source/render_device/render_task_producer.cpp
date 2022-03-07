@@ -135,6 +135,76 @@ void RenderTaskProducer::ProduceRenderTaskSetBlenderFunc(unsigned int source_ble
     RenderTaskQueue::Push(task);
 }
 
+void RenderTaskProducer::ProduceRenderTaskSetUniformMatrix4fv(unsigned int shader_program_handle,
+                                                              const char *uniform_name, bool transpose, float *matrix_data,
+                                                              int matrix_data_size) {
+    RenderTaskSetUniformMatrix4fv* task=new RenderTaskSetUniformMatrix4fv();
+    task->shader_program_handle_=shader_program_handle;
+    task->uniform_name_= static_cast<char *>(malloc(strlen(uniform_name) + 1));
+    strcpy(task->uniform_name_, uniform_name);
+    task->transpose_=transpose;
+    //拷贝数据
+    task->matrix_data_= (float*)malloc(matrix_data_size);
+    memcpy(task->matrix_data_, matrix_data, matrix_data_size);
+    RenderTaskQueue::Push(task);
+}
+
+void RenderTaskProducer::ProduceRenderTaskActiveAndBindTexture(unsigned int texture_uint, unsigned int texture_handle) {
+    RenderTaskActiveAndBindTexture* task=new RenderTaskActiveAndBindTexture();
+    task->texture_uint_=texture_uint;
+    task->texture_handle_=texture_handle;
+    RenderTaskQueue::Push(task);
+}
+
+void RenderTaskProducer::ProduceRenderTaskSetUniform1i(unsigned int shader_program_handle, const char *uniform_name,
+                                                       int value) {
+    RenderTaskSetUniform1i* task=new RenderTaskSetUniform1i();
+    task->shader_program_handle_=shader_program_handle;
+    task->uniform_name_= static_cast<char *>(malloc(strlen(uniform_name) + 1));
+    strcpy(task->uniform_name_, uniform_name);
+    task->value_=value;
+    RenderTaskQueue::Push(task);
+}
+
+void RenderTaskProducer::ProduceRenderTaskBindVAOAndDrawElements(unsigned int vao_handle, unsigned int vertex_index_num) {
+    RenderTaskBindVAOAndDrawElements* task=new RenderTaskBindVAOAndDrawElements();
+    task->vao_handle_=vao_handle;
+    task->vertex_index_num_=vertex_index_num;
+    RenderTaskQueue::Push(task);
+}
+
+void RenderTaskProducer::ProduceRenderTaskSetClearFlagAndClearColorBuffer(unsigned int clear_flag, float clear_color_r, float clear_color_g, float clear_color_b, float clear_color_a){
+    RenderTaskClear* task=new RenderTaskClear();
+    task->clear_flag_=clear_flag;
+    task->clear_color_r_=clear_color_r;
+    task->clear_color_g_=clear_color_g;
+    task->clear_color_b_=clear_color_b;
+    task->clear_color_a_=clear_color_a;
+    RenderTaskQueue::Push(task);
+}
+
+void RenderTaskProducer::ProduceRenderTaskSetStencilFunc(unsigned int stencil_func,int stencil_ref,unsigned int stencil_mask){
+    RenderTaskSetStencilFunc* task=new RenderTaskSetStencilFunc();
+    task->stencil_func_=stencil_func;
+    task->stencil_ref_=stencil_ref;
+    task->stencil_mask_=stencil_mask;
+    RenderTaskQueue::Push(task);
+}
+
+void RenderTaskProducer::ProduceRenderTaskSetStencilOp(unsigned int fail_op_,unsigned int z_test_fail_op_,unsigned int z_test_pass_op_){
+    RenderTaskSetStencilOp* task=new RenderTaskSetStencilOp();
+    task->fail_op_=fail_op_;
+    task->z_test_fail_op_=z_test_fail_op_;
+    task->z_test_pass_op_=z_test_pass_op_;
+    RenderTaskQueue::Push(task);
+}
+
+void RenderTaskProducer::ProduceRenderTaskSetStencilBufferClearValue(int clear_value){
+    RenderTaskSetStencilBufferClearValue* task=new RenderTaskSetStencilBufferClearValue();
+    task->clear_value_=clear_value;
+    RenderTaskQueue::Push(task);
+}
+
 void RenderTaskProducer::ProduceRenderTaskEndFrame() {
     RenderTaskEndFrame* render_task_frame_end=new RenderTaskEndFrame();
     RenderTaskQueue::Push(render_task_frame_end);

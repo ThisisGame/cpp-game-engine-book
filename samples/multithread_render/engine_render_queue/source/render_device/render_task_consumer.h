@@ -6,11 +6,6 @@
 #define UNTITLED_RENDER_TASK_CONSUMER_H
 
 #include <thread>
-#include <glad/gl.h>
-#define GLFW_INCLUDE_NONE
-#include <GLFW/glfw3.h>
-#include <spscqueue/include/rigtorp/SPSCQueue.h>
-#include <glm/glm.hpp>
 
 class GLFWwindow;
 class RenderTaskBase;
@@ -21,11 +16,6 @@ public:
     static void Init(GLFWwindow* window);
 
     static void Exit();
-
-    /// 添加任务到队列
-    /// \param render_task
-    static void PushRenderTask(RenderTaskBase* render_task);
-
 private:
     /// 线程主函数：死循环处理渲染任务
     static void ProcessTask();
@@ -74,11 +64,34 @@ private:
     /// \param task_base
     static void SetBlendingFunc(RenderTaskBase* task_base);
 
-    /// 绘制
+    /// 上传uniform矩阵
     /// \param task_base
-    /// \param projection
-    /// \param view
-    static void DrawArray(RenderTaskBase *task_base, glm::mat4 &projection, glm::mat4 &view);
+    static void SetUniformMatrix4fv(RenderTaskBase* task_base);
+
+    /// 激活并绑定纹理
+    /// \param task_base
+    static void ActiveAndBindTexture(RenderTaskBase* task_base);
+
+    /// 上传1个int值
+    /// \param task_base
+    static void SetUniform1i(RenderTaskBase* task_base);
+
+    /// 绑定VAO并绘制
+    /// \param task_base
+    static void BindVAOAndDrawElements(RenderTaskBase* task_base);
+
+    /// 设置clear_flag并且清除颜色缓冲
+    /// \param task_base
+    static void SetClearFlagAndClearColorBuffer(RenderTaskBase* task_base);
+
+    /// 设置模板测试函数
+    static void SetStencilFunc(RenderTaskBase* task_base);
+
+    /// 设置模板操作
+    static void SetStencilOp(RenderTaskBase* task_base);
+
+    /// 设置清除模板缓冲值
+    static void SetStencilBufferClearValue(RenderTaskBase* task_base);
 
     /// 结束一帧
     /// \param task_base
@@ -86,7 +99,6 @@ private:
 private:
     static GLFWwindow* window_;
     static std::thread render_thread_;//渲染线程
-    static rigtorp::SPSCQueue<RenderTaskBase*> render_task_queue_;//渲染任务队列
 };
 
 

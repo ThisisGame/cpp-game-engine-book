@@ -9,6 +9,7 @@
 #include <rttr/registration>
 #include "component/game_object.h"
 #include "component/transform.h"
+#include "render_device/render_task_producer.h"
 
 
 using namespace rttr;
@@ -52,8 +53,8 @@ void Camera::SetOrthographic(float left,float right,float bottom,float top,float
 }
 
 void Camera::Clear() {
-    glClear(clear_flag_);
-    glClearColor(clear_color_.r,clear_color_.g,clear_color_.b,clear_color_.a);
+    RenderTaskProducer::ProduceRenderTaskSetClearFlagAndClearColorBuffer(clear_flag_, clear_color_.r, clear_color_.g,
+                                                                         clear_color_.b, clear_color_.a);
 }
 
 void Camera::set_depth(unsigned char depth) {
