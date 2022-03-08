@@ -322,6 +322,7 @@ void RenderTaskConsumer::SetStencilBufferClearValue(RenderTaskBase* task_base){
 /// \param task_base
 void RenderTaskConsumer::EndFrame(RenderTaskBase* task_base) {
     RenderTaskEndFrame *task = dynamic_cast<RenderTaskEndFrame *>(task_base);
+    glfwSwapBuffers(window_);
     task->return_result_set=true;
 }
 
@@ -433,7 +434,10 @@ void RenderTaskConsumer::ProcessTask() {
                     SetStencilBufferClearValue(render_task);
                     break;
                 }
-                case RenderCommand::END_FRAME:break;
+                case RenderCommand::END_FRAME:{
+                    EndFrame(render_task);
+                    break;
+                }
             }
 
             RenderTaskQueue::Pop();
@@ -444,8 +448,6 @@ void RenderTaskConsumer::ProcessTask() {
             }
             //如果是帧结束任务，就交换缓冲区。
             if(render_command==RenderCommand::END_FRAME){
-                EndFrame(render_task);
-                glfwSwapBuffers(window_);
                 break;
             }
         }
