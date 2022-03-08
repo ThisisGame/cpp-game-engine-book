@@ -174,7 +174,8 @@ void RenderTaskConsumer::ProcessTask() {
                 continue;
             }
             RenderTaskBase* render_task = RenderTaskQueue::Front();
-            switch (render_task->render_command_) {//根据主线程发来的命令，做不同的处理
+            RenderCommand render_command=render_task->render_command_;
+            switch (render_command) {//根据主线程发来的命令，做不同的处理
                 case RenderCommand::NONE:break;
                 case RenderCommand::COMPILE_SHADER:{
                     CompileShader(render_task);
@@ -197,7 +198,7 @@ void RenderTaskConsumer::ProcessTask() {
             }
 
             //如果是帧结束任务，就交换缓冲区。
-            if(render_task->render_command_==RenderCommand::END_FRAME){
+            if(render_command==RenderCommand::END_FRAME){
                 EndFrame(render_task);
                 glfwSwapBuffers(window_);
                 break;

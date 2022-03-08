@@ -314,8 +314,6 @@ public:
         render_command_=RenderCommand::END_FRAME;
     }
     ~RenderTaskEndFrame(){}
-public:
-    bool render_thread_frame_end_=false;//渲染线程结束一帧
 };
 
 

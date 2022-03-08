@@ -198,7 +198,7 @@ void RenderTaskConsumer::CreateVAO(RenderTaskBase *task_base) {
     //上传顶点数据到缓冲区对象
     glBufferData(GL_ARRAY_BUFFER, task->vertex_data_size_, task->vertex_data_, GL_DYNAMIC_DRAW);__CHECK_GL_ERROR__
     //将主线程中产生的VBO句柄 映射到 VBO
-    GPUResourceMapper::MapTexture(task->vbo_handle_, vertex_buffer_object);
+    GPUResourceMapper::MapVBO(task->vbo_handle_, vertex_buffer_object);
 
     //在GPU上创建缓冲区对象
     glGenBuffers(1,&element_buffer_object);__CHECK_GL_ERROR__
@@ -253,7 +253,7 @@ void RenderTaskConsumer::SetEnableState(RenderTaskBase *task_base) {
     }
 }
 
-void RenderTaskConsumer::SetBlendingFunc(RenderTaskBase *task_base) {
+void RenderTaskConsumer::SetBlendFunc(RenderTaskBase *task_base) {
     RenderTaskSetBlenderFunc* task= dynamic_cast<RenderTaskSetBlenderFunc*>(task_base);
     glBlendFunc(task->source_blending_factor_, task->destination_blending_factor_);__CHECK_GL_ERROR__
 }
@@ -322,7 +322,6 @@ void RenderTaskConsumer::SetStencilBufferClearValue(RenderTaskBase* task_base){
 /// \param task_base
 void RenderTaskConsumer::EndFrame(RenderTaskBase* task_base) {
     RenderTaskEndFrame *task = dynamic_cast<RenderTaskEndFrame *>(task_base);
-    task->render_thread_frame_end_=true;
     task->return_result_set=true;
 }
 
@@ -355,7 +354,8 @@ void RenderTaskConsumer::ProcessTask() {
                 continue;
             }
             RenderTaskBase* render_task = RenderTaskQueue::Front();
-            switch (render_task->render_command_) {//根据主线程发来的命令，做不同的处理
+            RenderCommand render_command=render_task->render_command_;
+            switch (render_command) {//根据主线程发来的命令，做不同的处理
                 case RenderCommand::NONE:break;
                 case RenderCommand::UPDATE_SCREEN_SIZE:{
                     UpdateScreenSize(render_task);
@@ -389,8 +389,16 @@ void RenderTaskConsumer::ProcessTask() {
                     CreateVAO(render_task);
                     break;
                 }
+                case RenderCommand::UPDATE_VBO_SUB_DATA:{
+                    UpdateVBOSubData(render_task);
+                    break;
+                }
                 case RenderCommand::SET_ENABLE_STATE:{
                     SetEnableState(render_task);
+                    break;
+                }
+                case RenderCommand::SET_BLENDER_FUNC:{
+                    SetBlendFunc(render_task);
                     break;
                 }
                 case RenderCommand::SET_UNIFORM_MATRIX_4FV:{
@@ -421,16 +429,21 @@ void RenderTaskConsumer::ProcessTask() {
                     SetStencilOp(render_task);
                     break;
                 }
+                case RenderCommand::SET_STENCIL_BUFFER_CLEAR_VALUE:{
+                    SetStencilBufferClearValue(render_task);
+                    break;
+                }
                 case RenderCommand::END_FRAME:break;
             }
+
             RenderTaskQueue::Pop();
+
             //如果这个任务不需要返回参数，那么用完就删掉。
             if(render_task->need_return_result==false){
                 delete render_task;
             }
-
             //如果是帧结束任务，就交换缓冲区。
-            if(render_task->render_command_==RenderCommand::END_FRAME){
+            if(render_command==RenderCommand::END_FRAME){
                 EndFrame(render_task);
                 glfwSwapBuffers(window_);
                 break;

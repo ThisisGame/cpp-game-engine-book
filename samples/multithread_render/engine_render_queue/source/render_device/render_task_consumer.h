@@ -62,7 +62,7 @@ private:
 
     /// 设置混合函数
     /// \param task_base
-    static void SetBlendingFunc(RenderTaskBase* task_base);
+    static void SetBlendFunc(RenderTaskBase* task_base);
 
     /// 上传uniform矩阵
     /// \param task_base
