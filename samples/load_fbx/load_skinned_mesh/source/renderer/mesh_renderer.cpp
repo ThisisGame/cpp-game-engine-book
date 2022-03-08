@@ -154,7 +154,8 @@ void MeshRenderer::Render() {
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);__CHECK_GL_ERROR__
 
         //上传mvp矩阵
-        glUniformMatrix4fv(glGetUniformLocation(gl_program_id, "u_mvp"), 1, GL_FALSE, &mvp[0][0]);__CHECK_GL_ERROR__
+        GLint uniform_location=glGetUniformLocation(gl_program_id, "u_mvp");
+        glUniformMatrix4fv(uniform_location, 1, GL_FALSE, &mvp[0][0]);__CHECK_GL_ERROR__
 
         //从Pass节点拿到保存的Texture
         std::vector<std::pair<std::string,Texture2D*>> textures=material_->textures();

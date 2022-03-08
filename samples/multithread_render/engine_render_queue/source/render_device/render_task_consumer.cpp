@@ -55,11 +55,11 @@ void RenderTaskConsumer::CompileShader(RenderTaskBase* task_base){
     const char* fragment_shader_text=task->fragment_shader_source_;
 
     //创建顶点Shader
-    unsigned int vertex_shader = glCreateShader(GL_VERTEX_SHADER);
+    unsigned int vertex_shader = glCreateShader(GL_VERTEX_SHADER);__CHECK_GL_ERROR__
     //指定Shader源码
-    glShaderSource(vertex_shader, 1, &vertex_shader_text, NULL);
+    glShaderSource(vertex_shader, 1, &vertex_shader_text, NULL);__CHECK_GL_ERROR__
     //编译Shader
-    glCompileShader(vertex_shader);
+    glCompileShader(vertex_shader);__CHECK_GL_ERROR__
     //获取编译结果
     GLint compile_status=GL_FALSE;
     glGetShaderiv(vertex_shader, GL_COMPILE_STATUS, &compile_status);
@@ -72,11 +72,11 @@ void RenderTaskConsumer::CompileShader(RenderTaskBase* task_base){
     }
 
     //创建片段Shader
-    unsigned int fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
+    unsigned int fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);__CHECK_GL_ERROR__
     //指定Shader源码
-    glShaderSource(fragment_shader, 1, &fragment_shader_text, NULL);
+    glShaderSource(fragment_shader, 1, &fragment_shader_text, NULL);__CHECK_GL_ERROR__
     //编译Shader
-    glCompileShader(fragment_shader);
+    glCompileShader(fragment_shader);__CHECK_GL_ERROR__
     //获取编译结果
     compile_status=GL_FALSE;
     glGetShaderiv(fragment_shader, GL_COMPILE_STATUS, &compile_status);
@@ -89,12 +89,12 @@ void RenderTaskConsumer::CompileShader(RenderTaskBase* task_base){
     }
 
     //创建Shader程序
-    GLuint shader_program = glCreateProgram();
+    GLuint shader_program = glCreateProgram();__CHECK_GL_ERROR__
     //附加Shader
-    glAttachShader(shader_program, vertex_shader);
-    glAttachShader(shader_program, fragment_shader);
+    glAttachShader(shader_program, vertex_shader);__CHECK_GL_ERROR__
+    glAttachShader(shader_program, fragment_shader);__CHECK_GL_ERROR__
     //Link
-    glLinkProgram(shader_program);
+    glLinkProgram(shader_program);__CHECK_GL_ERROR__
     //获取编译结果
     GLint link_status=GL_FALSE;
     glGetProgramiv(shader_program, GL_LINK_STATUS, &link_status);
@@ -112,7 +112,7 @@ void RenderTaskConsumer::CompileShader(RenderTaskBase* task_base){
 void RenderTaskConsumer::UseShaderProgram(RenderTaskBase *task_base) {
     RenderTaskUseShaderProgram* task= dynamic_cast<RenderTaskUseShaderProgram*>(task_base);
     GLuint shader_program = GPUResourceMapper::GetShaderProgram(task->shader_program_handle_);
-    glUseProgram(shader_program);
+    glUseProgram(shader_program);__CHECK_GL_ERROR__
 }
 
 void RenderTaskConsumer::CreateCompressedTexImage2D(RenderTaskBase *task_base) {
@@ -186,28 +186,28 @@ void RenderTaskConsumer::UpdateTextureSubImage2D(RenderTaskBase *task_base) {
 void RenderTaskConsumer::CreateVAO(RenderTaskBase *task_base) {
     RenderTaskCreateVAO* task=dynamic_cast<RenderTaskCreateVAO*>(task_base);
     GLuint shader_program=GPUResourceMapper::GetShaderProgram(task->shader_program_handle_);
-    GLint attribute_pos_location = glGetAttribLocation(shader_program, "a_pos");
-    GLint attribute_color_location = glGetAttribLocation(shader_program, "a_color");
-    GLint attribute_uv_location = glGetAttribLocation(shader_program, "a_uv");
+    GLint attribute_pos_location = glGetAttribLocation(shader_program, "a_pos");__CHECK_GL_ERROR__
+    GLint attribute_color_location = glGetAttribLocation(shader_program, "a_color");__CHECK_GL_ERROR__
+    GLint attribute_uv_location = glGetAttribLocation(shader_program, "a_uv");__CHECK_GL_ERROR__
 
     GLuint vertex_buffer_object,element_buffer_object,vertex_array_object;
     //在GPU上创建缓冲区对象
-    glGenBuffers(1,&vertex_buffer_object);
+    glGenBuffers(1,&vertex_buffer_object);__CHECK_GL_ERROR__
     //将缓冲区对象指定为顶点缓冲区对象
-    glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer_object);
+    glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer_object);__CHECK_GL_ERROR__
     //上传顶点数据到缓冲区对象
-    glBufferData(GL_ARRAY_BUFFER, task->vertex_data_size_, task->vertex_data_, GL_DYNAMIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, task->vertex_data_size_, task->vertex_data_, GL_DYNAMIC_DRAW);__CHECK_GL_ERROR__
     //将主线程中产生的VBO句柄 映射到 VBO
     GPUResourceMapper::MapTexture(task->vbo_handle_, vertex_buffer_object);
 
     //在GPU上创建缓冲区对象
-    glGenBuffers(1,&element_buffer_object);
+    glGenBuffers(1,&element_buffer_object);__CHECK_GL_ERROR__
     //将缓冲区对象指定为顶点索引缓冲区对象
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_buffer_object);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_buffer_object);__CHECK_GL_ERROR__
     //上传顶点索引数据到缓冲区对象
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, task->vertex_index_data_size_, task->vertex_index_data_, GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, task->vertex_index_data_size_, task->vertex_index_data_, GL_STATIC_DRAW);__CHECK_GL_ERROR__
 
-    glGenVertexArrays(1,&vertex_array_object);
+    glGenVertexArrays(1,&vertex_array_object);__CHECK_GL_ERROR__
 
     //设置VAO
     glBindVertexArray(vertex_array_object);__CHECK_GL_ERROR__
@@ -229,7 +229,7 @@ void RenderTaskConsumer::CreateVAO(RenderTaskBase *task_base) {
     }
     glBindBuffer(GL_ARRAY_BUFFER, 0);__CHECK_GL_ERROR__
     //将主线程中产生的VAO句柄 映射到 VAO
-    GPUResourceMapper::MapTexture(task->vao_handle_, vertex_array_object);
+    GPUResourceMapper::MapVAO(task->vao_handle_, vertex_array_object);
 }
 
 void RenderTaskConsumer::UpdateVBOSubData(RenderTaskBase *task_base) {
@@ -262,32 +262,33 @@ void RenderTaskConsumer::SetUniformMatrix4fv(RenderTaskBase *task_base) {
     RenderTaskSetUniformMatrix4fv* task=dynamic_cast<RenderTaskSetUniformMatrix4fv*>(task_base);
     //上传mvp矩阵
     GLuint shader_program=GPUResourceMapper::GetShaderProgram(task->shader_program_handle_);
-    glUniformMatrix4fv(glGetUniformLocation(shader_program, task->uniform_name_), 1, task->transpose_, task->matrix_data_);__CHECK_GL_ERROR__
+    GLint uniform_location=glGetUniformLocation(shader_program, task->uniform_name_);__CHECK_GL_ERROR__
+    glUniformMatrix4fv(uniform_location, 1, task->transpose_?GL_TRUE:GL_FALSE, &task->matrix_[0][0]);__CHECK_GL_ERROR__
 }
 
 void RenderTaskConsumer::ActiveAndBindTexture(RenderTaskBase *task_base) {
     RenderTaskActiveAndBindTexture* task=dynamic_cast<RenderTaskActiveAndBindTexture*>(task_base);
     //激活纹理单元
-    glActiveTexture(task->texture_uint_);
+    glActiveTexture(task->texture_uint_);__CHECK_GL_ERROR__
     //将加载的图片纹理句柄，绑定到纹理单元0的Texture2D上。
     GLuint texture=GPUResourceMapper::GetTexture(task->texture_handle_);
-    glBindTexture(GL_TEXTURE_2D, texture);
+    glBindTexture(GL_TEXTURE_2D, texture);__CHECK_GL_ERROR__
 }
 
 void RenderTaskConsumer::SetUniform1i(RenderTaskBase *task_base) {
     RenderTaskSetUniform1i* task=dynamic_cast<RenderTaskSetUniform1i*>(task_base);
     //设置Shader程序从纹理单元读取颜色数据
     GLuint shader_program=GPUResourceMapper::GetShaderProgram(task->shader_program_handle_);
-    GLint uniform_location= glGetUniformLocation(shader_program, task->uniform_name_);
-    glUniform1i(uniform_location, task->value_);
+    GLint uniform_location= glGetUniformLocation(shader_program, task->uniform_name_);__CHECK_GL_ERROR__
+    glUniform1i(uniform_location, task->value_);__CHECK_GL_ERROR__
 }
 
 void RenderTaskConsumer::BindVAOAndDrawElements(RenderTaskBase *task_base) {
     RenderTaskBindVAOAndDrawElements* task=dynamic_cast<RenderTaskBindVAOAndDrawElements*>(task_base);
     GLuint vao=GPUResourceMapper::GetVAO(task->vao_handle_);
-    glBindVertexArray(vao);
+    glBindVertexArray(vao);__CHECK_GL_ERROR__
     {
-        glDrawElements(GL_TRIANGLES,task->vertex_index_num_,GL_UNSIGNED_SHORT,0);//使用顶点索引进行绘制，最后的0表示数据偏移量。
+        glDrawElements(GL_TRIANGLES,task->vertex_index_num_,GL_UNSIGNED_SHORT,0);__CHECK_GL_ERROR__//使用顶点索引进行绘制，最后的0表示数据偏移量。
     }
     glBindVertexArray(0);__CHECK_GL_ERROR__
 }
@@ -340,10 +341,10 @@ void RenderTaskConsumer::ProcessTask() {
         //获取画面宽高
         glfwGetFramebufferSize(window_, &width, &height);
         ratio = width / (float) height;
-        glViewport(0, 0, width, height);
+        glViewport(0, 0, width, height);__CHECK_GL_ERROR__
 
-        glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-        glClearColor(49.f/255,77.f/255,121.f/255,1.f);
+        glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);__CHECK_GL_ERROR__
+        glClearColor(49.f/255,77.f/255,121.f/255,1.f);__CHECK_GL_ERROR__
 
         view = glm::lookAt(glm::vec3(0, 0, 10), glm::vec3(0, 0,0), glm::vec3(0, 1, 0));
 
@@ -365,6 +366,7 @@ void RenderTaskConsumer::ProcessTask() {
                     break;
                 }
                 case RenderCommand::USE_SHADER_PROGRAM:{
+                    UseShaderProgram(render_task);
                     break;
                 }
                 case RenderCommand::CREATE_COMPRESSED_TEX_IMAGE2D:{

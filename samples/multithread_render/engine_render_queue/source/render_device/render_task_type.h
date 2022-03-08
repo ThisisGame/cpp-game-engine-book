@@ -6,6 +6,7 @@
 #define UNTITLED_RENDER_TASK_TYPE_H
 
 #include <stdlib.h>
+#include <glm/glm.hpp>
 #include "render_command.h"
 
 /// 渲染任务基类
@@ -48,10 +49,13 @@ public:
     RenderTaskCompileShader(){
         render_command_=RenderCommand::COMPILE_SHADER;
     }
-    ~RenderTaskCompileShader(){}
+    ~RenderTaskCompileShader(){
+        free(vertex_shader_source_);
+        free(fragment_shader_source_);
+    }
 public:
-    const char* vertex_shader_source_= nullptr;
-    const char* fragment_shader_source_= nullptr;
+    char* vertex_shader_source_= nullptr;
+    char* fragment_shader_source_= nullptr;
     unsigned int shader_program_handle_= 0;
 };
 
@@ -204,13 +208,12 @@ public:
     }
     ~RenderTaskSetUniformMatrix4fv(){
         free(uniform_name_);
-        free(matrix_data_);
     }
 public:
     unsigned int shader_program_handle_=0;//着色器程序句柄
     char* uniform_name_= nullptr;//uniform变量名
     bool transpose_=false;//是否转置
-    float* matrix_data_=nullptr;//4x4矩阵数据
+    glm::mat4 matrix_;//4x4矩阵数据
 };
 
 /// 激活并绑定纹理

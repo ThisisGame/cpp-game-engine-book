@@ -16,11 +16,15 @@ void RenderTaskProducer::ProduceRenderTaskUpdateScreenSize() {
 /// \param fragment_shader_source 片段shader源码
 /// \param shader_program_handle Shader程序句柄
 void RenderTaskProducer::ProduceRenderTaskCompileShader(const char* vertex_shader_source,const char* fragment_shader_source,unsigned int shader_program_handle){
-    RenderTaskCompileShader* render_task_compile_shader=new RenderTaskCompileShader();
-    render_task_compile_shader->vertex_shader_source_=vertex_shader_source;
-    render_task_compile_shader->fragment_shader_source_=fragment_shader_source;
-    render_task_compile_shader->shader_program_handle_=shader_program_handle;
-    RenderTaskQueue::Push(render_task_compile_shader);
+    RenderTaskCompileShader* task=new RenderTaskCompileShader();
+    task->vertex_shader_source_= static_cast<char *>(malloc(strlen(vertex_shader_source) + 1));
+    strcpy(task->vertex_shader_source_, vertex_shader_source);
+
+    task->fragment_shader_source_= static_cast<char *>(malloc(strlen(fragment_shader_source) + 1));
+    strcpy(task->fragment_shader_source_, fragment_shader_source);
+
+    task->shader_program_handle_=shader_program_handle;
+    RenderTaskQueue::Push(task);
 }
 
 void RenderTaskProducer::ProduceRenderTaskUseShaderProgram(unsigned int shader_program_handle) {
@@ -136,16 +140,13 @@ void RenderTaskProducer::ProduceRenderTaskSetBlenderFunc(unsigned int source_ble
 }
 
 void RenderTaskProducer::ProduceRenderTaskSetUniformMatrix4fv(unsigned int shader_program_handle,
-                                                              const char *uniform_name, bool transpose, float *matrix_data,
-                                                              int matrix_data_size) {
+                                                              const char *uniform_name, bool transpose, glm::mat4& matrix) {
     RenderTaskSetUniformMatrix4fv* task=new RenderTaskSetUniformMatrix4fv();
     task->shader_program_handle_=shader_program_handle;
     task->uniform_name_= static_cast<char *>(malloc(strlen(uniform_name) + 1));
     strcpy(task->uniform_name_, uniform_name);
     task->transpose_=transpose;
-    //拷贝数据
-    task->matrix_data_= (float*)malloc(matrix_data_size);
-    memcpy(task->matrix_data_, matrix_data, matrix_data_size);
+    task->matrix_= matrix;
     RenderTaskQueue::Push(task);
 }
 

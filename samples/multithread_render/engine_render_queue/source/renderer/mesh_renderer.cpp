@@ -79,7 +79,8 @@ void MeshRenderer::Render() {
     MeshFilter::Mesh* mesh=mesh_filter->skinned_mesh()== nullptr?mesh_filter->mesh():mesh_filter->skinned_mesh();
 
     //指定目标Shader程序。
-    GLuint shader_program_handle= material_->shader()->shader_program_handle();
+    auto shader=material_->shader();
+    GLuint shader_program_handle= shader->shader_program_handle();
 
     if(vertex_array_object_handle_ == 0){
         vertex_array_object_handle_=GPUResourceMapper::GenerateVAOHandle();
@@ -92,7 +93,7 @@ void MeshRenderer::Render() {
         RenderTaskProducer::ProduceRenderTaskUpdateVBOSubData(vertex_buffer_object_handle_, mesh->vertex_num_ * sizeof(MeshFilter::Vertex),mesh->vertex_data_);
     }
 
-    glUseProgram(shader_program_handle);
+    shader->Active();
     {
         // PreRender
         game_object()->ForeachLuaComponent([](sol::table lua_component_instance_table){
@@ -115,7 +116,7 @@ void MeshRenderer::Render() {
         RenderTaskProducer::ProduceRenderTaskSetEnableState(GL_BLEND,true);
         RenderTaskProducer::ProduceRenderTaskSetBlenderFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         //上传mvp矩阵
-        RenderTaskProducer::ProduceRenderTaskSetUniformMatrix4fv(shader_program_handle, "u_mvp", false,&mvp[0][0],sizeof(mvp));
+        RenderTaskProducer::ProduceRenderTaskSetUniformMatrix4fv(shader_program_handle, "u_mvp", false,mvp);
 
         //从Pass节点拿到保存的Texture
         std::vector<std::pair<std::string,Texture2D*>> textures=material_->textures();

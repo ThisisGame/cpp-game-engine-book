@@ -6,6 +6,7 @@
 #define UNTITLED_RENDER_TASK_PRODUCER_H
 
 #include <glad/gl.h>
+#include <glm/glm.hpp>
 
 /// 渲染任务生产者
 class RenderTaskProducer {
@@ -91,7 +92,7 @@ public:
     /// \param transpose
     /// \param value
     /// \param value_data_size
-    static void ProduceRenderTaskSetUniformMatrix4fv(unsigned int shader_program_handle, const char* uniform_name, bool transpose, float* matrix_data, int matrix_data_size);
+    static void ProduceRenderTaskSetUniformMatrix4fv(unsigned int shader_program_handle, const char* uniform_name, bool transpose, glm::mat4& matrix);
 
     /// 激活并绑定纹理
     /// \param texture_uint
