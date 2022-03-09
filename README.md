@@ -201,7 +201,7 @@ VisualStudio C++只支持Windows，Mac上就需要XCode，增加了学习成本�
   <tr>
     <td align="center">
         <a href="https://pvs-studio.com/">
-            <img src="https://cdn.pvs-studio.com/static/images/logo/pvs_logo_4.svg" width="100px;" alt="pvs-studio" border="1"/>
+            <img src="https://cdn.pvs-studio.com/static/images/logo/pvs_logo_4.svg" width="100px;" alt="pvs-studio" border="1" border-style="solid"/>
             <br />
             <sub><b>PVS-Studio</b></sub>
         </a>
@@ -210,7 +210,7 @@ VisualStudio C++只支持Windows，Mac上就需要XCode，增加了学习成本�
     </td>
     <td align="center">
         <a href="https://jb.gg/OpenSource">
-            <img src="https://resources.jetbrains.com/storage/products/jetbrains/img/meta/preview.png" width="100px" alt="JetBrains" border="1"/>
+            <img src="https://resources.jetbrains.com/storage/products/jetbrains/img/meta/preview.png" width="100px" alt="JetBrains" border="1" border-style="solid"/>
             <br />
             <sub><b>JetBrains</b></sub>
         </a>
