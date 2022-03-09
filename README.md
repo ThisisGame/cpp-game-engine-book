@@ -192,3 +192,30 @@ VisualStudio C++只支持Windows，Mac上就需要XCode，增加了学习成本�
 ## 团队介绍 Members
 
 * captainchen:作者
+
+## 感谢支持 Thanks
+
+项目使用CLion IDE，使用PVS-Studio作为代码扫描分析工具，感谢其提供的开源许可。
+
+<table>
+  <tr>
+    <td align="center">
+        <a href="https://pvs-studio.com/">
+            <img src="https://cdn.pvs-studio.com/static/images/logo/pvs_logo_4.svg" width="100px;" alt="pvs-studio" border="1"/>
+            <br />
+            <sub><b>PVS-Studio</b></sub>
+        </a>
+        <br />
+        </a>
+    </td>
+    <td align="center">
+        <a href="https://jb.gg/OpenSource">
+            <img src="https://resources.jetbrains.com/storage/products/jetbrains/img/meta/preview.png" width="100px" alt="JetBrains" border="1"/>
+            <br />
+            <sub><b>JetBrains</b></sub>
+        </a>
+        <br />
+    </td>
+  </tr>
+</table>
+
