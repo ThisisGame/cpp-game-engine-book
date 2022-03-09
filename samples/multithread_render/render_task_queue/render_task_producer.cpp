@@ -16,7 +16,7 @@ void RenderTaskProducer::ProduceRenderTaskCompileShader(const char* vertex_shade
     RenderTaskCompileShader* render_task_compile_shader=new RenderTaskCompileShader();
     render_task_compile_shader->vertex_shader_source_=vertex_shader_source;
     render_task_compile_shader->fragment_shader_source_=fragment_shader_source;
-    render_task_compile_shader->need_return_result=true;//需要返回结果
+    render_task_compile_shader->need_return_result_=true;//需要返回结果
     RenderTaskQueue::Push(render_task_compile_shader);
     //等待编译Shader任务结束并设置回传结果
     render_task_compile_shader->Wait();

@@ -84,7 +84,7 @@ void RenderTaskConsumer::CompileShader(RenderTaskBase* task_base){
     }
     //设置回传结果
     task->result_shader_program_id_=program;
-    task->return_result_set=true;
+    task->return_result_set_=true;
 }
 
 /// 创建VAO
@@ -116,7 +116,7 @@ void RenderTaskConsumer::CreateVAO(RenderTaskBase* task_base){
 
     //设置回传结果
     task->result_vao_=vao;
-    task->return_result_set=true;
+    task->return_result_set_=true;
 }
 
 /// 绘制
@@ -141,7 +141,7 @@ void RenderTaskConsumer::DrawArray(RenderTaskBase* task_base, glm::mat4& project
 void RenderTaskConsumer::EndFrame(RenderTaskBase* task_base) {
     RenderTaskEndFrame *task = dynamic_cast<RenderTaskEndFrame *>(task_base);
     glfwSwapBuffers(window_);
-    task->return_result_set=true;
+    task->return_result_set_=true;
 }
 
 void RenderTaskConsumer::ProcessTask() {
@@ -196,7 +196,7 @@ void RenderTaskConsumer::ProcessTask() {
             }
             RenderTaskQueue::Pop();
             //如果这个任务不需要返回参数，那么用完就删掉。
-            if(render_task->need_return_result==false){
+            if(render_task->need_return_result_ == false){
                 delete render_task;
             }
 
