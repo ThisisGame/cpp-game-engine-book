@@ -1,4 +1,6 @@
 {
+    "title" : "游戏引擎浅入浅出",
+    "author" : "captainchen",
     "plugins":[
         "expandable-chapters",
         "tbfed-pagefooter",
@@ -27,5 +29,19 @@
         "github": {
             "url": "https://github.com/ThisisGame/cpp-game-engine-book"
         }
+    },
+	"styles": {
+        "website": "book_style_web.css"
+    },
+    "pdf":{
+        "margin":{        
+            "right":0,        
+            "left":0,        
+            "top":5,        
+            "bottom":0
+        }
+    },
+    "structure": {
+        "readme": "Introduction.md"
     }
 }
