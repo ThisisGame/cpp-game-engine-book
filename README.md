@@ -137,7 +137,7 @@ Blender建模、FMOD、WWise音频制作，我都录制了视频。
 
 #### 阅读图书
 
-在线阅读：`http://www.thisisgame.com.cn/book/cpp-game-engine-book/`
+在线阅读：`http://www.thisisgame.com.cn/tutorial?book=cpp-game-engine-book&lang=zh&md=Introduction.md`
 
 本地阅读，按照下面步骤：
 
