@@ -178,7 +178,7 @@ VisualStudio C++只支持Windows，Mac上就需要XCode，增加了学习成本�
 
 ## 如何加入 How To Join
 
-* 你可以直接打开在线阅读：`http://www.thisisgame.com.cn/book/cpp-game-engine-book/`
+* 你可以直接打开在线阅读：`http://www.thisisgame.com.cn/tutorial?book=cpp-game-engine-book&lang=zh&md=Introduction.md`
 * 本书是开源的，你可以fork本项目，然后修改代码，然后提交合并请求。
 * 欢迎大家提Issue，反馈遇到的问题。内网可以直接联系我。也可以加入q群(879187705)讨论，得到答案后，更新issue，方便其他人查询。
   <table>
