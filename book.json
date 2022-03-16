@@ -26,10 +26,19 @@
         },
         "github": {
             "url": "https://github.com/ThisisGame/cpp-game-engine-book"
+        }
+    },
+    "openresty":{
+        "zh":{
+            "bookName":"游戏引擎 浅入浅出",
+            "codeResourcesDownloadUrl":"https://github.com/ThisisGame/cpp-game-engine-book",
+            "githubRepositoryUrl":"https://github.com/ThisisGame/cpp-game-engine-book"
         },
-        "openresty":{
+        "en":{
+            "bookName":"cpp-game-engine-book",
             "codeResourcesDownloadUrl":"https://github.com/ThisisGame/cpp-game-engine-book",
             "githubRepositoryUrl":"https://github.com/ThisisGame/cpp-game-engine-book"
         }
+        
     }
 }
