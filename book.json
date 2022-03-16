@@ -26,6 +26,10 @@
         },
         "github": {
             "url": "https://github.com/ThisisGame/cpp-game-engine-book"
+        },
+        "openresty":{
+            "codeResourcesDownloadUrl":"https://github.com/ThisisGame/cpp-game-engine-book",
+            "githubRepositoryUrl":"https://github.com/ThisisGame/cpp-game-engine-book"
         }
     }
 }
