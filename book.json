@@ -32,12 +32,16 @@
         "zh":{
             "bookName":"游戏引擎 浅入浅出",
             "codeResourcesDownloadUrl":"https://github.com/ThisisGame/cpp-game-engine-book",
-            "githubRepositoryUrl":"https://github.com/ThisisGame/cpp-game-engine-book"
+            "githubRepositoryUrl":"https://github.com/ThisisGame/cpp-game-engine-book",
+            "beginNotice":"\n```text \n「游戏引擎 浅入浅出」是一本开源电子书，Github地址： https://github.com/ThisisGame/cpp-game-engine-book \n```",
+            "beginNoticeShowConditionNeedLineNum":10
         },
         "en":{
             "bookName":"cpp-game-engine-book",
             "codeResourcesDownloadUrl":"https://github.com/ThisisGame/cpp-game-engine-book",
-            "githubRepositoryUrl":"https://github.com/ThisisGame/cpp-game-engine-book"
+            "githubRepositoryUrl":"https://github.com/ThisisGame/cpp-game-engine-book",
+            "beginNotice":"\n```text \n「游戏引擎 浅入浅出」是一本开源电子书，Github地址： https://github.com/ThisisGame/cpp-game-engine-book \n```",
+            "beginNoticeShowConditionNeedLineNum":10
         }
         
     }
