@@ -15,6 +15,7 @@ include(CMakeLists.txt.glfw)
 include(CMakeLists.txt.FreeType)
 include(CMakeLists.txt.fmod)
 include(CMakeLists.txt.easy_profile_core)
+include(CMakeLists.txt.Physx)
 include(CMakeLists.txt.lua)
 
 #拷贝depends目录
