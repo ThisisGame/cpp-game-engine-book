@@ -78,7 +78,7 @@
     * [16.1 初识easy_profiler](16. profiler/16.1 introducing_easy_profiler.md)
     * [16.2 集成easy_profiler](16. profiler/16.2 integrating_easy_profiler.md)
 * [17. 嵌入Lua](17. integrate_lua/17. integrate_lua.md)
-    * [17.1 Sol2与C++交互](17. integrate_lua/17.1 sol2_interaction_with_c++.md)
+    * [17.1 Sol2与C++交互](17. integrate_lua/17.1 sol2_interaction_with_cpp.md)
     * [17.2 引擎集成sol2](17. integrate_lua/17.2 integration_sol2.md)
 * [18. 骨骼动画](18. skeletal_animation/18. skeletal_animation.md)
     * [18.1 Blender制作骨骼动画](18. skeletal_animation/18.1 blender_makes_skeletal_animation.md)
