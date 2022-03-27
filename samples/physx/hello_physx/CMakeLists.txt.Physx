@@ -10,7 +10,7 @@ if(EXISTS "../../../template/depends/physx-4.1.7z")
     file(SIZE "../../../template/depends/physx-4.1.7z" SIZE_PHYSX)
     MESSAGE("size of physx-4.1.7z: ${SIZE_PHYSX}")
     #检查大小是否匹配
-    if(${SIZE_PHYSX} EQUAL 201902096)
+    if(${SIZE_PHYSX} EQUAL 19026568)
         MESSAGE("physx-4.1.7z is valid")
     else()
         MESSAGE("physx-4.1.7z is invalid")
