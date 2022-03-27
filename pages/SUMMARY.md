@@ -101,6 +101,8 @@
     * [21.2 基于任务队列的多线程渲染](21. multithreaded_rendering/21.2 multithreaded_rendering_based_on_task_queue.md)
     * [21.3 完全异步的多线程模型](21. multithreaded_rendering/21.3 fully_asynchronous_multithreading_model.md)
     * [21.4 引擎支持多线程渲染](21. multithreaded_rendering/21.4 engine_supports_multi-threaded_rendering.md)
+* [22. Physx物理引擎](22. physics_engine_physx/22. physics_engine_physx.md)
+    * [22.1 Physx实例-小球掉落](22. physics_engine_physx/22.1 hello_physx.md)
 * [89. Doxygen生成API文档](89. doxygen_generates_api_documentation/89. doxygen_generates_api_documentation.md)
 * [90. GPU分析工具](90. gpu_analysis_tools/90. gpu_analysis_tools.md)
     * [90.1 RenderDoc分析不显示bug](90. gpu_analysis_tools/90.1 renderdoc_analysis_not_show_bugs.md)

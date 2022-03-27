@@ -1,52 +1,56 @@
-##下载Physx.7z
-#function(DownloadPhysx)
-#    MESSAGE("Download physx.7z")
-#    file(DOWNLOAD "https://github.com/ThisisGame/cpp-game-engine-book/releases/download/v2022.1.10.1/physx.7z" "../../../template/depends/physx.7z" SHOW_PROGRESS)
-#endfunction()
-#
-##检测physx.7z是否存在，不存在则下载
-#if(EXISTS "../../../template/depends/physx.7z")
-#    MESSAGE("found physx.7z")
-#    file(SIZE "../../../template/depends/physx.7z" SIZE_PHYSX)
-#    MESSAGE("size of physx.7z: ${SIZE_PHYSX}")
-#    #检查大小是否匹配
-#    if(${SIZE_PHYSX} EQUAL 251652244)
-#        MESSAGE("physx.7z is valid")
-#    else()
-#        MESSAGE("physx.7z is invalid")
-#        DownloadPhysx()
-#    endif()
-#else()
-#    DownloadPhysx()
-#endif()
-#
-#
-#
-##解压physx.7z
-#if(EXISTS "../../../template/depends/physx/")
-#    MESSAGE("found physx")
-#else()
-#    MESSAGE("not find physx,extract physx.7z")
-#    file(ARCHIVE_EXTRACT INPUT "../../../template/depends/physx.7z" DESTINATION "../../../template/depends/" VERBOSE)
-#endif()
+#下载Physx.7z
+function(DownloadPhysx)
+    MESSAGE("Download physx-4.1.7z")
+    file(DOWNLOAD "https://github.com/ThisisGame/PhysX/releases/download/physx-4.1-win.x86_64.vc142.mt/physx-4.1.7z" "../../../template/depends/physx-4.1.7z" SHOW_PROGRESS)
+endfunction()
+
+#检测physx.7z是否存在，不存在则下载
+if(EXISTS "../../../template/depends/physx-4.1.7z")
+    MESSAGE("found physx-4.1.7z")
+    file(SIZE "../../../template/depends/physx-4.1.7z" SIZE_PHYSX)
+    MESSAGE("size of physx-4.1.7z: ${SIZE_PHYSX}")
+    #检查大小是否匹配
+    if(${SIZE_PHYSX} EQUAL 201902096)
+        MESSAGE("physx-4.1.7z is valid")
+    else()
+        MESSAGE("physx-4.1.7z is invalid")
+        DownloadPhysx()
+    endif()
+else()
+    DownloadPhysx()
+endif()
+
+
+
+#解压physx.7z
+if(EXISTS "../../../template/depends/physx-4.1")
+    MESSAGE("found physx")
+else()
+    MESSAGE("not find physx,extract physx-4.1.7z")
+    file(ARCHIVE_EXTRACT INPUT "../../../template/depends/physx-4.1.7z" DESTINATION "../../../template/depends/" VERBOSE)
+endif()
 
 
 #拷贝
-file(COPY "../../template/depends/physx/" DESTINATION "../depends/physx/")
+file(COPY "../../template/depends/physx-4.1/" DESTINATION "../depends/physx/")
 
 #头文件目录
-include_directories("depends")
-
+include_directories("depends/physx/physx/include")
+include_directories("depends/physx/pxshared/include")
 
 #链接目录
 if(WIN32)
-#    #链接lib文件
-#    link_libraries(AkSoundEngine AkStreamMgr AkMemoryMgr AkMusicEngine AkSpatialAudio CommunicationCentral AkMotionGeneratorSource AkMotionSink AkMotionSourceSource)
-#    #拷贝dll到exe目录
-#    file(COPY "depends/physx/bin/AkSoundEngineDLL.dll" DESTINATION "./")
-#    file(COPY "depends/physx/bin/AkMotion.dll" DESTINATION "./")
+    link_directories("depends/physx/physx/bin/win.x86_64.vc142.mt/debug")
+    #链接lib文件
+    link_libraries(PhysX_64 PhysXFoundation_64 PhysXExtensions_static_64 PhysXPvdSDK_static_64)
+    #拷贝dll到exe目录
+    file(COPY "depends/physx/physx/bin/win.x86_64.vc142.mt/debug/PhysXFoundation_64.dll" DESTINATION "./")
+    file(COPY "depends/physx/physx/bin/win.x86_64.vc142.mt/debug/PhysXDevice64.dll" DESTINATION "./")
+    file(COPY "depends/physx/physx/bin/win.x86_64.vc142.mt/debug/PhysXCooking_64.dll" DESTINATION "./")
+    file(COPY "depends/physx/physx/bin/win.x86_64.vc142.mt/debug/PhysXCommon_64.dll" DESTINATION "./")
+    file(COPY "depends/physx/physx/bin/win.x86_64.vc142.mt/debug/PhysX_64.dll" DESTINATION "./")
 else()
-    link_directories("depends/physx/bin/mac.x86_64/debug")
+    link_directories("depends/physx/physx/bin/mac.x86_64/debug")
     #链接lib文件
     link_libraries(PhysX_static_64)
 endif()
