@@ -14,9 +14,6 @@ PxPhysics*				gPhysics	= NULL;
 
 PxDefaultCpuDispatcher*	gDispatcher = NULL;
 PxScene*				gScene		= NULL;
-
-PxMaterial*				gMaterial	= NULL;
-
 PxPvd*                  gPvd        = NULL;
 
 
@@ -63,11 +60,11 @@ void CreateScene(){
 void CreatePlane(){
     //~en Create Physx Material.
     //~zh 创建物理材质
-    gMaterial = gPhysics->createMaterial(0.5f, 0.5f, 0.6f);
+    PxMaterial* planeMaterial = gPhysics->createMaterial(0.5f, 0.5f, 0.01f);
 
     //~en Create Plane,add to scene.
     //~zh 创建地板
-    PxRigidStatic* groundPlane = PxCreatePlane(*gPhysics, PxPlane(0,1,0,0), *gMaterial);
+    PxRigidStatic* groundPlane = PxCreatePlane(*gPhysics, PxPlane(0,1,0,0), *planeMaterial);
     gScene->addActor(*groundPlane);
 }
 
@@ -78,10 +75,18 @@ void CreateBall(){
     //~zh 创建刚体，坐标是 (0,10,0)
     PxRigidDynamic* body = gPhysics->createRigidDynamic(PxTransform(PxVec3(0, 10, 0)));
 
+    //~en Create Physx Material.
+    //~zh 创建小球的物理材质
+    PxMaterial* ballMaterial = gPhysics->createMaterial(0.5f, 0.5f, 0.98f);
+
+    ballMaterial->setRestitutionCombineMode(PxCombineMode::eMAX);
+//    ballMaterial->setRestitutionCombineMode(PxCombineMode::eAVERAGE);
+//    ballMaterial->setRestitutionCombineMode(PxCombineMode::eMIN);
+
     //~en Set rigidbody sharp
     //~zh 设置刚体形状，一个球。
     float radius = 0.5f;
-    PxShape* shape = gPhysics->createShape(PxSphereGeometry(radius), *gMaterial);
+    PxShape* shape = gPhysics->createShape(PxSphereGeometry(radius), *ballMaterial);
     body->attachShape(*shape);
     shape->release();
 
