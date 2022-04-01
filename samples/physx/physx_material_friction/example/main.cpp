@@ -60,7 +60,7 @@ void CreateScene(){
 void CreatePlane(){
     //~en Create Physx Material.
     //~zh 创建物理材质
-    PxMaterial* planeMaterial = gPhysics->createMaterial(1.0f, 0.98f, 0.01f);
+    PxMaterial* planeMaterial = gPhysics->createMaterial(98.0f, 100.0f, 0.01f);
 
     //~en Create Plane,add to scene.
     //~zh 创建地板
@@ -87,14 +87,14 @@ void CreateBall(){
     rigidDynamic->attachShape(*shape);
     shape->release();
 
-//    rigidDynamic->setLinearVelocity(PxVec3(0,0,-1));
-
     //~en calculate mass,mass = volume * density
     //~zh 根据体积、密度计算质量
     PxRigidBodyExt::updateMassAndInertia(*rigidDynamic, 10.0f);
 
     gScene->addActor(*rigidDynamic);
 
+    //~en addForce can also make the ball move.
+    //~zh 加上一个力，就可以让小球移动了。注意施加力时，小球必须已经被添加到场景中。
     rigidDynamic->addForce(PxVec3(0,0,-20),PxForceMode::eFORCE,true);
 }
 
