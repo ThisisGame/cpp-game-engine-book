@@ -79,11 +79,13 @@ void CreateBall(){
     //~zh 创建小球的物理材质
     PxMaterial* ballMaterial = gPhysics->createMaterial(0.5f, 0.5f, 0.98f);
 
+    //~en Set ball material restitution combine mode. When ball hit the floor, choose the larger, smaller, or average of the two.
+    //~zh 设置小球材质的弹性系数计算模式，小球与地板碰撞时，弹性系数是取两者大的、小的、还是平均。
     ballMaterial->setRestitutionCombineMode(PxCombineMode::eMAX);
 //    ballMaterial->setRestitutionCombineMode(PxCombineMode::eAVERAGE);
 //    ballMaterial->setRestitutionCombineMode(PxCombineMode::eMIN);
 
-    //~en Set rigidbody sharp
+    //~en Set rigid body sharp
     //~zh 设置刚体形状，一个球。
     float radius = 0.5f;
     PxShape* shape = gPhysics->createShape(PxSphereGeometry(radius), *ballMaterial);
