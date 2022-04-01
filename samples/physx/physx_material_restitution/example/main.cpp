@@ -77,7 +77,7 @@ void CreateBall(){
 
     //~en Create Physx Material.
     //~zh 创建小球的物理材质
-    PxMaterial* ballMaterial = gPhysics->createMaterial(0.5f, 0.5f, 0.98f);
+    PxMaterial* ballMaterial = gPhysics->createMaterial(0.5f, 0.5f, 1.0f);
 
     //~en Set ball material restitution combine mode. When ball hit the floor, choose the larger, smaller, or average of the two.
     //~zh 设置小球材质的弹性系数计算模式，小球与地板碰撞时，弹性系数是取两者大的、小的、还是平均。
