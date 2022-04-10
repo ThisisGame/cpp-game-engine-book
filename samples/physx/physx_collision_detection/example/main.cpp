@@ -15,11 +15,6 @@ SimulationEventCallback gSimulationEventCallback;
 PxScene*				gScene		= NULL;
 PxPvd*                  gPvd        = NULL;
 
-//~en is high-speed motion enabled.
-//~zh 高速运动是否启用。
-bool                    gHighSpeed  = false;
-
-
 //~en Init Physx
 //~zh 初始化Physx
 void InitPhysics()
@@ -39,15 +34,11 @@ void InitPhysics()
     gPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *gFoundation, PxTolerancesScale(),true,gPvd);
 }
 
+
+//~zh 设置在碰撞发生时，Physx需要做的事情
+//~en Set the actions when collision occurs,Physx needs to do.
 static	PxFilterFlags SimulationFilterShader(PxFilterObjectAttributes attributes0, PxFilterData filterData0,PxFilterObjectAttributes attributes1, PxFilterData filterData1,PxPairFlags& pairFlags, const void* constantBlock, PxU32 constantBlockSize) {
     pairFlags = PxPairFlag::eCONTACT_DEFAULT | PxPairFlag::eNOTIFY_TOUCH_FOUND;
-
-    if(gHighSpeed) {
-        pairFlags = PxPairFlag::eSOLVE_CONTACT;
-        pairFlags |= PxPairFlag::eDETECT_DISCRETE_CONTACT;
-        pairFlags |= PxPairFlag::eDETECT_CCD_CONTACT;
-    }
-
     return PxFilterFlags();
 }
 
@@ -58,11 +49,12 @@ void CreateScene(){
     sceneDesc.gravity = PxVec3(0.0f, -0.98f, 0.0f);
     gDispatcher = PxDefaultCpuDispatcherCreate(2);
     sceneDesc.cpuDispatcher	= gDispatcher;
+    //~zh 指定事件回调
+    //~en Specify the event callback
     sceneDesc.simulationEventCallback = &gSimulationEventCallback;
+    //~zh 设置在碰撞发生时，Physx需要做的事情
+    //~en Set the actions when collision occurs,Physx needs to do.
     sceneDesc.filterShader	= SimulationFilterShader;
-    if(gHighSpeed) {
-        sceneDesc.flags |= PxSceneFlag::eENABLE_CCD;
-    }
     gScene = gPhysics->createScene(sceneDesc);
 
     PxPvdSceneClient* pvdClient = gScene->getScenePvdClient();
@@ -88,6 +80,7 @@ void CreateWall(){
     //~en Create wall shape.
     //~zh 创建墙体形状
     const PxVec3 halfExtent(0.1f, 10.0f, 10.0f);
+//    PxShape* shape = gPhysics->createShape(PxBoxGeometry(halfExtent), *wallMaterial);
     PxShape* shape = gPhysics->createShape(PxBoxGeometry(halfExtent), *wallMaterial,false,PxShapeFlag::eVISUALIZATION | PxShapeFlag::eTRIGGER_SHAPE);
 
     //~en Add shape to body.
@@ -100,22 +93,13 @@ void CreateWall(){
     gScene->addActor(*body);
 }
 
-//~en Create bullet,add to scene.
-//~zh 创建子弹，并添加到场景中
-void CreateBullet(){
+//~zh 创建小球，并添加到场景中
+//~en Create ball,add to scene.
+void CreateBall(){
     //~en Create RigidBody,pos is (10,0,0)
     //~zh 创建刚体，坐标是 (10,0,0)
     PxRigidDynamic* body = gPhysics->createRigidDynamic(PxTransform(PxVec3(10, 5, 0)));
-
-    if(!gHighSpeed){
-        body->setLinearVelocity(PxVec3(-14.0f, 0.0f, 0.0f));
-    }else{
-        //~en enable continuous collision detection due to high-speed motion.
-        //~zh 对高速运动，开启连续碰撞检测。
-        body->setRigidBodyFlag(PxRigidBodyFlag::eENABLE_CCD, true);
-
-        body->setLinearVelocity(PxVec3(-140.0f, 0.0f, 0.0f));
-    }
+    body->setLinearVelocity(PxVec3(-14.0f, 0.0f, 0.0f));
 
     //~en Create Physx Material.
     //~zh 创建小球的物理材质
@@ -177,7 +161,7 @@ int main()
 
     //~en Create ball
     //~zh 创建球
-    CreateBullet();
+    CreateBall();
 
     //~en simulate game engine update
     //~zh 模拟游戏引擎update
