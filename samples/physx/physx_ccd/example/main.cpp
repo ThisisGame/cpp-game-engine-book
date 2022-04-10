@@ -87,7 +87,7 @@ void CreateWall(){
     //~en Create wall shape.
     //~zh 创建墙体形状
     const PxVec3 halfExtent(0.1f, 10.0f, 10.0f);
-    PxShape* shape = gPhysics->createShape(PxBoxGeometry(halfExtent), *wallMaterial, false);
+    PxShape* shape = gPhysics->createShape(PxBoxGeometry(halfExtent), *wallMaterial);
     shape->userData = shape;	// Arbitrary rule: it's a trigger if non null
 
     //~en Add shape to body.

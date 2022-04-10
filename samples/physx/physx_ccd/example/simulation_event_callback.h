@@ -55,12 +55,12 @@ public:
             // in a hash-set and test the reported shape pointers against it. Many options here.
 
             if(current.events & (PxPairFlag::eNOTIFY_TOUCH_FOUND|PxPairFlag::eNOTIFY_TOUCH_CCD))
-                printf("Shape is entering trigger volume\n");
+                printf("onContact Shape is entering trigger volume\n");
             if(current.events & PxPairFlag::eNOTIFY_TOUCH_LOST)
-                printf("Shape is leaving trigger volume\n");
+                printf("onContact Shape is leaving trigger volume\n");
 
             if(current.shapes[0]->userData && current.shapes[1]->userData)
-                printf("Trigger-trigger overlap detected\n");
+                printf("onContact Trigger-trigger overlap detected\n");
         }
     }
 };
