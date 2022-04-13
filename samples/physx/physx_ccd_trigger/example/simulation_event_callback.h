@@ -60,11 +60,8 @@ public:
             if(current.events & (PxPairFlag::eNOTIFY_TOUCH_FOUND|PxPairFlag::eNOTIFY_TOUCH_CCD)) {
                 printf("onContact Shape is entering volume\n");
             }
-            if(current.events & PxPairFlag::eNOTIFY_TOUCH_LOST) {
+            if(current.events & (PxPairFlag::eNOTIFY_TOUCH_LOST)) {
                 printf("onContact Shape is leaving volume\n");
-            }
-            if(current.shapes[0]->userData && current.shapes[1]->userData) {
-                printf("onContact Trigger-trigger overlap detected\n");
             }
         }
     }

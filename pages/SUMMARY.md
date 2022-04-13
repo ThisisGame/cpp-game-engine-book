@@ -105,6 +105,7 @@
     * [22.1 Physx实例-小球掉落](22. physics_engine_physx/22.1 hello_physx.md)
     * [22.2 物理材质](22. physics_engine_physx/22.2 physx_material.md)
     * [22.3 碰撞检测](22. physics_engine_physx/22.3 collision_detection.md)
+    * [22.4 连续碰撞检测](22. physics_engine_physx/22.4 continuous_collision_detection.md)
 * [89. Doxygen生成API文档](89. doxygen_generates_api_documentation/89. doxygen_generates_api_documentation.md)
 * [90. GPU分析工具](90. gpu_analysis_tools/90. gpu_analysis_tools.md)
     * [90.1 RenderDoc分析不显示bug](90. gpu_analysis_tools/90.1 renderdoc_analysis_not_show_bugs.md)
