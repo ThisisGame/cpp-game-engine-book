@@ -15,6 +15,9 @@ SimulationEventCallback gSimulationEventCallback;
 PxScene*				gScene		= NULL;
 PxPvd*                  gPvd        = NULL;
 
+//~en is high-speed motion enabled.
+//~zh 高速运动是否启用。
+bool                    gEnableCCD  = true;
 
 //~en Init Physx
 //~zh 初始化Physx
@@ -35,17 +38,20 @@ void InitPhysics()
     gPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *gFoundation, PxTolerancesScale(),true,gPvd);
 }
 
+
 //~zh 设置在碰撞发生时，Physx需要做的事情
 //~en Set the actions when collision occurs,Physx needs to do.
-static PxFilterFlags SimulationFilterShader(PxFilterObjectAttributes attributes0, PxFilterData filterData0,
-                                               PxFilterObjectAttributes attributes1, PxFilterData filterData1,
-                                               PxPairFlags& pairFlags, const void* constantBlock, PxU32 constantBlockSize) {
-    pairFlags = PxPairFlag::eCONTACT_DEFAULT | PxPairFlag::eNOTIFY_TOUCH_FOUND;
+static	PxFilterFlags SimulationFilterShader(PxFilterObjectAttributes attributes0, PxFilterData filterData0,PxFilterObjectAttributes attributes1, PxFilterData filterData1,PxPairFlags& pairFlags, const void* constantBlock, PxU32 constantBlockSize) {
 
-#ifdef HIGH_SPEED
-    pairFlags |= PxPairFlag::eDETECT_CCD_CONTACT|PxPairFlag::eNOTIFY_TOUCH_CCD;
-#endif
+    //~zh eNOTIFY_TOUCH_FOUND:当碰撞发生时处理回调。 eNOTIFY_TOUCH_LOST:当碰撞结束时处理回调。
+    //~en eNOTIFY_TOUCH_FOUND:When collision occurs,process callback. eNOTIFY_TOUCH_LOST:When collision ends,process callback.
+    pairFlags = PxPairFlag::eCONTACT_DEFAULT | PxPairFlag::eNOTIFY_TOUCH_FOUND | PxPairFlag::eNOTIFY_TOUCH_LOST;
 
+    if(gEnableCCD){
+        //~zh 场景启用CCD后，还需要指定碰撞时使用CCD，并且处理回调。
+        //~en When the scene is enabled CCD, you need to specify the collision to use CCD and handle the callback.
+        pairFlags |= PxPairFlag::eDETECT_CCD_CONTACT|PxPairFlag::eNOTIFY_TOUCH_CCD;
+    }
     return PxFilterFlags();
 }
 
@@ -62,9 +68,13 @@ void CreateScene(){
     //~zh 设置在碰撞发生时，Physx需要做的事情
     //~en Set the actions when collision occurs,Physx needs to do.
     sceneDesc.filterShader	= SimulationFilterShader;
-#ifdef HIGH_SPEED
-    sceneDesc.flags |= PxSceneFlag::eENABLE_CCD;
-#endif
+
+    if(gEnableCCD){
+        //~zh 启用CCD
+        //~en Enable CCD
+        sceneDesc.flags |= PxSceneFlag::eENABLE_CCD;
+    }
+
     gScene = gPhysics->createScene(sceneDesc);
 
     PxPvdSceneClient* pvdClient = gScene->getScenePvdClient();
@@ -91,7 +101,6 @@ void CreateWall(){
     //~zh 创建墙体形状
     const PxVec3 halfExtent(0.1f, 10.0f, 10.0f);
     PxShape* shape = gPhysics->createShape(PxBoxGeometry(halfExtent), *wallMaterial);
-    shape->userData = shape;	// Arbitrary rule: it's a trigger if non null
 
     //~en Add shape to body.
     //~zh 设置刚体形状，长方体的一面墙。
@@ -103,12 +112,19 @@ void CreateWall(){
     gScene->addActor(*body);
 }
 
-//~en Create bullet,add to scene.
-//~zh 创建子弹，并添加到场景中
-void CreateBullet(){
+//~zh 创建小球，并添加到场景中
+//~en Create ball,add to scene.
+void CreateBall(){
     //~en Create RigidBody,pos is (10,0,0)
     //~zh 创建刚体，坐标是 (10,0,0)
     PxRigidDynamic* body = gPhysics->createRigidDynamic(PxTransform(PxVec3(10, 5, 0)));
+    body->setLinearVelocity(PxVec3(-140.0f, 0.0f, 0.0f));
+
+    if(gEnableCCD){
+        //~en enable continuous collision detection due to high-speed motion.
+        //~zh 对高速运动，开启连续碰撞检测。
+        body->setRigidBodyFlag(PxRigidBodyFlag::eENABLE_CCD, true);
+    }
 
     //~en Create Physx Material.
     //~zh 创建小球的物理材质
@@ -126,16 +142,6 @@ void CreateBullet(){
     PxRigidBodyExt::updateMassAndInertia(*body, 1.0f);
 
     gScene->addActor(*body);
-
-#ifndef HIGH_SPEED
-        body->setLinearVelocity(PxVec3(-14.0f, 0.0f, 0.0f));
-#else
-        //~en enable continuous collision detection due to high-speed motion.
-        //~zh 对高速运动，开启连续碰撞检测。
-        body->setRigidBodyFlag(PxRigidBodyFlag::eENABLE_CCD, true);
-
-        body->setLinearVelocity(PxVec3(-140.0f, 0.0f, 0.0f));
-#endif
 }
 
 //~en simulate game engine update
@@ -181,7 +187,7 @@ int main()
 
     //~en Create ball
     //~zh 创建球
-    CreateBullet();
+    CreateBall();
 
     //~en simulate game engine update
     //~zh 模拟游戏引擎update

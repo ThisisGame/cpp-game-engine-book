@@ -3,10 +3,6 @@ project(untitled)
 
 set(CMAKE_CXX_STANDARD 17)
 
-#~en is high-speed motion enabled.
-#~zh 高速运动是否启用。
-add_definitions(-D HIGH_SPEED)
-
 if (MSVC)
     add_compile_options(/bigobj)
     add_compile_options(/wd4819)#忽略保存为unicode警告

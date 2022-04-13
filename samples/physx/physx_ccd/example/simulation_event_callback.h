@@ -30,10 +30,12 @@ public:
         while(count--)
         {
             const PxTriggerPair& current = *pairs++;
-            if(current.status & PxPairFlag::eNOTIFY_TOUCH_FOUND)
+            if(current.status & PxPairFlag::eNOTIFY_TOUCH_FOUND) {
                 printf("Shape is entering trigger volume\n");
-            if(current.status & PxPairFlag::eNOTIFY_TOUCH_LOST)
+            }
+            if(current.status & PxPairFlag::eNOTIFY_TOUCH_LOST){
                 printf("Shape is leaving trigger volume\n");
+            }
         }
     }
 
@@ -43,24 +45,18 @@ public:
 
     void onContact(const PxContactPairHeader& pairHeader, const PxContactPair* pairs, PxU32 count) override {
 		printf("onContact: %d pairs\n", count);
-        while(count--)
-        {
+        while(count--) {
             const PxContactPair& current = *pairs++;
 
-            // The reported pairs can be trigger pairs or not. We only enabled contact reports for
-            // trigger pairs in the filter shader, so we don't need to do further checks here. In a
-            // real-world scenario you would probably need a way to tell whether one of the shapes
-            // is a trigger or not. You could e.g. reuse the PxFilterData like we did in the filter
-            // shader, or maybe use the shape's userData to identify triggers, or maybe put triggers
-            // in a hash-set and test the reported shape pointers against it. Many options here.
-
-            if(current.events & (PxPairFlag::eNOTIFY_TOUCH_FOUND|PxPairFlag::eNOTIFY_TOUCH_CCD))
-                printf("onContact Shape is entering trigger volume\n");
-            if(current.events & PxPairFlag::eNOTIFY_TOUCH_LOST)
-                printf("onContact Shape is leaving trigger volume\n");
-
-            if(current.shapes[0]->userData && current.shapes[1]->userData)
+            if(current.events & (PxPairFlag::eNOTIFY_TOUCH_FOUND|PxPairFlag::eNOTIFY_TOUCH_CCD)) {
+                printf("onContact Shape is entering volume\n");
+            }
+            if(current.events & PxPairFlag::eNOTIFY_TOUCH_LOST) {
+                printf("onContact Shape is leaving volume\n");
+            }
+            if(current.shapes[0]->userData && current.shapes[1]->userData) {
                 printf("onContact Trigger-trigger overlap detected\n");
+            }
         }
     }
 };
