@@ -37,14 +37,18 @@ void InitPhysics()
     gPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *gFoundation, PxTolerancesScale(),true,gPvd);
 }
 
-static	PxFilterFlags SimulationFilterShader(PxFilterObjectAttributes attributes0, PxFilterData filterData0,PxFilterObjectAttributes attributes1, PxFilterData filterData1,PxPairFlags& pairFlags, const void* constantBlock, PxU32 constantBlockSize) {
-    pairFlags = PxPairFlag::eCONTACT_DEFAULT;
+//~zh 设置在碰撞发生时，Physx需要做的事情
+//~en Set the actions when collision occurs,Physx needs to do.
+static PxFilterFlags SimulationFilterShader(PxFilterObjectAttributes attributes0, PxFilterData filterData0,
+                                               PxFilterObjectAttributes attributes1, PxFilterData filterData1,
+                                               PxPairFlags& pairFlags, const void* constantBlock, PxU32 constantBlockSize) {
+    pairFlags = PxPairFlag::eCONTACT_DEFAULT | PxPairFlag::eNOTIFY_TOUCH_FOUND;
 
 #ifdef HIGH_SPEED
     pairFlags |= PxPairFlag::eDETECT_CCD_CONTACT|PxPairFlag::eNOTIFY_TOUCH_CCD;
 #endif
 
-    return PxFilterFlag::eCALLBACK;
+    return PxFilterFlags();
 }
 
 //~en Create Scene
@@ -57,6 +61,8 @@ void CreateScene(){
     //~en set physx event callback,such as trigger,collision,etc.
     //~zh 设置事件回调，用于接收物理事件，如Awake/Trigger等
     sceneDesc.simulationEventCallback = &gSimulationEventCallback;
+    //~zh 设置在碰撞发生时，Physx需要做的事情
+    //~en Set the actions when collision occurs,Physx needs to do.
     sceneDesc.filterShader	= SimulationFilterShader;
     sceneDesc.filterCallback	= &gTriggersFilterCallback;
 #ifdef HIGH_SPEED
