@@ -1,7 +1,6 @@
 #include <ctype.h>
 
 #include "simulation_event_callback.h"
-#include "trigger_filter_callback.h"
 
 #define PX_RELEASE(x)	if(x)	{ x->release(); x = NULL;	}
 
@@ -13,7 +12,6 @@ PxPhysics*				gPhysics	= NULL;
 
 PxDefaultCpuDispatcher*	gDispatcher = NULL;
 SimulationEventCallback gSimulationEventCallback;
-TriggersFilterCallback gTriggersFilterCallback;
 PxScene*				gScene		= NULL;
 PxPvd*                  gPvd        = NULL;
 
@@ -64,7 +62,6 @@ void CreateScene(){
     //~zh 设置在碰撞发生时，Physx需要做的事情
     //~en Set the actions when collision occurs,Physx needs to do.
     sceneDesc.filterShader	= SimulationFilterShader;
-    sceneDesc.filterCallback	= &gTriggersFilterCallback;
 #ifdef HIGH_SPEED
     sceneDesc.flags |= PxSceneFlag::eENABLE_CCD;
 #endif
@@ -146,6 +143,7 @@ void CreateBullet(){
 void Simulate(){
     static const PxU32 frameCount = 100;
     for(PxU32 i=0; i<frameCount; i++) {
+//        printf("frame:%d",i);
         gScene->simulate(1.0f/60.0f);
         gScene->fetchResults(true);
     }
