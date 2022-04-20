@@ -1,6 +1,8 @@
 #include <ctype.h>
 
-#include "simulation_event_callback.h"
+#include "PxPhysicsAPI.h"
+
+using namespace physx;
 
 #define PX_RELEASE(x)	if(x)	{ x->release(); x = NULL;	}
 
@@ -11,13 +13,9 @@ PxFoundation*			gFoundation = NULL;
 PxPhysics*				gPhysics	= NULL;
 
 PxDefaultCpuDispatcher*	gDispatcher = NULL;
-SimulationEventCallback gSimulationEventCallback;
 PxScene*				gScene		= NULL;
 PxPvd*                  gPvd        = NULL;
 
-//~en is high-speed motion enabled.
-//~zh 高速运动是否启用。
-bool                    gEnableCCD  = true;
 
 //~en Init Physx
 //~zh 初始化Physx
@@ -38,43 +36,14 @@ void InitPhysics()
     gPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *gFoundation, PxTolerancesScale(),true,gPvd);
 }
 
-
-//~zh 设置在碰撞发生时，Physx需要做的事情
-//~en Set the actions when collision occurs,Physx needs to do.
-static	PxFilterFlags SimulationFilterShader(PxFilterObjectAttributes attributes0, PxFilterData filterData0,PxFilterObjectAttributes attributes1, PxFilterData filterData1,PxPairFlags& pairFlags, const void* constantBlock, PxU32 constantBlockSize) {
-
-    //~zh eNOTIFY_TOUCH_FOUND:当碰撞发生时处理回调。 eNOTIFY_TOUCH_LOST:当碰撞结束时处理回调。
-    //~en eNOTIFY_TOUCH_FOUND:When collision occurs,process callback. eNOTIFY_TOUCH_LOST:When collision ends,process callback.
-    pairFlags = PxPairFlag::eCONTACT_DEFAULT | PxPairFlag::eNOTIFY_TOUCH_FOUND | PxPairFlag::eNOTIFY_TOUCH_LOST;
-
-    if(gEnableCCD){
-        //~zh 场景启用CCD后，还需要指定碰撞时使用CCD，并且处理回调。
-        //~en When the scene is enabled CCD, you need to specify the collision to use CCD and handle the callback.
-        pairFlags |= PxPairFlag::eDETECT_CCD_CONTACT|PxPairFlag::eNOTIFY_TOUCH_CCD;
-    }
-    return PxFilterFlags();
-}
-
 //~en Create Scene
 //~zh 创建Scene
 void CreateScene(){
     PxSceneDesc sceneDesc(gPhysics->getTolerancesScale());
-    sceneDesc.gravity = PxVec3(0.0f, -0.98f, 0.0f);
+    sceneDesc.gravity = PxVec3(0.0f, -9.81f, 0.0f);
     gDispatcher = PxDefaultCpuDispatcherCreate(2);
     sceneDesc.cpuDispatcher	= gDispatcher;
-    //~en set physx event callback,such as trigger,collision,etc.
-    //~zh 设置事件回调，用于接收物理事件，如Awake/Trigger等
-    sceneDesc.simulationEventCallback = &gSimulationEventCallback;
-    //~zh 设置在碰撞发生时，Physx需要做的事情
-    //~en Set the actions when collision occurs,Physx needs to do.
-    sceneDesc.filterShader	= SimulationFilterShader;
-
-    if(gEnableCCD){
-        //~zh 启用CCD
-        //~en Enable CCD
-        sceneDesc.flags |= PxSceneFlag::eENABLE_CCD;
-    }
-
+    sceneDesc.filterShader	= PxDefaultSimulationFilterShader;
     gScene = gPhysics->createScene(sceneDesc);
 
     PxPvdSceneClient* pvdClient = gScene->getScenePvdClient();
@@ -86,49 +55,35 @@ void CreateScene(){
     }
 }
 
-//~en Create wall,add to scene.
-//~zh 创建墙，并添加到场景中
-void CreateWall(){
-    //~en Create RigidBody,pos is (0,10,0)
-    //~zh 创建刚体，坐标是 (0,10,0)
-    PxRigidStatic* body = gPhysics->createRigidStatic(PxTransform(PxVec3(0, 10, 0)));
-
+//~en Create Plane,add to scene.
+//~zh 创建地板
+void CreatePlane(){
     //~en Create Physx Material.
     //~zh 创建物理材质
-    PxMaterial* wallMaterial = gPhysics->createMaterial(1.0f, 1.0f, 0.0f);
+    PxMaterial* planeMaterial = gPhysics->createMaterial(0.5f, 0.5f, 0.01f);
 
-    //~en Create wall shape.
-    //~zh 创建墙体形状
-    const PxVec3 halfExtent(0.1f, 10.0f, 10.0f);
-    PxShape* shape = gPhysics->createShape(PxBoxGeometry(halfExtent), *wallMaterial);
-
-    //~en Add shape to body.
-    //~zh 设置刚体形状，长方体的一面墙。
-    body->attachShape(*shape);
-    shape->release();
-
-    //~en Add body to scene.
-    //~zh 将刚体添加到场景中
-    gScene->addActor(*body);
+    //~en Create Plane,add to scene.
+    //~zh 创建地板
+    PxRigidStatic* groundPlane = PxCreatePlane(*gPhysics, PxPlane(0,1,0,0), *planeMaterial);
+    gScene->addActor(*groundPlane);
 }
 
-//~zh 创建小球，并添加到场景中
-//~en Create ball,add to scene.
+//~en Create ball
+//~zh 创建球
 void CreateBall(){
-    //~en Create RigidBody,pos is (10,0,0)
-    //~zh 创建刚体，坐标是 (10,0,0)
-    PxRigidDynamic* body = gPhysics->createRigidDynamic(PxTransform(PxVec3(10, 5, 0)));
-    body->setLinearVelocity(PxVec3(-140.0f, 0.0f, 0.0f));
-
-    if(gEnableCCD){
-        //~en enable continuous collision detection due to high-speed motion.
-        //~zh 对高速运动，开启连续碰撞检测。
-        body->setRigidBodyFlag(PxRigidBodyFlag::eENABLE_CCD, true);
-    }
+    //~en Create RigidBody,pos is (0,10,0)
+    //~zh 创建刚体，坐标是 (0,10,0)
+    PxRigidDynamic* body = gPhysics->createRigidDynamic(PxTransform(PxVec3(0, 10, 0)));
 
     //~en Create Physx Material.
     //~zh 创建小球的物理材质
     PxMaterial* ballMaterial = gPhysics->createMaterial(0.5f, 0.5f, 1.0f);
+
+    //~en Set ball material restitution combine mode. When ball hit the floor, choose the larger, smaller, or average of the two.
+    //~zh 设置小球材质的弹性系数计算模式，小球与地板碰撞时，弹性系数是取两者大的、小的、还是平均。
+//    ballMaterial->setRestitutionCombineMode(PxCombineMode::eMAX);
+    ballMaterial->setRestitutionCombineMode(PxCombineMode::eAVERAGE);
+//    ballMaterial->setRestitutionCombineMode(PxCombineMode::eMIN);
 
     //~en Set rigid body sharp
     //~zh 设置刚体形状，一个球。
@@ -139,19 +94,31 @@ void CreateBall(){
 
     //~en calculate mass,mass = volume * density
     //~zh 根据体积、密度计算质量
-    PxRigidBodyExt::updateMassAndInertia(*body, 1.0f);
+    PxRigidBodyExt::updateMassAndInertia(*body, 10.0f);
 
     gScene->addActor(*body);
+}
+
+//~zh 场景查询
+//~en scene query
+void SceneQuery(int frame){
+    PxVec3 origin(0,0.5f,10);
+    PxVec3 uintDir(0,0,-1);
+    PxHitFlags hitFlags = PxHitFlag::ePOSITION | PxHitFlag::eNORMAL | PxHitFlag::eUV;
+    PxRaycastHit hitInfo;
+    if(PxSceneQueryExt::raycastSingle(*gScene,origin,uintDir,20,hitFlags,hitInfo)){
+        printf("frame %d,hitInfo.position:(%f,%f,%f)\n",frame,hitInfo.position.x,hitInfo.position.y,hitInfo.position.z);
+    }
 }
 
 //~en simulate game engine update
 //~zh 模拟游戏引擎update
 void Simulate(){
-    static const PxU32 frameCount = 100;
+    static const PxU32 frameCount = 1000;
     for(PxU32 i=0; i<frameCount; i++) {
-//        printf("frame:%d",i);
         gScene->simulate(1.0f/60.0f);
         gScene->fetchResults(true);
+        SceneQuery(i);
     }
 }
 
@@ -168,7 +135,7 @@ void CleanupPhysics()
     }
     PX_RELEASE(gFoundation);
 
-    printf("test physx trigger done.\n");
+    printf("SnippetHelloWorld done.\n");
 }
 
 int main()
@@ -183,7 +150,7 @@ int main()
 
     //~en Create Plane,add to scene.
     //~zh 创建地板
-    CreateWall();
+    CreatePlane();
 
     //~en Create ball
     //~zh 创建球
