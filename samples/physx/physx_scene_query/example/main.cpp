@@ -71,31 +71,6 @@ void CreateGround(){
     gScene->addActor(*groundPlane);
 }
 
-//~zh 在地面上创建Box
-//~en Create Box on the ground.
-void CreateBoxOnTheGround(){
-    //~en Create RigidBody,pos is (0,10,0)
-    //~zh 创建刚体，坐标是 (0,10,0)
-    PxRigidStatic* body = gPhysics->createRigidStatic(gBoxOnTheGroundTransform);
-    body->setName("BoxOnTheGround");
-
-    //~zh 创建Box的物理材质
-    //~en Create Physx Material.
-    PxMaterial* boxMaterial = gPhysics->createMaterial(0.5f, 0.5f, 1.0f);
-
-    //~zh 设置不参与物理模拟，也不参与场景查询，仅为调试做渲染显示。
-    //~en Set to not participate in the simulation, not participate in scene query, only for debugging rendering.
-    PxShapeFlags shapeFlags = PxShapeFlag::eVISUALIZATION;
-
-    //~zh 设置刚体形状。
-    //~en Set the shape of the body.
-    PxShape* shape = gPhysics->createShape(gBoxOnTheGroundGeometry, *boxMaterial,false,shapeFlags);
-    body->attachShape(*shape);
-    shape->release();
-
-    gScene->addActor(*body);
-}
-
 //~en Create ball
 //~zh 创建球
 void CreateBall(){
@@ -130,18 +105,27 @@ void CreateBall(){
 //~en scene query
 void SceneQuery(int frame){
     //~zh 射线检测：从指定位置发出射线，检测小球掉落。
+    //~en Returns the first rigid actor that is hit along the ray.
     PxVec3 origin(0,0.5f,10);
     PxVec3 uintDir(0,0,-1);
     PxHitFlags hitFlags = PxHitFlag::ePOSITION | PxHitFlag::eNORMAL | PxHitFlag::eUV;
-    PxRaycastHit hitInfo;
-    if(PxSceneQueryExt::raycastSingle(*gScene,origin,uintDir,20,hitFlags,hitInfo)){
-        printf("frame %d,hitInfo.position:(%f,%f,%f)\n",frame,hitInfo.position.x,hitInfo.position.y,hitInfo.position.z);
+    PxRaycastHit raycastHit;
+    if(PxSceneQueryExt::raycastSingle(*gScene, origin, uintDir, 20, hitFlags, raycastHit)){
+        printf("frame %d,raycastHit.position:(%f,%f,%f)\n", frame, raycastHit.position.x, raycastHit.position.y, raycastHit.position.z);
     }
 
-    //~zh 重叠检测：以地板上的Box为范围，检测是否有Actor进入。
+    //~zh 重叠检测：检测是否有对象与指定几何对象重叠。
+    //~en Test returning, for a given geometry, any overlapping object in the scene.
     PxOverlapHit overlapHit;
-    if(PxSceneQueryExt::overlapAny(*gScene,gBoxOnTheGroundGeometry,gBoxOnTheGroundTransform,overlapHit)){
+    if(PxSceneQueryExt::overlapAny(*gScene,PxBoxGeometry(0.5f,0.5f,0.5f),PxTransform(PxVec3(0,5.0f,0)),overlapHit)){
         printf("frame %d,overlapHit:%s\n",frame,overlapHit.actor->getName());
+    }
+
+    //~zh 横扫检测：向前发射一个小球检测碰撞。
+    //~en sweep:fire a small ball forward to detect collision.
+    PxSweepHit sweepHit;
+    if(PxSceneQueryExt::sweepSingle(*gScene,PxSphereGeometry(0.5f), PxTransform(PxVec3(0,9.0f,10)),uintDir,20,hitFlags,sweepHit)){
+        printf("frame %d,sweepHit:%s\n",frame,sweepHit.actor->getName());
     }
 }
 
@@ -149,7 +133,7 @@ void SceneQuery(int frame){
 //~zh 模拟游戏引擎update
 void Simulate(){
     static const PxU32 frameCount = 100;
-    for(PxU32 i=0; i<frameCount; i++) {
+    for(PxU32 i=1; i<=frameCount; i++) {
         gScene->simulate(1.0f/60.0f);
         gScene->fetchResults(true);
         SceneQuery(i);
@@ -185,10 +169,6 @@ int main()
     //~en Create Plane,add to scene.
     //~zh 创建地板
     CreateGround();
-
-    //~zh 在地面上创建Box
-    //~en Create Box on the ground.
-    CreateBoxOnTheGround();
 
     //~en Create ball
     //~zh 创建球
