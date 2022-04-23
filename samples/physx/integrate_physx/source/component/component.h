@@ -21,6 +21,8 @@ public:
     virtual void Awake();
     virtual void Update();
 
+    virtual void FixedUpdate();
+
     /// 渲染之前
     virtual void OnPreRender();
     /// 渲染之后

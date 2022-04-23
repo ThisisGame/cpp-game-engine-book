@@ -3,11 +3,12 @@
 //
 
 #include "physics_scene.h"
+#include "utils/debug.h"
 
-PhysicsScene::PhysicsScene() {}
+PhysicsScene::PhysicsScene(PxScene* px_scene) {}
 
 PhysicsScene::~PhysicsScene() {}
 
-void PhysicsScene::AddActor() {
-
+void PhysicsScene::AddActor(PxActor& actor) {
+    scene_->addActor(actor);
 }

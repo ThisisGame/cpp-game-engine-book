@@ -6,7 +6,7 @@
 #include "mesh_filter.h"
 #include <fstream>
 #include <rttr/registration>
-#include "utils/application.h"
+#include "app/application.h"
 #include "utils/debug.h"
 
 using std::ifstream;

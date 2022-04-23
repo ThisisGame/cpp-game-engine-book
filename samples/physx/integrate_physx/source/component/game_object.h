@@ -21,8 +21,8 @@ public:
     GameObject(std::string name);
     ~GameObject();
 
-    std::string& name(){return name_;}
-    void set_name(std::string name){name_=name;}
+    const char* name(){return name_;}
+    void set_name(const char* name){name_=name;}
 
     /// 添加组件
     /// \param component_type_name 组件类名
@@ -51,9 +51,9 @@ public:
     /// 全局查找GameObject
     /// \param name
     /// \return
-    static GameObject* Find(std::string name);
+    static GameObject* Find(const char* name);
 private:
-    std::string name_;
+    const char* name_;
     std::unordered_map<std::string,std::vector<Component*>> component_type_instance_map_;
 
     unsigned char layer_;//将物体分不同的层，用于相机分层、物理碰撞分层等。

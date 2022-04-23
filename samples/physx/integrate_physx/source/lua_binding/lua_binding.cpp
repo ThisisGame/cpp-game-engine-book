@@ -26,7 +26,7 @@
 #include "ui/ui_image.h"
 #include "ui/ui_mask.h"
 #include "ui/ui_text.h"
-#include "utils/application.h"
+#include "app/application.h"
 #include "utils/debug.h"
 #include "utils/screen.h"
 #include "utils/time.h"

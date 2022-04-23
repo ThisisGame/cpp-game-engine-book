@@ -59,11 +59,11 @@ void GameObject::Foreach(std::function<void(GameObject* game_object)> func) {
     });
 }
 
-GameObject* GameObject::Find(std::string name) {
+GameObject* GameObject::Find(const char* name) {
     GameObject* game_object_find= nullptr;
     game_object_tree_.Find(game_object_tree_.root_node(), [&name](Tree::Node* node){
         GameObject* game_object=dynamic_cast<GameObject*>(node);
-        if(game_object->name()==name){
+        if(strcmp(game_object->name(),name)==0){
             return true;
         }
         return false;

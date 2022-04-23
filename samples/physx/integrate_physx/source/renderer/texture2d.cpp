@@ -7,7 +7,7 @@
 #include "timetool/stopwatch.h"
 #include "stb/stb_truetype.h"
 #include "utils/debug.h"
-#include "utils/application.h"
+#include "app/application.h"
 #include "render_device/render_task_producer.h"
 #include "render_device/gpu_resource_mapper.h"
 

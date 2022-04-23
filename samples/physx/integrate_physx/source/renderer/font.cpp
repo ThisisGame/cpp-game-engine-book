@@ -5,7 +5,7 @@
 #include "font.h"
 #include <fstream>
 #include "freetype/ftbitmap.h"
-#include "utils/application.h"
+#include "app/application.h"
 #include "spdlog/spdlog.h"
 #include "texture2d.h"
 

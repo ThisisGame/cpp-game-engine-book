@@ -30,6 +30,8 @@ public:
     /// 逻辑代码执行后，应用到渲染。
     static void Render();
 
+    static void FixedUpdate();
+
 private:
     static std::string title_;//标题栏显示
 

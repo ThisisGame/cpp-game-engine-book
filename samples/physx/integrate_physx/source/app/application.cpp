@@ -4,8 +4,8 @@
 
 #include "application.h"
 #include <memory>
-#include <easy/profiler.h>
-#include <glad/gl.h>
+#include "easy/profiler.h"
+#include "glad/gl.h"
 #ifdef WIN32
 // 避免出现APIENTRY重定义警告。
 // freetype引用了windows.h，里面定义了APIENTRY。
@@ -15,18 +15,19 @@
 #include <Windows.h>
 #endif
 #define GLFW_INCLUDE_NONE
-#include <GLFW/glfw3.h>
-#include "debug.h"
+#include "GLFW/glfw3.h"
+#include "utils/debug.h"
 #include "component/game_object.h"
 #include "renderer/camera.h"
 #include "renderer/mesh_renderer.h"
 #include "control/input.h"
-#include "screen.h"
+#include "utils/screen.h"
 #include "render_device/render_device_opengl.h"
 #include "render_device/render_task_consumer.h"
 #include "audio/audio.h"
-#include "time.h"
+#include "utils/time.h"
 #include "render_device/render_task_producer.h"
+#include "physics/physics.h"
 
 std::string Application::title_;
 std::string Application::data_path_;
@@ -169,6 +170,25 @@ void Application::Render(){
     });
 }
 
+void Application::FixedUpdate(){
+    EASY_FUNCTION(profiler::colors::Magenta); // 标记函数
+
+    Physics::FixedUpdate();
+
+    GameObject::Foreach([](GameObject* game_object){
+        if(game_object->active()){
+            game_object->ForeachLuaComponent([](sol::table lua_component_instance_table){
+                sol::protected_function fixed_update_function=lua_component_instance_table["FixedUpdate"];
+                auto result=fixed_update_function(lua_component_instance_table);
+                if(result.valid()== false){
+                    sol::error err = result;
+                    DEBUG_LOG_ERROR("\n---- RUN LUA ERROR ----\n{}\n------------------------",err.what());
+                }
+            });
+        }
+    });
+}
+
 void Application::Run() {
     while (true) {
         EASY_BLOCK("Frame"){
@@ -176,7 +196,16 @@ void Application::Run() {
                 break;
             }
             Update();
+
+            // 如果一帧卡了很久，就多执行几次FixedUpdate
+            float cost_time=Time::delta_time();
+            while(cost_time>=Time::fixed_update_time()){
+                FixedUpdate();
+                cost_time-=Time::fixed_update_time();
+            }
+
             Render();
+
 
             //发出特殊任务：渲染结束
             RenderTaskProducer::ProduceRenderTaskEndFrame();

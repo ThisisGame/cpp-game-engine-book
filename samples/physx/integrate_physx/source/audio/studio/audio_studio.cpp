@@ -3,7 +3,7 @@
 //
 
 #include "audio_studio.h"
-#include "utils/application.h"
+#include "app/application.h"
 #include "utils/debug.h"
 
 FMOD_STUDIO_SYSTEM* AudioStudio::system_;

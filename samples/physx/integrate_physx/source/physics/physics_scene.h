@@ -12,11 +12,11 @@ using namespace physx;
 // 物理模拟的场景单元,对Physx
 class PhysicsScene {
 public:
-    PhysicsScene();
+    PhysicsScene(PxScene* px_scene);
     ~PhysicsScene();
 
     /// 添加物理对象
-    void AddActor(PxActor* actor);
+    void AddActor(PxActor& actor);
 
 private:
     PxScene* scene_;//Physx的Scene

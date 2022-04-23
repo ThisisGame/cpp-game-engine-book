@@ -7,7 +7,7 @@
 #include <fstream>
 #include <glad/gl.h>
 #include "utils/debug.h"
-#include "utils/application.h"
+#include "app/application.h"
 #include "render_device/gpu_resource_mapper.h"
 #include "render_device/render_task_producer.h"
 

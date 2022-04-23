@@ -6,7 +6,7 @@
 #include <fstream>
 #include <glm/ext.hpp>
 #include <glm/gtx/string_cast_beauty.hpp>
-#include "utils/application.h"
+#include "app/application.h"
 #include "utils/debug.h"
 #include "utils/time.h"
 
