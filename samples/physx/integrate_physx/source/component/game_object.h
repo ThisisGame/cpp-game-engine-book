@@ -18,7 +18,7 @@
 class Component;
 class GameObject:public Tree::Node {
 public:
-    GameObject(std::string name);
+    GameObject(const char* name);
     ~GameObject();
 
     const char* name(){return name_;}

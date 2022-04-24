@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.17)
-project(untitled)
+project(integrate_physx)
 
 set(CMAKE_CXX_STANDARD 17)
 
@@ -47,4 +47,5 @@ file(GLOB_RECURSE engine_cpp source/*.cpp)
 file(GLOB_RECURSE rttr_cpp "depends/rttr/*.cpp")
 file(GLOB_RECURSE example_cpp example/*.cpp)
 
-add_executable(untitled ${glfw_sources} ${rttr_cpp} ${freetype_src} ${easy_profiler_core_source} ${lua_src} ${engine_cpp} ${example_cpp} source/physics/physics.cpp source/physics/physics.h source/physics/rigid_body.cpp source/physics/rigid_body.h source/physics/physics_scene.cpp source/physics/physics_scene.h)
+add_executable(${PROJECT_NAME} ${glfw_sources} ${rttr_cpp} ${freetype_src} ${easy_profiler_core_source} ${lua_src} ${engine_cpp} ${example_cpp})
+set_property(TARGET ${PROJECT_NAME} PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")

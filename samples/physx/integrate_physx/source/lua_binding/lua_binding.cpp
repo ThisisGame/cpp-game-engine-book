@@ -30,6 +30,7 @@
 #include "utils/debug.h"
 #include "utils/screen.h"
 #include "utils/time.h"
+#include "physics/rigid_body.h"
 
 sol::state LuaBinding::sol_state_;
 
@@ -251,7 +252,7 @@ void LuaBinding::BindLua() {
 
     // component
     {
-        sol_state_.new_usertype<GameObject>("GameObject",sol::call_constructor,sol::constructors<GameObject(std::string)>(),
+        sol_state_.new_usertype<GameObject>("GameObject",sol::call_constructor,sol::constructors<GameObject(const char*)>(),
                                             "name",&GameObject::name,
                                             "set_name",&GameObject::set_name,
                                             "layer",&GameObject::layer,
@@ -531,6 +532,13 @@ void LuaBinding::BindLua() {
                                               "current_animation_clip", &Animation::current_animation_clip
         );
 
+    }
+
+    // physics
+    {
+        sol_state_.new_usertype<MeshFilter>("RigidBody",sol::call_constructor,sol::constructors<RigidBody()>(),
+                                            sol::base_classes,sol::bases<Component>()
+        );
     }
 
     // utils

@@ -9,7 +9,7 @@ PxDefaultErrorCallback	Physics::px_error_callback_;
 PxFoundation*			Physics::px_foundation_;
 PxPhysics*				Physics::px_physics_;
 PxDefaultCpuDispatcher*	Physics::px_cpu_dispatcher_;
-std::list<PxScene*>		Physics::px_scenes_;
+PxScene*		        Physics::px_scene_;
 PxPvd*                  Physics::px_pvd_;
 
 void Physics::Init() {
@@ -29,10 +29,8 @@ void Physics::Init() {
 }
 
 void Physics::FixedUpdate() {
-    for (auto px_scene:px_scenes_) {
-        px_scene->simulate(1.0f / 60.0f);
-        px_scene->fetchResults(true);
-    }
+    px_scene_->simulate(1.0f / 60.0f);
+    px_scene_->fetchResults(true);
 }
 
 PxScene* Physics::CreatePxScene() {
@@ -58,12 +56,14 @@ PxScene* Physics::CreatePxScene() {
 PxRigidDynamic* Physics::CreateRigidDynamic(const glm::vec3& pos,const char* name){
     PxRigidDynamic* body = px_physics_->createRigidDynamic(PxTransform(PxVec3(0, 10, 0)));
     body->setName(name);
+    px_scene_->addActor(*body);
     return body;
 }
 
 PxRigidStatic* Physics::CreateRigidStatic(const glm::vec3 &pos, const char *name) {
     PxRigidStatic* body = px_physics_->createRigidStatic(PxTransform(PxVec3(0, 10, 0)));
     body->setName(name);
+    px_scene_->addActor(*body);
     return body;
 }
 

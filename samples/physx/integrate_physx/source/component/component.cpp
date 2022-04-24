@@ -24,6 +24,10 @@ void Component::Update() {
 
 }
 
+void Component::FixedUpdate() {
+
+}
+
 void Component::OnPreRender() {
 
 }

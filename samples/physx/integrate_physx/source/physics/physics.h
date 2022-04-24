@@ -36,7 +36,7 @@ private:
     static PxPhysics*				px_physics_;
 
     static PxDefaultCpuDispatcher*	px_cpu_dispatcher_;
-    static std::list<PxScene*>		px_scenes_;
+    static PxScene*		            px_scene_;
     static PxPvd*                   px_pvd_;
 };
 
