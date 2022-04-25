@@ -96,14 +96,16 @@ void MeshRenderer::Render() {
     shader->Active();
     {
         // PreRender
-        game_object()->ForeachLuaComponent([](sol::table lua_component_instance_table){
+        game_object()->ForeachLuaComponent([](std::string component_name,sol::table lua_component_instance_table){
             sol::protected_function function=lua_component_instance_table["OnPreRender"];
-            if(function.valid()){
-                auto result=function(lua_component_instance_table);
-                if(result.valid()== false){
-                    sol::error err = result;
-                    DEBUG_LOG_ERROR("\n---- RUN LUA ERROR ----\n{}\n------------------------",err.what());
-                }
+            if(function.valid()== false){
+                DEBUG_LOG_ERROR("{}:OnPreRender is not valid",component_name);
+                return;
+            }
+            auto result=function(lua_component_instance_table);
+            if(result.valid()== false){
+                sol::error err = result;
+                DEBUG_LOG_ERROR("{}:OnPreRender {}",err.what());
             }
         });
 
@@ -130,14 +132,16 @@ void MeshRenderer::Render() {
         RenderTaskProducer::ProduceRenderTaskBindVAOAndDrawElements(vertex_array_object_handle_,mesh->vertex_index_num_);
 
         // PostRender
-        game_object()->ForeachLuaComponent([](sol::table lua_component_instance_table){
+        game_object()->ForeachLuaComponent([](std::string component_name,sol::table lua_component_instance_table){
             sol::protected_function function=lua_component_instance_table["OnPostRender"];
-            if(function.valid()){
-                auto result=function(lua_component_instance_table);
-                if(result.valid()== false){
-                    sol::error err = result;
-                    DEBUG_LOG_ERROR("\n---- RUN LUA ERROR ----\n{}\n------------------------",err.what());
-                }
+            if(function.valid()== false){
+                DEBUG_LOG_ERROR("{}:OnPostRender is not valid",component_name);
+                return;
+            }
+            auto result=function(lua_component_instance_table);
+            if(result.valid()== false){
+                sol::error err = result;
+                DEBUG_LOG_ERROR("{}:OnPostRender {}",err.what());
             }
         });
     }

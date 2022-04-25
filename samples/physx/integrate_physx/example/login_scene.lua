@@ -43,6 +43,8 @@ function LoginScene:Awake()
 
     --播放动画
     self.go_skeleton_:GetComponent("Animation"):Play("idle")
+
+    self.go_skeleton_:AddComponent("RigidBody")
 end
 
 function LoginScene:game_object()
@@ -64,4 +66,8 @@ function LoginScene:Update()
     self.last_frame_mouse_position_=Input.mousePosition()
     --鼠标滚轮控制相机远近
     self.go_camera_:GetComponent("Transform"):set_position(self.go_camera_:GetComponent("Transform"):position() *(10 - Input.mouse_scroll())/10)
+end
+
+function LoginScene:FixedUpdate()
+    
 end

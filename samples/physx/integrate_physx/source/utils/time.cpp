@@ -7,7 +7,7 @@
 std::chrono::system_clock::time_point Time::startup_time_;
 float Time::delta_time_=0;
 float Time::last_frame_time_=0;
-float Time::fixed_update_time_=0;
+float Time::fixed_update_time_=1.0/60;
 
 Time::Time() {
 }

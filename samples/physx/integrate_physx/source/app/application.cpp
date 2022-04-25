@@ -119,6 +119,8 @@ void Application::Init() {
 
     //初始化 fmod
     Audio::Init();
+
+    Physics::Init();
 }
 
 
@@ -129,12 +131,16 @@ void Application::Update(){
 
     GameObject::Foreach([](GameObject* game_object){
         if(game_object->active()){
-            game_object->ForeachLuaComponent([](sol::table lua_component_instance_table){
+            game_object->ForeachLuaComponent([](std::string component_name,sol::table lua_component_instance_table){
                 sol::protected_function update_function=lua_component_instance_table["Update"];
+                if(update_function.valid()==false){
+                    DEBUG_LOG_ERROR("{}:Update is not valid!if it is c++,please register in lua_binding.cpp.",component_name);
+                    return;
+                }
                 auto result=update_function(lua_component_instance_table);
                 if(result.valid()== false){
                     sol::error err = result;
-                    DEBUG_LOG_ERROR("\n---- RUN LUA ERROR ----\n{}\n------------------------",err.what());
+                    DEBUG_LOG_ERROR("{}:Update {}",err.what());
                 }
             });
         }
@@ -177,12 +183,16 @@ void Application::FixedUpdate(){
 
     GameObject::Foreach([](GameObject* game_object){
         if(game_object->active()){
-            game_object->ForeachLuaComponent([](sol::table lua_component_instance_table){
+            game_object->ForeachLuaComponent([](std::string component_name,sol::table lua_component_instance_table){
                 sol::protected_function fixed_update_function=lua_component_instance_table["FixedUpdate"];
+                if(fixed_update_function.valid()==false){
+                    DEBUG_LOG_ERROR("{}:FixedUpdate is not valid!if it is c++,please register in lua_binding.cpp.",component_name);
+                    return;
+                }
                 auto result=fixed_update_function(lua_component_instance_table);
                 if(result.valid()== false){
                     sol::error err = result;
-                    DEBUG_LOG_ERROR("\n---- RUN LUA ERROR ----\n{}\n------------------------",err.what());
+                    DEBUG_LOG_ERROR("{}:FixedUpdate {}",err.what());
                 }
             });
         }

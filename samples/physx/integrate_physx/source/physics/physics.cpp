@@ -3,6 +3,7 @@
 //
 
 #include "physics.h"
+#include "utils/debug.h"
 
 PxDefaultAllocator		Physics::px_allocator_;
 PxDefaultErrorCallback	Physics::px_error_callback_;
@@ -26,14 +27,24 @@ void Physics::Init() {
     //~en Creates an instance of the physics SDK.
     //~zh 创建Physx SDK实例
     px_physics_ = PxCreatePhysics(PX_PHYSICS_VERSION, *px_foundation_, PxTolerancesScale(),true,px_pvd_);
+
+    px_scene_ = CreatePxScene();
 }
 
 void Physics::FixedUpdate() {
+    if(px_scene_==nullptr) {
+        DEBUG_LOG_ERROR("px_scene_==nullptr,please call Physics::CreatePxScene() first");
+        return;
+    }
     px_scene_->simulate(1.0f / 60.0f);
     px_scene_->fetchResults(true);
 }
 
 PxScene* Physics::CreatePxScene() {
+    if(px_physics_==nullptr) {
+        DEBUG_LOG_ERROR("px_physics_==nullptr,please call Physics::Init() first");
+        return nullptr;
+    }
     //~zh 创建Physx Scene
     PxSceneDesc sceneDesc(px_physics_->getTolerancesScale());
     sceneDesc.gravity = PxVec3(0.0f, -9.81f, 0.0f);
@@ -54,14 +65,14 @@ PxScene* Physics::CreatePxScene() {
 }
 
 PxRigidDynamic* Physics::CreateRigidDynamic(const glm::vec3& pos,const char* name){
-    PxRigidDynamic* body = px_physics_->createRigidDynamic(PxTransform(PxVec3(0, 10, 0)));
+    PxRigidDynamic* body = px_physics_->createRigidDynamic(PxTransform(PxVec3(pos.x,pos.y,pos.z)));
     body->setName(name);
     px_scene_->addActor(*body);
     return body;
 }
 
 PxRigidStatic* Physics::CreateRigidStatic(const glm::vec3 &pos, const char *name) {
-    PxRigidStatic* body = px_physics_->createRigidStatic(PxTransform(PxVec3(0, 10, 0)));
+    PxRigidStatic* body = px_physics_->createRigidStatic(PxTransform(PxVec3(pos.x,pos.y,pos.z)));
     body->setName(name);
     px_scene_->addActor(*body);
     return body;

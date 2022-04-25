@@ -81,7 +81,7 @@ public:
 
     /// 遍历组件 一般在Update中使用
     /// \param func
-    void ForeachLuaComponent(std::function<void(sol::table)> func);
+    void ForeachLuaComponent(std::function<void(std::string,sol::table)> func);
 
 private:
     std::unordered_map<std::string,std::vector<sol::table>> lua_component_type_instance_map_;//所有lua component

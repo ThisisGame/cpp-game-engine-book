@@ -112,11 +112,11 @@ sol::table GameObject::GetComponentFromLua(std::string component_type_name) {
     return lua_component_type_instance_map_[component_type_name][0];
 }
 
-void GameObject::ForeachLuaComponent(std::function<void(sol::table)> func) {
+void GameObject::ForeachLuaComponent(std::function<void(std::string,sol::table)> func) {
     for (auto& v : lua_component_type_instance_map_){
         for (auto& iter : v.second){
             sol::table lua_component_instance_table=iter;
-            func(lua_component_instance_table);
+            func(v.first,lua_component_instance_table);
         }
     }
 }

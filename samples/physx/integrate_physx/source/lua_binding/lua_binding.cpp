@@ -30,6 +30,7 @@
 #include "utils/debug.h"
 #include "utils/screen.h"
 #include "utils/time.h"
+#include "physics/physics.h"
 #include "physics/rigid_body.h"
 
 sol::state LuaBinding::sol_state_;
@@ -264,10 +265,16 @@ void LuaBinding::BindLua() {
         );
 
         sol_state_.new_usertype<Component>("Component",sol::call_constructor,sol::constructors<Component()>(),
+                                           "game_object",&Component::game_object,
+                                           "set_game_object",&Component::set_game_object,
+                                            "OnEnable",&Component::OnEnable,
                                            "Awake",&Component::Awake,
                                            "Update",&Component::Update,
-                                           "game_object",&Component::game_object,
-                                           "set_game_object",&Component::set_game_object
+                                           "FixedUpdate",&Component::FixedUpdate,
+                                           "OnPreRender",&Component::OnPreRender,
+                                           "OnPostRender",&Component::OnPostRender,
+                                           "OnDisable",&Component::OnDisable
+
         );
 
         sol_state_.new_usertype<Transform>("Transform",sol::call_constructor,sol::constructors<Transform()>(),
@@ -536,7 +543,10 @@ void LuaBinding::BindLua() {
 
     // physics
     {
-        sol_state_.new_usertype<MeshFilter>("RigidBody",sol::call_constructor,sol::constructors<RigidBody()>(),
+        sol_state_.new_usertype<Physics>("Physics",
+                                         "CreatePxScene", &Physics::CreatePxScene
+        );
+        sol_state_.new_usertype<RigidBody>("RigidBody",sol::call_constructor,sol::constructors<RigidBody()>(),
                                             sol::base_classes,sol::bases<Component>()
         );
     }

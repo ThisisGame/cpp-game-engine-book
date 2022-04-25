@@ -16,7 +16,7 @@ RTTR_REGISTRATION{
             .constructor<>()(rttr::policy::ctor::as_raw_ptr);
 }
 
-RigidBody::RigidBody() {
+RigidBody::RigidBody():px_rigid_body_(nullptr),is_static_(false) {
 
 }
 

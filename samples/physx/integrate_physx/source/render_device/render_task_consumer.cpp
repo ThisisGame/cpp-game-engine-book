@@ -241,7 +241,7 @@ void RenderTaskConsumer::UpdateVBOSubData(RenderTaskBase *task_base) {
     //更新Buffer数据
     glBufferSubData(GL_ARRAY_BUFFER,0,task->vertex_data_size_,task->vertex_data_);__CHECK_GL_ERROR__
     stopwatch.stop();
-    DEBUG_LOG_INFO("glBufferSubData cost {}",stopwatch.microseconds());
+//    DEBUG_LOG_INFO("glBufferSubData cost {}",stopwatch.microseconds());
 }
 
 void RenderTaskConsumer::SetEnableState(RenderTaskBase *task_base) {
@@ -451,6 +451,6 @@ void RenderTaskConsumer::ProcessTask() {
                 break;
             }
         }
-        std::cout<<"task in queue:"<<RenderTaskQueue::Size()<<std::endl;
+//        DEBUG_LOG_INFO("task in queue:{}",RenderTaskQueue::Size());
     }
 }
