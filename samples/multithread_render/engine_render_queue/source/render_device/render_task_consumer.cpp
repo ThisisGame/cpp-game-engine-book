@@ -356,6 +356,7 @@ void RenderTaskConsumer::ProcessTask() {
             }
             RenderTaskBase* render_task = RenderTaskQueue::Front();
             RenderCommand render_command=render_task->render_command_;
+            bool need_return_result=render_task->need_return_result;
             switch (render_command) {//根据主线程发来的命令，做不同的处理
                 case RenderCommand::NONE:break;
                 case RenderCommand::UPDATE_SCREEN_SIZE:{
@@ -443,7 +444,7 @@ void RenderTaskConsumer::ProcessTask() {
             RenderTaskQueue::Pop();
 
             //如果这个任务不需要返回参数，那么用完就删掉。
-            if(render_task->need_return_result==false){
+            if(need_return_result==false){
                 delete render_task;
             }
             //如果是帧结束任务，就交换缓冲区。

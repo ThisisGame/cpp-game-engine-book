@@ -1,34 +1,34 @@
-#下载Physx.7z
-function(DownloadPhysx)
-    MESSAGE("Download physx-4.1.7z")
-    file(DOWNLOAD "https://github.com/ThisisGame/PhysX/releases/download/physx-4.1-win.x86_64.vc142.mt/physx-4.1.7z" "../../../template/depends/physx-4.1.7z" SHOW_PROGRESS)
-endfunction()
-
-#检测physx.7z是否存在，不存在则下载
-if(EXISTS "../../../template/depends/physx-4.1.7z")
-    MESSAGE("found physx-4.1.7z")
-    file(SIZE "../../../template/depends/physx-4.1.7z" SIZE_PHYSX)
-    MESSAGE("size of physx-4.1.7z: ${SIZE_PHYSX}")
-    #检查大小是否匹配
-    if(${SIZE_PHYSX} EQUAL 19026568)
-        MESSAGE("physx-4.1.7z is valid")
-    else()
-        MESSAGE("physx-4.1.7z is invalid")
-        DownloadPhysx()
-    endif()
-else()
-    DownloadPhysx()
-endif()
-
-
-
-#解压physx.7z
-if(EXISTS "../../../template/depends/physx-4.1")
-    MESSAGE("found physx")
-else()
-    MESSAGE("not find physx,extract physx-4.1.7z")
-    file(ARCHIVE_EXTRACT INPUT "../../../template/depends/physx-4.1.7z" DESTINATION "../../../template/depends/" VERBOSE)
-endif()
+##下载Physx.7z
+#function(DownloadPhysx)
+#    MESSAGE("Download physx-4.1.7z")
+#    file(DOWNLOAD "https://github.com/ThisisGame/PhysX/releases/download/physx-4.1-win.x86_64.vc142.mt/physx-4.1.7z" "../../../template/depends/physx-4.1.7z" SHOW_PROGRESS)
+#endfunction()
+#
+##检测physx.7z是否存在，不存在则下载
+#if(EXISTS "../../../template/depends/physx-4.1.7z")
+#    MESSAGE("found physx-4.1.7z")
+#    file(SIZE "../../../template/depends/physx-4.1.7z" SIZE_PHYSX)
+#    MESSAGE("size of physx-4.1.7z: ${SIZE_PHYSX}")
+#    #检查大小是否匹配
+#    if(${SIZE_PHYSX} EQUAL 19026568)
+#        MESSAGE("physx-4.1.7z is valid")
+#    else()
+#        MESSAGE("physx-4.1.7z is invalid")
+#        DownloadPhysx()
+#    endif()
+#else()
+#    DownloadPhysx()
+#endif()
+#
+#
+#
+##解压physx.7z
+#if(EXISTS "../../../template/depends/physx-4.1")
+#    MESSAGE("found physx")
+#else()
+#    MESSAGE("not find physx,extract physx-4.1.7z")
+#    file(ARCHIVE_EXTRACT INPUT "../../../template/depends/physx-4.1.7z" DESTINATION "../../../template/depends/" VERBOSE)
+#endif()
 
 
 #拷贝
@@ -50,7 +50,8 @@ if(WIN32)
     file(COPY "depends/physx/physx/bin/win.x86_64.vc142.mt/debug/PhysXCommon_64.dll" DESTINATION "./")
     file(COPY "depends/physx/physx/bin/win.x86_64.vc142.mt/debug/PhysX_64.dll" DESTINATION "./")
 else()
+    add_definitions(-D _DEBUG)
     link_directories("depends/physx/physx/bin/mac.x86_64/debug")
     #链接lib文件
-    link_libraries(PhysX_static_64)
+    link_libraries(PhysX_static_64 PhysXFoundation_static_64 PhysXExtensions_static_64 PhysXPvdSDK_static_64)
 endif()
