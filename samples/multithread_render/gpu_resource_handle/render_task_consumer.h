@@ -31,7 +31,7 @@ private:
 
     /// 创建VAO
     /// \param task_base
-    static void RenderTaskConsumer::CreateVAO(RenderTaskBase* task_base);
+    static void CreateVAO(RenderTaskBase* task_base);
 
     /// 绘制
     /// \param task_base
