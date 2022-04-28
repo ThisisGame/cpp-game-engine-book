@@ -16,5 +16,4 @@ include_directories("depends")
 
 file(GLOB_RECURSE example_cpp example/*.cpp)
 
-add_executable(untitled ${example_cpp})
-set_property(TARGET untitled PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+add_executable(${PROJECT_NAME} ${example_cpp})

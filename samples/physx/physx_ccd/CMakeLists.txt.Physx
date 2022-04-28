@@ -1,7 +1,7 @@
 #下载Physx.7z
 function(DownloadPhysx)
     MESSAGE("Download physx-4.1.7z")
-    file(DOWNLOAD "https://github.com/ThisisGame/PhysX/releases/download/physx-4.1-win.x86_64.vc142.mt/physx-4.1.7z" "../../../template/depends/physx-4.1.7z" SHOW_PROGRESS)
+    file(DOWNLOAD "https://github.com/ThisisGame/PhysX/releases/download/lib.mac.win.20220427/physx-4.1.7z" "../../../template/depends/physx-4.1.7z" SHOW_PROGRESS)
 endfunction()
 
 #检测physx.7z是否存在，不存在则下载
@@ -10,7 +10,7 @@ if(EXISTS "../../../template/depends/physx-4.1.7z")
     file(SIZE "../../../template/depends/physx-4.1.7z" SIZE_PHYSX)
     MESSAGE("size of physx-4.1.7z: ${SIZE_PHYSX}")
     #检查大小是否匹配
-    if(${SIZE_PHYSX} EQUAL 19026568)
+    if(${SIZE_PHYSX} EQUAL 46488026)
         MESSAGE("physx-4.1.7z is valid")
     else()
         MESSAGE("physx-4.1.7z is invalid")
@@ -39,7 +39,7 @@ include_directories("depends/physx/physx/include")
 include_directories("depends/physx/pxshared/include")
 
 #链接目录
-if(WIN32)
+if(MSVC)
     link_directories("depends/physx/physx/bin/win.x86_64.vc142.mt/debug")
     #链接lib文件
     link_libraries(PhysX_64 PhysXFoundation_64 PhysXExtensions_static_64 PhysXPvdSDK_static_64)
@@ -52,5 +52,11 @@ if(WIN32)
 else()
     link_directories("depends/physx/physx/bin/mac.x86_64/debug")
     #链接lib文件
-    link_libraries(PhysX_static_64)
+    link_libraries(PhysX_static_64 PhysXFoundation_static_64 PhysXExtensions_static_64 PhysXPvdSDK_static_64 PhysXCommon_static_64)
 endif()
+
+if (MSVC)
+    set_property(TARGET ${PROJECT_NAME} PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+else()
+    add_definitions(-D _DEBUG)
+endif ()

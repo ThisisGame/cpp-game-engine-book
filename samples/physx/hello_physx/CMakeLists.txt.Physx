@@ -39,7 +39,7 @@ include_directories("depends/physx/physx/include")
 include_directories("depends/physx/pxshared/include")
 
 #链接目录
-if(WIN32)
+if(MSVC)
     link_directories("depends/physx/physx/bin/win.x86_64.vc142.mt/debug")
     #链接lib文件
     link_libraries(PhysX_64 PhysXFoundation_64 PhysXExtensions_static_64 PhysXPvdSDK_static_64)
@@ -50,8 +50,13 @@ if(WIN32)
     file(COPY "depends/physx/physx/bin/win.x86_64.vc142.mt/debug/PhysXCommon_64.dll" DESTINATION "./")
     file(COPY "depends/physx/physx/bin/win.x86_64.vc142.mt/debug/PhysX_64.dll" DESTINATION "./")
 else()
-    add_definitions(-D _DEBUG)
     link_directories("depends/physx/physx/bin/mac.x86_64/debug")
     #链接lib文件
     link_libraries(PhysX_static_64 PhysXFoundation_static_64 PhysXExtensions_static_64 PhysXPvdSDK_static_64 PhysXCommon_static_64)
 endif()
+
+if (MSVC)
+    set_property(TARGET ${PROJECT_NAME} PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+else()
+    add_definitions(-D _DEBUG)
+endif ()

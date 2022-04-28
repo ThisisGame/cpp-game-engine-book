@@ -241,7 +241,7 @@ void RenderTaskConsumer::UpdateVBOSubData(RenderTaskBase *task_base) {
     //更新Buffer数据
     glBufferSubData(GL_ARRAY_BUFFER,0,task->vertex_data_size_,task->vertex_data_);__CHECK_GL_ERROR__
     stopwatch.stop();
-//    DEBUG_LOG_INFO("glBufferSubData cost {}",stopwatch.microseconds());
+    DEBUG_LOG_INFO("glBufferSubData cost {}",stopwatch.microseconds());
 }
 
 void RenderTaskConsumer::SetEnableState(RenderTaskBase *task_base) {
@@ -323,7 +323,7 @@ void RenderTaskConsumer::SetStencilBufferClearValue(RenderTaskBase* task_base){
 void RenderTaskConsumer::EndFrame(RenderTaskBase* task_base) {
     RenderTaskEndFrame *task = dynamic_cast<RenderTaskEndFrame *>(task_base);
     glfwSwapBuffers(window_);
-    task->return_result_set=true;
+    task->return_result_set_=true;
 }
 
 void RenderTaskConsumer::ProcessTask() {
@@ -356,6 +356,7 @@ void RenderTaskConsumer::ProcessTask() {
             }
             RenderTaskBase* render_task = RenderTaskQueue::Front();
             RenderCommand render_command=render_task->render_command_;
+            bool need_return_result=render_task->need_return_result_;
             switch (render_command) {//根据主线程发来的命令，做不同的处理
                 case RenderCommand::NONE:break;
                 case RenderCommand::UPDATE_SCREEN_SIZE:{
@@ -443,7 +444,7 @@ void RenderTaskConsumer::ProcessTask() {
             RenderTaskQueue::Pop();
 
             //如果这个任务不需要返回参数，那么用完就删掉。
-            if(render_task->need_return_result==false){
+            if(need_return_result==false){
                 delete render_task;
             }
             //如果是帧结束任务，就交换缓冲区。
@@ -451,6 +452,6 @@ void RenderTaskConsumer::ProcessTask() {
                 break;
             }
         }
-//        DEBUG_LOG_INFO("task in queue:{}",RenderTaskQueue::Size());
+        std::cout<<"task in queue:"<<RenderTaskQueue::Size()<<std::endl;
     }
 }
