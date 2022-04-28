@@ -32,6 +32,8 @@
 #include "utils/time.h"
 #include "physics/physics.h"
 #include "physics/rigid_body.h"
+#include "physics/collider.h"
+#include "physics/sphere_collider.h"
 
 sol::state LuaBinding::sol_state_;
 
@@ -548,6 +550,12 @@ void LuaBinding::BindLua() {
         );
         sol_state_.new_usertype<RigidBody>("RigidBody",sol::call_constructor,sol::constructors<RigidBody()>(),
                                             sol::base_classes,sol::bases<Component>()
+        );
+        sol_state_.new_usertype<Collider>("Collider",sol::call_constructor,sol::constructors<Collider()>(),
+                                           sol::base_classes,sol::bases<Component>()
+        );
+        sol_state_.new_usertype<SphereCollider>("SphereCollider",sol::call_constructor,sol::constructors<SphereCollider()>(),
+                                          sol::base_classes,sol::bases<Collider,Component>()
         );
     }
 

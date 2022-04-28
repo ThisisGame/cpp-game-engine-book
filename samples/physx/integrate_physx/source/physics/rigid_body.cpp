@@ -8,7 +8,7 @@
 #include "component/game_object.h"
 #include "component/transform.h"
 #include "utils/debug.h"
-
+#include "collider.h"
 
 using namespace rttr;
 RTTR_REGISTRATION{
@@ -26,6 +26,15 @@ RigidBody::~RigidBody(){
 
 void RigidBody::Awake() {
 
+}
+
+void RigidBody::BindCollider(Collider *collider) {
+    if (collider == nullptr){
+        return;
+    }
+    PxShape* px_shape=collider->px_shape();
+    px_rigid_body_->attachShape(*px_shape);
+    px_shape->release();
 }
 
 void RigidBody::Update() {

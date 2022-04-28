@@ -28,6 +28,10 @@ public:
 
     static PxRigidStatic* CreateRigidStatic(const glm::vec3& pos,const char* name);
 
+    static PxMaterial* CreateMaterial(float static_friction, float dynamic_friction, float restitution);
+
+    static PxShape* CreateSphereShape(float radius, PxMaterial* material);
+
 private:
     static PxDefaultAllocator		px_allocator_;
     static PxDefaultErrorCallback	px_error_callback_;

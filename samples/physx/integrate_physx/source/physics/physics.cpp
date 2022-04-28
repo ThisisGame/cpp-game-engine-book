@@ -78,3 +78,13 @@ PxRigidStatic* Physics::CreateRigidStatic(const glm::vec3 &pos, const char *name
     return body;
 }
 
+PxMaterial* Physics::CreateMaterial(float static_friction, float dynamic_friction, float restitution){
+    PxMaterial* material = px_physics_->createMaterial(static_friction, dynamic_friction, restitution);
+    return material;
+}
+
+PxShape* Physics::CreateSphereShape(float radius, PxMaterial* material){
+    PxShape* shape = px_physics_->createShape(PxSphereGeometry(radius), *material);
+    return shape;
+}
+

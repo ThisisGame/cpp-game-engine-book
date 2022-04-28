@@ -45,6 +45,7 @@ function LoginScene:Awake()
     self.go_skeleton_:GetComponent("Animation"):Play("idle")
 
     self.go_skeleton_:AddComponent("RigidBody")
+    self.go_skeleton_:AddComponent("SphereCollider")
 end
 
 function LoginScene:game_object()

@@ -10,11 +10,14 @@
 
 using namespace physx;
 
+class Collider;
 // 刚体
 class RigidBody : public Component{
 public:
     RigidBody();
     ~RigidBody();
+
+    void BindCollider(Collider *collider);
 
 public:
     /// Awake里反序列化给成员变量赋值。
