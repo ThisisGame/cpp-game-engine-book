@@ -28,9 +28,12 @@ public:
     void FixedUpdate() override;
 
 protected:
-    virtual void CreateMaterial();
+    virtual void CreatePhysicMaterial();
     virtual void CreateShape();
     virtual void RegisterToRigidBody();
+
+private:
+    void GetOrAddRigidBody();
 
 protected:
     PxShape* px_shape_;

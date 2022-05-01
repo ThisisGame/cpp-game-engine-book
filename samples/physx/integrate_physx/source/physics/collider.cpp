@@ -27,10 +27,13 @@ Collider::~Collider(){
 }
 
 void Collider::Awake() {
-
+    GetOrAddRigidBody();
+    CreatePhysicMaterial();
+    CreateShape();
+    RegisterToRigidBody();
 }
 
-void Collider::CreateMaterial() {
+void Collider::CreatePhysicMaterial() {
     if(physic_material_== nullptr){
         physic_material_=new PhysicMaterial(0.5f,0.5f,0.5f);
     }
@@ -46,18 +49,30 @@ void Collider::CreateShape() {
 
 void Collider::RegisterToRigidBody() {
     if(rigid_body_== nullptr){
+        DEBUG_LOG_ERROR("rigid_body_ is nullptr");
+        return;
+    }
+    rigid_body_->BindCollider(this);
+}
+
+void Collider::GetOrAddRigidBody() {
+    if(rigid_body_== nullptr){
         auto component=game_object()->GetComponent("RigidBody");
+        if(component== nullptr){
+            DEBUG_LOG_INFO("RigidBody not found,add it to game object");
+            component = game_object()->AddComponent("RigidBody");
+        }
         if(component!= nullptr){
             rigid_body_=dynamic_cast<RigidBody*>(component);
-            rigid_body_->BindCollider(this);
+        }
+        if(rigid_body_== nullptr){
+            DEBUG_LOG_ERROR("RigidBody not found");
         }
     }
 }
 
 void Collider::Update() {
-    CreateMaterial();
-    CreateShape();
-    RegisterToRigidBody();
+
 }
 
 void Collider::FixedUpdate() {

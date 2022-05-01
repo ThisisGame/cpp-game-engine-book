@@ -25,7 +25,14 @@ RigidBody::~RigidBody(){
 }
 
 void RigidBody::Awake() {
-
+    Transform* transform=dynamic_cast<Transform*>(game_object()->GetComponent("Transform"));
+    if(is_static_){
+        PxRigidStatic* px_rigid_static=Physics::CreateRigidStatic(transform->position(),game_object()->name());
+        px_rigid_body_=dynamic_cast<PxRigidBody*>(px_rigid_static);
+    }else{
+        PxRigidDynamic* px_rigid_dynamic=Physics::CreateRigidDynamic(transform->position(), game_object()->name());
+        px_rigid_body_=dynamic_cast<PxRigidBody*>(px_rigid_dynamic);
+    }
 }
 
 void RigidBody::BindCollider(Collider *collider) {
@@ -38,16 +45,7 @@ void RigidBody::BindCollider(Collider *collider) {
 }
 
 void RigidBody::Update() {
-    if(px_rigid_body_== nullptr){
-        Transform* transform=dynamic_cast<Transform*>(game_object()->GetComponent("Transform"));
-        if(is_static_){
-            PxRigidStatic* px_rigid_static=Physics::CreateRigidStatic(transform->position(),game_object()->name());
-            px_rigid_body_=dynamic_cast<PxRigidBody*>(px_rigid_static);
-        }else{
-            PxRigidDynamic* px_rigid_dynamic=Physics::CreateRigidDynamic(transform->position(), game_object()->name());
-            px_rigid_body_=dynamic_cast<PxRigidBody*>(px_rigid_dynamic);
-        }
-    }
+
 }
 
 void RigidBody::FixedUpdate() {

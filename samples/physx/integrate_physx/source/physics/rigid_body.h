@@ -11,7 +11,7 @@
 using namespace physx;
 
 class Collider;
-// 刚体
+//~zh 刚体组件，对Physx PxRigidBody进行封装。Collider组件依赖于刚体组件，所以当有Collider组件时，刚体组件也必须存在。
 class RigidBody : public Component{
 public:
     RigidBody();
