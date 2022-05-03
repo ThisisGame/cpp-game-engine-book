@@ -5,6 +5,7 @@ LoginScene={
     animation_,--骨骼动画
     animation_clip_, --- 骨骼动画片段
     material_, --材质
+    go_ground_, --地面
     last_frame_mouse_position_,--上一帧的鼠标位置
 }
 
@@ -25,7 +26,7 @@ function LoginScene:Awake()
 
     --创建骨骼蒙皮动画
     self.go_skeleton_=GameObject("skeleton")
-    self.go_skeleton_:AddComponent("Transform"):set_position(glm.vec3(0, -1, 0))
+    self.go_skeleton_:AddComponent("Transform"):set_position(glm.vec3(0, 1, 0))
     self.go_skeleton_:GetComponent("Transform"):set_rotation(glm.vec3(-90, 0, 0))
     self.go_skeleton_:AddComponent("Animation"):LoadAnimationClipFromFile("animation/fbx_extra_bip001_bip001_take_001_baselayer.skeleton_anim","idle")
 
@@ -46,6 +47,12 @@ function LoginScene:Awake()
 
     self.go_skeleton_:AddComponent("RigidBody")
     self.go_skeleton_:AddComponent("SphereCollider")
+
+    --创建地面
+    --self.go_ground_=GameObject("ground")
+    --self.go_ground_:AddComponent("Transform"):set_position(glm.vec3(0, -1, 0))
+    --self.go_ground_:AddComponent("RigidBody")
+    --self.go_ground_:AddComponent("BoxCollider")
 end
 
 function LoginScene:game_object()

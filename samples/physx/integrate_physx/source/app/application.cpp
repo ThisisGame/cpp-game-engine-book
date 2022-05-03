@@ -140,7 +140,7 @@ void Application::Update(){
                 auto result=update_function(lua_component_instance_table);
                 if(result.valid()== false){
                     sol::error err = result;
-                    DEBUG_LOG_ERROR("{}:Update {}",err.what());
+                    DEBUG_LOG_ERROR("{}:Update {}",component_name,err.what());
                 }
             });
         }

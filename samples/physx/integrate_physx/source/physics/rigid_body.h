@@ -28,7 +28,7 @@ public:
     void FixedUpdate() override;
 
 private:
-    PxRigidBody*    px_rigid_body_;
+    PxRigidActor*    px_rigid_actor_;
 
     bool            is_static_;//是否是静态对象。
 };

@@ -88,3 +88,8 @@ PxShape* Physics::CreateSphereShape(float radius, PxMaterial* material){
     return shape;
 }
 
+PxShape* Physics::CreateBoxShape(const glm::vec3& size, PxMaterial* material){
+    PxShape* shape = px_physics_->createShape(PxBoxGeometry(size.x/2,size.y/2,size.z/2), *material);
+    return shape;
+}
+

@@ -2,8 +2,8 @@
 // Created by captain on 4/28/2022.
 //
 
-#ifndef INTEGRATE_PHYSX_BOX_COLLIDER_H
-#define INTEGRATE_PHYSX_BOX_COLLIDER_H
+#ifndef INTEGRATE_PHYSX_COLLIDER_H
+#define INTEGRATE_PHYSX_COLLIDER_H
 
 #include <PxPhysicsAPI.h>
 #include "component/component.h"
@@ -44,4 +44,4 @@ private:
 };
 
 
-#endif //INTEGRATE_PHYSX_BOX_COLLIDER_H
+#endif //INTEGRATE_PHYSX_COLLIDER_H

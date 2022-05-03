@@ -32,6 +32,8 @@ public:
 
     static PxShape* CreateSphereShape(float radius, PxMaterial* material);
 
+    static PxShape* CreateBoxShape(const glm::vec3& size, PxMaterial* material);
+
 private:
     static PxDefaultAllocator		px_allocator_;
     static PxDefaultErrorCallback	px_error_callback_;
