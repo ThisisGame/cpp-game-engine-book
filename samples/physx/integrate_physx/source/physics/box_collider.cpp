@@ -13,7 +13,7 @@ RTTR_REGISTRATION//注册反射
             .constructor<>()(rttr::policy::ctor::as_raw_ptr);
 }
 
-BoxCollider::BoxCollider():Collider(),size_(0,0,0)
+BoxCollider::BoxCollider():Collider(),size_(1,1,1)
 {
 
 }

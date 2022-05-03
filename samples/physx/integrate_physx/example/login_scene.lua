@@ -49,10 +49,10 @@ function LoginScene:Awake()
     self.go_skeleton_:AddComponent("SphereCollider")
 
     --创建地面
-    --self.go_ground_=GameObject("ground")
-    --self.go_ground_:AddComponent("Transform"):set_position(glm.vec3(0, -1, 0))
-    --self.go_ground_:AddComponent("RigidBody")
-    --self.go_ground_:AddComponent("BoxCollider")
+    self.go_ground_=GameObject("ground")
+    self.go_ground_:AddComponent("Transform"):set_position(glm.vec3(0, -1, 0))
+    self.go_ground_:AddComponent("RigidBody")
+    self.go_ground_:AddComponent("BoxCollider")
 end
 
 function LoginScene:game_object()
