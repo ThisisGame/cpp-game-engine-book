@@ -17,8 +17,12 @@ public:
     RigidBody();
     ~RigidBody();
 
+    void Create();
+
     void BindCollider(Collider *collider);
 
+    bool is_static(){return is_static_;}
+    void set_is_static(bool is_static);
 public:
     /// Awake里反序列化给成员变量赋值。
     void Awake() override;

@@ -24,7 +24,11 @@ RigidBody::~RigidBody(){
 
 }
 
-void RigidBody::Awake() {
+void RigidBody::Create() {
+    if(px_rigid_actor_!=nullptr) {
+        px_rigid_actor_->release();
+        px_rigid_actor_ = nullptr;
+    }
     Transform* transform=dynamic_cast<Transform*>(game_object()->GetComponent("Transform"));
     if(is_static_){
         PxRigidStatic* px_rigid_static=Physics::CreateRigidStatic(transform->position(),game_object()->name());
@@ -33,6 +37,16 @@ void RigidBody::Awake() {
         PxRigidDynamic* px_rigid_dynamic=Physics::CreateRigidDynamic(transform->position(), game_object()->name());
         px_rigid_actor_=dynamic_cast<PxRigidActor*>(px_rigid_dynamic);
     }
+}
+
+
+void RigidBody::set_is_static(bool is_static) {
+    is_static_=is_static;
+    Create();
+}
+
+void RigidBody::Awake() {
+    Create();
 }
 
 void RigidBody::BindCollider(Collider *collider) {

@@ -550,7 +550,8 @@ void LuaBinding::BindLua() {
                                          "CreatePxScene", &Physics::CreatePxScene
         );
         sol_state_.new_usertype<RigidBody>("RigidBody",sol::call_constructor,sol::constructors<RigidBody()>(),
-                                            sol::base_classes,sol::bases<Component>()
+                                            sol::base_classes,sol::bases<Component>(),
+                                            "set_is_static", &RigidBody::set_is_static
         );
         sol_state_.new_usertype<Collider>("Collider",sol::call_constructor,sol::constructors<Collider()>(),
                                            sol::base_classes,sol::bases<Component>()

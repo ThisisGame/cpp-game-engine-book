@@ -50,8 +50,8 @@ function LoginScene:Awake()
 
     --创建地面
     self.go_ground_=GameObject("ground")
-    self.go_ground_:AddComponent("Transform"):set_position(glm.vec3(0, -1, 0))
-    self.go_ground_:AddComponent("RigidBody")
+    self.go_ground_:AddComponent("Transform"):set_position(glm.vec3(0, -2, 0))
+    self.go_ground_:AddComponent("RigidBody"):set_is_static(true)
     self.go_ground_:AddComponent("BoxCollider")
 end
 
