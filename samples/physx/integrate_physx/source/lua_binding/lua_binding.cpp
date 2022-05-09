@@ -31,7 +31,9 @@
 #include "utils/screen.h"
 #include "utils/time.h"
 #include "physics/physics.h"
+#include "physics/rigid_actor.h"
 #include "physics/rigid_dynamic.h"
+#include "physics/rigid_static.h"
 #include "physics/collider.h"
 #include "physics/sphere_collider.h"
 #include "physics/box_collider.h"
@@ -549,9 +551,15 @@ void LuaBinding::BindLua() {
         sol_state_.new_usertype<Physics>("Physics",
                                          "CreatePxScene", &Physics::CreatePxScene
         );
-        sol_state_.new_usertype<RigidDynamic>("RigidBody", sol::call_constructor, sol::constructors<RigidDynamic()>(),
-                                              sol::base_classes, sol::bases<Component>(),
-                                              "set_is_static", &RigidDynamic::set_is_static
+        sol_state_.new_usertype<RigidActor>("RigidActor",sol::call_constructor, sol::constructors<RigidActor()>(),
+                                            sol::base_classes, sol::bases<Component>(),
+                                            "BindCollider", &RigidActor::BindCollider
+        );
+        sol_state_.new_usertype<RigidDynamic>("RigidDynamic", sol::call_constructor, sol::constructors<RigidDynamic()>(),
+                                              sol::base_classes, sol::bases<Component>()
+        );
+        sol_state_.new_usertype<RigidStatic>("RigidStatic", sol::call_constructor, sol::constructors<RigidStatic()>(),
+                                              sol::base_classes, sol::bases<Component>()
         );
         sol_state_.new_usertype<Collider>("Collider",sol::call_constructor,sol::constructors<Collider()>(),
                                            sol::base_classes,sol::bases<Component>()

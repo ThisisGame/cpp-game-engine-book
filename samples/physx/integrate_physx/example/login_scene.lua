@@ -44,15 +44,15 @@ function LoginScene:Awake()
 
     --播放动画
     self.go_skeleton_:GetComponent("Animation"):Play("idle")
-
-    self.go_skeleton_:AddComponent("RigidBody")
+    self.go_skeleton_:AddComponent("RigidDynamic")
     self.go_skeleton_:AddComponent("SphereCollider")
 
     --创建地面
     self.go_ground_=GameObject("ground")
     self.go_ground_:AddComponent("Transform"):set_position(glm.vec3(0, -2, 0))
-    self.go_ground_:AddComponent("RigidBody"):set_is_static(true)
     self.go_ground_:AddComponent("BoxCollider")
+    self.go_ground_:AddComponent("RigidStatic")
+
 end
 
 function LoginScene:game_object()

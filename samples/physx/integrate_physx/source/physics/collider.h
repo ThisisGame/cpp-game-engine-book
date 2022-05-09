@@ -5,9 +5,11 @@
 #ifndef INTEGRATE_PHYSX_COLLIDER_H
 #define INTEGRATE_PHYSX_COLLIDER_H
 
+#include <rttr/registration>
 #include <PxPhysicsAPI.h>
 #include "component/component.h"
 
+using namespace rttr;
 using namespace physx;
 
 class RigidActor;
@@ -41,6 +43,8 @@ protected:
 private:
     PhysicMaterial* physic_material_;
     RigidActor* rigid_actor_;
+
+RTTR_ENABLE();
 };
 
 

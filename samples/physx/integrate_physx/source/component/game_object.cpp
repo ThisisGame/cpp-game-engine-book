@@ -36,6 +36,21 @@ Component* GameObject::AddComponent(std::string component_type_name) {
 Component* GameObject::GetComponent(std::string component_type_name) {
     sol::table component_table=GetComponentFromLua(component_type_name);
     if(!component_table){
+        //没有找到组件,就去查找子组件
+        type t = type::get_by_name(component_type_name);
+        if(t.is_valid()==false){
+            std::cout<<"type::get_by_name({}) failed:"<<component_type_name<<std::endl;
+            return nullptr;
+        }
+        auto derived_classes = t.get_derived_classes();
+        for(auto derived_class:derived_classes){
+            component_table=GetComponentFromLua(derived_class.get_name().to_string());
+            if(component_table){
+                break;
+            }
+        }
+    }
+    if(!component_table){
         return nullptr;
     }
     Component* component=component_table.as<Component*>();

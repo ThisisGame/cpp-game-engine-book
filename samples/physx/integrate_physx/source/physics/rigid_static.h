@@ -13,7 +13,6 @@ public:
     RigidStatic();
     ~RigidStatic();
 
-    void BindCollider(Collider *collider) override;
 public:
     /// Awake里反序列化给成员变量赋值。
     void Awake() override;
