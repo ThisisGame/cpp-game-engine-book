@@ -5,9 +5,11 @@
 #ifndef INTEGRATE_PHYSX_BOX_COLLIDER_H
 #define INTEGRATE_PHYSX_BOX_COLLIDER_H
 
-
-#include "collider.h"
+#include <rttr/registration>
 #include <glm/glm.hpp>
+#include "collider.h"
+
+using namespace rttr;
 
 class BoxCollider : public Collider {
 public:
@@ -20,6 +22,8 @@ protected:
 private:
     //~zh 碰撞器尺寸
     glm::vec3 size_;
+
+RTTR_ENABLE(Collider);
 };
 
 

@@ -10,7 +10,7 @@
 #include "component/transform.h"
 #include "utils/debug.h"
 #include "physic_material.h"
-#include "rigid_body.h"
+#include "rigid_dynamic.h"
 
 using namespace rttr;
 RTTR_REGISTRATION{
@@ -18,7 +18,7 @@ RTTR_REGISTRATION{
             .constructor<>()(rttr::policy::ctor::as_raw_ptr);
 }
 
-Collider::Collider():px_shape_(nullptr),px_material_(nullptr),physic_material_(nullptr),rigid_body_(nullptr) {
+Collider::Collider(): px_shape_(nullptr), px_material_(nullptr), physic_material_(nullptr), rigid_actor_(nullptr) {
 
 }
 
@@ -27,10 +27,9 @@ Collider::~Collider(){
 }
 
 void Collider::Awake() {
-    GetOrAddRigidBody();
     CreatePhysicMaterial();
     CreateShape();
-    RegisterToRigidBody();
+    RegisterToRigidActor();
 }
 
 void Collider::CreatePhysicMaterial() {
@@ -47,28 +46,29 @@ void Collider::CreateShape() {
 
 }
 
-void Collider::RegisterToRigidBody() {
-    if(rigid_body_== nullptr){
-        DEBUG_LOG_ERROR("rigid_body_ is nullptr");
+void Collider::RegisterToRigidActor() {
+    if(GetRigidActor() == nullptr){
+        DEBUG_LOG_ERROR("rigid_actor_ is nullptr,Collider need to be attached to a rigid_actor");
         return;
     }
-    rigid_body_->BindCollider(this);
+    rigid_actor_->BindCollider(this);
 }
 
-void Collider::GetOrAddRigidBody() {
-    if(rigid_body_== nullptr){
-        auto component=game_object()->GetComponent("RigidBody");
-        if(component== nullptr){
-            DEBUG_LOG_INFO("RigidBody not found,add it to game object");
-            component = game_object()->AddComponent("RigidBody");
-        }
-        if(component!= nullptr){
-            rigid_body_=dynamic_cast<RigidBody*>(component);
-        }
-        if(rigid_body_== nullptr){
-            DEBUG_LOG_ERROR("RigidBody not found");
-        }
+RigidActor * Collider::GetRigidActor() {
+    if (rigid_actor_ != nullptr){
+        return rigid_actor_;
     }
+    auto component=game_object()->GetComponent("RigidDynamic");
+    if(component != nullptr){
+        rigid_actor_=dynamic_cast<RigidActor*>(component);
+        return rigid_actor_;
+    }
+    component=game_object()->GetComponent("RigidStatic");
+    if(component != nullptr){
+        rigid_actor_=dynamic_cast<RigidActor*>(component);
+        return rigid_actor_;
+    }
+    return nullptr;
 }
 
 void Collider::Update() {

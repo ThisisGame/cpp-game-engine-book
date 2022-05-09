@@ -5,12 +5,14 @@
 #ifndef INTEGRATE_PHYSX_COLLIDER_H
 #define INTEGRATE_PHYSX_COLLIDER_H
 
+#include <rttr/registration>
 #include <PxPhysicsAPI.h>
 #include "component/component.h"
 
+using namespace rttr;
 using namespace physx;
 
-class RigidBody;
+class RigidActor;
 class PhysicMaterial;
 class Collider : public Component {
 public:
@@ -27,20 +29,22 @@ public:
 
     void FixedUpdate() override;
 
-protected:
+public:
     virtual void CreatePhysicMaterial();
     virtual void CreateShape();
-    virtual void RegisterToRigidBody();
+    virtual void RegisterToRigidActor();
 
 private:
-    void GetOrAddRigidBody();
+    RigidActor * GetRigidActor();
 
 protected:
     PxShape* px_shape_;
     PxMaterial* px_material_;
 private:
     PhysicMaterial* physic_material_;
-    RigidBody* rigid_body_;
+    RigidActor* rigid_actor_;
+
+RTTR_ENABLE();
 };
 
 
