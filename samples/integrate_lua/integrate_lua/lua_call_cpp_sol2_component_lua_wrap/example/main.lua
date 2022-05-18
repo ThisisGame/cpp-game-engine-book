@@ -82,3 +82,7 @@ function main()
     --local go=GameObject()
     --CompareGameObject(go,go)
 end
+
+function update()
+
+end

@@ -176,25 +176,20 @@ int main(int argc, char * argv[])
         std::cerr << "------------------------" << std::endl;
     }
 
+    //调用lua update()
+    sol::protected_function update_function=sol_state["update"];
+
+
     for(int i=0;i<30000;i++){
         std::cout<<"Loop "<<i<<std::endl;
 
-        float time=1.0f;
-        for (int j = 1; j <10000000; ++j) {
-            time=time*j/j;
+        result=update_function();
+        if(result.valid()== false){
+            sol::error err = result;
+            std::cerr << "----- RUN LUA ERROR ----" << std::endl;
+            std::cerr << err.what() << std::endl;
+            std::cerr << "------------------------" << std::endl;
         }
-        GameObject::Foreach([](GameObject* game_object){
-            game_object->ForeachLuaComponent([](sol::table lua_component_instance_table){
-                sol::protected_function update_function=lua_component_instance_table["Update"];
-                auto result=update_function(lua_component_instance_table);
-                if(result.valid()== false){
-                    sol::error err = result;
-                    std::cerr << "----- RUN LUA ERROR ----" << std::endl;
-                    std::cerr << err.what() << std::endl;
-                    std::cerr << "------------------------" << std::endl;
-                }
-            });
-        });
     }
 
     return 0;
