@@ -1,4 +1,4 @@
-#include "../source/game_object.h"
+﻿#include "../source/game_object.h"
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
 #include "../source/key_action.h"

@@ -1,4 +1,4 @@
-## 13.1 绘制TrueType
+﻿## 13.1 绘制TrueType
 
 ```bash
 CLion项目文件位于 samples\draw_font\draw_ttf_font

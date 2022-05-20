@@ -1,4 +1,4 @@
-#define GLFW_INCLUDE_NONE
+﻿#define GLFW_INCLUDE_NONE
 
 #include "utils/debug.h"
 #include "lua_binding/lua_binding.h"

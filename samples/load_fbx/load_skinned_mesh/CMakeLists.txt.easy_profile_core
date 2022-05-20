@@ -1,4 +1,4 @@
-#message(STATUS "")
+﻿#message(STATUS "")
 #message(STATUS "EASY_PROFILER.Core version = ${EASY_PRODUCT_VERSION_STRING}")
 #message(STATUS "")
 

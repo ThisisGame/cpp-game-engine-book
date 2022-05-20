@@ -1,4 +1,4 @@
-#define GLFW_INCLUDE_NONE
+﻿#define GLFW_INCLUDE_NONE
 
 #include "component/game_object.h"
 #include "utils/application.h"

@@ -1,4 +1,4 @@
-#使用Wwise播放音效
+﻿#使用Wwise播放音效
 add_definitions(-D USE_WWISE_AUDIO)
 
 #是否输出wwise占用系统资源

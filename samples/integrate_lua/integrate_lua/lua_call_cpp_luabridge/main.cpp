@@ -1,4 +1,4 @@
-extern "C"
+﻿extern "C"
 {
 #include "lua.h"
 #include "lauxlib.h"
