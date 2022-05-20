@@ -1,4 +1,4 @@
-//
+﻿//
 // Created by captainchen on 2021/5/14.
 // technique是指一个效果，这个效果包含多个Pass，例如要实现被遮挡透视的效果，第一个Pass改变ZWrite，第二个Pass正常渲染。
 //

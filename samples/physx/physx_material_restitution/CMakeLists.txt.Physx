@@ -1,4 +1,4 @@
-#下载Physx.7z
+﻿#下载Physx.7z
 function(DownloadPhysx)
     MESSAGE("Download physx-4.1.7z")
     file(DOWNLOAD "https://github.com/ThisisGame/PhysX/releases/download/lib.mac.win.20220427/physx-4.1.7z" "../../../template/depends/physx-4.1.7z" SHOW_PROGRESS)

@@ -1,4 +1,4 @@
-#include <glad/gl.h>
+﻿#include <glad/gl.h>
 #ifdef WIN32
 // 避免出现APIENTRY重定义警告。
 // freetype引用了windows.h，里面定义了APIENTRY。

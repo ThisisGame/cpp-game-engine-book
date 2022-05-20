@@ -1,4 +1,4 @@
-#使用fmod studio，加载bank文件的形式。
+﻿#使用fmod studio，加载bank文件的形式。
 add_definitions(-D USE_FMOD_STUDIO)
 
 #拷贝depends目录

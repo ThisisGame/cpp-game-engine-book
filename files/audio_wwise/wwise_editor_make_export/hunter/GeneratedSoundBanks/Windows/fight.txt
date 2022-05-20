@@ -1,4 +1,4 @@
-Event	ID	Name			Wwise Object Path	Notes
+﻿Event	ID	Name			Wwise Object Path	Notes
 	445985469	die			\Default Work Unit\die	
 
 In Memory Audio	ID	Name	Audio source file		Wwise Object Path	Notes	Data Size

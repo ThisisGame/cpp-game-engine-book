@@ -1,4 +1,4 @@
-Event	ID	Name			Wwise Object Path	Notes
+﻿Event	ID	Name			Wwise Object Path	Notes
 	153136435	lion			\Default Work Unit\lion	
 	185173510	little_die			\Default Work Unit\little_die	
 	347299850	open_game			\Default Work Unit\open_game	

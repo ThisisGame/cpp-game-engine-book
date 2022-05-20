@@ -1,4 +1,4 @@
-#拷贝depends目录
+﻿#拷贝depends目录
 file(COPY "../../template/depends/fmod/" DESTINATION "../depends/fmod/")
 
 #头文件目录

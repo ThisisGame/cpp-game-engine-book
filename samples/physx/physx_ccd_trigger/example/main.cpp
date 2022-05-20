@@ -1,4 +1,4 @@
-#include <ctype.h>
+﻿#include <ctype.h>
 
 #include "simulation_event_callback.h"
 

@@ -1,4 +1,4 @@
-## 17.1 Lua与C++交互
+﻿## 17.1 Lua与C++交互
 
 sol2特性
 1. lua可以对cpp class添加函数

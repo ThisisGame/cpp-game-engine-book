@@ -1,4 +1,4 @@
-#拷贝depends目录
+﻿#拷贝depends目录
 file(COPY "../../template/depends/freetype-2.11.0/" DESTINATION "../depends/freetype/")
 
 add_definitions(-D FT2_BUILD_LIBRARY)

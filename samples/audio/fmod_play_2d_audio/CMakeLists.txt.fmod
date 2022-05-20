@@ -1,4 +1,4 @@
-#链接目录
+﻿#链接目录
 link_directories("depends/fmod/api/core/lib/x64")
 
 if(WIN32)
