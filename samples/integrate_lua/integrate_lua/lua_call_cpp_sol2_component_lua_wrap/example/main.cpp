@@ -19,7 +19,18 @@ void CompareGameObject(GameObject* a,GameObject* b){
 
 int main(int argc, char * argv[])
 {
-    sol_state.open_libraries(sol::lib::base,sol::lib::package);
+    sol_state.open_libraries(sol::lib::base,
+                             sol::lib::package,
+                             sol::lib::coroutine,
+                             sol::lib::string,
+                             sol::lib::os,
+                             sol::lib::math,
+                             sol::lib::table,
+                             sol::lib::debug,
+                             sol::lib::bit32,
+                             sol::lib::io,
+                             sol::lib::utf8
+                             );
 
     //绑定glm::vec3
     {
@@ -88,9 +99,11 @@ int main(int argc, char * argv[])
                 ));
     }
 
+
+    auto cpp_ns_table = sol_state["Cpp"].get_or_create<sol::table>();
     //绑定 GameObject
     {
-        sol_state.new_usertype<GameObject>("GameObject",sol::call_constructor,sol::constructors<GameObject()>(),
+        cpp_ns_table.new_usertype<GameObject>("GameObject",sol::call_constructor,sol::constructors<GameObject()>(),
                 "AddComponent", &GameObject::AddComponentFromLua,
                 "GetComponent",&GameObject::GetComponentFromLua,
                 sol::meta_function::equal_to,&GameObject::operator==
@@ -99,7 +112,7 @@ int main(int argc, char * argv[])
 
     //绑定 Component
     {
-        sol_state.new_usertype<Component>("Component",sol::call_constructor,sol::constructors<Component()>(),
+        cpp_ns_table.new_usertype<Component>("Component",sol::call_constructor,sol::constructors<Component()>(),
                 "Awake",&Component::Awake,
                 "Update",&Component::Update,
                 "game_object",&Component::game_object,
@@ -109,17 +122,17 @@ int main(int argc, char * argv[])
 
     //绑定 Animator
     {
-        sol_state.new_usertype<Animator>("Animator",sol::call_constructor,sol::constructors<Animator()>(),
+        cpp_ns_table.new_usertype<Animator>("Animator",sol::call_constructor,sol::constructors<Animator()>(),
                 sol::base_classes,sol::bases<Component>());
     }
     //绑定 Camera
     {
-        sol_state.new_usertype<Camera>("Camera",sol::call_constructor,sol::constructors<Camera()>(),
+        cpp_ns_table.new_usertype<Camera>("Camera",sol::call_constructor,sol::constructors<Camera()>(),
                 sol::base_classes,sol::bases<Component>(),
                 "position",&Camera::position,
                 "set_position",&Camera::set_position
         );
-        sol_state.new_usertype<UICamera>("UICamera",sol::call_constructor,sol::constructors<UICamera()>(),
+        cpp_ns_table.new_usertype<UICamera>("UICamera",sol::call_constructor,sol::constructors<UICamera()>(),
                                        sol::base_classes,sol::bases<Camera,Component>()
         );
     }
@@ -127,7 +140,7 @@ int main(int argc, char * argv[])
 
     //绑定普通函数
     {
-        sol_state.set_function("CompareGameObject", &CompareGameObject);
+        cpp_ns_table.set_function("CompareGameObject", &CompareGameObject);
     }
 
     //绑定常量
@@ -140,13 +153,13 @@ int main(int argc, char * argv[])
 
     //绑定枚举
     {
-        sol_state.new_enum<KeyAction,true>("KeyAction",{
+        cpp_ns_table.new_enum<KeyAction,true>("KeyAction",{
                 {"UP",KeyAction::UP},
                 {"DOWN",KeyAction::DOWN}
         });
 
-        sol_state.set_function("GetKeyActionUp", &GetKeyActionUp);
-        sol_state.set_function("GetKeyActionDown", &GetKeyActionDown);
+        cpp_ns_table.set_function("GetKeyActionUp", &GetKeyActionUp);
+        cpp_ns_table.set_function("GetKeyActionDown", &GetKeyActionDown);
     }
 
     //设置lua搜索目录
@@ -178,8 +191,6 @@ int main(int argc, char * argv[])
 
     //调用lua update()
     sol::protected_function update_function=sol_state["update"];
-
-
     for(int i=0;i<30000;i++){
         std::cout<<"Loop "<<i<<std::endl;
 

@@ -12,6 +12,9 @@
 class Animator:public Component
 {
 public:
+    Animator(): Component(){
+        set_type_name("Animator");
+    }
     ~Animator(){
 
     }

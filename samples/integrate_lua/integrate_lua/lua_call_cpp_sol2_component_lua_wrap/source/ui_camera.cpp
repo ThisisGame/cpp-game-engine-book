@@ -15,7 +15,7 @@ RTTR_REGISTRATION
 }
 
 UICamera::UICamera(): Camera() {
-
+    set_type_name("UICamera");
 }
 
 UICamera::~UICamera() {

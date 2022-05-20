@@ -13,6 +13,9 @@
 class Camera:public Component
 {
 public:
+    Camera(): Component(){
+        set_type_name("Camera");
+    }
     ~Camera(){
 
     }

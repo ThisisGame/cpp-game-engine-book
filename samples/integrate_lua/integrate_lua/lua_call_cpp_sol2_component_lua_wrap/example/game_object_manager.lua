@@ -10,15 +10,19 @@ require("game_object")
 
 GameObjectManager={}
 
-
 --- 存储所有的GameObject。
 GameObjectManager.game_object_list_={}
 
---- 遍历GameObject
---- @param call_back function @回调函数
-function GameObjectManager.Foreach(call_back)
-    for _,value in pairs(GameObjectManager.game_object_list_) do
-        call_back(value)
+--- 添加GameObject
+--- @param game_object GameObject
+function GameObjectManager:Add(game_object)
+    table.insert(self.game_object_list_,game_object)
+end
+
+
+function GameObjectManager:Update()
+    for _,game_object in pairs(self.game_object_list_) do
+        game_object:Update()
     end
 end
 
