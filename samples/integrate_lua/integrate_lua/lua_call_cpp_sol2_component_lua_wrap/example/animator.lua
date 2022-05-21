@@ -5,24 +5,12 @@
 ---
 
 require("lua_extension")
+require("cpp_component")
 
-Animator=class("Animator",Component)
+Animator=class("Animator",CppComponent)
 
 function Animator:ctor()
     Animator.super.ctor(self)
     ---@type Cpp.Animator
-    self.animator_cpp_instance=Cpp.Animator() --创建对应的C++实例
-end
-
-function Animator:set_game_object(game_object)
-    Animator.super:set_game_object(game_object)
-    self.animator_cpp_instance:set_game_object(game_object.game_object_cpp_instance)--设置C++实例的game_object
-end
-
-function Animator:Awake()
-    self.animator_cpp_instance:Awake()
-end
-
-function Animator:Update()
-    self.animator_cpp_instance:Update()
+    self.cpp_component_instance_=Cpp.Animator() --创建对应的C++实例
 end

@@ -64,7 +64,8 @@ int main(void)
     GameObject* go=new GameObject("something");
 
     //挂上 Transform 组件
-    auto transform=dynamic_cast<Transform*>(go->AddComponent("Transform"));
+//    auto transform=dynamic_cast<Transform*>(go->AddComponent("Transform"));
+    auto transform=go->AddComponent<Transform>();
 
     //挂上 MeshFilter 组件
     auto mesh_filter=dynamic_cast<MeshFilter*>(go->AddComponent("MeshFilter"));

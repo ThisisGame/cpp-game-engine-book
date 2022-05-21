@@ -36,6 +36,7 @@ Component* GameObject::AddComponent(std::string component_type_name) {
     return component;
 }
 
+
 std::vector<Component*> &GameObject::GetComponents(std::string component_type_name) {
     return component_type_instance_map_[component_type_name];
 }

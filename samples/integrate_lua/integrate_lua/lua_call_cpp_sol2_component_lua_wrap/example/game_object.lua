@@ -15,8 +15,12 @@ function GameObject:ctor()
     --- @type Component[] @组件列表
     self.components_map_={}
     --- @type Cpp.GameObject @C++ GameObject对象
-    self.game_object_cpp_instance_=Cpp.GameObject()
+    self.cpp_game_object_instance_=Cpp.GameObject()
     GameObjectManager:Add(self)
+end
+
+function GameObject:cpp_game_object_instance()
+    return self.cpp_game_object_instance_
 end
 
 ---@param component_type table @组件类型

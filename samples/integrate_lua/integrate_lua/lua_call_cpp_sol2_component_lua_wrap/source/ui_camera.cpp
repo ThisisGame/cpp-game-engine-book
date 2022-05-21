@@ -4,9 +4,6 @@
 
 #include "ui_camera.h"
 
-#include <rttr/registration>
-using namespace rttr;
-
 //注册反射
 RTTR_REGISTRATION
 {
@@ -15,7 +12,7 @@ RTTR_REGISTRATION
 }
 
 UICamera::UICamera(): Camera() {
-    set_type_name("UICamera");
+
 }
 
 UICamera::~UICamera() {

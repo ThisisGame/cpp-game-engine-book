@@ -104,9 +104,7 @@ int main(int argc, char * argv[])
     //绑定 GameObject
     {
         cpp_ns_table.new_usertype<GameObject>("GameObject",sol::call_constructor,sol::constructors<GameObject()>(),
-                "AddComponent", &GameObject::AddComponentFromLua,
-                "GetComponent",&GameObject::GetComponentFromLua,
-                sol::meta_function::equal_to,&GameObject::operator==
+                "AttachComponent", &GameObject::AttachComponent
         );
     }
 
@@ -191,7 +189,7 @@ int main(int argc, char * argv[])
 
     //调用lua update()
     sol::protected_function update_function=sol_state["update"];
-    for(int i=0;i<30000;i++){
+    for(int i=0;i<10;i++){
         std::cout<<"Loop "<<i<<std::endl;
 
         result=update_function();

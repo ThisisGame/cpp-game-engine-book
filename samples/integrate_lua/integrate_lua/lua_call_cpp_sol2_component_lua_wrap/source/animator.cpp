@@ -4,9 +4,6 @@
 
 #include "animator.h"
 
-#include <rttr/registration>
-using namespace rttr;
-
 //注册反射
 RTTR_REGISTRATION
 {

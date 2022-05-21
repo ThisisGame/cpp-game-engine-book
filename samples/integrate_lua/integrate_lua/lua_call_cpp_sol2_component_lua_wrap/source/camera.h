@@ -8,17 +8,15 @@
 #include <iostream>
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
+#include <rttr/registration>
 #include "component.h"
+using namespace rttr;
 
 class Camera:public Component
 {
 public:
-    Camera(): Component(){
-        set_type_name("Camera");
-    }
-    ~Camera(){
-
-    }
+    Camera(): Component(){}
+    ~Camera(){}
 public:
     void Awake() override{
         std::cout<<"Camera Awake"<<std::endl;
@@ -39,6 +37,8 @@ public:
 
 private:
     glm::vec3 position_;
+
+RTTR_ENABLE();
 };
 
 

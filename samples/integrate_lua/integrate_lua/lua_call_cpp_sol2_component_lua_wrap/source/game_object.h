@@ -2,8 +2,8 @@
 // Created by captainchen on 2021/9/16.
 //
 
-#ifndef TEST_GAME_OBJECT_H
-#define TEST_GAME_OBJECT_H
+#ifndef GAME_OBJECT_H
+#define GAME_OBJECT_H
 #include <sol/sol.hpp>
 #include <iostream>
 #include <string>
@@ -29,21 +29,38 @@ public:
         std::cout<<"~GameObject"<<std::endl;
     }
 
-    Component* AddComponent(sol::table component_instance_table){
-        Component* component=component_instance_table.as<Component*>();
-        const char* component_type_name=component->type_name();
-        if(components_map_.find(component_type_name) == components_map_.end()){
+
+    /// 添加组件，仅用于C++中添加组件。
+    /// \tparam T 组件类型
+    /// \return 组件实例
+    template <class T=Component>
+    T* AddComponent(){
+        T* component=new T();
+        AttachComponent(component);
+        component->Awake();
+        return component;
+    }
+
+    /// 附加组件实例
+    /// \param component_instance_table
+    void AttachComponent(Component* component){
+        component->set_game_object(this);
+        //获取类名
+        type t=type::get(*component);
+        std::string component_type_name=t.get_name().to_string();
+
+        if(components_map_.find(component_type_name)==components_map_.end()){
             std::vector<Component*> component_vec;
+            component_vec.push_back(component);
             components_map_[component_type_name]=component_vec;
+        }else{
+            components_map_[component_type_name].push_back(component);
         }
-        components_map_[component_type_name].push_back(component);
     }
 
-    Component* GetComponent(std::string component_type_name) {
-
-    }
 
 private:
     std::unordered_map<std::string,std::vector<Component*>> components_map_;
 };
-#endif //TEST_GAME_OBJECT_H
+
+#endif //GAME_OBJECT_H
