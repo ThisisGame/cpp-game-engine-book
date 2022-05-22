@@ -14,6 +14,7 @@ function CppComponent:ctor()
 end
 
 function CppComponent:set_game_object(game_object)
+    print("CppComponent:set_game_object")
     CppComponent.super:set_game_object(game_object)
     game_object:cpp_game_object_instance():AttachComponent(self.cpp_component_instance_)
 end

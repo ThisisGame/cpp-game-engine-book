@@ -164,6 +164,7 @@ int main(int argc, char * argv[])
     {
         sol::table package_table=sol_state["package"];
         std::string path=package_table["path"];
+        path.append(";../source_lua/?.lua;");
         path.append(";../example/?.lua;");
         package_table["path"]=path;
     }

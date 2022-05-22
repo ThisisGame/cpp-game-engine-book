@@ -26,7 +26,9 @@ end
 ---@param component_type table @组件类型
 ---@return Component @组件
 function GameObject:AddComponent(component_type)
+    print("GameObject:AddComponent")
     local component_instance=component_type.new()
+    print("GameObject:AddComponent component_instance:" .. tostring(component_instance))
     self.components_map_[component_type]=component_instance
     component_instance:set_game_object(self)
     component_instance:Awake()
