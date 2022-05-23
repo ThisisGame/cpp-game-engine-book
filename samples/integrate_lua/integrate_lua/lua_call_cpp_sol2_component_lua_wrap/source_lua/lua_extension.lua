@@ -49,9 +49,12 @@ end
 
 --- 判断继承关系
 function is_sub_class_of(sub,super)
+    if sub.__index.super==nil then
+        return false
+    end
     if sub.__index.super==super then
         return true
     else
-        return is_sub_class_of(sub,sub.__index.super)
+        return is_sub_class_of(sub.__index.super,super)
     end
 end

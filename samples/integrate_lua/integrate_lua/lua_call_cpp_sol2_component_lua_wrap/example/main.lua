@@ -9,7 +9,7 @@ require("login_scene")
 game_object=nil
 
 function main()
-    print(is_sub_class_of(Animator,GameObject))
+    print(is_sub_class_of(UICamera,Camera))
     game_object = GameObject.new()
     print("game_object:" .. tostring(game_object))
 
