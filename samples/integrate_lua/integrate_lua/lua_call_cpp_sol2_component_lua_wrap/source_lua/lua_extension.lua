@@ -58,3 +58,43 @@ function is_sub_class_of(sub,super)
         return is_sub_class_of(sub.__index.super,super)
     end
 end
+
+--- 合并列表
+function combine_list(t1,t2)
+    for k,v in pairs(t2) do
+        table.insert(t1,v)
+    end
+end
+
+--- 替换字符
+function string_replace(src,find,new)
+    find=string.gsub(find,"[%(%)%.%%%+%-%*%?%[%]%^%$]", function(c) return "%" .. c end)
+    return string.gsub(src,find,new)
+end
+
+--- 打印table内容
+function table_tostring (t)
+    if t==nil then
+        return "nil"
+    end
+    local tmpData={}
+    for key,value in pairs(t) do
+        -- if type(value)=="table" then
+        --     value=table.tostring(value)
+        -- end
+        table.insert(tmpData,string.format("%s=%s[%s]",key,tostring(value),type(value)))
+    end
+    return(string.format("{%s}",table.concat(tmpData,",")))
+end
+
+--- 判断字符串以 xx 开头
+--- @param varStr string 需要判断的字符串
+--- @param varStart string xx
+function string_startswith(str,start_str)
+    return string.sub(str,1,string.len(start_str))==start_str
+end
+
+--- 判断字符串以 xx 结尾
+function string_endswith(str,end_str)
+    return end_str=='' or string.sub(str,-string.len(end_str))==end_str
+end

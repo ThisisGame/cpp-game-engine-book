@@ -10,6 +10,10 @@ CppComponent=class("CppComponent",Component)
 
 function CppComponent:ctor()
     CppComponent.super.ctor(self)
+    self:InitCppComponent()
+end
+
+function CppComponent:InitCppComponent()
     self.cpp_component_instance_=nil --创建对应的C++实例
 end
 

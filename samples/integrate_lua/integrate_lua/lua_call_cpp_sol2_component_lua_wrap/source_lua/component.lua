@@ -12,10 +12,14 @@ function Component:ctor()
     self.game_object_=nil
 end
 
+--- 设置目标GameObject
+--- @return void
 function Component:set_game_object(game_object)
     self.game_object_=game_object
 end
 
+--- 返回组件所属的GameObject
+--- @return GameObject @返回组件所属的GameObject
 function Component:game_object()
     return self.game_object_
 end

@@ -27,7 +27,10 @@ end
 ---@return Component @组件
 function GameObject:AddComponent(component_type)
     local component_instance=component_type.new()
-    self.components_map_[component_type]=component_instance
+    if self.components_map_[component_type]==nil then
+        self.components_map_[component_type]={}
+    end
+    table.insert(self.components_map_[component_type],component_instance)
     component_instance:set_game_object(self)
     component_instance:Awake()
     return component_instance
@@ -37,12 +40,32 @@ end
 --- @param component_type table @组件类型
 --- @return table @组件实例
 function GameObject:GetComponent(component_type)
-    return self.components_map_[component_type]
+    if self.components_map_[component_type] and #self.components_map_[component_type]>0 then
+        return self.components_map_[component_type][1]
+    end
+    return nil
+end
+
+--- 获取指定类型所有组件
+--- @param component_type table @组件类型
+--- @return table @指定类型所有组件
+function GameObject:GetComponents(component_type)
+    --print("GetComponents self.components_map_:" .. table_tostring(self.components_map_))
+    local return_components={}
+    for key,components in pairs(self.components_map_) do
+        if key==component_type or is_sub_class_of(key,component_type) then
+            --print("GetComponents check:" .. table_tostring(components))
+            combine_list(return_components,components)
+        end
+    end
+    return return_components
 end
 
 
 function GameObject:Update()
-    for _,component in pairs(self.components_map_) do
-        component:Update()
+    for _,components in pairs(self.components_map_) do
+        for _, component in pairs(components) do
+            component:Update()
+        end
     end
 end

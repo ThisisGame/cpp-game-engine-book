@@ -190,7 +190,7 @@ int main(int argc, char * argv[])
 
     //调用lua update()
     sol::protected_function update_function=sol_state["update"];
-    for(int i=0;i<10;i++){
+    for(int i=0;i<5;i++){
         std::cout<<"Loop "<<i<<std::endl;
 
         result=update_function();

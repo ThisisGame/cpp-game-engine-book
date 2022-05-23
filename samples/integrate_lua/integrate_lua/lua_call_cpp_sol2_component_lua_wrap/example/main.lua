@@ -44,14 +44,12 @@ function main()
     print("get camera:" .. tostring(camera))
 
     print("----------- Get Animator ------------")
-    if camera==nil then
-        print("camera==nil")
-    end
-    if camera:game_object()==nil then
-        print("camera:game_object()==nil")
-    end
     animator=camera:game_object():GetComponent(Animator)
     print("get animator:" .. tostring(animator))
+
+    print("----------- Get All Camera ------------")
+    local cameras=game_object:GetComponents(Camera)
+    print("get all camera:" .. tostring(table_tostring(cameras)))
 end
 
 function update()
