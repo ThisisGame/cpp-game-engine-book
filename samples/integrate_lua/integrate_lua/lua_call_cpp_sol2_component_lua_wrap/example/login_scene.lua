@@ -15,5 +15,5 @@ function LoginScene:Awake()
 end
 
 function LoginScene:Update()
-    print("LoginScene Update")
+    --print("LoginScene Update")
 end

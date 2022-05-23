@@ -14,17 +14,16 @@ function CppComponent:ctor()
 end
 
 function CppComponent:set_game_object(game_object)
-    print("CppComponent:set_game_object")
-    CppComponent.super:set_game_object(game_object)
+    CppComponent.super.set_game_object(self,game_object)
     game_object:cpp_game_object_instance():AttachComponent(self.cpp_component_instance_)
 end
 
 function CppComponent:Awake()
-    CppComponent.super:Awake()
+    CppComponent.super.Awake(self)
     self.cpp_component_instance_:Awake()
 end
 
 function CppComponent:Update()
-    CppComponent.super:Update()
+    CppComponent.super.Update(self)
     self.cpp_component_instance_:Update()
 end
