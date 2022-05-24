@@ -9,3 +9,4 @@ logs
 .backup
 .cache
 cmake-build-release
+.vscode
