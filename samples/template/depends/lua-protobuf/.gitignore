@@ -1,0 +1,8 @@
+*.dll
+*.dll.*
+*.so
+*.exp
+*.rock
+*.gcov
+*.gcda
+*.gcno

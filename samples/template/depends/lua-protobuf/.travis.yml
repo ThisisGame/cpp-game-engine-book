@@ -1,0 +1,43 @@
+language: c
+sudo: false
+
+env:
+  global:
+    - LUAROCKS=2.4.3
+    - ROCKSPEC=rockspecs/lua-protobuf-scm-1.rockspec
+  matrix:
+    - LUA="lua 5.1"
+    - LUA="lua 5.2"
+    - LUA="lua 5.3"
+    - LUA="luajit 2.0"
+    - LUA="luajit 2.1"
+
+branches:
+  only:
+    - master
+    - new
+
+before_install:
+  - pip install --user hererocks urllib3[secure] cpp-coveralls
+  - hererocks env --$LUA -rlatest    # Use latest LuaRocks, install into 'env' directory.
+  - source env/bin/activate          # Add directory with all installed binaries to PATH.
+
+install:
+  # - sudo luarocks make $ROCKSPEC CFLAGS="-O2 -fPIC -ftest-coverage -fprofile-arcs" LIBFLAG="-shared --coverage"
+  - luarocks make $ROCKSPEC CFLAGS="-O3 -fPIC -Wall -Wextra --coverage" LIBFLAG="-shared --coverage"
+
+script: 
+  - lua test.lua
+  # - lunit.sh test.lua
+
+after_success:
+    - coveralls
+#  - coveralls -b .. -r .. --dump c.report.json
+#  - luacov-coveralls -j c.report.json -v
+
+notifications:
+  email:
+    on_success: change
+    on_failure: always
+
+# vim: ft=yaml nu et sw=2 fdc=2 fdm=syntax

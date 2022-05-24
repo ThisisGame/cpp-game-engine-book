@@ -1,4 +1,5 @@
-﻿require("lua_extension")
+﻿require("lua_panda").start("127.0.0.1", 8818);
+require("lua_extension")
 require("component")
 require("game_object_manager")
 require("animator")
