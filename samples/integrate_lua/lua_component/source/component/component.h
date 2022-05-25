@@ -8,6 +8,9 @@
 #ifndef UNTITLED_COMPONENT_H
 #define UNTITLED_COMPONENT_H
 
+#include <rttr/registration>
+using namespace rttr;
+
 class GameObject;
 class Component {
 public:
@@ -29,6 +32,8 @@ public:
     virtual void OnDisable();
 private:
     GameObject* game_object_;
+
+RTTR_ENABLE();
 };
 
 

@@ -10,6 +10,8 @@
 class UICamera :public Camera{
 public:
     UICamera();
+
+RTTR_ENABLE();
 };
 
 

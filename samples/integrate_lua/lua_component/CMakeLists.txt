@@ -16,6 +16,7 @@ include(CMakeLists.txt.FreeType)
 include(CMakeLists.txt.fmod)
 include(CMakeLists.txt.easy_profile_core)
 include(CMakeLists.txt.lua)
+include(CMakeLists.txt.luasocket)
 
 #拷贝depends目录
 file(COPY "../../template/depends/glfw-3.3-3.4/" DESTINATION "../depends/glfw-3.3-3.4/")
@@ -47,4 +48,4 @@ file(GLOB_RECURSE engine_cpp source/*.cpp)
 file(GLOB_RECURSE rttr_cpp "depends/rttr/*.cpp")
 file(GLOB_RECURSE example_cpp example/*.cpp)
 
-add_executable(untitled ${glfw_sources} ${rttr_cpp} ${freetype_src} ${easy_profiler_core_source} ${lua_src} ${engine_cpp} ${example_cpp})
+add_executable(untitled ${glfw_sources} ${rttr_cpp} ${freetype_src} ${easy_profiler_core_source} ${lua_src} ${luasocket_c} ${engine_cpp} ${example_cpp})

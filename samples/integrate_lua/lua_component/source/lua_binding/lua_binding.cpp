@@ -5,6 +5,9 @@
 #include "lua_binding.h"
 #include <glm/ext.hpp>
 #include <sol/sol.hpp>
+extern "C"{
+#include <luasocket/luasocket.h>
+}
 #include "audio/audio.h"
 #include "audio/studio/audio_studio.h"
 #include "audio/studio/audio_studio_event.h"
@@ -26,7 +29,10 @@
 sol::state LuaBinding::sol_state_;
 
 void LuaBinding::Init(std::string package_path) {
-    sol_state_.open_libraries(sol::lib::base,sol::lib::package);
+    sol_state_.open_libraries(sol::lib::base,sol::lib::package,sol::lib::coroutine,sol::lib::string,sol::lib::os,sol::lib::math,
+                              sol::lib::table,sol::lib::debug,sol::lib::bit32,sol::lib::io,sol::lib::utf8);
+    //启用luasocket
+    sol_state_.require("socket.core",luaopen_socket_core,true);
     //设置lua搜索目录
     sol::table package_table=sol_state_["package"];
     std::string path=package_table["path"];

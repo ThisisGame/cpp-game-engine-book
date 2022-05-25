@@ -59,6 +59,8 @@ public:
     Mesh* mesh(){return mesh_;};//Mesh对象
 private:
     Mesh* mesh_;//Mesh对象
+
+RTTR_ENABLE();
 };
 
 
