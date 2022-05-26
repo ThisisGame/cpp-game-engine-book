@@ -24,10 +24,28 @@ function Component:game_object()
     return self.game_object_
 end
 
+function Component:OnEnable()
+
+end
+
 function Component:Awake()
     
 end
 
 function Component:Update()
+
+end
+
+--- 渲染之前
+function Component:OnPreRender()
+
+end
+
+--- 渲染之后
+function Component:OnPostRender()
+
+end
+
+function Component:OnDisable()
 
 end
