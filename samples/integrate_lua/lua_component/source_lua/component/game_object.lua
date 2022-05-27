@@ -7,8 +7,7 @@
 require("lua_extension")
 require("component")
 
---- GameObject是游戏物体空节点，可以挂载多个组件
---- @class GameObject
+--- @class GameObject @GameObject是游戏物体空节点，可以挂载多个组件
 GameObject=class("GameObject")
 
 function GameObject:ctor()

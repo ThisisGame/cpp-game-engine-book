@@ -6,6 +6,7 @@
 
 require("lua_extension")
 
+--- @class Component @组件
 Component=class("Component")
 
 function Component:ctor()

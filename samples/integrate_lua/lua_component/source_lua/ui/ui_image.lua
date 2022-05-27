@@ -7,6 +7,7 @@
 require("lua_extension")
 require("cpp_component")
 
+--- @class UIImage @图片
 UIImage=class("UIImage",CppComponent)
 
 function UIImage:ctor()
@@ -18,6 +19,18 @@ function UIImage:InitCppComponent()
     self.cpp_component_instance_=Cpp.UIImage() --创建对应的C++实例
 end
 
-function UIImage:set_image_normal(image)
-    self.cpp_component_instance_:set_image_normal()
+function UIImage:set_texture(texture_2d)
+    self.cpp_component_instance_:set_texture(texture_2d)
+end
+
+function UIImage:Update()
+    self.cpp_component_instance_:Update()
+end
+
+function UIImage:OnPreRender()
+    self.cpp_component_instance_:OnPreRender()
+end
+
+function UIImage:OnPostRender()
+    self.cpp_component_instance_:OnPostRender()
 end

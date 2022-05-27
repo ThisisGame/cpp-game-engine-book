@@ -7,6 +7,8 @@
 require("lua_extension")
 require("cpp_component")
 
+--- UI相机
+--- @class UICamera : Camera
 UICamera=class("UICamera",Camera)
 
 function UICamera:ctor()

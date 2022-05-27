@@ -7,6 +7,8 @@
 require("lua_extension")
 require("cpp_component")
 
+--- 相机
+--- @class Camera : CppComponent
 Camera=class("Camera",CppComponent)
 
 function Camera:ctor()

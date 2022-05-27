@@ -6,6 +6,7 @@
 
 require("lua_extension")
 require("cpp_component")
+require("material")
 
 MeshRenderer=class("MeshRenderer",CppComponent)
 
@@ -19,9 +20,15 @@ function MeshRenderer:InitCppComponent()
 end
 
 --- 设置Material
---- @param material
+--- @param material Material 材质
 function MeshRenderer:SetMaterial(material)
     self.cpp_component_instance_:SetMaterial(material)
+end
+
+--- 材质
+--- @return Material @返回当前使用的材质
+function MeshRenderer:material()
+    return self.cpp_component_instance_:material()
 end
 
 --- 渲染

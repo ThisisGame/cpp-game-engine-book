@@ -7,6 +7,7 @@
 require("lua_extension")
 require("cpp_class")
 
+--- @class Material 材质
 Material=class("Material",CppClass)
 
 function Material:ctor()

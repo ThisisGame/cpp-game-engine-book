@@ -6,6 +6,7 @@
 
 require("lua_extension")
 
+--- @class CppComponent : Component @对C++ Component的封装的基类
 CppComponent=class("CppComponent",Component)
 
 function CppComponent:ctor()
