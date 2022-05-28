@@ -119,7 +119,8 @@ int main(int argc, char * argv[])
                 "Awake",&Component::Awake,
                 "Update",&Component::Update,
                 "game_object",&Component::game_object,
-                "set_game_object",&Component::set_game_object
+                "set_game_object",&Component::set_game_object,
+                "set_lua_component_instance",&Component::set_lua_component_instance
         );
     }
 
@@ -193,18 +194,14 @@ int main(int argc, char * argv[])
         std::cerr << "------------------------" << std::endl;
     }
 
-    //调用lua update()
-    sol::protected_function update_function=sol_state["update"];
     for(int i=0;i<5;i++){
         std::cout<<"Loop "<<i<<std::endl;
 
-        result=update_function();
-        if(result.valid()== false){
-            sol::error err = result;
-            std::cerr << "----- RUN LUA ERROR ----" << std::endl;
-            std::cerr << err.what() << std::endl;
-            std::cerr << "------------------------" << std::endl;
-        }
+        GameObject::Foreach([](GameObject* game_object){
+            game_object->ForeachComponent([](Component* component){
+                component->Update();
+            });
+        });
     }
 
     return 0;

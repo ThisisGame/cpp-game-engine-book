@@ -58,9 +58,28 @@ public:
         }
     }
 
+    void ForeachComponent(std::function<void(Component*)> func) {
+        for (auto& v : components_map_){
+            for (auto& iter : v.second){
+                Component* component=iter;
+                func(component);
+            }
+        }
+    }
 
 private:
     std::unordered_map<std::string,std::vector<Component*>> components_map_;
+
+public:
+    static void Foreach(std::function<void(GameObject* game_object)> func) {
+        for (auto iter=game_object_list_.begin();iter!=game_object_list_.end();iter++){
+            auto game_object=*iter;
+            func(game_object);
+        }
+    }
+private:
+    static std::list<GameObject*> game_object_list_;//存储所有的GameObject。
+
 };
 
 #endif //GAME_OBJECT_H

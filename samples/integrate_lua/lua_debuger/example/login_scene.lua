@@ -11,9 +11,11 @@ function LoginScene:ctor()
 end
 
 function LoginScene:Awake()
+    LoginScene.super.Awake(self)
     print("LoginScene Awake")
 end
 
 function LoginScene:Update()
-    --print("LoginScene Update")
+    LoginScene.super.Update(self)
+    print("LoginScene Update")
 end

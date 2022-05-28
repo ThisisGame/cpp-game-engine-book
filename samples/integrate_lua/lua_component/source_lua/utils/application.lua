@@ -15,16 +15,43 @@ function Application.Init()
 end
 
 function Application.Run()
-
+    while true do
+        if self.ShouldClose() then
+            break
+        end
+        self.Update()
+        self.Render()
+        self.SwapBuffers()
+        self.PollEvents()
+    end
+    self.Quit()
 end
 
 function Application.UpdateScreenSize()
 
 end
 
+function Application.ShouldClose()
+    return Cpp.Application.ShouldClose()
+end
+
+function Application.SwapBuffers()
+    Cpp.Application.SwapBuffers()
+end
+
+function Application.PollEvents()
+    Cpp.Application.PollEvents()
+end
+
+function Application.Quit()
+    Cpp.Application.Quit()
+end
+
 --- 每一帧内逻辑代码。
 function Application.Update()
-
+    Time.Update()
+    self.UpdateScreenSize()
+    GameObjectManager:Update()
 end
 
 --- 逻辑代码执行后，应用到渲染。

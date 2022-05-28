@@ -193,6 +193,25 @@ void Application::Run() {
     exit(EXIT_SUCCESS);
 }
 
+bool Application::ShouldClose(){
+    return glfwWindowShouldClose(glfw_window_);
+}
+
+void Application::SwapBuffers(){
+    glfwSwapBuffers(glfw_window_);
+}
+
+void Application::PollEvents(){
+    glfwPollEvents();
+}
+
+void Application::Quit(){
+    glfwDestroyWindow(glfw_window_);
+
+    glfwTerminate();
+    exit(EXIT_SUCCESS);
+}
+
 void Application::UpdateScreenSize() {
     int width, height;
     glfwGetFramebufferSize(glfw_window_, &width, &height);

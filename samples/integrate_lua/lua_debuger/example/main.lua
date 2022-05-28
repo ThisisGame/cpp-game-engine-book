@@ -1,7 +1,6 @@
 ﻿require("lua_panda").start("127.0.0.1", 8818);
 require("lua_extension")
 require("component")
-require("game_object_manager")
 require("animator")
 require("camera")
 require("ui_camera")
@@ -51,8 +50,4 @@ function main()
     print("----------- Get All Camera ------------")
     local cameras=game_object:GetComponents(Camera)
     print("get all camera:" .. tostring(table_tostring(cameras)))
-end
-
-function update()
-    GameObjectManager:Update()
 end

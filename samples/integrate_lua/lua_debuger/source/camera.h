@@ -19,15 +19,17 @@ public:
     ~Camera(){}
 public:
     void Awake() override{
-        std::cout<<"Camera Awake"<<std::endl;
+        std::cout<<"Cpp.Camera Awake"<<std::endl;
+        Component::Awake();
     }
 
     void Update() override{
-//        std::cout<<"Camera Update"<<std::endl;
+        std::cout<<"Cpp.Camera Update"<<std::endl;
+        Component::Update();
     }
 
     void set_position(glm::vec3 position){
-        std::cout<<"Camera set_position:"<<glm::to_string(position)<<std::endl;
+        std::cout<<"Cpp.Camera set_position:"<<glm::to_string(position)<<std::endl;
         position_=position;
     }
 
