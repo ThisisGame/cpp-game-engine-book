@@ -19,16 +19,15 @@ public:
     /// 初始化OpenGL
     static void Init();
 
-    static void UpdateScreenSize();
-    /// 应该关闭程序了
-    /// \return
-    static bool ShouldClose();
-    /// 交换缓冲区
-    static void SwapBuffers();
-    /// 处理事件
-    static void PollEvents();
+    static void Run();
 
-    static void Quit();
+    static void UpdateScreenSize();
+
+    /// 每一帧内逻辑代码。
+    static void Update();
+
+    /// 逻辑代码执行后，应用到渲染。
+    static void Render();
 
 private:
     static std::string title_;//标题栏显示

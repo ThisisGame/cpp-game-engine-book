@@ -120,7 +120,7 @@ void MeshRenderer::Render() {
     glUseProgram(gl_program_id);
     {
         // PreRender
-        game_object()->ForeachLuaComponent([](sol::table lua_component_instance_table){
+        game_object()->ForeachComponent([](sol::table lua_component_instance_table){
             sol::protected_function function=lua_component_instance_table["OnPreRender"];
             if(function.valid()){
                 auto result=function(lua_component_instance_table);

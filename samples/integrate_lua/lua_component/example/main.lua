@@ -15,7 +15,3 @@ function main()
 
     Application.Run()--开始引擎主循环
 end
-
-function update()
-    GameObjectManager:Update()
-end

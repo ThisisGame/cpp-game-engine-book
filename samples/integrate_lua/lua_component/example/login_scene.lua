@@ -1,23 +1,23 @@
-LoginScene={
-    game_object_,
-    go_camera_1_,
-    go_audio_source_bgm_,
-    go_player_,
-    material_player_,
-    camera_1_,
-    last_frame_mouse_position_,--上一帧的鼠标位置
-    transform_player_= nullptr,
-    audio_studio_event_,
-    material_audio_listener_,
-}
+LoginScene=class("LoginScene",Component)
 
-setmetatable(LoginScene,{["__call"]=function(table,param)
-    local instance=setmetatable({},{__index=table})
-    return instance
-end})
+--- 登录场景
+---@class LoginScene
+function LoginScene:ctor()
+    LoginScene.super.ctor(self)
+    self.game_object_=nil
+    self.go_camera_1_=nil
+    self.go_audio_source_bgm_=nil
+    self.go_player_=nil
+    self.material_player_=nil
+    self.camera_1_=nil
+    self.last_frame_mouse_position_=nil
+    self.transform_player_=nil
+    self.audio_studio_event_=nil
+    self.material_audio_listener_=nil
+end
 
--- public:
 function LoginScene:Awake()
+    LoginScene.super.Awake(self)
     --创建相机1 GameObject
     self.go_camera_1_= GameObject("main_camera")
     --挂上 Transform 组件
@@ -79,7 +79,7 @@ end
 
 
 function LoginScene:Update()
-    --print("LoginScene:Update")
+    LoginScene.super.Update(self)
     self.camera_1_:set_depth(0)
     self.camera_1_:SetView(glm.vec3(0.0,0.0,0.0), glm.vec3(0.0,1.0,0.0))
     self.camera_1_:SetPerspective(60, Screen.aspect_ratio(), 1, 1000)

@@ -52,6 +52,26 @@ public:
     /// 附加组件实例
     /// \param component_instance_table
     void AttachComponent(Component* component);
+
+    /// 遍历组件
+    /// \param func
+    void ForeachComponent(std::function<void(Component*)> func) {
+        for (auto& v : components_map_){
+            for (auto& iter : v.second){
+                Component* component=iter;
+                func(component);
+            }
+        }
+    }
+
+    /// 遍历GameObject
+    /// \param func
+    static void Foreach(std::function<void(GameObject* game_object)> func) {
+        for (auto iter=game_object_list_.begin();iter!=game_object_list_.end();iter++){
+            auto game_object=*iter;
+            func(game_object);
+        }
+    }
 private:
     std::string name_;
 
@@ -59,9 +79,11 @@ private:
 
     bool active_=true;//是否激活
 
+    std::unordered_map<std::string,std::vector<Component*>> components_map_;
+
     static Tree game_object_tree_;//用树存储所有的GameObject。
 
-    std::unordered_map<std::string,std::vector<Component*>> components_map_;
+    static std::list<GameObject*> game_object_list_;//存储所有的GameObject。
 };
 
 

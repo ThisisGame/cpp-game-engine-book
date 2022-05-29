@@ -7,7 +7,8 @@
 require("lua_extension")
 require("component")
 
---- @class GameObject @GameObject是游戏物体空节点，可以挂载多个组件
+--- GameObject是游戏物体空节点，可以挂载多个组件
+--- @class GameObject
 GameObject=class("GameObject")
 
 function GameObject:ctor()
@@ -15,7 +16,6 @@ function GameObject:ctor()
     self.components_map_={}
     --- @type Cpp.GameObject @C++ GameObject对象
     self.cpp_game_object_instance_=Cpp.GameObject()
-    GameObjectManager:Add(self)
 end
 
 function GameObject:cpp_game_object_instance()
@@ -31,7 +31,6 @@ function GameObject:AddComponent(component_type)
     end
     table.insert(self.components_map_[component_type],component_instance)
     component_instance:set_game_object(self)
-    component_instance:Awake()
     return component_instance
 end
 
@@ -58,13 +57,4 @@ function GameObject:GetComponents(component_type)
         end
     end
     return return_components
-end
-
-
-function GameObject:Update()
-    for _,components in pairs(self.components_map_) do
-        for _, component in pairs(components) do
-            component:Update()
-        end
-    end
 end

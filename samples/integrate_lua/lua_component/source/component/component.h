@@ -9,6 +9,8 @@
 #define UNTITLED_COMPONENT_H
 
 #include <rttr/registration>
+#include <sol/sol.hpp>
+#include "utils/debug.h"
 using namespace rttr;
 
 class GameObject;
@@ -20,6 +22,17 @@ public:
     GameObject* game_object(){return game_object_;}
     void set_game_object(GameObject* game_object){game_object_=game_object;}
 
+    /// 设置对应的Lua组件
+    /// \param lua_component_instance
+    void set_lua_component_instance(sol::table& lua_component_instance){
+        lua_component_instance_=lua_component_instance;
+    }
+
+    /// 同步调用Lua组件函数
+    /// \param function_name
+    void SyncLuaComponent(const char* function_name);
+
+public:
     virtual void OnEnable();
     virtual void Awake();
     virtual void Update();
@@ -32,6 +45,7 @@ public:
     virtual void OnDisable();
 private:
     GameObject* game_object_;
+    sol::table lua_component_instance_;
 
 RTTR_ENABLE();
 };
