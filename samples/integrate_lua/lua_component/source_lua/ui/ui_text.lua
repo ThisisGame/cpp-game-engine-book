@@ -4,10 +4,9 @@
 --- DateTime: 5/16/2022 10:55 PM
 ---
 
-require("cpp_component")
 
 --- @class UIText : CppComponent @文字
-UIText=class("UIText",CppComponent)
+UIText=class("UIText",Component)
 
 function UIText:ctor()
     UIText.super.ctor(self)

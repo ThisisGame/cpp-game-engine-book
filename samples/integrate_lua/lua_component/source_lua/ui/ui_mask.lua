@@ -4,10 +4,9 @@
 --- DateTime: 5/16/2022 10:55 PM
 ---
 
-require("cpp_component")
 
 --- @class UIMask : CppComponent @遮罩
-UIMask=class("UIMask",CppComponent)
+UIMask=class("UIMask",Component)
 
 function UIMask:ctor()
     UIMask.super.ctor(self)

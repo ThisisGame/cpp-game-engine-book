@@ -28,6 +28,7 @@ public:
         lua_component_instance_=lua_component_instance;
     }
 
+private:
     /// 同步调用Lua组件函数
     /// \param function_name
     void SyncLuaComponent(const char* function_name);

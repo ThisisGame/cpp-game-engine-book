@@ -18,19 +18,19 @@ end
 --- 判断当前帧 键盘按键是否按下
 --- @param key_code
 function Input.GetKey(key_code)
-    Cpp.Input.GetKey(key_code)
+    return Cpp.Input.GetKey(key_code)
 end
 
 --- 判断当前帧 键盘按键是否处于按下状态
 --- @param key_code
 function Input.GetKeyDown(key_code)
-    Cpp.Input.GetKeyDown(key_code)
+    return Cpp.Input.GetKeyDown(key_code)
 end
 
 --- 判断当前帧 键盘按键是否按下并松开
 --- @param key_code
 function Input.GetKeyUp(key_code)
-    Cpp.Input.GetKeyUp(key_code)
+    return Cpp.Input.GetKeyUp(key_code)
 end
 
 --- 刷帧
@@ -42,27 +42,27 @@ end
 --- @param mouse_button_index number @0 表示主按钮（通常为左按钮），1 表示副按钮，2 表示中间按钮。
 --- @return boolean
 function Input.GetMouseButton(mouse_button_index)
-    Cpp.Input.GetMouseButton(mouse_button_index)
+    return Cpp.Input.GetMouseButton(mouse_button_index)
 end
 
 --- 指定鼠标按键是否处于按下的状态
 --- @param mouse_button_index number @0 表示主按钮（通常为左按钮），1 表示副按钮，2 表示中间按钮。
 --- @return boolean
 function Input.GetMouseButtonDown(mouse_button_index)
-    Cpp.Input.GetMouseButtonDown(mouse_button_index)
+    return Cpp.Input.GetMouseButtonDown(mouse_button_index)
 end
 
 --- 鼠标按钮是否松开
 --- @param mouse_button_index number @0 表示主按钮（通常为左按钮），1 表示副按钮，2 表示中间按钮。
 --- @return boolean
 function Input.GetMouseButtonUp(mouse_button_index)
-    Cpp.Input.GetMouseButtonUp(mouse_button_index)
+    return Cpp.Input.GetMouseButtonUp(mouse_button_index)
 end
 
 --- 返回鼠标位置
 --- @return vec2
 function Input.mousePosition()
-    Cpp.Input.mousePosition()
+    return Cpp.Input.mousePosition()
 end
 
 --- 设置鼠标位置

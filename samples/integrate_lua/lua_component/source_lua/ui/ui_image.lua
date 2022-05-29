@@ -5,10 +5,9 @@
 ---
 
 require("lua_extension")
-require("cpp_component")
 
 --- @class UIImage @图片
-UIImage=class("UIImage",CppComponent)
+UIImage=class("UIImage",Component)
 
 function UIImage:ctor()
     UIImage.super.ctor(self)

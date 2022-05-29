@@ -29,12 +29,12 @@ void Component::SyncLuaComponent(const char* function_name){
     if(!function_awake.valid()){
         return;
     }
-    auto result=function_awake();
+    auto result=function_awake(lua_component_instance_);
     if(result.valid()== false){
         sol::error err = result;
         type t=type::get(this);
         std::string component_type_name=t.get_name().to_string();
-        SPDLOG_ERROR("\n---- RUN LUA_FUNCTION ERROR ----\nComponent call Awake error,type:{}\n{}\n------------------------",component_type_name,err.what());
+        DEBUG_LOG_ERROR("\n---- RUN LUA_FUNCTION ERROR ----\nComponent call Awake error,type:{}\n{}\n------------------------",component_type_name,err.what());
     }
 }
 

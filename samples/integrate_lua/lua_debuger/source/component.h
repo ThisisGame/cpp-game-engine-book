@@ -36,7 +36,7 @@ public:
         if(!function_awake.valid()){
             return;
         }
-        auto result=function_awake();
+        auto result=function_awake(lua_component_instance_);
         if(result.valid()== false){
             sol::error err = result;
             type t=type::get(this);

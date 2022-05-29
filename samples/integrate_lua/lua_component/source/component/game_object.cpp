@@ -3,7 +3,6 @@
 //
 
 #include "game_object.h"
-#include <assert.h>
 #include <rttr/registration>
 #include "component.h"
 #include "utils/debug.h"
@@ -11,6 +10,7 @@
 using namespace rttr;
 
 Tree GameObject::game_object_tree_;//用树存储所有的GameObject。
+std::list<GameObject*> GameObject::game_object_list_;
 
 GameObject::GameObject(std::string name): Tree::Node(),layer_(0x01) {
     set_name(name);
@@ -43,17 +43,6 @@ GameObject* GameObject::Find(std::string name) {
     return game_object_find;
 }
 
-/// 添加组件，仅用于C++中添加组件。
-/// \tparam T 组件类型
-/// \return 组件实例
-template <class T>
-T* GameObject::AddComponent(){
-    T* component=new T();
-    AttachComponent(component);
-    component->Awake();
-    return component;
-}
-
 /// 附加组件实例
 /// \param component_instance_table
 void GameObject::AttachComponent(Component* component){
@@ -68,5 +57,25 @@ void GameObject::AttachComponent(Component* component){
         components_map_[component_type_name]=component_vec;
     }else{
         components_map_[component_type_name].push_back(component);
+    }
+}
+
+/// 遍历组件
+/// \param func
+void GameObject::ForeachComponent(std::function<void(Component*)> func) {
+    for (auto& v : components_map_){
+        for (auto& iter : v.second){
+            Component* component=iter;
+            func(component);
+        }
+    }
+}
+
+/// 遍历GameObject
+/// \param func
+void GameObject::Foreach(std::function<void(GameObject* game_object)> func) {
+    for (auto iter=game_object_list_.begin();iter!=game_object_list_.end();iter++){
+        auto game_object=*iter;
+        func(game_object);
     }
 }

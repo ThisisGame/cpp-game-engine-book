@@ -5,9 +5,8 @@
 ---
 
 require("lua_extension")
-require("cpp_component")
 
-UIButton=class("UIButton",CppComponent)
+UIButton=class("UIButton",Component)
 
 function UIButton:ctor()
     UIButton.super.ctor(self)

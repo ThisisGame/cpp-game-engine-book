@@ -11,11 +11,11 @@ require("component")
 --- @class GameObject
 GameObject=class("GameObject")
 
-function GameObject:ctor()
+function GameObject:ctor(name)
     --- @type Component[] @组件列表
     self.components_map_={}
     --- @type Cpp.GameObject @C++ GameObject对象
-    self.cpp_game_object_instance_=Cpp.GameObject()
+    self.cpp_game_object_instance_=Cpp.GameObject(name)
 end
 
 function GameObject:cpp_game_object_instance()

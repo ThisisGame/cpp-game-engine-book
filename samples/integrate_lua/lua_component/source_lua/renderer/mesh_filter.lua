@@ -5,9 +5,8 @@
 ---
 
 require("lua_extension")
-require("cpp_component")
 
-MeshFilter=class("MeshFilter",CppComponent)
+MeshFilter=class("MeshFilter",Component)
 
 function MeshFilter:ctor()
     MeshFilter.super.ctor(self)

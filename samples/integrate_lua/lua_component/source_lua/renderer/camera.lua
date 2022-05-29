@@ -5,11 +5,10 @@
 ---
 
 require("lua_extension")
-require("cpp_component")
 
 --- 相机
 --- @class Camera : CppComponent
-Camera=class("Camera",CppComponent)
+Camera=class("Camera",Component)
 
 function Camera:ctor()
     Camera.super.ctor(self)

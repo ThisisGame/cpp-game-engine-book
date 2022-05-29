@@ -8,11 +8,12 @@ LoginScene=class("LoginScene",Component)
 ---@class LoginScene
 function LoginScene:ctor()
     LoginScene.super.ctor(self)
+    self.app_version_="1.0.0"
 end
 
 function LoginScene:Awake()
     LoginScene.super.Awake(self)
-    print("LoginScene Awake")
+    print("LoginScene Awake,app_version:",self.app_version_)
 end
 
 function LoginScene:Update()

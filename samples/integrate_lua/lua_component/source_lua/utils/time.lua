@@ -10,20 +10,11 @@ Time={
 
 }
 
---- 初始化
-function Time.Init()
-    Cpp.Time.Init()
-end
-
-function Time.Update()
-    Cpp.Time.Update()
-end
-
 --- 获取游戏运行时间
-function Time.TimeSinceStartup()
+function Time:TimeSinceStartup()
     Cpp.Time.TimeSinceStartup()
 end
 
-function Time.delta_time()
+function Time:delta_time()
     Cpp.Time.delta_time()
 end

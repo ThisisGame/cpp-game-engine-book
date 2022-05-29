@@ -4,7 +4,7 @@
 --- DateTime: 5/26/2022 12:03 AM
 ---
 
-require("audio_studio_event")
+require("audio/studio/audio_studio_event")
 
 
 --- 音频引擎
@@ -13,26 +13,26 @@ AudioStudio={
 }
 
 --- 初始化FMOD Studio
-function AudioStudio.Init()
+function AudioStudio:Init()
     Cpp.AudioStudio.Init()
 end
 
 --- 刷帧
-function AudioStudio.Update()
+function AudioStudio:Update()
     Cpp.AudioStudio.Update()
 end
 
 --- 加载 bank 文件
 --- @param file_name string
 --- @return
-function AudioStudio.LoadBankFile(file_name)
+function AudioStudio:LoadBankFile(file_name)
     Cpp.AudioStudio.LoadBankFile(file_name)
 end
 
 --- 获取Event实例，如果没有就创建。
 --- @param event_path string
 --- @return AudioStudioEvent @返回创建的event
-function AudioStudio.CreateEventInstance(event_path)
+function AudioStudio:CreateEventInstance(event_path)
     Cpp.AudioStudio.CreateEventInstance(event_path)
 end
 
@@ -40,6 +40,6 @@ end
 --- @param x number
 --- @param y number
 --- @param z number
-function AudioStudio.SetListenerAttributes(x,y,z)
+function AudioStudio:SetListenerAttributes(x,y,z)
     Cpp.AudioStudio.SetListenerAttributes(x,y,z)
 end

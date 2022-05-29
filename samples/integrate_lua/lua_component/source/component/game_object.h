@@ -12,12 +12,8 @@
 #include <memory>
 #include <list>
 #include <functional>
-#include <rttr/registration>
 #include "component.h"
 #include "data_structs/tree.h"
-#include "lua_binding/lua_binding.h"
-
-using namespace rttr;
 
 class GameObject:public Tree::Node {
 public:
@@ -47,31 +43,42 @@ public:
     /// \tparam T 组件类型
     /// \return 组件实例
     template <class T=Component>
-    T* AddComponent();
+    T* AddComponent(){
+        T* component=new T();
+        AttachComponent(component);
+        component->Awake();
+        return dynamic_cast<T*>(component);
+    }
 
     /// 附加组件实例
     /// \param component_instance_table
     void AttachComponent(Component* component);
 
+    /// 获取组件，仅用于C++中添加组件。
+    /// \tparam T 组件类型
+    /// \return 组件实例
+    template <class T=Component>
+    T* GetComponent(){
+        //获取类名
+        type t=type::get<T>();
+        std::string component_type_name=t.get_name().to_string();
+        if(components_map_.find(component_type_name)==components_map_.end()){
+            return nullptr;
+        }
+        std::vector<Component*> component_vec=components_map_[component_type_name];
+        if(component_vec.size()==0){
+            return nullptr;
+        }
+        return dynamic_cast<T*>(component_vec[0]);
+    }
+
     /// 遍历组件
     /// \param func
-    void ForeachComponent(std::function<void(Component*)> func) {
-        for (auto& v : components_map_){
-            for (auto& iter : v.second){
-                Component* component=iter;
-                func(component);
-            }
-        }
-    }
+    void ForeachComponent(std::function<void(Component*)> func);
 
     /// 遍历GameObject
     /// \param func
-    static void Foreach(std::function<void(GameObject* game_object)> func) {
-        for (auto iter=game_object_list_.begin();iter!=game_object_list_.end();iter++){
-            auto game_object=*iter;
-            func(game_object);
-        }
-    }
+    static void Foreach(std::function<void(GameObject* game_object)> func);
 private:
     std::string name_;
 

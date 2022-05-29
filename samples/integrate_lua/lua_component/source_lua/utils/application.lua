@@ -10,51 +10,18 @@ Application={
 
 }
 
-function Application.Init()
+function Application:Init()
     Cpp.Application.Init()
 end
 
-function Application.Run()
-    while true do
-        if self.ShouldClose() then
-            break
-        end
-        self.Update()
-        self.Render()
-        self.SwapBuffers()
-        self.PollEvents()
-    end
-    self.Quit()
+function Application:set_title(title)
+    Cpp.Application.set_title(title)
 end
 
-function Application.UpdateScreenSize()
-
+function Application:set_data_path(data_path)
+    Cpp.Application.set_data_path(data_path)
 end
 
-function Application.ShouldClose()
-    return Cpp.Application.ShouldClose()
-end
-
-function Application.SwapBuffers()
-    Cpp.Application.SwapBuffers()
-end
-
-function Application.PollEvents()
-    Cpp.Application.PollEvents()
-end
-
-function Application.Quit()
-    Cpp.Application.Quit()
-end
-
---- 每一帧内逻辑代码。
-function Application.Update()
-    Time.Update()
-    self.UpdateScreenSize()
-    GameObjectManager:Update()
-end
-
---- 逻辑代码执行后，应用到渲染。
-function Application.Render()
-
+function Application:UpdateScreenSize()
+    return Cpp.Application.UpdateScreenSize()
 end
