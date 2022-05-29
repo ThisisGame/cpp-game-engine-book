@@ -4,6 +4,7 @@ project(test)
 set(CMAKE_CXX_STANDARD 17)
 
 if (MSVC)
+    add_compile_options(/bigobj)
     add_compile_options(/wd4819)#忽略保存为unicode警告
 endif ()
 
@@ -20,8 +21,6 @@ include_directories("depends/lua/src")
 include_directories("depends")
 
 if (MSVC)
-    add_compile_options(/bigobj)
-    add_compile_options(/wd4819)#忽略保存为unicode警告
     set(luasocket_c depends/luasocket/auxiliar.c
             depends/luasocket/buffer.c
             depends/luasocket/compat.c

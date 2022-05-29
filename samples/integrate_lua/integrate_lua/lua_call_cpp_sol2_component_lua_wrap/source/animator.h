@@ -17,11 +17,13 @@ public:
     ~Animator(){}
 public:
     void Awake() override{
-        std::cout<<"Animator Awake"<<std::endl;
+        std::cout<<"Cpp.Animator Awake"<<std::endl;
+        Component::Awake();
     }
 
     void Update() override{
-//        std::cout<<"Animator Update"<<std::endl;
+        std::cout<<"Cpp.Animator Update"<<std::endl;
+        Component::Update();
     }
 
 RTTR_ENABLE();

@@ -1,6 +1,5 @@
 ﻿require("lua_extension")
 require("component")
-require("game_object_manager")
 require("animator")
 require("camera")
 require("ui_camera")
@@ -10,6 +9,8 @@ game_object=nil
 
 function main()
     print(is_sub_class_of(UICamera,Camera))
+    print(is_sub_class_of(UICamera,GameObject))
+
     game_object = GameObject.new()
     print("game_object:" .. tostring(game_object))
 
@@ -18,7 +19,7 @@ function main()
     local animator=game_object:AddComponent(Animator)
     print("add animator:" .. tostring(animator))
 
-    print(animator:game_object())
+    print("animator:game_object():",animator:game_object())
 
     print("----------- Add Camera ----------------")
 
@@ -50,8 +51,4 @@ function main()
     print("----------- Get All Camera ------------")
     local cameras=game_object:GetComponents(Camera)
     print("get all camera:" .. tostring(table_tostring(cameras)))
-end
-
-function update()
-    GameObjectManager:Update()
 end
