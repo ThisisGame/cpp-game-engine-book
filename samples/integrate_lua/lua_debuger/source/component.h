@@ -46,9 +46,11 @@ public:
     }
 
     virtual void Awake(){
+        std::cout<<"Cpp.Component Awake"<<std::endl;
         SyncLuaComponent("Awake");
     };
     virtual void Update(){
+        std::cout<<"Cpp.Component Update"<<std::endl;
         SyncLuaComponent("Update");
     };
 private:

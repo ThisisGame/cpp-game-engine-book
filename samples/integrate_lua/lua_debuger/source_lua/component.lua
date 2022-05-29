@@ -9,16 +9,17 @@ Component={}
 function Component:ctor()
     self.game_object_=nil
     self:InitCppComponent()
+    self:SetToCpp()
 end
 
 --- 创建对应的C++实例
 function Component:InitCppComponent()
     self.cpp_component_instance_=Cpp.Component()
-    self.cpp_component_instance_:set_lua_component_instance(self)
 end
 
-function Component:BindCpp()
-    
+--- 将Lua Component绑定到C++端
+function Component:SetToCpp()
+    self.cpp_component_instance_:set_lua_component_instance(self)
 end
 
 --- 返回组件所属的GameObject

@@ -10,6 +10,8 @@ game_object=nil
 
 function main()
     print(is_sub_class_of(UICamera,Camera))
+    print(is_sub_class_of(UICamera,GameObject))
+
     game_object = GameObject.new()
     print("game_object:" .. tostring(game_object))
 
@@ -18,7 +20,7 @@ function main()
     local animator=game_object:AddComponent(Animator)
     print("add animator:" .. tostring(animator))
 
-    print(animator:game_object())
+    print("animator:game_object():",animator:game_object())
 
     print("----------- Add Camera ----------------")
 
