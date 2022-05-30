@@ -18,4 +18,6 @@ function main()
     print("pos:" .. tostring(pos))
 
     go:AddComponent(LoginScene)
+
+    Application:Run()--开始引擎主循环
 end

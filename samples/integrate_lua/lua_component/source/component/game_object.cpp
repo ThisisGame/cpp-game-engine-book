@@ -74,8 +74,9 @@ void GameObject::ForeachComponent(std::function<void(Component*)> func) {
 /// 遍历GameObject
 /// \param func
 void GameObject::Foreach(std::function<void(GameObject* game_object)> func) {
-    for (auto iter=game_object_list_.begin();iter!=game_object_list_.end();iter++){
-        auto game_object=*iter;
+    game_object_tree_.Post(game_object_tree_.root_node(),[&func](Tree::Node* node){
+        auto n=node;
+        GameObject* game_object= dynamic_cast<GameObject *>(n);
         func(game_object);
-    }
+    });
 }

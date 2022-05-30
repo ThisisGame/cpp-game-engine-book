@@ -4,7 +4,10 @@ require("renderer/mesh_filter")
 require("renderer/mesh_renderer")
 require("renderer/material")
 require("control/input")
+require("control/key_code")
 require("audio/studio/audio_studio")
+require("utils/screen")
+require("utils/time")
 
 LoginScene=class("LoginScene",Component)
 
@@ -78,7 +81,7 @@ end
 
 
 function LoginScene:Update()
-    print("LoginScene Update")
+    --print("LoginScene Update")
     LoginScene.super.Update(self)
     self.camera_1_:set_depth(0)
     self.camera_1_:SetView(glm.vec3(0.0,0.0,0.0), glm.vec3(0.0,1.0,0.0))

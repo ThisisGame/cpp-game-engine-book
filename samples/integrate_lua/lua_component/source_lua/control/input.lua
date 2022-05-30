@@ -74,7 +74,7 @@ end
 --- 获取鼠标滚动值
 --- @return number
 function Input.mouse_scroll()
-    Cpp.Input.mouse_scroll()
+    return Cpp.Input.mouse_scroll()
 end
 
 --- 记录鼠标滚轮事件

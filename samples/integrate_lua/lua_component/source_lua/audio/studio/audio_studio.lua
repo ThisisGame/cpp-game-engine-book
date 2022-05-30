@@ -33,7 +33,9 @@ end
 --- @param event_path string
 --- @return AudioStudioEvent @返回创建的event
 function AudioStudio:CreateEventInstance(event_path)
-    Cpp.AudioStudio.CreateEventInstance(event_path)
+    local cpp_audio_studio_event=Cpp.AudioStudio.CreateEventInstance(event_path)
+    local audio_studio_event=AudioStudioEvent.new(cpp_audio_studio_event)
+    return audio_studio_event
 end
 
 --- 设置听者属性

@@ -39,31 +39,31 @@ void Component::SyncLuaComponent(const char* function_name){
 }
 
 void Component::OnEnable() {
-    DEBUG_LOG_INFO("Cpp.Component OnEnable");
+//    DEBUG_LOG_INFO("Cpp.Component OnEnable");
     SyncLuaComponent("OnEnable");
 }
 
 void Component::Awake() {
-    DEBUG_LOG_INFO("Cpp.Component Awake");
+//    DEBUG_LOG_INFO("Cpp.Component Awake");
     SyncLuaComponent("Awake");
 }
 
 void Component::Update() {
-    DEBUG_LOG_INFO("Cpp.Component Update");
+//    DEBUG_LOG_INFO("Cpp.Component Update");
     SyncLuaComponent("Update");
 }
 
 void Component::OnPreRender() {
-    DEBUG_LOG_INFO("Cpp.Component OnPreRender");
+//    DEBUG_LOG_INFO("Cpp.Component OnPreRender");
     SyncLuaComponent("OnPreRender");
 }
 
 void Component::OnPostRender() {
-    DEBUG_LOG_INFO("Cpp.Component OnPostRender");
+//    DEBUG_LOG_INFO("Cpp.Component OnPostRender");
     SyncLuaComponent("OnPostRender");
 }
 
 void Component::OnDisable() {
-    DEBUG_LOG_INFO("Cpp.Component OnDisable");
+//    DEBUG_LOG_INFO("Cpp.Component OnDisable");
     SyncLuaComponent("OnDisable");
 }

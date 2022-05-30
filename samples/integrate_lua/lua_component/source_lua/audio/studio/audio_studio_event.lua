@@ -9,8 +9,8 @@ require("cpp_class")
 
 AudioStudioEvent=class("AudioStudioEvent",CppClass)
 
-function AudioStudioEvent:ctor()
-    AudioStudioEvent.super.ctor(self)
+function AudioStudioEvent:ctor(cpp_class_instance)
+    AudioStudioEvent.super.ctor(self,cpp_class_instance)
 end
 
 --- 实例化C++ Class

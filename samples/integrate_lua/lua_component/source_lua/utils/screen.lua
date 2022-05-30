@@ -11,16 +11,16 @@ Screen={
 }
 
 function Screen:width()
-    Cpp.Screen.width()
+    return Cpp.Screen.width()
 end
 
 function Screen:height()
-    Cpp.Screen.height()
+    return Cpp.Screen.height()
 end
 
 --- 获取屏幕宽高比
 function Screen:aspect_ratio()
-    Cpp.Screen.aspect_ratio()
+    return Cpp.Screen.aspect_ratio()
 end
 
 function Screen:set_width()

@@ -39,11 +39,11 @@ function Component:OnEnable()
 end
 
 function Component:Awake()
-    print("Component:Awake")
+    --print("Component:Awake")
 end
 
 function Component:Update()
-    print("Component:Update")
+    --print("Component:Update")
 end
 
 --- 渲染之前
