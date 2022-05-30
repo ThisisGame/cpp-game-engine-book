@@ -20,7 +20,7 @@ RTTR_REGISTRATION{
             .constructor<>()(rttr::policy::ctor::as_raw_ptr);
 }
 
-UIButton::UIButton():pressed_(false),click_callback_(nullptr) {
+UIButton::UIButton():pressed_(false),click_callback_(nullptr),image_normal_(nullptr),image_press_(nullptr) {
 
 }
 

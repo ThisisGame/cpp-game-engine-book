@@ -6,7 +6,7 @@
 #include "utils/application.h"
 #include "utils/debug.h"
 
-AudioClip::AudioClip() {}
+AudioClip::AudioClip()=default;
 
 AudioClip::~AudioClip() {
     if(fmod_sound_!= nullptr){

@@ -54,7 +54,9 @@ public:
     /// \param component_instance_table
     void AttachComponent(Component* component);
 
-    /// 获取组件，仅用于C++中添加组件。
+
+
+    /// 获取组件，仅用于C++中。
     /// \tparam T 组件类型
     /// \return 组件实例
     template <class T=Component>
@@ -62,10 +64,24 @@ public:
         //获取类名
         type t=type::get<T>();
         std::string component_type_name=t.get_name().to_string();
-        if(components_map_.find(component_type_name)==components_map_.end()){
-            return nullptr;
+        std::vector<Component*> component_vec;
+
+        if(components_map_.find(component_type_name)!=components_map_.end()){
+            component_vec=components_map_[component_type_name];
         }
-        std::vector<Component*> component_vec=components_map_[component_type_name];
+        if(component_vec.size()==0){
+            //没有找到组件,就去查找子类组件
+            auto derived_classes = t.get_derived_classes();
+            for(auto derived_class:derived_classes){
+                std::string derived_class_type_name=derived_class.get_name().to_string();
+                if(components_map_.find(derived_class_type_name)!=components_map_.end()){
+                    component_vec=components_map_[derived_class_type_name];
+                    if(component_vec.size()!=0){
+                        break;
+                    }
+                }
+            }
+        }
         if(component_vec.size()==0){
             return nullptr;
         }
