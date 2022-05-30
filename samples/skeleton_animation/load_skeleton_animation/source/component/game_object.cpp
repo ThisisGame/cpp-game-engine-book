@@ -3,7 +3,6 @@
 //
 
 #include "game_object.h"
-#include <assert.h>
 #include <rttr/registration>
 #include "component.h"
 #include "utils/debug.h"
@@ -11,6 +10,7 @@
 using namespace rttr;
 
 Tree GameObject::game_object_tree_;//用树存储所有的GameObject。
+std::list<GameObject*> GameObject::game_object_list_;
 
 GameObject::GameObject(std::string name): Tree::Node(),layer_(0x01) {
     set_name(name);
@@ -21,26 +21,6 @@ GameObject::~GameObject() {
     DEBUG_LOG_INFO("GameObject::~GameObject");
 }
 
-Component* GameObject::AddComponent(std::string component_type_name) {
-    type t = type::get_by_name(component_type_name);
-    if(t.is_valid()==false){
-        std::cout<<"type::get_by_name({}) failed:"<<component_type_name<<std::endl;
-        return nullptr;
-    }
-
-    sol::table component_table=AddComponentFromLua(component_type_name);
-    Component* component=component_table.as<Component*>();
-    return component;
-}
-
-Component* GameObject::GetComponent(std::string component_type_name) {
-    sol::table component_table=GetComponentFromLua(component_type_name);
-    if(!component_table){
-        return nullptr;
-    }
-    Component* component=component_table.as<Component*>();
-    return component;
-}
 
 bool GameObject::SetParent(GameObject* parent){
     if(parent== nullptr){
@@ -49,14 +29,6 @@ bool GameObject::SetParent(GameObject* parent){
     }
     parent->AddChild(this);
     return true;
-}
-
-void GameObject::Foreach(std::function<void(GameObject* game_object)> func) {
-    game_object_tree_.Post(game_object_tree_.root_node(),[&func](Tree::Node* node){
-        auto n=node;
-        GameObject* game_object= dynamic_cast<GameObject *>(n);
-        func(game_object);
-    });
 }
 
 GameObject* GameObject::Find(std::string name) {
@@ -71,52 +43,40 @@ GameObject* GameObject::Find(std::string name) {
     return game_object_find;
 }
 
-//LuaScript
-sol::table GameObject::AddComponentFromLua(std::string component_type_name) {
-    sol::protected_function component_type_construct_function=LuaBinding::sol_state()[component_type_name];//对c++的class注册为table，并实现了__call，所以可以直接带括号。
-    auto result=component_type_construct_function();
-    if(result.valid()== false){
-        sol::error err = result;
-        DEBUG_LOG_ERROR("\n---- RUN LUA_FUNCTION ERROR ----\nAddComponentFromLua call type construct error,type:{}\n{}\n------------------------",component_type_name,err.what());
-    }
-    sol::table new_table=result;
+/// 附加组件实例
+/// \param component_instance_table
+void GameObject::AttachComponent(Component* component){
+    component->set_game_object(this);
+    //获取类名
+    type t=type::get(*component);
+    std::string component_type_name=t.get_name().to_string();
 
-    result=new_table["set_game_object"](new_table,this);
-    if(result.valid()== false){
-        sol::error err = result;
-        DEBUG_LOG_ERROR("\n---- RUN LUA_FUNCTION ERROR ----\nAddComponentFromLua call set_game_object error,type:{}\n{}\n------------------------",component_type_name,err.what());
-    }
-
-    if(lua_component_type_instance_map_.find(component_type_name)==lua_component_type_instance_map_.end()){
-        std::vector<sol::table> component_vec;
-        component_vec.push_back(new_table);
-        lua_component_type_instance_map_[component_type_name]=component_vec;
+    if(components_map_.find(component_type_name)==components_map_.end()){
+        std::vector<Component*> component_vec;
+        component_vec.push_back(component);
+        components_map_[component_type_name]=component_vec;
     }else{
-        lua_component_type_instance_map_[component_type_name].push_back(new_table);
+        components_map_[component_type_name].push_back(component);
     }
-    result=new_table["Awake"](new_table);
-    if(result.valid()== false){
-        sol::error err = result;
-        DEBUG_LOG_ERROR("\n---- RUN LUA_FUNCTION ERROR ----\nAddComponentFromLua call Awake error,type:{}\n{}\n------------------------",component_type_name,err.what());
-    }
-    return new_table;
 }
 
-sol::table GameObject::GetComponentFromLua(std::string component_type_name) {
-    if(lua_component_type_instance_map_.find(component_type_name)==lua_component_type_instance_map_.end()){
-        return sol::lua_nil;
-    }
-    if(lua_component_type_instance_map_[component_type_name].size()==0){
-        return sol::lua_nil;
-    }
-    return lua_component_type_instance_map_[component_type_name][0];
-}
-
-void GameObject::ForeachLuaComponent(std::function<void(sol::table)> func) {
-    for (auto& v : lua_component_type_instance_map_){
+/// 遍历组件
+/// \param func
+void GameObject::ForeachComponent(std::function<void(Component*)> func) {
+    for (auto& v : components_map_){
         for (auto& iter : v.second){
-            sol::table lua_component_instance_table=iter;
-            func(lua_component_instance_table);
+            Component* component=iter;
+            func(component);
         }
     }
+}
+
+/// 遍历GameObject
+/// \param func
+void GameObject::Foreach(std::function<void(GameObject* game_object)> func) {
+    game_object_tree_.Post(game_object_tree_.root_node(),[&func](Tree::Node* node){
+        auto n=node;
+        GameObject* game_object= dynamic_cast<GameObject *>(n);
+        func(game_object);
+    });
 }

@@ -94,6 +94,8 @@ private:
     Mesh* mesh_= nullptr;//Mesh对象
     Mesh* skinned_mesh_= nullptr;//蒙皮Mesh对象
     std::vector<unsigned char> vertex_relate_bone_index_vec_;//顶点关联骨骼索引，长度为顶点个数
+
+RTTR_ENABLE();
 };
 
 

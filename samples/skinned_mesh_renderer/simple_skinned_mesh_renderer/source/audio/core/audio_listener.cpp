@@ -23,8 +23,7 @@ void AudioListener::Awake() {}
 
 void AudioListener::Update() {
     Component::Update();
-    auto component_transform=game_object()->GetComponent("Transform");
-    auto transform=dynamic_cast<Transform*>(component_transform);
+    auto transform=game_object()->GetComponent<Transform>();
     if(!transform){
         return;
     }

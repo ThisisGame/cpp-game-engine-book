@@ -2,6 +2,8 @@
 project(untitled)
 
 set(CMAKE_CXX_STANDARD 17)
+add_definitions(-D USE_FMOD_STUDIO)#是否使用fmod studio，加载bank文件的形式。
+
 
 if (MSVC)
     add_compile_options(/bigobj)
@@ -14,6 +16,7 @@ include(CMakeLists.txt.FreeType)
 include(CMakeLists.txt.fmod)
 include(CMakeLists.txt.easy_profile_core)
 include(CMakeLists.txt.lua)
+include(CMakeLists.txt.luasocket)
 
 #拷贝depends目录
 file(COPY "../../template/depends/glfw-3.3-3.4/" DESTINATION "../depends/glfw-3.3-3.4/")
@@ -25,7 +28,6 @@ file(COPY "../../template/depends/stb/" DESTINATION "../depends/stb/")
 file(COPY "../../template/depends/spdlog/include/spdlog/" DESTINATION "../depends/spdlog/")
 file(COPY "../../template/depends/rttr-0.9.6/src/rttr/" DESTINATION "../depends/rttr/")
 file(COPY "../../template/depends/easy_profiler-2.1.0/easy_profiler_core/" DESTINATION "../depends/easy_profiler_core/")
-
 
 #拷贝data文件
 file(COPY "../../template/data/audio/load_bank/" DESTINATION "../data/audio/")
@@ -43,4 +45,4 @@ file(GLOB_RECURSE engine_cpp source/*.cpp)
 file(GLOB_RECURSE rttr_cpp "depends/rttr/*.cpp")
 file(GLOB_RECURSE example_cpp example/*.cpp)
 
-add_executable(untitled ${glfw_sources} ${rttr_cpp} ${freetype_src} ${easy_profiler_core_source} ${lua_src} ${engine_cpp} ${example_cpp})
+add_executable(untitled ${glfw_sources} ${rttr_cpp} ${freetype_src} ${easy_profiler_core_source} ${lua_src} ${luasocket_c} ${engine_cpp} ${example_cpp})

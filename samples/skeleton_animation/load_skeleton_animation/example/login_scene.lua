@@ -1,31 +1,26 @@
-LoginScene={
-    --- 骨骼动画
-    animation_clip_
-}
+require("lua_extension")
+require("renderer/animation_clip")
 
-setmetatable(LoginScene,{["__call"]=function(table,param)
-    local instance=setmetatable({},{__index=table})
-    return instance
-end})
+LoginScene=class("LoginScene",Component)
 
--- public:
+--- 登录场景
+---@class LoginScene
+function LoginScene:ctor()
+    LoginScene.super.ctor(self)
+    ---@type AnimationClip
+    self.animation_clip_=nil
+end
+
 function LoginScene:Awake()
-    self.animation_clip_=AnimationClip()
+    print("LoginScene Awake")
+    LoginScene.super.Awake(self)
+    self.animation_clip_=AnimationClip.new()
     self.animation_clip_:LoadFromFile("animation/export.skeleton_anim")
     self.animation_clip_:Play()
 end
 
-function LoginScene:game_object()
-    print("LoginScene:game_object")
-    return self.game_object_
-end
-
-function LoginScene:set_game_object(game_object)
-    print("LoginScene:set_game_object " .. tostring(game_object) .. " self:" .. tostring(self))
-    self.game_object_=game_object
-end
-
 function LoginScene:Update()
-    --print("LoginScene:Update")
+    --print("LoginScene Update")
+    LoginScene.super.Update(self)
     self.animation_clip_:Update()
 end

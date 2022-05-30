@@ -39,7 +39,7 @@ Camera::~Camera() {
 }
 
 void Camera::SetView(const glm::vec3 &cameraForward,const glm::vec3 &cameraUp) {
-    auto transform=dynamic_cast<Transform*>(game_object()->GetComponent("Transform"));
+    auto transform=game_object()->GetComponent<Transform>();
     view_mat4_=glm::lookAt(transform->position(), cameraForward, cameraUp);
 }
 

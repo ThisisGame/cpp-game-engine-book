@@ -39,17 +39,17 @@ void UIText::Update() {
         return;
     }
 
-    MeshFilter* mesh_filter=dynamic_cast<MeshFilter*>(game_object()->GetComponent("MeshFilter"));
+    MeshFilter* mesh_filter=game_object()->GetComponent<MeshFilter>();
     if(mesh_filter== nullptr){
         //挂上 MeshFilter 组件
-        mesh_filter=dynamic_cast<MeshFilter*>(game_object()->AddComponent("MeshFilter"));
+        mesh_filter=game_object()->AddComponent<MeshFilter>();
 
         //创建 Material
         auto material=new Material();//设置材质
         material->Parse("material/ui_text.mat");
 
         //挂上 MeshRenderer 组件
-        auto mesh_renderer=dynamic_cast<MeshRenderer*>(game_object()->AddComponent("MeshRenderer"));
+        auto mesh_renderer=game_object()->AddComponent<MeshRenderer>();
         mesh_renderer->SetMaterial(material);
 
         //使用文字贴图

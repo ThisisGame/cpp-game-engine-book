@@ -26,6 +26,7 @@ public:
 private:
     Texture2D* texture2D_= nullptr;//Texture
 
+RTTR_ENABLE();
 };
 
 

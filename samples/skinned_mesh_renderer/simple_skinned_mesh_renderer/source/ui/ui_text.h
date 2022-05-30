@@ -37,6 +37,8 @@ private:
     std::string text_;
     bool dirty_;//是否变化需要重新生成Mesh
     glm::vec4 color_;//字体颜色
+
+RTTR_ENABLE();
 };
 
 

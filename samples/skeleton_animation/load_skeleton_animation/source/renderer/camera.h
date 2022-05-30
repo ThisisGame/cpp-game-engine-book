@@ -99,6 +99,8 @@ public:
 private:
     static std::vector<Camera*> all_camera_;//所有Camera，每一帧都遍历Camera，设置current_camera_。
     static Camera* current_camera_;//当前用于渲染的Camera，就是MeshRenderer在计算MVP的时候，用这个Camera的View Projection矩阵计算MVP。
+
+RTTR_ENABLE();
 };
 
 
