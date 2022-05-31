@@ -7,8 +7,8 @@
 #include "component/transform.h"
 #include "utils/debug.h"
 
-AudioStudioEvent::AudioStudioEvent() {}
-AudioStudioEvent::~AudioStudioEvent(){}
+AudioStudioEvent::AudioStudioEvent()=default;
+AudioStudioEvent::~AudioStudioEvent()=default;
 
 
 FMOD_RESULT AudioStudioEvent::SetParameterByName(const char *name, float value, bool ignore_seek_speed) {

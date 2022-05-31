@@ -23,8 +23,7 @@ SkinnedMeshRenderer::SkinnedMeshRenderer():MeshRenderer() {
 
 void SkinnedMeshRenderer::Update() {
     //主动获取 MeshFilter 组件
-    auto component_mesh_filter=game_object()->GetComponent("MeshFilter");
-    auto mesh_filter=dynamic_cast<MeshFilter*>(component_mesh_filter);
+    MeshFilter* mesh_filter=game_object()->GetComponent<MeshFilter>();
     if(!mesh_filter){
         DEBUG_LOG_ERROR("SkinnedMeshRenderer::Update() failed, can't get MeshFilter component");
         return;
@@ -43,8 +42,7 @@ void SkinnedMeshRenderer::Update() {
     }
 
     //主动获取 Animation 组件
-    auto component_animation=game_object()->GetComponent("Animation");
-    auto animation=dynamic_cast<Animation*>(component_animation);
+    Animation* animation=game_object()->GetComponent<Animation>();
     if(!animation){
         DEBUG_LOG_ERROR("SkinnedMeshRenderer::Update() failed, can't get Animation component");
         return;

@@ -19,7 +19,6 @@ public:
     /// \param file_path
     void LoadFromFile(const char *file_path);
 
-
     /// 获取骨骼T-pose
     /// \param bone_index 骨骼index
     /// \return 骨骼T-pose

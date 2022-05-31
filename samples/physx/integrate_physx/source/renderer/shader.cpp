@@ -19,13 +19,9 @@ using std::pair;
 
 unordered_map<string,Shader*> Shader::kShaderMap;
 
-Shader::Shader() {
+Shader::Shader()=default;
 
-}
-
-Shader::~Shader() {
-
-}
+Shader::~Shader()=default;
 
 Shader* Shader::Find(string shader_name) {
     unordered_map<string,Shader*>::iterator iter=kShaderMap.find(shader_name);

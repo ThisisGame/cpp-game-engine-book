@@ -26,6 +26,8 @@ private:
 
     unsigned int vertex_buffer_object_handle_=0;//顶点缓冲区对象句柄
     unsigned int vertex_array_object_handle_=0;//顶点数组对象句柄
+
+RTTR_ENABLE();
 };
 
 

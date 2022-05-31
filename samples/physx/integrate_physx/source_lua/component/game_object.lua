@@ -11,16 +11,45 @@ require("component")
 --- @class GameObject
 GameObject=class("GameObject")
 
-function GameObject:ctor()
+function GameObject:ctor(name)
     --- @type Component[] @组件列表
     self.components_map_={}
     --- @type Cpp.GameObject @C++ GameObject对象
-    self.cpp_game_object_instance_=Cpp.GameObject()
-    GameObjectManager:Add(self)
+    self.cpp_game_object_instance_=Cpp.GameObject(name)
 end
 
 function GameObject:cpp_game_object_instance()
     return self.cpp_game_object_instance_
+end
+
+--- @return string
+function GameObject:name()
+    return self.cpp_game_object_instance_:name()
+end
+
+--- @param name string
+function GameObject:set_name(name)
+    self.cpp_game_object_instance_:set_name(name)
+end
+
+--- @return number
+function GameObject:layer()
+    return self.cpp_game_object_instance_:layer()
+end
+
+--- @param layer number
+function GameObject:set_layer(layer)
+    self.cpp_game_object_instance_:set_layer(layer)
+end
+
+--- @return boolean
+function GameObject:active()
+    return self.cpp_game_object_instance_:active()
+end
+
+--- @param active boolean
+function GameObject:set_active(active)
+    self.cpp_game_object_instance_:set_active(active)
 end
 
 ---@param component_type table @组件类型
@@ -32,7 +61,6 @@ function GameObject:AddComponent(component_type)
     end
     table.insert(self.components_map_[component_type],component_instance)
     component_instance:set_game_object(self)
-    component_instance:Awake()
     return component_instance
 end
 
@@ -59,13 +87,4 @@ function GameObject:GetComponents(component_type)
         end
     end
     return return_components
-end
-
-
-function GameObject:Update()
-    for _,components in pairs(self.components_map_) do
-        for _, component in pairs(components) do
-            component:Update()
-        end
-    end
 end

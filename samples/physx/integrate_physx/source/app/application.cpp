@@ -4,6 +4,7 @@
 
 #include "application.h"
 #include <memory>
+#include "rttr/registration"
 #include "easy/profiler.h"
 #include "glad/gl.h"
 #ifdef WIN32
@@ -119,7 +120,6 @@ void Application::Init() {
 
     //初始化 fmod
     Audio::Init();
-
     Physics::Init();
 }
 
@@ -131,17 +131,8 @@ void Application::Update(){
 
     GameObject::Foreach([](GameObject* game_object){
         if(game_object->active()){
-            game_object->ForeachLuaComponent([](std::string component_name,sol::table lua_component_instance_table){
-                sol::protected_function update_function=lua_component_instance_table["Update"];
-                if(update_function.valid()==false){
-                    DEBUG_LOG_ERROR("{}:Update is not valid!if it is c++,please register in lua_binding.cpp.",component_name);
-                    return;
-                }
-                auto result=update_function(lua_component_instance_table);
-                if(result.valid()== false){
-                    sol::error err = result;
-                    DEBUG_LOG_ERROR("{}:Update {}",component_name,err.what());
-                }
+            game_object->ForeachComponent([](Component* component){
+                component->Update();
             });
         }
     });
@@ -160,15 +151,8 @@ void Application::Render(){
             if(game_object->active()==false){
                 return;
             }
-            auto component=game_object->GetComponent("MeshRenderer");
-            if (!component){
-                component=game_object->GetComponent("SkinnedMeshRenderer");
-                if (!component){
-                    return;
-                }
-            }
-            auto mesh_renderer=dynamic_cast<MeshRenderer*>(component);
-            if(!mesh_renderer){
+            MeshRenderer* mesh_renderer=game_object->GetComponent<MeshRenderer>();
+            if(mesh_renderer== nullptr){
                 return;
             }
             mesh_renderer->Render();
@@ -178,22 +162,12 @@ void Application::Render(){
 
 void Application::FixedUpdate(){
     EASY_FUNCTION(profiler::colors::Magenta); // 标记函数
-
     Physics::FixedUpdate();
 
     GameObject::Foreach([](GameObject* game_object){
         if(game_object->active()){
-            game_object->ForeachLuaComponent([](std::string component_name,sol::table lua_component_instance_table){
-                sol::protected_function fixed_update_function=lua_component_instance_table["FixedUpdate"];
-                if(fixed_update_function.valid()==false){
-                    DEBUG_LOG_ERROR("{}:FixedUpdate is not valid!if it is c++,please register in lua_binding.cpp.",component_name);
-                    return;
-                }
-                auto result=fixed_update_function(lua_component_instance_table);
-                if(result.valid()== false){
-                    sol::error err = result;
-                    DEBUG_LOG_ERROR("{}:FixedUpdate {}",err.what());
-                }
+            game_object->ForeachComponent([](Component* component){
+                component->FixedUpdate();
             });
         }
     });
@@ -206,7 +180,6 @@ void Application::Run() {
                 break;
             }
             Update();
-
             // 如果一帧卡了很久，就多执行几次FixedUpdate
             float cost_time=Time::delta_time();
             while(cost_time>=Time::fixed_update_time()){
@@ -215,7 +188,6 @@ void Application::Run() {
             }
 
             Render();
-
 
             //发出特殊任务：渲染结束
             RenderTaskProducer::ProduceRenderTaskEndFrame();

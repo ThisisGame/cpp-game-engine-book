@@ -5,6 +5,9 @@ set(CMAKE_CXX_STANDARD 17)
 
 add_definitions(-D GLM_SWIZZLE)#GLM开启重排，随意转换。 vec2 v2 = v4.xz();
 
+add_definitions(-D USE_FMOD_STUDIO)#是否使用fmod studio，加载bank文件的形式。
+
+
 if (MSVC)
     add_compile_options(/bigobj)
     add_compile_options(/wd4819)#忽略保存为unicode警告
@@ -16,6 +19,7 @@ include(CMakeLists.txt.FreeType)
 include(CMakeLists.txt.fmod)
 include(CMakeLists.txt.easy_profile_core)
 include(CMakeLists.txt.lua)
+include(CMakeLists.txt.luasocket)
 include(CMakeLists.txt.Physx)
 
 #拷贝depends目录
@@ -47,7 +51,7 @@ file(GLOB_RECURSE engine_cpp source/*.cpp)
 file(GLOB_RECURSE rttr_cpp "depends/rttr/*.cpp")
 file(GLOB_RECURSE example_cpp example/*.cpp)
 
-add_executable(${PROJECT_NAME} ${glfw_sources} ${rttr_cpp} ${freetype_src} ${easy_profiler_core_source} ${lua_src} ${engine_cpp} ${example_cpp})
+add_executable(${PROJECT_NAME} ${glfw_sources} ${rttr_cpp} ${freetype_src} ${easy_profiler_core_source} ${lua_src} ${luasocket_c} ${engine_cpp} ${example_cpp})
 
 if (MSVC)
     set_property(TARGET ${PROJECT_NAME} PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
