@@ -57,7 +57,6 @@ void Material::Parse(string material_path) {
             return;
         }
 
-        std::string shader_property_name=texture_name_attribute->value();
         std::string image_path=texture_image_attribute->value();
         textures_.push_back(std::make_pair(texture_name_attribute->value(), image_path.empty()? nullptr:Texture2D::LoadFromFile(image_path)));
 

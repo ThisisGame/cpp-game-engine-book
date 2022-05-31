@@ -90,7 +90,7 @@ public:
     VertexRelateBoneInfo* vertex_relate_bone_infos(){return vertex_relate_bone_infos_;};
 
     /// 设置顶点关联骨骼信息
-    /// \param vertex_relate_bone_info_vec unsigned char数组形式，长度为顶点个数*8.
+    /// \param vertex_relate_bone_info_data unsigned char数组形式，长度为顶点个数*8.
     /// 每个顶点按照 bone_index_[4] bone_weight_[4] 的顺序存储，
     void set_vertex_relate_bone_infos(std::vector<int>& vertex_relate_bone_info_data){
         if(vertex_relate_bone_infos_!=nullptr){
@@ -111,6 +111,8 @@ private:
     Mesh* mesh_= nullptr;//Mesh对象
     Mesh* skinned_mesh_= nullptr;//蒙皮Mesh对象
     VertexRelateBoneInfo* vertex_relate_bone_infos_= nullptr;//顶点关联骨骼信息(4个骨骼索引、权重)，长度为顶点数
+
+RTTR_ENABLE();
 };
 
 

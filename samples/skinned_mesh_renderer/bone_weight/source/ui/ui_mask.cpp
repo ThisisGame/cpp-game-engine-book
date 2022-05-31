@@ -36,7 +36,7 @@ void UIMask::Update() {
     if(texture2D_== nullptr){
         return;
     }
-    MeshFilter* mesh_filter=dynamic_cast<MeshFilter*>(game_object()->GetComponent("MeshFilter"));
+    MeshFilter* mesh_filter=game_object()->GetComponent<MeshFilter>();
     if(mesh_filter== nullptr){
         //创建 MeshFilter
         std::vector<MeshFilter::Vertex> vertex_vector={
@@ -49,7 +49,7 @@ void UIMask::Update() {
                 0,1,2,
                 0,2,3
         };
-        mesh_filter=dynamic_cast<MeshFilter*>(game_object()->AddComponent("MeshFilter"));
+        mesh_filter=game_object()->AddComponent<MeshFilter>();
         mesh_filter->CreateMesh(vertex_vector,index_vector);
 
         //创建 Material
@@ -58,7 +58,7 @@ void UIMask::Update() {
         material->SetTexture("u_diffuse_texture", texture2D_);
 
         //挂上 MeshRenderer 组件
-        auto mesh_renderer=dynamic_cast<MeshRenderer*>(game_object()->AddComponent("MeshRenderer"));
+        auto mesh_renderer=game_object()->AddComponent<MeshRenderer>();
         mesh_renderer->SetMaterial(material);
     }
 }

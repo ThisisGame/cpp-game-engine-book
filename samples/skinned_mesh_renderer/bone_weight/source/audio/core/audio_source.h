@@ -36,6 +36,8 @@ private:
     AudioClip* audio_clip_;
     FMOD_CHANNEL* fmod_channel_;
     FMOD_MODE fmod_mode_=FMOD_DEFAULT;
+
+RTTR_ENABLE();
 };
 
 
