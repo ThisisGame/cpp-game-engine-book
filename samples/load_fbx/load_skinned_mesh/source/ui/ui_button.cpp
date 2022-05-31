@@ -20,7 +20,7 @@ RTTR_REGISTRATION{
             .constructor<>()(rttr::policy::ctor::as_raw_ptr);
 }
 
-UIButton::UIButton():pressed_(false),click_callback_(nullptr) {
+UIButton::UIButton():pressed_(false),click_callback_(nullptr),image_normal_(nullptr),image_press_(nullptr) {
 
 }
 
@@ -35,10 +35,10 @@ void UIButton::Update() {
         return;
     }
 
-    Transform* transform=dynamic_cast<Transform*>(game_object()->GetComponent("Transform"));
+    Transform* transform=game_object()->GetComponent<Transform>();
     //按钮的图片 与 按钮坐标同步
-    Transform* transform_image_normal=dynamic_cast<Transform*>(image_normal_->game_object()->GetComponent("Transform"));
-    Transform* transform_image_press=dynamic_cast<Transform*>(image_press_->game_object()->GetComponent("Transform"));
+    Transform* transform_image_normal=image_normal_->game_object()->GetComponent<Transform>();
+    Transform* transform_image_press=image_press_->game_object()->GetComponent<Transform>();
     transform_image_normal->set_position(transform->position());
     transform_image_press->set_position(transform->position());
 

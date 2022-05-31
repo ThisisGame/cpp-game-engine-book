@@ -45,7 +45,6 @@ void MeshFilter::LoadMesh(string mesh_file_path) {
     mesh_->vertex_index_data_=vertex_index_data;
 }
 
-
 void MeshFilter::CreateMesh(std::vector<Vertex> &vertex_data, std::vector<unsigned short> &vertex_index_data) {
     if(mesh_!= nullptr){
         delete mesh_;
@@ -87,6 +86,7 @@ const char* MeshFilter::GetMeshName() {
 }
 
 void MeshFilter::LoadWeight(string weight_file_path) {
+    //读取 Mesh文件头
     ifstream input_file_stream(Application::data_path()+weight_file_path,ios::in | ios::binary);
     if (!input_file_stream.is_open()){
         DEBUG_LOG_ERROR("weight file open failed");

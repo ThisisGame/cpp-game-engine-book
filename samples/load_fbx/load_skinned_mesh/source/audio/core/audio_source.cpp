@@ -116,8 +116,7 @@ void AudioSource::Update() {
     Component::Update();
 
     if(fmod_mode_ ^ FMOD_3D){
-        auto component_transform=game_object()->GetComponent("Transform");
-        auto transform=dynamic_cast<Transform*>(component_transform);
+        auto transform=game_object()->GetComponent<Transform>();
         if(!transform){
             return;
         }

@@ -26,7 +26,7 @@ RTTR_REGISTRATION
             .constructor<>()(rttr::policy::ctor::as_raw_ptr);
 }
 
-MeshRenderer::MeshRenderer():Component() {
+MeshRenderer::MeshRenderer():Component(),material_(nullptr) {
 
 }
 
@@ -54,7 +54,7 @@ void MeshRenderer::Render() {
     glm::mat4 projection=current_camera->projection_mat4();
 
     //主动获取 Transform 组件，计算mvp。
-    auto component_transform=game_object()->GetComponent("Transform");
+    auto component_transform=game_object()->GetComponent<Transform>();
     auto transform=dynamic_cast<Transform*>(component_transform);
     if(!transform){
         return;
@@ -68,7 +68,7 @@ void MeshRenderer::Render() {
     glm::mat4 mvp=projection*view * model;
 
     //主动获取 MeshFilter 组件
-    auto component_mesh_filter=game_object()->GetComponent("MeshFilter");
+    auto component_mesh_filter=game_object()->GetComponent<MeshFilter>();
     auto mesh_filter=dynamic_cast<MeshFilter*>(component_mesh_filter);
     if(!mesh_filter){
         return;
@@ -133,15 +133,8 @@ void MeshRenderer::Render() {
     glUseProgram(gl_program_id);
     {
         // PreRender
-        game_object()->ForeachLuaComponent([](sol::table lua_component_instance_table){
-            sol::protected_function function=lua_component_instance_table["OnPreRender"];
-            if(function.valid()){
-                auto result=function(lua_component_instance_table);
-                if(result.valid()== false){
-                    sol::error err = result;
-                    DEBUG_LOG_ERROR("\n---- RUN LUA ERROR ----\n{}\n------------------------",err.what());
-                }
-            }
+        game_object()->ForeachComponent([](Component* component){
+            component->OnPreRender();
         });
 
         if(current_camera->camera_use_for()==Camera::CameraUseFor::SCENE){
@@ -180,15 +173,8 @@ void MeshRenderer::Render() {
         glBindVertexArray(0);__CHECK_GL_ERROR__
 
         // PostRender
-        game_object()->ForeachLuaComponent([](sol::table lua_component_instance_table){
-            sol::protected_function function=lua_component_instance_table["OnPostRender"];
-            if(function.valid()){
-                auto result=function(lua_component_instance_table);
-                if(result.valid()== false){
-                    sol::error err = result;
-                    DEBUG_LOG_ERROR("\n---- RUN LUA ERROR ----\n{}\n------------------------",err.what());
-                }
-            }
+        game_object()->ForeachComponent([](Component* component){
+            component->OnPostRender();
         });
     }
 }

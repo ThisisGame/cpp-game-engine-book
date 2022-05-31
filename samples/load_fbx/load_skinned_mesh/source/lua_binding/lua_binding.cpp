@@ -5,6 +5,9 @@
 #include "lua_binding.h"
 #include <glm/ext.hpp>
 #include <sol/sol.hpp>
+extern "C"{
+#include <luasocket/luasocket.h>
+}
 #include "audio/audio.h"
 #include "audio/studio/audio_studio.h"
 #include "audio/studio/audio_studio_event.h"
@@ -34,7 +37,10 @@
 sol::state LuaBinding::sol_state_;
 
 void LuaBinding::Init(std::string package_path) {
-    sol_state_.open_libraries(sol::lib::base,sol::lib::package);
+    sol_state_.open_libraries(sol::lib::base,sol::lib::package,sol::lib::coroutine,sol::lib::string,sol::lib::os,sol::lib::math,
+                              sol::lib::table,sol::lib::debug,sol::lib::bit32,sol::lib::io,sol::lib::utf8);
+    //启用luasocket
+    sol_state_.require("socket.core",luaopen_socket_core,true);
     //设置lua搜索目录
     sol::table package_table=sol_state_["package"];
     std::string path=package_table["path"];
@@ -135,11 +141,12 @@ void LuaBinding::BindLua() {
         ));
     }
 
+    auto cpp_ns_table = sol_state_["Cpp"].get_or_create<sol::table>();
     // audio
     {
         // FMOD_RESULT
         {
-            sol_state_.new_enum<FMOD_RESULT,true>("FMOD_RESULT",{
+            cpp_ns_table.new_enum<FMOD_RESULT,true>("FMOD_RESULT",{
                     {"FMOD_OK",FMOD_RESULT::FMOD_OK},
                     {"FMOD_ERR_BADCOMMAND",FMOD_RESULT::FMOD_ERR_BADCOMMAND},
                     {"FMOD_ERR_CHANNEL_ALLOC",FMOD_RESULT::FMOD_ERR_CHANNEL_ALLOC},
@@ -226,12 +233,12 @@ void LuaBinding::BindLua() {
             });
         }
 
-        sol_state_.new_usertype<Audio>("Audio",
+        cpp_ns_table.new_usertype<Audio>("Audio",
                                        "Init",&Audio::Init,
                                        "Update",&Audio::Update
         );
 
-        sol_state_.new_usertype<Audio>("AudioStudio",
+        cpp_ns_table.new_usertype<Audio>("AudioStudio",
                                        "Init",&AudioStudio::Init,
                                        "Update",&AudioStudio::Update,
                                        "LoadBankFile",&AudioStudio::LoadBankFile,
@@ -239,7 +246,7 @@ void LuaBinding::BindLua() {
                                        "SetListenerAttributes",&AudioStudio::SetListenerAttributes
         );
 
-        sol_state_.new_usertype<AudioStudioEvent>("AudioStudioEvent",
+        cpp_ns_table.new_usertype<AudioStudioEvent>("AudioStudioEvent",
 //                                      "event_instance",&AudioStudioEvent::event_instance,
                                                   "SetParameterByName",&AudioStudioEvent::SetParameterByName,
                                                   "Set3DAttribute",&AudioStudioEvent::Set3DAttribute,
@@ -251,25 +258,26 @@ void LuaBinding::BindLua() {
 
     // component
     {
-        sol_state_.new_usertype<GameObject>("GameObject",sol::call_constructor,sol::constructors<GameObject(std::string)>(),
+        cpp_ns_table.new_usertype<GameObject>("GameObject",sol::call_constructor,sol::constructors<GameObject(std::string)>(),
                                             "name",&GameObject::name,
                                             "set_name",&GameObject::set_name,
                                             "layer",&GameObject::layer,
                                             "set_layer",&GameObject::set_layer,
-                                            "AddComponent", &GameObject::AddComponentFromLua,
-                                            "GetComponent",&GameObject::GetComponentFromLua,
                                             "SetParent",&GameObject::SetParent,
-                                            "Foreach",&GameObject::ForeachLuaComponent
+                                            "ForeachComponent",&GameObject::ForeachComponent,
+                                            "Foreach",&GameObject::Foreach,
+                                            "AttachComponent", &GameObject::AttachComponent
         );
 
-        sol_state_.new_usertype<Component>("Component",sol::call_constructor,sol::constructors<Component()>(),
+        cpp_ns_table.new_usertype<Component>("Component",sol::call_constructor,sol::constructors<Component()>(),
                                            "Awake",&Component::Awake,
                                            "Update",&Component::Update,
                                            "game_object",&Component::game_object,
-                                           "set_game_object",&Component::set_game_object
+                                           "set_game_object",&Component::set_game_object,
+                                           "set_lua_component_instance",&Component::set_lua_component_instance
         );
 
-        sol_state_.new_usertype<Transform>("Transform",sol::call_constructor,sol::constructors<Transform()>(),
+        cpp_ns_table.new_usertype<Transform>("Transform",sol::call_constructor,sol::constructors<Transform()>(),
                                            sol::base_classes,sol::bases<Component>(),
                                            "position", &Transform::position,
                                            "rotation", &Transform::rotation,
@@ -282,13 +290,13 @@ void LuaBinding::BindLua() {
 
     // control
     {
-        sol_state_.new_enum<KeyAction,true>("KeyAction",{
+        cpp_ns_table.new_enum<KeyAction,true>("KeyAction",{
                 {"KEY_ACTION_UP",KeyAction::KEY_ACTION_UP},
                 {"KEY_ACTION_DOWN",KeyAction::KEY_ACTION_DOWN},
                 {"KEY_ACTION_REPEAT",KeyAction::KEY_ACTION_REPEAT}
         });
 
-        sol_state_.new_enum<KeyCode,true>("KeyCode",{
+        cpp_ns_table.new_enum<KeyCode,true>("KeyCode",{
                 {"KEY_CODE_UNKNOWN",KeyCode::KEY_CODE_UNKNOWN},
                 {"MOUSE_BUTTON_1",KeyCode::MOUSE_BUTTON_1},
                 {"MOUSE_BUTTON_2",KeyCode::MOUSE_BUTTON_2},
@@ -424,13 +432,13 @@ void LuaBinding::BindLua() {
                 {"KEY_CODE_MENU",KeyCode::KEY_CODE_MENU}
         });
 
-        sol_state_.new_enum<KeyAction,true>("KeyAction",{
+        cpp_ns_table.new_enum<KeyAction,true>("KeyAction",{
                 {"KEY_ACTION_UP",KeyAction::KEY_ACTION_UP},
                 {"KEY_ACTION_DOWN",KeyAction::KEY_ACTION_DOWN},
                 {"KEY_ACTION_REPEAT",KeyAction::KEY_ACTION_REPEAT}
         });
 
-        sol_state_.new_usertype<Input>("Input",
+        cpp_ns_table.new_usertype<Input>("Input",
                                        "RecordKey",&Input::RecordKey,
                                        "GetKey",&Input::GetKey,
                                        "GetKeyDown",&Input::GetKeyDown,
@@ -448,7 +456,7 @@ void LuaBinding::BindLua() {
 
     // renderer
     {
-        sol_state_.new_usertype<Camera>("Camera",sol::call_constructor,sol::constructors<Camera()>(),
+        cpp_ns_table.new_usertype<Camera>("Camera",sol::call_constructor,sol::constructors<Camera()>(),
                                         sol::base_classes,sol::bases<Component>(),
                                         "SetView",&Camera::SetView,
                                         "SetPerspective",&Camera::SetPerspective,
@@ -467,27 +475,27 @@ void LuaBinding::BindLua() {
                                         "Sort",&Camera::Sort
         );
 
-        sol_state_.new_usertype<UICamera>("UICamera",sol::call_constructor,sol::constructors<UICamera()>(),
-                                                sol::base_classes,sol::bases<Camera,Component>()
+        cpp_ns_table.new_usertype<UICamera>("UICamera",sol::call_constructor,sol::constructors<UICamera()>(),
+                                          sol::base_classes,sol::bases<Camera,Component>()
         );
 
-        sol_state_.new_usertype<Material>("Material",sol::call_constructor,sol::constructors<Material()>(),
+        cpp_ns_table.new_usertype<Material>("Material",sol::call_constructor,sol::constructors<Material()>(),
                                           "Parse",&Material::Parse,
                                           "SetUniform1i",&Material::SetUniform1i,
                                           "SetTexture",&Material::SetTexture
         );
 
-        sol_state_.new_usertype<MeshFilter>("MeshFilter",sol::call_constructor,sol::constructors<MeshFilter()>(),
+        cpp_ns_table.new_usertype<MeshFilter>("MeshFilter",sol::call_constructor,sol::constructors<MeshFilter()>(),
                                             sol::base_classes,sol::bases<Component>(),
                                             "LoadMesh", &MeshFilter::LoadMesh,
                                             "CreateMesh", [] (MeshFilter* meshFilter,std::vector<float>& vertex_data,std::vector<unsigned short>& vertex_index_data)
-                                                                {return meshFilter->CreateMesh(vertex_data,vertex_index_data);},
+                                            {return meshFilter->CreateMesh(vertex_data,vertex_index_data);},
                                             "GetMeshName",&MeshFilter::GetMeshName,
                                             "set_vertex_relate_bone_infos",&MeshFilter::set_vertex_relate_bone_infos,
                                             "LoadWeight",&MeshFilter::LoadWeight
         );
 
-        sol_state_.new_usertype<MeshRenderer>("MeshRenderer",sol::call_constructor,sol::constructors<MeshRenderer()>(),
+        cpp_ns_table.new_usertype<MeshRenderer>("MeshRenderer",sol::call_constructor,sol::constructors<MeshRenderer()>(),
                                               sol::base_classes,sol::bases<Component>(),
                                               "SetMaterial", &MeshRenderer::SetMaterial,
                                               "material", &MeshRenderer::material,
@@ -495,11 +503,12 @@ void LuaBinding::BindLua() {
         );
 
 
-        sol_state_.new_usertype<SkinnedMeshRenderer>("SkinnedMeshRenderer",sol::call_constructor,sol::constructors<SkinnedMeshRenderer()>(),
+        cpp_ns_table.new_usertype<SkinnedMeshRenderer>("SkinnedMeshRenderer",sol::call_constructor,sol::constructors<SkinnedMeshRenderer()>(),
                                                      sol::base_classes,sol::bases<MeshRenderer,Component>()
         );
 
-        sol_state_.new_usertype<Shader>("Shader",sol::call_constructor,sol::constructors<Shader()>(),
+
+        cpp_ns_table.new_usertype<Shader>("Shader",sol::call_constructor,sol::constructors<Shader()>(),
                                         "Parse", &Shader::Parse,
                                         "CreateGPUProgram", &Shader::CreateGPUProgram,
                                         "Active", &Shader::Active,
@@ -508,7 +517,7 @@ void LuaBinding::BindLua() {
                                         "Find", &Shader::Find
         );
 
-        sol_state_.new_usertype<Texture2D>("Texture2D",
+        cpp_ns_table.new_usertype<Texture2D>("Texture2D",
                                            "mipmap_level", &Texture2D::mipmap_level,
                                            "width", &Texture2D::width,
                                            "height", &Texture2D::height,
@@ -517,25 +526,25 @@ void LuaBinding::BindLua() {
                                            "LoadFromFile", &Texture2D::LoadFromFile
         );
 
-        sol_state_.new_usertype<AnimationClip>("AnimationClip",sol::call_constructor,sol::constructors<AnimationClip()>(),
-                                            "LoadFromFile", &AnimationClip::LoadFromFile,
-                                            "Play", &AnimationClip::Play,
-                                            "Stop", &AnimationClip::Stop,
-                                            "Update", &AnimationClip::Update
+        cpp_ns_table.new_usertype<AnimationClip>("AnimationClip",sol::call_constructor,sol::constructors<AnimationClip()>(),
+                                               "LoadFromFile", &AnimationClip::LoadFromFile,
+                                               "Play", &AnimationClip::Play,
+                                               "Stop", &AnimationClip::Stop,
+                                               "Update", &AnimationClip::Update
         );
 
-        sol_state_.new_usertype<Animation>("Animation",sol::call_constructor,sol::constructors<Animation()>(),
-                                              sol::base_classes,sol::bases<Component>(),
-                                              "LoadAnimationClipFromFile", &Animation::LoadAnimationClipFromFile,
-                                              "Play", &Animation::Play,
-                                              "current_animation_clip", &Animation::current_animation_clip
+        cpp_ns_table.new_usertype<Animation>("Animation",sol::call_constructor,sol::constructors<Animation()>(),
+                                           sol::base_classes,sol::bases<Component>(),
+                                           "LoadAnimationClipFromFile", &Animation::LoadAnimationClipFromFile,
+                                           "Play", &Animation::Play,
+                                           "current_animation_clip", &Animation::current_animation_clip
         );
 
     }
 
     // utils
     {
-        sol_state_.new_usertype<Application>("Application",
+        cpp_ns_table.new_usertype<Application>("Application",
                                              "set_title",&Application::set_title,
                                              "set_data_path",&Application::set_data_path,
                                              "Init",&Application::Init,
@@ -545,11 +554,11 @@ void LuaBinding::BindLua() {
                                              "Render",&Application::Render
         );
 
-        sol_state_.new_usertype<Debug>("Debug",
+        cpp_ns_table.new_usertype<Debug>("Debug",
                                        "Init",&Debug::Init
         );
 
-        sol_state_.new_usertype<Screen>("Screen",
+        cpp_ns_table.new_usertype<Screen>("Screen",
                                         "width",&Screen::width,
                                         "height",&Screen::height,
                                         "aspect_ratio",&Screen::aspect_ratio,
@@ -558,7 +567,7 @@ void LuaBinding::BindLua() {
                                         "set_width_height",&Screen::set_width_height
         );
 
-        sol_state_.new_usertype<Time>("Time",
+        cpp_ns_table.new_usertype<Time>("Time",
                                       "Init",&Time::Init,
                                       "Update",&Time::Update,
                                       "TimeSinceStartup",&Time::TimeSinceStartup,

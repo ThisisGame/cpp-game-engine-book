@@ -4,6 +4,7 @@
 
 #include "application.h"
 #include <memory>
+#include <rttr/registration>
 #include <easy/profiler.h>
 #include <glad/gl.h>
 #ifdef WIN32
@@ -127,13 +128,8 @@ void Application::Update(){
 
     GameObject::Foreach([](GameObject* game_object){
         if(game_object->active()){
-            game_object->ForeachLuaComponent([](sol::table lua_component_instance_table){
-                sol::protected_function update_function=lua_component_instance_table["Update"];
-                auto result=update_function(lua_component_instance_table);
-                if(result.valid()== false){
-                    sol::error err = result;
-                    DEBUG_LOG_ERROR("\n---- RUN LUA ERROR ----\n{}\n------------------------",err.what());
-                }
+            game_object->ForeachComponent([](Component* component){
+                component->Update();
             });
         }
     });
@@ -152,15 +148,8 @@ void Application::Render(){
             if(game_object->active()==false){
                 return;
             }
-            auto component=game_object->GetComponent("MeshRenderer");
-            if (!component){
-                component=game_object->GetComponent("SkinnedMeshRenderer");
-                if (!component){
-                    return;
-                }
-            }
-            auto mesh_renderer=dynamic_cast<MeshRenderer*>(component);
-            if(!mesh_renderer){
+            MeshRenderer* mesh_renderer=game_object->GetComponent<MeshRenderer>();
+            if(mesh_renderer== nullptr){
                 return;
             }
             mesh_renderer->Render();
