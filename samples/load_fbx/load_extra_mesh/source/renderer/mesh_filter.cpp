@@ -45,7 +45,6 @@ void MeshFilter::LoadMesh(string mesh_file_path) {
     mesh_->vertex_index_data_=vertex_index_data;
 }
 
-
 void MeshFilter::CreateMesh(std::vector<Vertex> &vertex_data, std::vector<unsigned short> &vertex_index_data) {
     if(mesh_!= nullptr){
         delete mesh_;
