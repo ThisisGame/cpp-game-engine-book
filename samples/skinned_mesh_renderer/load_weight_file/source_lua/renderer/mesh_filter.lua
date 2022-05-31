@@ -35,3 +35,9 @@ end
 function MeshFilter:set_vertex_relate_bone_infos(vertex_relate_bone_info_data)
     self.cpp_component_instance_:set_vertex_relate_bone_infos(sol2.convert_sequence_int(vertex_relate_bone_info_data))
 end
+
+--- 加载权重文件
+--- @param weight_file_path string @权重文件路径
+function MeshFilter:LoadWeight(weight_file_path)
+    self.cpp_component_instance_:LoadWeight(weight_file_path)
+end

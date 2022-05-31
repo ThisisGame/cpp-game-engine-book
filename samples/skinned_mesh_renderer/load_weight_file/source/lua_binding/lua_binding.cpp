@@ -481,7 +481,8 @@ void LuaBinding::BindLua() {
                                             "LoadMesh", &MeshFilter::LoadMesh,
                                             "CreateMesh", [] (MeshFilter* meshFilter,std::vector<float>& vertex_data,std::vector<unsigned short>& vertex_index_data)
                                             {return meshFilter->CreateMesh(vertex_data,vertex_index_data);},
-                                              "set_vertex_relate_bone_infos",&MeshFilter::set_vertex_relate_bone_infos
+                                            "set_vertex_relate_bone_infos",&MeshFilter::set_vertex_relate_bone_infos,
+                                            "LoadWeight",&MeshFilter::LoadWeight
         );
 
         cpp_ns_table.new_usertype<MeshRenderer>("MeshRenderer",sol::call_constructor,sol::constructors<MeshRenderer()>(),

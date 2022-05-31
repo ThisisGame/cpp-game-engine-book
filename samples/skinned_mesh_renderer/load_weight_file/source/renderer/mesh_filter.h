@@ -104,6 +104,10 @@ public:
         }
     }
 
+    /// 加载权重文件
+    /// \param weight_file_path 权重文件路径
+    void LoadWeight(string weight_file_path);
+
     /// 获取蒙皮Mesh对象指针
     Mesh* skinned_mesh(){return skinned_mesh_;};
     void set_skinned_mesh(Mesh* skinned_mesh){skinned_mesh_ = skinned_mesh;};

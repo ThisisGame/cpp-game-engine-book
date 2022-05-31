@@ -24,7 +24,7 @@ RTTR_REGISTRATION
             .constructor<>()(rttr::policy::ctor::as_raw_ptr);
 }
 
-MeshRenderer::MeshRenderer():Component() {
+MeshRenderer::MeshRenderer():Component(),material_(nullptr) {
 
 }
 
