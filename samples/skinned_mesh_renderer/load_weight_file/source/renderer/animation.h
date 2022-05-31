@@ -37,6 +37,8 @@ private:
     std::unordered_map<std::string,AnimationClip*> animation_clips_map_;
     /// 当前播放的动画
     AnimationClip* current_animation_clip_;
+
+RTTR_ENABLE();
 };
 
 

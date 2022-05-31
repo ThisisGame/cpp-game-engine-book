@@ -18,9 +18,7 @@ void Tree::Post(Node* node,std::function<void(Node * )> func) {
     }
 }
 
-Tree::~Tree() {
-
-}
+Tree::~Tree()=default;
 
 void Tree::Find(Node* node_parent,std::function<bool(Node *)> function_check,Node** node_result= nullptr) {
     for (auto child:node_parent->children()) {

@@ -28,6 +28,8 @@ private:
     UIImage* image_press_;//按压状态显示图片
     bool pressed_;//当前按钮状态是否按下
     std::function<void()> click_callback_;//按钮点击回调
+
+RTTR_ENABLE();
 };
 
 

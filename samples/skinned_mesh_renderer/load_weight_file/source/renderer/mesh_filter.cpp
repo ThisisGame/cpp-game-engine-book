@@ -7,7 +7,6 @@
 #include <fstream>
 #include <rttr/registration>
 #include "utils/application.h"
-#include "utils/debug.h"
 
 using std::ifstream;
 using std::ios;
@@ -45,6 +44,22 @@ void MeshFilter::LoadMesh(string mesh_file_path) {
 }
 
 
+
+MeshFilter::~MeshFilter() {
+    if(mesh_!=nullptr) {
+        delete mesh_;
+        mesh_=nullptr;
+    }
+    if(skinned_mesh_!=nullptr) {
+        delete skinned_mesh_;
+        skinned_mesh_=nullptr;
+    }
+    if(vertex_relate_bone_infos_!=nullptr) {
+        delete vertex_relate_bone_infos_;
+        vertex_relate_bone_infos_=nullptr;
+    }
+}
+
 void MeshFilter::CreateMesh(std::vector<Vertex> &vertex_data, std::vector<unsigned short> &vertex_index_data) {
     if(mesh_!= nullptr){
         delete mesh_;
@@ -81,43 +96,3 @@ void MeshFilter::CreateMesh(std::vector<float>& vertex_data,std::vector<unsigned
     memcpy(mesh_->vertex_index_data_,&vertex_index_data[0],vertex_index_data_size);
 }
 
-void MeshFilter::LoadWeight(string weight_file_path) {
-    //读取 Mesh文件头
-    ifstream input_file_stream(Application::data_path()+weight_file_path,ios::in | ios::binary);
-    if (!input_file_stream.is_open()){
-        DEBUG_LOG_ERROR("weight file open failed");
-        return;
-    }
-    //判断文件头
-    char file_head[7];
-    input_file_stream.read(file_head,6);
-    file_head[6]='\0';
-    if(strcmp(file_head,"weight") != 0) {
-        DEBUG_LOG_ERROR("weight file head error");
-        return;
-    }
-    //读取权重数据
-    input_file_stream.seekg(0,ios::end);
-    int length = input_file_stream.tellg();
-    input_file_stream.seekg(6,ios::beg);
-    vertex_relate_bone_infos_ =(VertexRelateBoneInfo*)malloc(length-6);
-    input_file_stream.read((char*)vertex_relate_bone_infos_,length-6);
-    //关闭文件
-    input_file_stream.close();
-}
-
-
-MeshFilter::~MeshFilter() {
-    if(mesh_!=nullptr) {
-        delete mesh_;
-        mesh_=nullptr;
-    }
-    if(skinned_mesh_!=nullptr) {
-        delete skinned_mesh_;
-        skinned_mesh_=nullptr;
-    }
-    if(vertex_relate_bone_infos_!=nullptr) {
-        delete vertex_relate_bone_infos_;
-        vertex_relate_bone_infos_=nullptr;
-    }
-}

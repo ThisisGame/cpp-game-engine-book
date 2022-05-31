@@ -82,7 +82,7 @@ void AnimationClip::LoadFromFile(const char *file_path) {
     for (int frame_index = 0; frame_index < frame_count_; frame_index++) {
         //读取一帧的骨骼矩阵
         std::vector<glm::mat4> bone_matrices;
-        for (unsigned short bone_index = 0; bone_index < bone_count; bone_index++) {
+        for (unsigned short bone_index = 0; bone_index < 2; bone_index++) {
             glm::mat4 bone_matrix;
             input_file_stream.read(reinterpret_cast<char *>(&bone_matrix), sizeof(float) * 16);
             bone_matrices.push_back(bone_matrix);
