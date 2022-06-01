@@ -38,7 +38,7 @@ public:
         T* component=new T();
         AttachComponent(component);
         component->Awake();
-        return component;
+        return dynamic_cast<T*>(component);
     }
 
     /// 附加组件实例

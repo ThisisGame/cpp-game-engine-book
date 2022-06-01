@@ -22,7 +22,7 @@ function GameObject:cpp_game_object_instance()
     return self.cpp_game_object_instance_
 end
 
----@param component_type table @组件类型
+---@param component_type Component @组件类型
 ---@return Component @组件
 function GameObject:AddComponent(component_type)
     local component_instance=component_type.new()
