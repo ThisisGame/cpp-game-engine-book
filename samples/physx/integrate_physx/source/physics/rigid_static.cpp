@@ -25,7 +25,7 @@ RigidStatic::~RigidStatic(){
 }
 
 void RigidStatic::Awake() {
-    Transform* transform=dynamic_cast<Transform*>(game_object()->GetComponent("Transform"));
+    Transform* transform=game_object()->GetComponent<Transform>();
     PxRigidStatic* px_rigid_static_=Physics::CreateRigidStatic(transform->position(), game_object()->name());
     px_rigid_actor_=dynamic_cast<PxRigidActor*>(px_rigid_static_);
     RigidActor::Awake();

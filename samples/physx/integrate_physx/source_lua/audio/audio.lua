@@ -12,11 +12,11 @@ Audio={
 }
 
 --- 初始化fmod
-function Audio.Init()
+function Audio:Init()
     Cpp.Audio.Init()
 end
 
 --- 刷帧
-function Audio.Update()
+function Audio:Update()
     Cpp.Audio.Update()
 end

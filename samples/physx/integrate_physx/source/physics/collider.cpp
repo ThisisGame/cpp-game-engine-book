@@ -11,6 +11,7 @@
 #include "utils/debug.h"
 #include "physic_material.h"
 #include "rigid_dynamic.h"
+#include "rigid_static.h"
 
 using namespace rttr;
 RTTR_REGISTRATION{
@@ -58,14 +59,12 @@ RigidActor * Collider::GetRigidActor() {
     if (rigid_actor_ != nullptr){
         return rigid_actor_;
     }
-    auto component=game_object()->GetComponent("RigidDynamic");
-    if(component != nullptr){
-        rigid_actor_=dynamic_cast<RigidActor*>(component);
+    rigid_actor_=game_object()->GetComponent<RigidDynamic>();
+    if(rigid_actor_ != nullptr){
         return rigid_actor_;
     }
-    component=game_object()->GetComponent("RigidStatic");
-    if(component != nullptr){
-        rigid_actor_=dynamic_cast<RigidActor*>(component);
+    rigid_actor_=game_object()->GetComponent<RigidStatic>();
+    if(rigid_actor_ != nullptr){
         return rigid_actor_;
     }
     return nullptr;

@@ -25,7 +25,7 @@ RigidActor::~RigidActor(){
 }
 
 void RigidActor::Awake() {
-    Component* component=game_object()->GetComponent("Collider");
+    Component* component=game_object()->GetComponent<Collider>();
     if(component!= nullptr){
         Collider* collider=static_cast<Collider*>(component);
         BindCollider(collider);

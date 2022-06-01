@@ -23,6 +23,8 @@ public:
 
 protected:
     PxRigidActor* px_rigid_actor_;
+
+RTTR_ENABLE(Component)
 };
 
 

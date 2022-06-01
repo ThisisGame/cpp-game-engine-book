@@ -4,6 +4,7 @@
 --- DateTime: 5/16/2022 10:55 PM
 ---
 
+--- @class Component @组件
 Component={}
 
 function Component:ctor()

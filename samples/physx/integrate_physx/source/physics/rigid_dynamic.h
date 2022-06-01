@@ -20,6 +20,8 @@ public:
     void Update() override;
 
     void FixedUpdate() override;
+
+RTTR_ENABLE(RigidActor)
 };
 
 
