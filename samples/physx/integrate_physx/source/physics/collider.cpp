@@ -19,7 +19,7 @@ RTTR_REGISTRATION{
             .constructor<>()(rttr::policy::ctor::as_raw_ptr);
 }
 
-Collider::Collider(): px_shape_(nullptr), px_material_(nullptr), physic_material_(nullptr), rigid_actor_(nullptr) {
+Collider::Collider(): px_shape_(nullptr), px_material_(nullptr), physic_material_(nullptr), rigid_actor_(nullptr) ,is_trigger_(false){
 
 }
 
@@ -30,6 +30,7 @@ Collider::~Collider(){
 void Collider::Awake() {
     CreatePhysicMaterial();
     CreateShape();
+    UpdateTriggerState();
     RegisterToRigidActor();
 }
 
@@ -45,6 +46,16 @@ void Collider::CreatePhysicMaterial() {
 
 void Collider::CreateShape() {
 
+}
+
+void Collider::UpdateTriggerState(){
+    if(px_shape_== nullptr){
+        return;
+    }
+    //~zh 设置附加数据为1，表示当前Shape是Trigger
+    //~en set shape's user data 1, it is a trigger.
+    px_shape_->setSimulationFilterData(PxFilterData(is_trigger_?1:0,0,0,0));
+    px_shape_->userData=game_object();
 }
 
 void Collider::RegisterToRigidActor() {

@@ -31,7 +31,7 @@ public:
 private:
     /// 同步调用Lua组件函数
     /// \param function_name
-    void SyncLuaComponent(const char* function_name);
+    void SyncLuaComponent(const char* function_name,GameObject* game_object= nullptr);
 
 public:
     virtual void OnEnable();
@@ -45,6 +45,12 @@ public:
     virtual void OnPostRender();
 
     virtual void OnDisable();
+
+    virtual void OnTriggerEnter(GameObject* game_object);
+
+    virtual void OnTriggerExit(GameObject* game_object);
+
+    virtual void OnTriggerStay(GameObject* game_object);
 private:
     GameObject* game_object_;
     sol::table lua_component_instance_;

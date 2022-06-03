@@ -16,12 +16,19 @@ RTTR_REGISTRATION{
             .constructor<>()(rttr::policy::ctor::as_raw_ptr);
 }
 
-RigidDynamic::RigidDynamic(){
+RigidDynamic::RigidDynamic():enable_ccd_(false){
 
 }
 
 RigidDynamic::~RigidDynamic(){
 
+}
+
+void RigidDynamic::UpdateCCDState(){
+    PxRigidDynamic* px_rigid_dynamic=dynamic_cast<PxRigidDynamic*>(px_rigid_actor_);
+    //~en enable continuous collision detection due to high-speed motion.
+    //~zh 对高速运动，开启连续碰撞检测。
+    px_rigid_dynamic->setRigidBodyFlag(PxRigidBodyFlag::eENABLE_CCD, enable_ccd_);
 }
 
 void RigidDynamic::Awake() {

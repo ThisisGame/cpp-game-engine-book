@@ -8,6 +8,8 @@
 #include <list>
 #include <glm/glm.hpp>
 #include <PxPhysicsAPI.h>
+#include "simulation_event_callback.h"
+
 using namespace physx;
 
 
@@ -34,9 +36,13 @@ public:
 
     static PxShape* CreateBoxShape(const glm::vec3& size, PxMaterial* material);
 
+    static bool enable_ccd(){return enable_ccd_;}
+    static void set_enable_ccd(bool enable_ccd){enable_ccd_=enable_ccd;}
+
 private:
     static PxDefaultAllocator		px_allocator_;
     static PxDefaultErrorCallback	px_error_callback_;
+    static SimulationEventCallback  simulation_event_callback_;
 
     static PxFoundation*			px_foundation_;
     static PxPhysics*				px_physics_;
@@ -44,6 +50,8 @@ private:
     static PxDefaultCpuDispatcher*	px_cpu_dispatcher_;
     static PxScene*		            px_scene_;
     static PxPvd*                   px_pvd_;
+
+    static bool                     enable_ccd_;
 };
 
 

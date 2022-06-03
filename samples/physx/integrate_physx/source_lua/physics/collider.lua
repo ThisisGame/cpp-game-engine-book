@@ -34,3 +34,7 @@ end
 function Collider:RegisterToRigidActor()
     return self.cpp_component_instance_:RegisterToRigidActor()
 end
+
+function Collider:set_is_trigger(is_trigger)
+    return self.cpp_component_instance_:set_is_trigger(is_trigger)
+end

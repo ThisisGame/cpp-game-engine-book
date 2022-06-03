@@ -565,13 +565,15 @@ void LuaBinding::BindLua() {
                                             "BindCollider", &RigidActor::BindCollider
         );
         cpp_ns_table.new_usertype<RigidDynamic>("RigidDynamic", sol::call_constructor, sol::constructors<RigidDynamic()>(),
-                                              sol::base_classes, sol::bases<Component>()
+                                              sol::base_classes, sol::bases<Component>(),
+                                              "set_enable_ccd",&RigidDynamic::set_enable_ccd
         );
         cpp_ns_table.new_usertype<RigidStatic>("RigidStatic", sol::call_constructor, sol::constructors<RigidStatic()>(),
                                              sol::base_classes, sol::bases<Component>()
         );
         cpp_ns_table.new_usertype<Collider>("Collider",sol::call_constructor,sol::constructors<Collider()>(),
-                                          sol::base_classes,sol::bases<Component>()
+                                          sol::base_classes,sol::bases<Component>(),
+                                          "set_is_trigger",&Collider::set_is_trigger
         );
         cpp_ns_table.new_usertype<BoxCollider>("BoxCollider",sol::call_constructor,sol::constructors<BoxCollider()>(),
                                              sol::base_classes,sol::bases<Collider,Component>()

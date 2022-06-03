@@ -3,6 +3,7 @@
 //
 
 #include "component.h"
+#include "game_object.h"
 
 //注册反射
 RTTR_REGISTRATION
@@ -21,7 +22,7 @@ Component::~Component() {
 
 /// 同步调用Lua组件函数
 /// \param function_name
-void Component::SyncLuaComponent(const char* function_name){
+void Component::SyncLuaComponent(const char* function_name,GameObject* game_object){
     if (!lua_component_instance_.valid()){
         return;
     }
@@ -29,7 +30,7 @@ void Component::SyncLuaComponent(const char* function_name){
     if(!function_awake.valid()){
         return;
     }
-    auto result=function_awake(lua_component_instance_);
+    auto result=function_awake(lua_component_instance_,game_object);
     if(result.valid()== false){
         sol::error err = result;
         type t=type::get(this);
@@ -73,4 +74,16 @@ void Component::OnPostRender() {
 void Component::OnDisable() {
 //    DEBUG_LOG_INFO("Cpp.Component OnDisable");
     SyncLuaComponent("OnDisable");
+}
+
+void Component::OnTriggerEnter(GameObject* game_object) {
+    SyncLuaComponent("OnTriggerEnter",game_object);
+}
+
+void Component::OnTriggerExit(GameObject* game_object) {
+    SyncLuaComponent("OnTriggerExit",game_object);
+}
+
+void Component::OnTriggerStay(GameObject* game_object) {
+    SyncLuaComponent("OnTriggerStay",game_object);
 }

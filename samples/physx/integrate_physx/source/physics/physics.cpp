@@ -7,11 +7,37 @@
 
 PxDefaultAllocator		Physics::px_allocator_;
 PxDefaultErrorCallback	Physics::px_error_callback_;
+SimulationEventCallback Physics::simulation_event_callback_;
 PxFoundation*			Physics::px_foundation_;
 PxPhysics*				Physics::px_physics_;
 PxDefaultCpuDispatcher*	Physics::px_cpu_dispatcher_;
 PxScene*		        Physics::px_scene_;
 PxPvd*                  Physics::px_pvd_;
+bool                    Physics::enable_ccd_=true;
+
+//~zh 设置在碰撞发生时，Physx需要做的事情
+//~en Set the actions when collision occurs,Physx needs to do.
+static	PxFilterFlags SimulationFilterShader(PxFilterObjectAttributes attributes0, PxFilterData filterData0,PxFilterObjectAttributes attributes1, PxFilterData filterData1,PxPairFlags& pairFlags, const void* constantBlock, PxU32 constantBlockSize) {
+
+    //~zh eNOTIFY_TOUCH_FOUND:当碰撞发生时处理回调。 eNOTIFY_TOUCH_LOST:当碰撞结束时处理回调。
+    //~en eNOTIFY_TOUCH_FOUND:When collision occurs,process callback. eNOTIFY_TOUCH_LOST:When collision ends,process callback.
+    pairFlags = PxPairFlag::eSOLVE_CONTACT | PxPairFlag::eDETECT_DISCRETE_CONTACT | PxPairFlag::eNOTIFY_TOUCH_FOUND | PxPairFlag::eNOTIFY_TOUCH_LOST;
+
+    //~zh Trigger的意思就是不处理物理碰撞，只是触发一个回调函数。
+    //~en Trigger means that the physical collision is not processed,only a callback function is triggered.
+    bool isTrigger=filterData0.word0==1 || filterData1.word0==1;
+    if(isTrigger) {
+        pairFlags = pairFlags ^ PxPairFlag::eSOLVE_CONTACT;
+    }
+
+    if(Physics::enable_ccd()){
+        //~zh 场景启用CCD后，还需要指定碰撞时使用CCD，并且处理回调。
+        //~en When the scene is enabled CCD, you need to specify the collision to use CCD and handle the callback.
+        pairFlags |= PxPairFlag::eDETECT_CCD_CONTACT|PxPairFlag::eNOTIFY_TOUCH_CCD;
+    }
+    return PxFilterFlags();
+}
+
 
 void Physics::Init() {
     //~en Creates an instance of the foundation class,The foundation class is needed to initialize higher level SDKs.only one instance per process.
@@ -50,7 +76,17 @@ PxScene* Physics::CreatePxScene() {
     sceneDesc.gravity = PxVec3(0.0f, -9.81f, 0.0f);
     px_cpu_dispatcher_ = PxDefaultCpuDispatcherCreate(2);
     sceneDesc.cpuDispatcher	= px_cpu_dispatcher_;
-    sceneDesc.filterShader	= PxDefaultSimulationFilterShader;
+    //~en set physx event callback,such as trigger,collision,etc.
+    //~zh 设置事件回调，用于接收物理事件，如Awake/Trigger等
+    sceneDesc.simulationEventCallback = &simulation_event_callback_;
+    //~zh 设置在碰撞发生时，Physx需要做的事情
+    //~en Set the actions when collision occurs,Physx needs to do.
+    sceneDesc.filterShader	= SimulationFilterShader;
+    if(enable_ccd_){
+        //~zh 启用CCD
+        //~en Enable CCD
+        sceneDesc.flags |= PxSceneFlag::eENABLE_CCD;
+    }
     PxScene* px_scene = px_physics_->createScene(sceneDesc);
     //~zh 设置PVD
     PxPvdSceneClient* pvd_client = px_scene->getScenePvdClient();
