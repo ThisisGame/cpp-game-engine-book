@@ -9,15 +9,9 @@ require("cpp_class")
 
 PhysicMaterial=class("PhysicMaterial",CppClass)
 
-function PhysicMaterial:ctor(cpp_class_instance,...)
-    PhysicMaterial.super.ctor(self,cpp_class_instance,...)
+function PhysicMaterial:ctor_with(cpp_class_instance,...)
+    PhysicMaterial.super.ctor_with(self,cpp_class_instance,...)
 end
-
---- 实例化C++ Class
-function PhysicMaterial:InitCppClass(...)
-    self.cpp_class_instance_=Cpp.PhysicMaterial(...)
-end
-
 
 function PhysicMaterial:static_friction()
     return self.cpp_class_instance_:static_friction()

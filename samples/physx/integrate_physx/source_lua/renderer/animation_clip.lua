@@ -10,8 +10,8 @@ require("cpp_class")
 --- @class AnimationClip @骨骼动画片段
 AnimationClip=class("AnimationClip",CppClass)
 
-function AnimationClip:ctor(cpp_class_instance)
-    AnimationClip.super.ctor(self,cpp_class_instance)
+function AnimationClip:ctor()
+    AnimationClip.super.ctor(self)
 end
 
 --- 实例化C++ Class

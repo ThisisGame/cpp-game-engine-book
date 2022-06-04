@@ -129,3 +129,16 @@ PxShape* Physics::CreateBoxShape(const glm::vec3& size, PxMaterial* material){
     return shape;
 }
 
+bool Physics::RaycastSingle(glm::vec3& origin,glm::vec3& dir,float distance,RaycastHit* raycast_hit){
+    PxHitFlags hitFlags = PxHitFlag::ePOSITION | PxHitFlag::eNORMAL | PxHitFlag::eUV;
+    PxRaycastHit px_raycast_hit;
+    if(PxSceneQueryExt::raycastSingle(*px_scene_, PxVec3(origin.x,origin.y,origin.z), PxVec3(dir.x,dir.y,dir.z), distance, hitFlags, px_raycast_hit)){
+        raycast_hit->set_position(px_raycast_hit.position.x, px_raycast_hit.position.y, px_raycast_hit.position.z);
+
+        GameObject* game_object= static_cast<GameObject *>(px_raycast_hit.shape->userData);
+        raycast_hit->set_game_object(game_object);
+        return true;
+    }
+    return false;
+}
+

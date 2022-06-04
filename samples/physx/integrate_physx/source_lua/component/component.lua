@@ -31,7 +31,7 @@ end
 
 function Component:set_game_object(game_object)
     self.game_object_=game_object
-    game_object:cpp_game_object_instance():AttachComponent(self.cpp_component_instance_)
+    game_object:cpp_class_instance():AttachComponent(self.cpp_component_instance_)
     self.cpp_component_instance_:Awake()
 end
 

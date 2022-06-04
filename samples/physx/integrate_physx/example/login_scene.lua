@@ -88,6 +88,12 @@ function LoginScene:Update()
     self.camera_:SetView(glm.vec3(0.0,0.0,0.0), glm.vec3(0.0,1.0,0.0))
     self.camera_:SetPerspective(60, Screen.aspect_ratio(), 1, 1000)
 
+    --持续射线检测
+    local raycast_hit=RaycastHit.new();
+    if Physics:RaycastSingle(glm.vec3(0,-10,0),glm.vec3(0,1,0),20,raycast_hit) then
+        print("raycast hit game_object:",raycast_hit:game_object():name()," pos:",raycast_hit:position())
+    end
+
     self.last_frame_mouse_position_=Input.mousePosition()
     --鼠标滚轮控制相机远近
     self.go_camera_:GetComponent(Transform):set_position(self.go_camera_:GetComponent(Transform):position() *(10 - Input.mouse_scroll())/10)

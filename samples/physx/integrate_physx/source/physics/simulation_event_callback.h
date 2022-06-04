@@ -60,14 +60,14 @@ public:
                     continue;
                 }
                 GameObject* gameObject= static_cast<GameObject *>(shape->userData);
-                DEBUG_LOG_INFO("Shape is a trigger,gameObject:{}", gameObject->name());
+//                DEBUG_LOG_INFO("Shape is a trigger,gameObject:{}", gameObject->name());
                 GameObject* another_game_object= static_cast<GameObject *>(another_shape->userData);
                 if(another_game_object->active()==false){
                     continue;
                 }
 
                 if(current.events & (PxPairFlag::eNOTIFY_TOUCH_FOUND|PxPairFlag::eNOTIFY_TOUCH_CCD)) {
-                    DEBUG_LOG_INFO("onContact Shape is entering volume");
+//                    DEBUG_LOG_INFO("onContact Shape is entering volume");
                     //通知相交的另外一个物体进入
                     another_game_object->ForeachComponent([gameObject](Component* component){
                         component->OnTriggerEnter(gameObject);
@@ -75,7 +75,7 @@ public:
                 }
 
                 if(current.events & (PxPairFlag::eNOTIFY_TOUCH_LOST)) {
-                    DEBUG_LOG_INFO("onContact Shape is leaving volume");
+//                    DEBUG_LOG_INFO("onContact Shape is leaving volume");
                     //通知相交的另外一个物体离开
                     another_game_object->ForeachComponent([gameObject](Component* component){
                         component->OnTriggerExit(gameObject);

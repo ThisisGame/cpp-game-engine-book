@@ -44,6 +44,14 @@ function class(classname, super)
         return instance
     end
 
+    --- 构造 并且传入现存的cpp实例
+    function cls.new_with(...)
+        local instance = setmetatable({}, cls)
+        instance.class = cls
+        instance:ctor_with(...)
+        return instance
+    end
+
     return cls
 end
 

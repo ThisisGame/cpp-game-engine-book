@@ -5,51 +5,52 @@
 ---
 
 require("lua_extension")
+require("cpp_class")
 require("component")
 
 --- GameObject是游戏物体空节点，可以挂载多个组件
 --- @class GameObject
-GameObject=class("GameObject")
+GameObject=class("GameObject",CppClass)
 
 function GameObject:ctor(name)
+    GameObject.super.ctor(self,name)
     --- @type Component[] @组件列表
     self.components_map_={}
-    --- @type Cpp.GameObject @C++ GameObject对象
-    self.cpp_game_object_instance_=Cpp.GameObject(name)
 end
 
-function GameObject:cpp_game_object_instance()
-    return self.cpp_game_object_instance_
+--- 实例化C++ Class
+function GameObject:InitCppClass(...)
+    self.cpp_class_instance_=Cpp.GameObject(...)
 end
 
 --- @return string
 function GameObject:name()
-    return self.cpp_game_object_instance_:name()
+    return self.cpp_class_instance_:name()
 end
 
 --- @param name string
 function GameObject:set_name(name)
-    self.cpp_game_object_instance_:set_name(name)
+    self.cpp_class_instance_:set_name(name)
 end
 
 --- @return number
 function GameObject:layer()
-    return self.cpp_game_object_instance_:layer()
+    return self.cpp_class_instance_:layer()
 end
 
 --- @param layer number
 function GameObject:set_layer(layer)
-    self.cpp_game_object_instance_:set_layer(layer)
+    self.cpp_class_instance_:set_layer(layer)
 end
 
 --- @return boolean
 function GameObject:active()
-    return self.cpp_game_object_instance_:active()
+    return self.cpp_class_instance_:active()
 end
 
 --- @param active boolean
 function GameObject:set_active(active)
-    self.cpp_game_object_instance_:set_active(active)
+    self.cpp_class_instance_:set_active(active)
 end
 
 ---@param component_type table @组件类型

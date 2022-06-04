@@ -10,6 +10,7 @@
 #include <PxPhysicsAPI.h>
 #include "simulation_event_callback.h"
 #include "physic_error_call_back.h"
+#include "raycast_hit.h"
 
 using namespace physx;
 
@@ -40,6 +41,13 @@ public:
     static bool enable_ccd(){return enable_ccd_;}
     static void set_enable_ccd(bool enable_ccd){enable_ccd_=enable_ccd;}
 
+    /// 射线检测：从指定位置发出射线，返回射线击中的第一个物体信息。
+    /// \param origin
+    /// \param dir
+    /// \param distance
+    /// \param raycast_hit
+    /// \return
+    static bool RaycastSingle(glm::vec3& origin,glm::vec3& dir,float distance,RaycastHit* raycast_hit);
 private:
     static PxDefaultAllocator		px_allocator_;
     static PhysicErrorCallback	    physic_error_callback_;
@@ -52,7 +60,7 @@ private:
     static PxScene*		            px_scene_;
     static PxPvd*                   px_pvd_;
 
-    static bool                     enable_ccd_;
+    static bool                     enable_ccd_;//连续检测。
 };
 
 

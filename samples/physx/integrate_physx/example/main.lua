@@ -7,7 +7,7 @@ require("login_scene")
 function main()
     Debug.ConnectDebugServer()
 
-    Application:set_title("[load_skinned_mesh]")
+    Application:set_title("[physic]")
     Application:set_data_path("../data/")--设置资源目录
     Application:Init()--初始化引擎
 

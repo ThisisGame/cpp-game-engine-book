@@ -5,6 +5,7 @@
 ---
 
 require("lua_extension")
+require("physics/raycast_hit")
 
 --- @class Physics @物理引擎
 Physics={
@@ -45,4 +46,13 @@ end
 
 function Physics:CreateBoxShape(size,material)
     Cpp.Physics.CreateBoxShape(size,material)
+end
+
+--- 射线检测：从指定位置发出射线，返回射线击中的第一个物体信息。
+--- @param origin table @射线起点
+--- @param dir table @射线方向
+--- @param distance number @射线最大距离
+--- @param raycast_hit RaycastHit @射线结果，需要传入引用
+function Physics:RaycastSingle(origin,dir,distance,raycast_hit)
+    return Cpp.Physics.RaycastSingle(origin,dir,distance,raycast_hit.cpp_class_instance_)
 end

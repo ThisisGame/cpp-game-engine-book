@@ -558,7 +558,8 @@ void LuaBinding::BindLua() {
     // physics
     {
         cpp_ns_table.new_usertype<Physics>("Physics",
-                                         "CreatePxScene", &Physics::CreatePxScene
+                                         "CreatePxScene", &Physics::CreatePxScene,
+                                         "RaycastSingle",&Physics::RaycastSingle
         );
         cpp_ns_table.new_usertype<RigidActor>("RigidActor",sol::call_constructor, sol::constructors<RigidActor()>(),
                                             sol::base_classes, sol::bases<Component>(),
@@ -580,6 +581,10 @@ void LuaBinding::BindLua() {
         );
         cpp_ns_table.new_usertype<SphereCollider>("SphereCollider",sol::call_constructor,sol::constructors<SphereCollider()>(),
                                                 sol::base_classes,sol::bases<Collider,Component>()
+        );
+        cpp_ns_table.new_usertype<RaycastHit>("RaycastHit",sol::call_constructor,sol::constructors<RaycastHit()>(),
+                                                    "position",&RaycastHit::position,
+                                                    "game_object",&RaycastHit::game_object
         );
     }
 
