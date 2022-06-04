@@ -5,6 +5,7 @@
 #include "camera.h"
 #include <memory>
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/euler_angles.hpp>
 #include <glad/gl.h>
 #include <rttr/registration>
 #include "component/game_object.h"
@@ -42,6 +43,11 @@ Camera::~Camera() {
 void Camera::SetView(const glm::vec3 &cameraForward,const glm::vec3 &cameraUp) {
     auto transform=game_object()->GetComponent<Transform>();
     view_mat4_=glm::lookAt(transform->position(), cameraForward, cameraUp);
+
+    glm::vec3 rotation=transform->rotation();
+    glm::mat4 eulerAngleYXZ = glm::eulerAngleYXZ(glm::radians(rotation.y), glm::radians(rotation.x), glm::radians(rotation.z));
+
+    view_mat4_=eulerAngleYXZ*view_mat4_;
 }
 
 void Camera::SetPerspective(float fovDegrees, float aspectRatio, float nearClip, float farClip) {

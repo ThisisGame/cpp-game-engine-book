@@ -44,24 +44,26 @@ function LoginScene:Awake()
     --创建相机1 GameObject
     self.go_camera_= GameObject.new("main_camera")
     --挂上 Transform 组件
-    self.go_camera_:AddComponent(Transform):set_position(glm.vec3(0, 0, 5))
+    self.go_camera_:AddComponent(Transform):set_position(glm.vec3(0, 10, 20))
+    self.go_camera_:GetComponent(Transform):set_rotation(glm.vec3(-10, 0, 0))
     --挂上 Camera 组件
     self.camera_=self.go_camera_:AddComponent(Camera)
     self.camera_:set_depth(0)
 
     --创建骨骼蒙皮动画
     self.go_skeleton_=GameObject.new("skeleton")
-    self.go_skeleton_:AddComponent(Transform):set_position(glm.vec3(0, 1, 0))
-    self.go_skeleton_:GetComponent(Transform):set_rotation(glm.vec3(-90, 0, 0))
-    self.go_skeleton_:AddComponent(Animation):LoadAnimationClipFromFile("animation/fbx_extra_bip001_bip001_take_001_baselayer.skeleton_anim","idle")
+    self.go_skeleton_:AddComponent(Transform):set_position(glm.vec3(0, 20, 0))
+    self.go_skeleton_:GetComponent(Transform):set_rotation(glm.vec3(0, 0, 0))
+    local anim_clip_name="animation/fbx_extra_basic_plane_bones_basic_plane_bones_basic_plane_bones_armatureaction_basic_plane_.skeleton_anim"
+    self.go_skeleton_:AddComponent(Animation):LoadAnimationClipFromFile(anim_clip_name,"idle")
 
     local mesh_filter=self.go_skeleton_:AddComponent(MeshFilter)
-    mesh_filter:LoadMesh("model/fbx_extra_jiulian.mesh")--加载Mesh
-    mesh_filter:LoadWeight("model/fbx_extra_jiulian.weight")--加载权重文件
+    mesh_filter:LoadMesh("model/fbx_extra_basic_plane.mesh")--加载Mesh
+    mesh_filter:LoadWeight("model/fbx_extra_basic_plane.weight")--加载权重文件
 
     --手动创建Material
     self.material_ = Material.new()--设置材质
-    self.material_:Parse("material/fbx_extra_jiulian.mat")
+    self.material_:Parse("material/fbx_extra_basic_plane.mat")
 
     --挂上 MeshRenderer 组件
     local skinned_mesh_renderer= self.go_skeleton_:AddComponent(SkinnedMeshRenderer)
@@ -70,29 +72,22 @@ function LoginScene:Awake()
     --播放动画
     self.go_skeleton_:GetComponent(Animation):Play("idle")
     self.go_skeleton_:AddComponent(RigidDynamic)
-    self.go_skeleton_:AddComponent(SphereCollider):set_is_trigger(true)
+    self.go_skeleton_:AddComponent(SphereCollider):set_is_trigger(false)
     self.go_skeleton_:AddComponent(Player)
 
     --创建地面
     self.go_ground_=GameObject.new("ground")
     self.go_ground_:AddComponent(Transform):set_position(glm.vec3(0, -2, 0))
     self.go_ground_:AddComponent(RigidStatic)
-    self.go_ground_:AddComponent(BoxCollider):set_is_trigger(true)
+    self.go_ground_:AddComponent(BoxCollider):set_is_trigger(false)
 end
 
 function LoginScene:Update()
     --print("LoginScene:Update")
     LoginScene.super.Update(self)
     self.camera_:set_depth(0)
-    self.camera_:set_depth(0)
     self.camera_:SetView(glm.vec3(0.0,0.0,0.0), glm.vec3(0.0,1.0,0.0))
     self.camera_:SetPerspective(60, Screen.aspect_ratio(), 1, 1000)
-
-    --持续射线检测
-    local raycast_hit=RaycastHit.new();
-    if Physics:RaycastSingle(glm.vec3(0,-10,0),glm.vec3(0,1,0),20,raycast_hit) then
-        print("raycast hit game_object:",raycast_hit:game_object():name()," pos:",raycast_hit:position())
-    end
 
     self.last_frame_mouse_position_=Input.mousePosition()
     --鼠标滚轮控制相机远近

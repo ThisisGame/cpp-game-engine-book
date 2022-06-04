@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.01.00">
+	<object class="Bank" id="{2ad5cfac-5cce-45c1-976c-7e02630483b9}">
+		<property name="name">
+			<value>integrate_physx</value>
+		</property>
+		<property name="isMasterBank">
+			<value>true</value>
+		</property>
+		<relationship name="folder">
+			<destination>{cfe10e96-5157-41ec-a4ee-82ea9bf5e8a3}</destination>
+		</relationship>
+	</object>
+</objects>

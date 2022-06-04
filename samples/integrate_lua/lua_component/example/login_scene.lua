@@ -58,7 +58,6 @@ function LoginScene:CreateAudioSource()
     mesh_renderer:SetMaterial(self.material_player_)
 
     --加载bank
-    print(AudioStudio:Init())
     AudioStudio:LoadBankFile("audio/test.bank")
     AudioStudio:LoadBankFile("audio/test.strings.bank")
     self.audio_studio_event_=AudioStudio:CreateEventInstance("event:/footstep")

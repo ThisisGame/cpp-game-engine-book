@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.01.00">
+	<object class="AudioFile" id="{06cd0c27-0a73-4c5a-98fe-cd535b6adc04}">
+		<property name="assetPath">
+			<value>接触警告.mp3</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>22.0499992</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>3.030204081632653</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{59cdacf1-4ce9-490a-8829-339a8e5f9b6c}</destination>
+		</relationship>
+	</object>
+</objects>

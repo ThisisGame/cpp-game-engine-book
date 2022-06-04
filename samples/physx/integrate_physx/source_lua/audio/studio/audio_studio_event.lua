@@ -7,6 +7,7 @@
 require("lua_extension")
 require("cpp_class")
 
+--- @class AudioStudioEvent :CppClass @FModStudio Event
 AudioStudioEvent=class("AudioStudioEvent",CppClass)
 
 function AudioStudioEvent:ctor_with(cpp_class_instance)

@@ -141,6 +141,9 @@ void LuaBinding::BindLua() {
     {
         auto glm_ns_table = sol_state_["glm"].get_or_create<sol::table>();
         glm_ns_table.set_function("rotate",sol::overload([] (const glm::mat4* m,const float f,const glm::vec3* v) {return glm::rotate(*m,f,*v);}));
+        glm_ns_table.set_function("distance",sol::overload([] (const glm::vec3* a,const glm::vec3* b) {
+            return glm::distance(*a,*b);
+        }));
         glm_ns_table.set_function("radians",sol::overload([] (const float f) {return glm::radians(f);}));
         glm_ns_table.set_function("to_string",sol::overload(
                 [] (const glm::mat4* m) {return glm::to_string((*m));},

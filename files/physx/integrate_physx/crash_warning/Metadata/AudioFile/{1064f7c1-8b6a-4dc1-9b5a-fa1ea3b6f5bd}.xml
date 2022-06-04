@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.01.00">
+	<object class="AudioFile" id="{1064f7c1-8b6a-4dc1-9b5a-fa1ea3b6f5bd}">
+		<property name="assetPath">
+			<value>爆炸.mp3</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>44.0999985</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>3.3959183673469386</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{59cdacf1-4ce9-490a-8829-339a8e5f9b6c}</destination>
+		</relationship>
+	</object>
+</objects>
