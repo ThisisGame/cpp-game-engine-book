@@ -25,6 +25,5 @@ SphereCollider::~SphereCollider() {
 void SphereCollider::CreateShape() {
     if(px_shape_== nullptr){
         px_shape_=Physics::CreateSphereShape(radius_,px_material_);
-        UpdateTriggerState();
     }
 }

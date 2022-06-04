@@ -9,6 +9,7 @@
 #include <glm/glm.hpp>
 #include <PxPhysicsAPI.h>
 #include "simulation_event_callback.h"
+#include "physic_error_call_back.h"
 
 using namespace physx;
 
@@ -41,7 +42,7 @@ public:
 
 private:
     static PxDefaultAllocator		px_allocator_;
-    static PxDefaultErrorCallback	px_error_callback_;
+    static PhysicErrorCallback	    physic_error_callback_;
     static SimulationEventCallback  simulation_event_callback_;
 
     static PxFoundation*			px_foundation_;

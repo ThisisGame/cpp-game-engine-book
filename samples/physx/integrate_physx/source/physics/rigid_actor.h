@@ -16,7 +16,8 @@ public:
     RigidActor();
     ~RigidActor();
 
-    virtual void BindCollider(Collider *collider);
+    virtual void AttachColliderShape(Collider *collider);
+    virtual void DeAttachColliderShape(Collider *collider);
 
 public:
     void Awake() override;

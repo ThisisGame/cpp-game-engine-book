@@ -6,7 +6,7 @@
 #include "utils/debug.h"
 
 PxDefaultAllocator		Physics::px_allocator_;
-PxDefaultErrorCallback	Physics::px_error_callback_;
+PhysicErrorCallback	    Physics::physic_error_callback_;
 SimulationEventCallback Physics::simulation_event_callback_;
 PxFoundation*			Physics::px_foundation_;
 PxPhysics*				Physics::px_physics_;
@@ -42,7 +42,7 @@ static	PxFilterFlags SimulationFilterShader(PxFilterObjectAttributes attributes0
 void Physics::Init() {
     //~en Creates an instance of the foundation class,The foundation class is needed to initialize higher level SDKs.only one instance per process.
     //~zh 创建Foundation实例。
-    px_foundation_ = PxCreateFoundation(PX_PHYSICS_VERSION, px_allocator_, px_error_callback_);
+    px_foundation_ = PxCreateFoundation(PX_PHYSICS_VERSION, px_allocator_, physic_error_callback_);
 
     //~en Connect to pvd(PhysX Visual Debugger).
     //~zh 连接PVD

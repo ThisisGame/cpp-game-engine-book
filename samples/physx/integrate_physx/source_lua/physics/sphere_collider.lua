@@ -6,7 +6,7 @@
 
 require("lua_extension")
 
---- @class SphereCollider : Component
+--- @class SphereCollider : Component @球形碰撞体
 SphereCollider=class("SphereCollider",Collider)
 
 function SphereCollider:ctor()

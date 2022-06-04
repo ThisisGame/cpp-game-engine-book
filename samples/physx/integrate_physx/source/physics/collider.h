@@ -23,8 +23,14 @@ public:
 
     bool is_trigger(){return is_trigger_;}
     void set_is_trigger(bool is_trigger){
+        if(is_trigger_==is_trigger){
+            return;
+        }
         is_trigger_=is_trigger;
+        UnRegisterToRigidActor();
+        CreateShape();
         UpdateTriggerState();
+        RegisterToRigidActor();
     }
 
 public:
@@ -40,6 +46,7 @@ public:
     /// 更新Shape 触发器 Filter
     virtual void UpdateTriggerState();
     virtual void RegisterToRigidActor();
+    virtual void UnRegisterToRigidActor();
 
 private:
     RigidActor * GetRigidActor();

@@ -63,7 +63,16 @@ void Collider::RegisterToRigidActor() {
         DEBUG_LOG_ERROR("rigid_actor_ is nullptr,Collider need to be attached to a rigid_actor");
         return;
     }
-    rigid_actor_->BindCollider(this);
+    rigid_actor_->AttachColliderShape(this);
+}
+
+void Collider::UnRegisterToRigidActor() {
+    if(GetRigidActor() == nullptr){
+        DEBUG_LOG_ERROR("rigid_actor_ is nullptr,Collider need to be attached to a rigid_actor");
+        return;
+    }
+    rigid_actor_->DeAttachColliderShape(this);
+    px_shape_=nullptr;
 }
 
 RigidActor * Collider::GetRigidActor() {

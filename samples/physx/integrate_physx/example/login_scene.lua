@@ -19,6 +19,7 @@ require("physics/sphere_collider")
 require("physics/rigid_actor")
 require("physics/rigid_dynamic")
 require("physics/rigid_static")
+require("player")
 
 LoginScene=class("LoginScene",Component)
 
@@ -69,17 +70,19 @@ function LoginScene:Awake()
     --播放动画
     self.go_skeleton_:GetComponent(Animation):Play("idle")
     self.go_skeleton_:AddComponent(RigidDynamic)
-    self.go_skeleton_:AddComponent(SphereCollider)
+    self.go_skeleton_:AddComponent(SphereCollider):set_is_trigger(true)
+    self.go_skeleton_:AddComponent(Player)
 
     --创建地面
     self.go_ground_=GameObject.new("ground")
     self.go_ground_:AddComponent(Transform):set_position(glm.vec3(0, -2, 0))
-    self.go_ground_:AddComponent(BoxCollider):set_is_trigger(true)
     self.go_ground_:AddComponent(RigidStatic)
+    self.go_ground_:AddComponent(BoxCollider):set_is_trigger(true)
 end
 
 function LoginScene:Update()
     --print("LoginScene:Update")
+    LoginScene.super.Update(self)
     self.camera_:set_depth(0)
     self.camera_:set_depth(0)
     self.camera_:SetView(glm.vec3(0.0,0.0,0.0), glm.vec3(0.0,1.0,0.0))

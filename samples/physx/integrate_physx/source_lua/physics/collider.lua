@@ -6,8 +6,7 @@
 
 require("lua_extension")
 
---- 骨骼动画
---- @class Collider : Component
+--- @class Collider : Component @碰撞体
 Collider=class("Collider",Component)
 
 function Collider:ctor()

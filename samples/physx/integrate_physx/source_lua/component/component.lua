@@ -60,3 +60,11 @@ end
 function Component:OnDisable()
 
 end
+
+function Component:OnTriggerEnter(game_object)
+
+end
+
+function Component:OnTriggerExit(game_object)
+
+end

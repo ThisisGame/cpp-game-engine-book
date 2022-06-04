@@ -562,7 +562,7 @@ void LuaBinding::BindLua() {
         );
         cpp_ns_table.new_usertype<RigidActor>("RigidActor",sol::call_constructor, sol::constructors<RigidActor()>(),
                                             sol::base_classes, sol::bases<Component>(),
-                                            "BindCollider", &RigidActor::BindCollider
+                                            "AttachColliderShape", &RigidActor::AttachColliderShape
         );
         cpp_ns_table.new_usertype<RigidDynamic>("RigidDynamic", sol::call_constructor, sol::constructors<RigidDynamic()>(),
                                               sol::base_classes, sol::bases<Component>(),

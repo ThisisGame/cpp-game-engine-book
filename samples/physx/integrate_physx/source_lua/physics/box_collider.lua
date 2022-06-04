@@ -6,8 +6,7 @@
 
 require("lua_extension")
 
---- 骨骼动画
---- @class BoxCollider : Collider
+--- @class BoxCollider : Collider @碰撞盒子
 BoxCollider=class("BoxCollider",Collider)
 
 function BoxCollider:ctor()

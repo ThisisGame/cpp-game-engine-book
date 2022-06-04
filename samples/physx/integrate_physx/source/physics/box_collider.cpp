@@ -25,6 +25,5 @@ BoxCollider::~BoxCollider() {
 void BoxCollider::CreateShape() {
     if(px_shape_== nullptr){
         px_shape_=Physics::CreateBoxShape(size_,px_material_);
-        UpdateTriggerState();
     }
 }
