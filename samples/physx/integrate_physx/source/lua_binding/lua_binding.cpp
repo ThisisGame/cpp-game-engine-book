@@ -273,6 +273,8 @@ void LuaBinding::BindLua() {
                                             "set_name",&GameObject::set_name,
                                             "layer",&GameObject::layer,
                                             "set_layer",&GameObject::set_layer,
+                                            "active",&GameObject::active,
+                                            "set_active",&GameObject::set_active,
                                             "SetParent",&GameObject::SetParent,
                                             "ForeachComponent",&GameObject::ForeachComponent,
                                             "Foreach",&GameObject::Foreach,

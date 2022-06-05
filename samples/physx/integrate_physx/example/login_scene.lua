@@ -131,6 +131,7 @@ function LoginScene:CreateUI()
     local image_warning=self.go_image_warning_:AddComponent(UIImage)
     local texture_warning=Texture2D.LoadFromFile("images/warning.cpt")
     image_warning:set_texture(texture_warning);
+    self.go_image_warning_:GetComponent(Transform):set_position(glm.vec3(-texture_warning:width()/2,0,0))
 end
 
 function LoginScene:Update()
@@ -139,6 +140,10 @@ function LoginScene:Update()
     self.camera_:set_depth(0)
     self.camera_:SetView(glm.vec3(0.0,0.0,0.0), glm.vec3(0.0,1.0,0.0))
     self.camera_:SetPerspective(60, Screen.aspect_ratio(), 1, 1000)
+
+    --警告图片闪烁
+    local show=(math.floor(Time:TimeSinceStartup()*10)%3)==0
+    self.go_image_warning_:set_active(show)
 
     self.last_frame_mouse_position_=Input.mousePosition()
     --鼠标滚轮控制相机远近

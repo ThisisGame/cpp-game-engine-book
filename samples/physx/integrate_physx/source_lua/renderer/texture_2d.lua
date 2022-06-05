@@ -11,7 +11,7 @@ require("cpp_class")
 Texture2D=class("Texture2D",CppClass)
 
 function Texture2D:ctor_with(cpp_class_instance,...)
-    Texture2D.super.ctor(self,cpp_class_instance,...)
+    Texture2D.super.ctor_with(self,cpp_class_instance,...)
 end
 
 --- 加载一个图片文件
