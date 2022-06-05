@@ -36,6 +36,7 @@ file(COPY "../../template/depends/SPSCQueue-1.1/" DESTINATION "../depends/spscqu
 
 #拷贝data文件
 file(COPY "../../template/data/audio/integrate_physx/" DESTINATION "../data/audio/")
+file(COPY "../../template/data/images/warning.cpt" DESTINATION "../data/images/")
 file(COPY "../../template/data/images/plane_albedo.cpt" DESTINATION "../data/images/")
 file(COPY "../../template/data/model/fbx_extra_basic_plane.mesh" DESTINATION "../data/model/")
 file(COPY "../../template/data/model/fbx_extra_basic_plane.weight" DESTINATION "../data/model/")
@@ -43,6 +44,7 @@ file(COPY "../../template/data/animation/fbx_extra_basic_plane_bones_basic_plane
 file(COPY "../../template/data/shader/unlit.vs" DESTINATION "../data/shader/")
 file(COPY "../../template/data/shader/unlit.fs" DESTINATION "../data/shader/")
 file(COPY "../../template/data/material/fbx_extra_basic_plane.mat" DESTINATION "../data/material/")
+file(COPY "../../template/data/material/ui_image.mat" DESTINATION "../data/material/")
 
 #头文件目录
 include_directories("depends")

@@ -11,7 +11,7 @@
 #include "timetool/stopwatch.h"
 #include "material.h"
 #include "mesh_filter.h"
-#include "texture2d.h"
+#include "texture_2d.h"
 #include "shader.h"
 #include "camera.h"
 #include "component/game_object.h"

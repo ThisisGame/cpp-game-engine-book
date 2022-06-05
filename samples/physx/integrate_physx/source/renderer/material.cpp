@@ -10,7 +10,7 @@
 #include "rapidxml/rapidxml_print.hpp"
 #include "rapidxml/rapidxml_utils.hpp"
 #include "shader.h"
-#include "texture2d.h"
+#include "texture_2d.h"
 #include "app/application.h"
 
 using std::ifstream;

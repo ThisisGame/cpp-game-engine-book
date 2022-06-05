@@ -8,8 +8,16 @@
 #include <iostream>
 #include <vector>
 #include <functional>
+#include <glad/gl.h>
 #include <glm/glm.hpp>
 #include "component/component.h"
+
+/// 清除缓存标记
+enum BufferClearFlag{
+    CLEAR_COLOR_BUFFER=GL_COLOR_BUFFER_BIT,
+    CLEAR_DEPTH_BUFFER=GL_DEPTH_BUFFER_BIT,
+    CLEAR_STENCIL_BUFFER=GL_STENCIL_BUFFER_BIT,
+};
 
 class Camera: public Component {
 public:

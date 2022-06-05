@@ -6,7 +6,7 @@
 #include <vector>
 #include <rttr/registration>
 #include "component/game_object.h"
-#include "renderer/texture2d.h"
+#include "renderer/texture_2d.h"
 #include "renderer/material.h"
 #include "renderer/mesh_renderer.h"
 #include "render_device/render_task_producer.h"
@@ -18,12 +18,19 @@ RTTR_REGISTRATION{
             .constructor<>()(rttr::policy::ctor::as_raw_ptr);
 }
 
-UIImage::UIImage() {
+UIImage::UIImage():Component() {
 
 }
 
 UIImage::~UIImage() {
 
+}
+
+/// 指定图片路径加载并设置
+/// \param texture_file_path
+void UIImage::LoadTexture2D(const char* texture_file_path){
+    Texture2D* texture_2d=Texture2D::LoadFromFile(texture_file_path);
+    set_texture(texture_2d);
 }
 
 void UIImage::Update() {

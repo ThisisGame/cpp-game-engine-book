@@ -7,7 +7,7 @@
 #include <glm/ext.hpp>
 #include "component/game_object.h"
 #include "component/transform.h"
-#include "renderer/texture2d.h"
+#include "renderer/texture_2d.h"
 #include "utils/debug.h"
 #include "utils/screen.h"
 #include "control/input.h"

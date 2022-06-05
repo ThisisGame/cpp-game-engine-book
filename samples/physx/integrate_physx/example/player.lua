@@ -9,6 +9,7 @@ function Player:ctor()
     Player.super.ctor(self)
     ---@field is_crash_ boolean @是否已经坠毁
     self.is_crash_=false
+    ---@field audio_studio_event_warning_ AudioStudioEvent @坠机警告音效Event
     self.audio_studio_event_warning_=nil
     self.audio_studio_event_crash_=nil
 end

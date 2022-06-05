@@ -21,7 +21,7 @@ extern "C"{
 #include "renderer/mesh_renderer.h"
 #include "renderer/skinned_mesh_renderer.h"
 #include "renderer/shader.h"
-#include "renderer/texture2d.h"
+#include "renderer/texture_2d.h"
 #include "renderer/animation_clip.h"
 #include "renderer/animation.h"
 #include "ui/ui_button.h"
@@ -491,6 +491,12 @@ void LuaBinding::BindLua() {
                                         "Sort",&Camera::Sort
         );
 
+        cpp_ns_table.new_enum<BufferClearFlag,true>("BufferClearFlag",{
+                {"CLEAR_COLOR_BUFFER",BufferClearFlag::CLEAR_COLOR_BUFFER},
+                {"CLEAR_STENCIL_BUFFER",BufferClearFlag::CLEAR_STENCIL_BUFFER},
+                {"CLEAR_DEPTH_BUFFER",BufferClearFlag::CLEAR_DEPTH_BUFFER}
+        });
+
         cpp_ns_table.new_usertype<UICamera>("UICamera",sol::call_constructor,sol::constructors<UICamera()>(),
                                           sol::base_classes,sol::bases<Camera,Component>()
         );
@@ -556,6 +562,16 @@ void LuaBinding::BindLua() {
                                            "current_animation_clip", &Animation::current_animation_clip
         );
 
+    }
+
+    // ui
+    {
+        cpp_ns_table.new_usertype<UIImage>("UIImage",sol::call_constructor,sol::constructors<UIImage()>(),
+                                           sol::base_classes,sol::bases<Component>(),
+                                           "texture2D", &UIImage::texture2D,
+                                           "set_texture",&UIImage::set_texture,
+                                           "LoadTexture2D",&UIImage::LoadTexture2D
+        );
     }
 
     // physics

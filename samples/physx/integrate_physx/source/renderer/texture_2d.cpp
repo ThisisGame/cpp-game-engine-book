@@ -2,7 +2,7 @@
 // Created by captain on 2021/4/6.
 //
 #define STB_TRUETYPE_IMPLEMENTATION
-#include "texture2d.h"
+#include "texture_2d.h"
 #include <fstream>
 #include "timetool/stopwatch.h"
 #include "stb/stb_truetype.h"

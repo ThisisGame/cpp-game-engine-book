@@ -6,8 +6,7 @@
 
 require("lua_extension")
 
---- UI相机
---- @class UICamera : Camera
+--- @class UICamera : Camera @UI相机
 UICamera=class("UICamera",Camera)
 
 function UICamera:ctor()

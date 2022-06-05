@@ -7,7 +7,7 @@
 #include "freetype/ftbitmap.h"
 #include "app/application.h"
 #include "spdlog/spdlog.h"
-#include "texture2d.h"
+#include "texture_2d.h"
 
 using std::ifstream;
 using std::ios;

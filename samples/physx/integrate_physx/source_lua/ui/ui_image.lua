@@ -11,6 +11,8 @@ UIImage=class("UIImage",Component)
 
 function UIImage:ctor()
     UIImage.super.ctor(self)
+    ---@field texture_2d_ Texture2D
+    self.texture_2d_=nil
 end
 
 function UIImage:InitCppComponent()
@@ -18,18 +20,9 @@ function UIImage:InitCppComponent()
     self.cpp_component_instance_=Cpp.UIImage() --创建对应的C++实例
 end
 
+--- 设置Texture2D
+--- @param texture_2d Texture2D
 function UIImage:set_texture(texture_2d)
-    self.cpp_component_instance_:set_texture(texture_2d)
-end
-
-function UIImage:Update()
-    self.cpp_component_instance_:Update()
-end
-
-function UIImage:OnPreRender()
-    self.cpp_component_instance_:OnPreRender()
-end
-
-function UIImage:OnPostRender()
-    self.cpp_component_instance_:OnPostRender()
+    self.texture_2d_=texture_2d
+    self.cpp_component_instance_:set_texture(texture_2d:cpp_class_instance())
 end
