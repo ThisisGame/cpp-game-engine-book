@@ -109,6 +109,7 @@
     * [22.3 碰撞检测](22. physics_engine_physx/22.3 collision_detection.md)
     * [22.4 连续碰撞检测](22. physics_engine_physx/22.4 continuous_collision_detection.md)
     * [22.5 场景查询](22. physics_engine_physx/22.5 scene_query.md)
+    * [22.6 引擎集成Physx](22. physics_engine_physx/22.6 integrating_physx.md)
 * [89. Doxygen生成API文档](89. doxygen_generates_api_documentation/89. doxygen_generates_api_documentation.md)
 * [90. GPU分析工具](90. gpu_analysis_tools/90. gpu_analysis_tools.md)
     * [90.1 RenderDoc分析不显示bug](90. gpu_analysis_tools/90.1 renderdoc_analysis_not_show_bugs.md)
