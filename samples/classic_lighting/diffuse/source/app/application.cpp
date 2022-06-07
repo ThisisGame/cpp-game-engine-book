@@ -23,7 +23,6 @@
 #include "renderer/mesh_renderer.h"
 #include "control/input.h"
 #include "utils/screen.h"
-#include "render_device/render_device_opengl.h"
 #include "render_device/render_task_consumer.h"
 #include "audio/audio.h"
 #include "utils/time.h"
@@ -85,7 +84,6 @@ void Application::Init() {
     Debug::Init();
     DEBUG_LOG_INFO("game start");
     Time::Init();
-    RenderDevice::Init(new RenderDeviceOpenGL());
     glfwSetErrorCallback(error_callback);
     if (!glfwInit())
     {

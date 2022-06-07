@@ -42,8 +42,8 @@ void Shader::Parse(string shader_name) {
     shader_name_=shader_name;
 
     //组装完整文件路径
-    string vertex_shader_file_path=Application::data_path()+shader_name+".vs";
-    string fragment_shader_file_path=Application::data_path()+shader_name+".fs";
+    string vertex_shader_file_path=Application::data_path()+shader_name+".vert";
+    string fragment_shader_file_path=Application::data_path()+shader_name+".frag";
 
     //读取顶点Shader代码
     ifstream vertex_shader_input_file_stream(vertex_shader_file_path);

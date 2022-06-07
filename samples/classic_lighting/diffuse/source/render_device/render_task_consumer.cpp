@@ -217,12 +217,16 @@ void RenderTaskConsumer::CreateVAO(RenderTaskBase *task_base) {
         //将Shader变量(a_pos)和顶点坐标VBO句柄进行关联，最后的0表示数据偏移量。
         glVertexAttribPointer(attribute_pos_location, 3, GL_FLOAT, false, task->vertex_data_stride_, 0);__CHECK_GL_ERROR__
         //启用顶点Shader属性(a_color)，指定与顶点颜色数据进行关联
-        glVertexAttribPointer(attribute_color_location, 4, GL_FLOAT, false, task->vertex_data_stride_, (void*)(sizeof(float) * 3));__CHECK_GL_ERROR__
+        if(attribute_color_location>=0){
+            glVertexAttribPointer(attribute_color_location, 4, GL_FLOAT, false, task->vertex_data_stride_, (void*)(sizeof(float) * 3));__CHECK_GL_ERROR__
+        }
         //将Shader变量(a_uv)和顶点UV坐标VBO句柄进行关联，最后的0表示数据偏移量。
         glVertexAttribPointer(attribute_uv_location, 2, GL_FLOAT, false, task->vertex_data_stride_, (void*)(sizeof(float) * (3 + 4)));__CHECK_GL_ERROR__
 
         glEnableVertexAttribArray(attribute_pos_location);__CHECK_GL_ERROR__
-        glEnableVertexAttribArray(attribute_color_location);__CHECK_GL_ERROR__
+        if(attribute_color_location>=0){
+            glEnableVertexAttribArray(attribute_color_location);__CHECK_GL_ERROR__
+        }
         glEnableVertexAttribArray(attribute_uv_location);__CHECK_GL_ERROR__
 
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_buffer_object);__CHECK_GL_ERROR__
@@ -277,10 +281,23 @@ void RenderTaskConsumer::ActiveAndBindTexture(RenderTaskBase *task_base) {
 
 void RenderTaskConsumer::SetUniform1i(RenderTaskBase *task_base) {
     RenderTaskSetUniform1i* task=dynamic_cast<RenderTaskSetUniform1i*>(task_base);
-    //设置Shader程序从纹理单元读取颜色数据
     GLuint shader_program=GPUResourceMapper::GetShaderProgram(task->shader_program_handle_);
     GLint uniform_location= glGetUniformLocation(shader_program, task->uniform_name_);__CHECK_GL_ERROR__
     glUniform1i(uniform_location, task->value_);__CHECK_GL_ERROR__
+}
+
+void RenderTaskConsumer::SetUniform1f(RenderTaskBase *task_base) {
+    RenderTaskSetUniform1f* task=dynamic_cast<RenderTaskSetUniform1f*>(task_base);
+    GLuint shader_program=GPUResourceMapper::GetShaderProgram(task->shader_program_handle_);
+    GLint uniform_location= glGetUniformLocation(shader_program, task->uniform_name_);__CHECK_GL_ERROR__
+    glUniform1f(uniform_location, task->value_);__CHECK_GL_ERROR__
+}
+
+void RenderTaskConsumer::SetUniform3f(RenderTaskBase *task_base) {
+    RenderTaskSetUniform3f* task=dynamic_cast<RenderTaskSetUniform3f*>(task_base);
+    GLuint shader_program=GPUResourceMapper::GetShaderProgram(task->shader_program_handle_);
+    GLint uniform_location= glGetUniformLocation(shader_program, task->uniform_name_);__CHECK_GL_ERROR__
+    glUniform3f(uniform_location, task->value_.x,task->value_.y,task->value_.z);__CHECK_GL_ERROR__
 }
 
 void RenderTaskConsumer::BindVAOAndDrawElements(RenderTaskBase *task_base) {
@@ -413,6 +430,14 @@ void RenderTaskConsumer::ProcessTask() {
                 }
                 case RenderCommand::SET_UNIFORM_1I:{
                     SetUniform1i(render_task);
+                    break;
+                }
+                case RenderCommand::SET_UNIFORM_1F:{
+                    SetUniform1f(render_task);
+                    break;
+                }
+                case RenderCommand::SET_UNIFORM_3F:{
+                    SetUniform3f(render_task);
                     break;
                 }
                 case RenderCommand::SET_CLEAR_FLAG_AND_CLEAR_COLOR_BUFFER:{

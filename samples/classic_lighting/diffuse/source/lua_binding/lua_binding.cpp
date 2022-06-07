@@ -506,6 +506,8 @@ void LuaBinding::BindLua() {
         cpp_ns_table.new_usertype<Material>("Material",sol::call_constructor,sol::constructors<Material()>(),
                                           "Parse",&Material::Parse,
                                           "SetUniform1i",&Material::SetUniform1i,
+                                          "SetUniform1f",&Material::SetUniform1f,
+                                          "SetUniform3f",&Material::SetUniform3f,
                                           "SetTexture",&Material::SetTexture
         );
 

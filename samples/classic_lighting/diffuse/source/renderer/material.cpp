@@ -4,10 +4,7 @@
 
 #include "material.h"
 #include <iostream>
-#include <fstream>
-#include "glad/gl.h"
 #include "rapidxml/rapidxml.hpp"
-#include "rapidxml/rapidxml_print.hpp"
 #include "rapidxml/rapidxml_utils.hpp"
 #include "shader.h"
 #include "texture_2d.h"
@@ -18,15 +15,11 @@ using std::ios;
 using std::cout;
 using std::endl;
 
-Material::Material() {
+Material::Material() = default;
 
-}
+Material::~Material() = default;
 
-Material::~Material() {
-
-}
-
-void Material::Parse(string material_path) {
+void Material::Parse(const string& material_path) {
     //解析xml
     rapidxml::file<> xml_file((Application::data_path()+material_path).c_str());
     rapidxml::xml_document<> document;
@@ -59,23 +52,26 @@ void Material::Parse(string material_path) {
 
         std::string shader_property_name=texture_name_attribute->value();
         std::string image_path=texture_image_attribute->value();
-        textures_.push_back(std::make_pair(shader_property_name, image_path.empty()? nullptr:Texture2D::LoadFromFile(image_path)));
+        textures_.emplace_back(shader_property_name, image_path.empty()? nullptr:Texture2D::LoadFromFile(image_path));
 
         material_texture_node=material_texture_node->next_sibling("texture");
     }
 }
 
 
-
-void Material::SetUniformMatrix4fv(std::string shader_property_name, float *pointer) {
-    uniform_matrix4fv_vec.push_back(std::make_pair(shader_property_name,pointer));
+void Material::SetUniform1i(const std::string& shader_property_name, int value) {
+    uniform_1i_vec_.emplace_back(shader_property_name, value);
 }
 
-void Material::SetUniform1i(std::string shader_property_name, int value) {
-    uniform_1i_vec.push_back(std::make_pair(shader_property_name,value));
+void Material::SetUniform1f(const std::string& shader_property_name, float value) {
+    uniform_1f_vec_.emplace_back(shader_property_name, value);
 }
 
-void Material::SetTexture(string property, Texture2D *texture2D) {
+void Material::SetUniform3f(const std::string& shader_property_name,glm::vec3& value){
+    uniform_3f_vec_.emplace_back(shader_property_name, value);
+}
+
+void Material::SetTexture(const string& property, Texture2D *texture2D) {
     for (auto& pair : textures_){
         if(pair.first==property){
             delete(pair.second);

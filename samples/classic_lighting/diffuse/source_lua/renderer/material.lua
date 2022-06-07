@@ -24,13 +24,25 @@ function Material:Parse(material_path)
     self.cpp_class_instance_:Parse(material_path)
 end
 
-
-function Material:SetUniformMatrix4fv(shader_property_name,pointer)
-    self.cpp_class_instance_:SetUniformMatrix4fv(shader_property_name,pointer)
-end
-
+--- 上传int值
+--- @param shader_property_name string @shader属性名
+--- @param value number @值
 function Material:SetUniform1i(shader_property_name,value)
     self.cpp_class_instance_:SetUniform1i(shader_property_name,value)
+end
+
+--- 上传float值
+--- @param shader_property_name string @shader属性名
+--- @param value number @值
+function Material:SetUniform1f(shader_property_name,value)
+    self.cpp_class_instance_:SetUniform1f(shader_property_name,value)
+end
+
+--- 上传vec3值
+--- @param shader_property_name string @shader属性名
+--- @param value glm.vec3 @值
+function Material:SetUniform3f(shader_property_name,value)
+    self.cpp_class_instance_:SetUniform3f(shader_property_name,value)
 end
 
 --- 设置纹理

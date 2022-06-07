@@ -105,6 +105,18 @@ public:
     /// \param value
     static void ProduceRenderTaskSetUniform1i(unsigned int shader_program_handle, const char* uniform_name, int value);
 
+    /// 上传1个float值
+    /// \param shader_program_handle
+    /// \param uniform_name
+    /// \param value
+    static void ProduceRenderTaskSetUniform1f(unsigned int shader_program_handle, const char* uniform_name, float value);
+
+    /// 上传1个 vec3
+    /// \param shader_program_handle
+    /// \param uniform_name
+    /// \param value
+    static void ProduceRenderTaskSetUniform3f(unsigned int shader_program_handle, const char* uniform_name, glm::vec3 value);
+
     /// 绑定VAO并绘制
     /// \param vao_handle
     /// \param inex_count

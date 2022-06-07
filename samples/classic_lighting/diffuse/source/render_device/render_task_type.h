@@ -228,19 +228,46 @@ public:
     unsigned int texture_handle_;//纹理句柄
 };
 
-/// 上传1个int值
-class RenderTaskSetUniform1i:public RenderTaskBase{
+/// 上传1个uniform值
+class RenderTaskSetUniform:public RenderTaskBase{
 public:
-    RenderTaskSetUniform1i(){
-        render_command_=RenderCommand::SET_UNIFORM_1I;
-    }
-    ~RenderTaskSetUniform1i(){
+    RenderTaskSetUniform(){}
+    ~RenderTaskSetUniform(){
         free(uniform_name_);
     }
 public:
     unsigned int shader_program_handle_;//shader程序句柄
     char* uniform_name_=nullptr;//uniform变量名
+};
+
+/// 上传1个int值
+class RenderTaskSetUniform1i:public RenderTaskSetUniform{
+public:
+    RenderTaskSetUniform1i(){
+        render_command_=RenderCommand::SET_UNIFORM_1I;
+    }
+public:
     int value_;//目标值
+};
+
+/// 上传1个float值
+class RenderTaskSetUniform1f:public RenderTaskSetUniform{
+public:
+    RenderTaskSetUniform1f(){
+        render_command_=RenderCommand::SET_UNIFORM_1F;
+    }
+public:
+    float value_;//目标值
+};
+
+/// 上传1个 vec3
+class RenderTaskSetUniform3f:public RenderTaskSetUniform{
+public:
+    RenderTaskSetUniform3f(){
+        render_command_=RenderCommand::SET_UNIFORM_3F;
+    }
+public:
+    glm::vec3 value_;//目标值
 };
 
 /// 绑定VAO并绘制

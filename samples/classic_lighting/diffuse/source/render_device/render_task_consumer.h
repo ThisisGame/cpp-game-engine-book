@@ -76,6 +76,14 @@ private:
     /// \param task_base
     static void SetUniform1i(RenderTaskBase* task_base);
 
+    /// 上传1个float值
+    /// \param task_base
+    static void SetUniform1f(RenderTaskBase* task_base);
+
+    /// 上传1个vec3
+    /// \param task_base
+    static void SetUniform3f(RenderTaskBase* task_base);
+
     /// 绑定VAO并绘制
     /// \param task_base
     static void BindVAOAndDrawElements(RenderTaskBase* task_base);

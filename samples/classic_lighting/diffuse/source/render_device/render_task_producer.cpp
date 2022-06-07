@@ -167,6 +167,26 @@ void RenderTaskProducer::ProduceRenderTaskSetUniform1i(unsigned int shader_progr
     RenderTaskQueue::Push(task);
 }
 
+void RenderTaskProducer::ProduceRenderTaskSetUniform1f(unsigned int shader_program_handle, const char *uniform_name,
+                                                       float value) {
+    RenderTaskSetUniform1f* task=new RenderTaskSetUniform1f();
+    task->shader_program_handle_=shader_program_handle;
+    task->uniform_name_= static_cast<char *>(malloc(strlen(uniform_name) + 1));
+    strcpy(task->uniform_name_, uniform_name);
+    task->value_=value;
+    RenderTaskQueue::Push(task);
+}
+
+void RenderTaskProducer::ProduceRenderTaskSetUniform3f(unsigned int shader_program_handle, const char *uniform_name,
+                                                       glm::vec3 value) {
+    RenderTaskSetUniform3f* task=new RenderTaskSetUniform3f();
+    task->shader_program_handle_=shader_program_handle;
+    task->uniform_name_= static_cast<char *>(malloc(strlen(uniform_name) + 1));
+    strcpy(task->uniform_name_, uniform_name);
+    task->value_=value;
+    RenderTaskQueue::Push(task);
+}
+
 void RenderTaskProducer::ProduceRenderTaskBindVAOAndDrawElements(unsigned int vao_handle, unsigned int vertex_index_num) {
     RenderTaskBindVAOAndDrawElements* task=new RenderTaskBindVAOAndDrawElements();
     task->vao_handle_=vao_handle;

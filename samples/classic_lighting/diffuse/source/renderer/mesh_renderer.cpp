@@ -111,7 +111,7 @@ void MeshRenderer::Render() {
         //上传mvp矩阵
         RenderTaskProducer::ProduceRenderTaskSetUniformMatrix4fv(shader_program_handle, "u_mvp", false,mvp);
 
-        //从Pass节点拿到保存的Texture
+        //上传Texture
         std::vector<std::pair<std::string,Texture2D*>> textures=material_->textures();
         for (int texture_index = 0; texture_index < textures.size(); ++texture_index) {
             //激活纹理单元,将加载的图片纹理句柄，绑定到纹理单元上。
@@ -119,6 +119,19 @@ void MeshRenderer::Render() {
             //设置Shader程序从纹理单元读取颜色数据
             RenderTaskProducer::ProduceRenderTaskSetUniform1i(shader_program_handle,textures[texture_index].first.c_str(),texture_index);
         }
+
+        //上传uniform_1f
+        std::vector<std::pair<std::string,float>> uniform_1f_vec=material_->uniform_1f_vec();
+        for (auto uniform_1f : uniform_1f_vec) {
+            RenderTaskProducer::ProduceRenderTaskSetUniform1f(shader_program_handle,uniform_1f.first.c_str(),uniform_1f.second);
+        }
+
+        //上传uniform_3f
+        std::vector<std::pair<std::string,glm::vec3>> uniform_3f_vec=material_->uniform_3f_vec();
+        for (auto uniform_3f : uniform_3f_vec) {
+            RenderTaskProducer::ProduceRenderTaskSetUniform3f(shader_program_handle,uniform_3f.first.c_str(),uniform_3f.second);
+        }
+
         // 绑定VAO并绘制
         RenderTaskProducer::ProduceRenderTaskBindVAOAndDrawElements(vertex_array_object_handle_,mesh->vertex_index_num_);
 

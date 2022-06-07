@@ -11,7 +11,6 @@
 #include "renderer/mesh_renderer.h"
 #include "renderer/mesh_filter.h"
 #include "renderer/font.h"
-#include "render_device/render_device.h"
 #include "utils/debug.h"
 
 using namespace rttr;

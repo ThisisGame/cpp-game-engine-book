@@ -1,0 +1,3 @@
+<material shader="shader/ambient_light">
+    <texture name="u_diffuse_texture" image="images/plane_albedo.cpt"/>
+</material>
