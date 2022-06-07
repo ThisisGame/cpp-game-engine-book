@@ -11,4 +11,5 @@ layout(location = 0) out vec4 o_fragColor;
 void main()
 {
     o_fragColor = texture(u_diffuse_texture,v_uv) * u_ambient_light_color * u_ambient_light_intensity;
+    o_fragColor.a = 1.0;
 }
