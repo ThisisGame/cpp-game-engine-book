@@ -16,6 +16,7 @@ namespace Engine{
         glm::vec3 position_;
         glm::vec4 color_;
         glm::vec2 uv_;
+        glm::vec3 normal_;
     };
 
     //Mesh文件头
@@ -316,6 +317,7 @@ void ParseMesh(const FbxMesh* pMesh){
         mesh_file.vertex_[i].position_ = glm::vec3(lVertices[i * 3], lVertices[i * 3+1], lVertices[i * 3+2]);
         mesh_file.vertex_[i].color_ = glm::vec4(1.0f);
         mesh_file.vertex_[i].uv_ = glm::vec2(lUVs[i * 2], lUVs[i * 2 + 1]);
+        mesh_file.vertex_[i].normal_ = glm::vec3(lNormals[i * 3], lNormals[i * 3+1], lNormals[i * 3+2]);
     }
     // 填充索引
     mesh_file.index_=lIndices;

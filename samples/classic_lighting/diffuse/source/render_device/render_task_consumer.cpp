@@ -189,6 +189,7 @@ void RenderTaskConsumer::CreateVAO(RenderTaskBase *task_base) {
     GLint attribute_pos_location = glGetAttribLocation(shader_program, "a_pos");__CHECK_GL_ERROR__
     GLint attribute_color_location = glGetAttribLocation(shader_program, "a_color");__CHECK_GL_ERROR__
     GLint attribute_uv_location = glGetAttribLocation(shader_program, "a_uv");__CHECK_GL_ERROR__
+    GLint attribute_normal_location = glGetAttribLocation(shader_program, "a_normal");__CHECK_GL_ERROR__
 
     GLuint vertex_buffer_object,element_buffer_object,vertex_array_object;
     //在GPU上创建缓冲区对象
@@ -222,12 +223,19 @@ void RenderTaskConsumer::CreateVAO(RenderTaskBase *task_base) {
         }
         //将Shader变量(a_uv)和顶点UV坐标VBO句柄进行关联，最后的0表示数据偏移量。
         glVertexAttribPointer(attribute_uv_location, 2, GL_FLOAT, false, task->vertex_data_stride_, (void*)(sizeof(float) * (3 + 4)));__CHECK_GL_ERROR__
+        //将Shader变量(a_normal)和顶点法线VBO句柄进行关联，最后的0表示数据偏移量。
+        if(attribute_normal_location>=0) {
+            glVertexAttribPointer(attribute_normal_location, 3, GL_FLOAT, false, task->vertex_data_stride_,(void *) (sizeof(float) * (3 + 4 + 2)));__CHECK_GL_ERROR__
+        }
 
         glEnableVertexAttribArray(attribute_pos_location);__CHECK_GL_ERROR__
         if(attribute_color_location>=0){
             glEnableVertexAttribArray(attribute_color_location);__CHECK_GL_ERROR__
         }
         glEnableVertexAttribArray(attribute_uv_location);__CHECK_GL_ERROR__
+        if(attribute_normal_location>=0){
+            glEnableVertexAttribArray(attribute_normal_location);__CHECK_GL_ERROR__
+        }
 
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_buffer_object);__CHECK_GL_ERROR__
     }

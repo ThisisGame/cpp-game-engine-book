@@ -41,7 +41,7 @@ end
 
 function LoginScene:CreateEnvironment()
     self.environment_=Environment.new()
-    self.environment_:set_ambient_color(glm.vec3(1.0,0.0,0.0))
+    self.environment_:set_ambient_color(glm.vec3(1.0,1.0,1.0))
     self.environment_:set_ambient_color_intensity(0.7)
 end
 
@@ -68,12 +68,12 @@ function LoginScene:CreatePlayer()
     self.go_skeleton_:AddComponent(Animation):LoadAnimationClipFromFile(anim_clip_name,"idle")
 
     local mesh_filter=self.go_skeleton_:AddComponent(MeshFilter)
-    mesh_filter:LoadMesh("model/fbx_extra_basic_plane.mesh")--加载Mesh
+    mesh_filter:LoadMesh("model/basic_plane_model_basic_plane.mesh")--加载Mesh
     mesh_filter:LoadWeight("model/fbx_extra_basic_plane.weight")--加载权重文件
 
     --手动创建Material
     self.material_ = Material.new()--设置材质
-    self.material_:Parse("material/fbx_extra_basic_plane_ambient_light.mat")
+    self.material_:Parse("material/basic_plane_diffuse_light.mat")
 
     --挂上 MeshRenderer 组件
     local skinned_mesh_renderer= self.go_skeleton_:AddComponent(SkinnedMeshRenderer)
