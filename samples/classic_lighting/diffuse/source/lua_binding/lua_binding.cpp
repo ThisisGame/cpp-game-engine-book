@@ -40,6 +40,7 @@ extern "C"{
 #include "physics/collider.h"
 #include "physics/sphere_collider.h"
 #include "physics/box_collider.h"
+#include "lighting/environment.h"
 
 sol::state LuaBinding::sol_state_;
 
@@ -575,6 +576,16 @@ void LuaBinding::BindLua() {
                                            "texture2D", &UIImage::texture2D,
                                            "set_texture",&UIImage::set_texture,
                                            "LoadTexture2D",&UIImage::LoadTexture2D
+        );
+    }
+
+    // lighting
+    {
+        cpp_ns_table.new_usertype<Environment>("Environment",sol::call_constructor, sol::constructors<Environment()>(),
+                "set_ambient_color", &Environment::set_ambient_color,
+                "ambient_color", &Environment::ambient_color,
+                "set_ambient_color_intensity", &Environment::set_ambient_color_intensity,
+                "ambient_color_intensity", &Environment::ambient_color_intensity
         );
     }
 

@@ -1,5 +1,5 @@
 ﻿cmake_minimum_required(VERSION 3.17)
-project(integrate_physx)
+project(ambient)
 
 set(CMAKE_CXX_STANDARD 17)
 
@@ -18,7 +18,7 @@ include(CMakeLists.txt.glfw)
 include(CMakeLists.txt.FreeType)
 include(CMakeLists.txt.fmod)
 include(CMakeLists.txt.easy_profile_core)
-include(CMakeLists.txt.lua)
+include(CMakeLists.txt.lua_script)
 include(CMakeLists.txt.luasocket)
 include(CMakeLists.txt.Physx)
 

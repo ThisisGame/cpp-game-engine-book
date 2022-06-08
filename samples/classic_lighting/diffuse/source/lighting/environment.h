@@ -13,7 +13,7 @@ public:
     Environment();
 
     /// 设置环境颜色
-    void set_ambient_color(const glm::vec3 &ambient_color);
+    void set_ambient_color(const glm::vec3 &ambient_color){ambient_color_= ambient_color;}
 
     /// 获取环境颜色
     const glm::vec3 &ambient_color() const{return ambient_color_;}

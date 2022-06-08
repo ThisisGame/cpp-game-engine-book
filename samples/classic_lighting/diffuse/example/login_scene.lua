@@ -1,4 +1,5 @@
 require("lua_extension")
+require("lua_extension_math")
 require("renderer/camera")
 require("renderer/mesh_filter")
 require("renderer/mesh_renderer")
@@ -11,6 +12,7 @@ require("control/input")
 require("control/key_code")
 require("utils/screen")
 require("utils/time")
+require("lighting/environment")
 
 LoginScene=class("LoginScene",Component)
 
@@ -25,16 +27,22 @@ function LoginScene:ctor()
     self.animation_ = nil--骨骼动画
     self.animation_clip_ = nil --- 骨骼动画片段
     self.material_ = nil --材质
-    self.ambient_light_color_=glm.vec3(1.0,0.0,0.0)--环境光颜色
-    self.ambient_light_intensity_=1.0 --环境光强度
+    self.environment_=nil --环境
 end
 
 function LoginScene:Awake()
     print("LoginScene Awake")
     LoginScene.super.Awake(self)
 
+    self:CreateEnvironment()
     self:CreateMainCamera()
     self:CreatePlayer()
+end
+
+function LoginScene:CreateEnvironment()
+    self.environment_=Environment.new()
+    self.environment_:set_ambient_color(glm.vec3(1.0,0.0,0.0))
+    self.environment_:set_ambient_color_intensity(0.7)
 end
 
 --- 创建主相机
@@ -84,29 +92,25 @@ function LoginScene:Update()
 
     --按键R G B切换环境光颜色
     if Input.GetKeyUp(KeyCode.KEY_CODE_R) then
-        self.ambient_light_color_=glm.vec3(1.0,0.0,0.0)
+        self.environment_:set_ambient_color(glm.vec3(1.0,0.0,0.0))
     elseif Input.GetKeyUp(KeyCode.KEY_CODE_G) then
-        self.ambient_light_color_=glm.vec3(0.0,1.0,0.0)
+        self.environment_:set_ambient_color(glm.vec3(0.0,1.0,0.0))
     elseif Input.GetKeyUp(KeyCode.KEY_CODE_B) then
-        self.ambient_light_color_=glm.vec3(0.0,0.0,1.0)
+        self.environment_:set_ambient_color(glm.vec3(0.0,0.0,1.0))
     end
 
     --方向上下切换环境光强度
-    if Input.GetKeyUp(KeyCode.KEY_CODE_UP) then
-        self.ambient_light_intensity_=self.ambient_light_intensity_+0.1
-        if self.ambient_light_intensity_>1 then
-            self.ambient_light_intensity_=1
-        end
-    elseif Input.GetKeyUp(KeyCode.KEY_CODE_DOWN) then
-        self.ambient_light_intensity_=self.ambient_light_intensity_-0.1
-        if self.ambient_light_intensity_<0 then
-            self.ambient_light_intensity_=0
-        end
+    local ambient_light_intensity=self.environment_:ambient_color_intensity()
+    if Input.GetKeyDown(KeyCode.KEY_CODE_UP) then
+        ambient_light_intensity=ambient_light_intensity+Time:delta_time()*0.5
+    elseif Input.GetKeyDown(KeyCode.KEY_CODE_DOWN) then
+        ambient_light_intensity=ambient_light_intensity-Time:delta_time()*0.5
     end
+    self.environment_:set_ambient_color_intensity(math.clamp(ambient_light_intensity,0,1))
 
     --设置环境光颜色和强度
-    self.material_:SetUniform3f("u_ambient_light_color",self.ambient_light_color_)
-    self.material_:SetUniform1f("u_ambient_light_intensity",self.ambient_light_intensity_)
+    self.material_:SetUniform3f("u_ambient_light_color",self.environment_:ambient_color())
+    self.material_:SetUniform1f("u_ambient_light_intensity",self.environment_:ambient_color_intensity())
 
     --鼠标滚轮控制相机远近
     self.go_camera_:GetComponent(Transform):set_position(self.go_camera_:GetComponent(Transform):position() *(10 - Input.mouse_scroll())/10)
