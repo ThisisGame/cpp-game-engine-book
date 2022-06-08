@@ -1,6 +1,6 @@
 ﻿#define GLFW_INCLUDE_NONE
 
-
+#include <filesystem>
 #include "fbxsdk.h"
 #include "Common/Common.h"
 #include "engine.h"
@@ -27,10 +27,18 @@ FbxAnimStack * mCurrentAnimationStack;
 FbxTime mCurrentTime;
 FbxTime mStart,mStop;//动画片段开始结束时间。
 
-int main(void){
-    Debug::Init();
+std::string src_file_path;
 
-    InitFbxSDK("../data/model/fbx_extra.fbx");
+int main(int argc,char** argv){
+    Debug::Init();
+    src_file_path="../data/model/fbx_extra.fbx";
+
+    if(argc>1){
+        src_file_path=argv[1];
+    }
+    DEBUG_LOG_INFO("src_file_name:{}", src_file_path);
+
+    InitFbxSDK(src_file_path.c_str());
 
     // 获取所有的动画片段
     FbxArray<FbxString*> mAnimStackNameArray;
@@ -230,7 +238,12 @@ void ParseNodeRecursive(FbxNode* pNode){
                     }
                 }
             }
-            weightFile.Write(fmt::format("../data/model/fbx_extra_{}.weight", name).c_str());
+            // 写入文件
+            std::filesystem::path path(src_file_path);
+            std::string src_file_name = path.filename().stem().string();
+            std::string dst_file_name=fmt::format("{}_{}.weight",src_file_name,name);
+            path.replace_filename(dst_file_name);
+            weightFile.Write(path.string());
         }
     }
     // 遍历子节点，递归

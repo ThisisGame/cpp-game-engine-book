@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <fstream>
+#include <filesystem>
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
 #include <glm/gtx/string_cast_beauty.hpp>
@@ -48,7 +49,7 @@ namespace Engine{
         }
 
         // 写入文件
-        void Write(const char* filePath){
+        void Write(std::string filePath){
             std::ofstream file(filePath, std::ios::binary);
             if(file.is_open()){
                 file.write(reinterpret_cast<char*>(&head_), sizeof(head_));
@@ -65,9 +66,17 @@ void ParseMesh(const FbxMesh* pMesh);
 
 int LogSceneCheckError(FbxImporter *mImporter, FbxArray<FbxString *> &details);
 
-int main(void){
+std::string src_file_path;
+
+int main(int argc,char** argv){
     Debug::Init();
-    const char* mFileName="../data/model/fbx_extra.fbx";
+
+    src_file_path="../data/model/fbx_extra.fbx";
+
+    if(argc>1){
+        src_file_path=argv[1];
+    }
+    DEBUG_LOG_INFO("src_file_name:{}", src_file_path);
 
     FbxManager * mSdkManager;
     FbxScene * mScene;
@@ -81,14 +90,14 @@ int main(void){
     // 创建一个Importer，用来解析FBX文件
     int lFileFormat = -1;
     mImporter = FbxImporter::Create(mSdkManager, "");
-    if (!mSdkManager->GetIOPluginRegistry()->DetectReaderFileFormat(mFileName, lFileFormat)) {
+    if (!mSdkManager->GetIOPluginRegistry()->DetectReaderFileFormat(src_file_path.c_str(), lFileFormat)) {
         // 未能识别文件格式
         DEBUG_LOG_ERROR("Unrecognizable file format.");
         return -1;
     }
 
     // 初始化Importer，设置文件路径
-    if (mImporter->Initialize(mFileName, lFileFormat) == false) {
+    if (mImporter->Initialize(src_file_path.c_str(), lFileFormat) == false) {
         DEBUG_LOG_ERROR("Call to FbxImporter::Initialize() failed.Error reported: {}", mImporter->GetStatus().GetErrorString());
         return -1;
     }
@@ -136,7 +145,8 @@ int main(void){
     // 递归解析节点
     ParseNode(mScene->GetRootNode());
 
-    DEBUG_LOG_INFO("extra mesh success");
+    DEBUG_LOG_INFO("extra mesh success.press any key exit.");
+    getchar();
 
     return 0;
 }
@@ -285,7 +295,13 @@ void ParseMesh(const FbxMesh* pMesh){
     }
     // 填充索引
     mesh_file.index_=lIndices;
+
     // 写入文件
-    mesh_file.Write(fmt::format("../data/model/fbx_extra_{}.mesh", mesh_file.head_.name_).c_str());
+    std::filesystem::path path(src_file_path);
+    std::string src_file_name = path.filename().stem().string();
+    std::string dst_file_name=fmt::format("{}_{}.mesh",src_file_name,mesh_file.head_.name_);
+    path.replace_filename(dst_file_name);
+    mesh_file.Write(path.string());
+
 }
 

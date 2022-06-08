@@ -1,6 +1,6 @@
 ﻿#define GLFW_INCLUDE_NONE
 
-
+#include <filesystem>
 #include "fbxsdk.h"
 #include "Common/Common.h"
 #include "engine.h"
@@ -27,10 +27,18 @@ FbxAnimStack * mCurrentAnimationStack;
 FbxTime mCurrentTime;
 FbxTime mStart,mStop;//动画片段开始结束时间。
 
-int main(void){
+std::string src_file_path;
+int main(int argc,char** argv){
     Debug::Init();
 
-    InitFbxSDK("../data/model/fbx_extra.fbx");
+    src_file_path="../data/model/fbx_extra.fbx";
+
+    if(argc>1){
+        src_file_path=argv[1];
+    }
+    DEBUG_LOG_INFO("src_file_name:{}", src_file_path);
+
+    InitFbxSDK(src_file_path.c_str());
 
     // 获取所有的动画片段
     FbxArray<FbxString*> mAnimStackNameArray;
@@ -58,7 +66,9 @@ int main(void){
     FbxAMatrix lDummyGlobalPosition;
     ParseNodeRecursive(mScene->GetRootNode());
 
-    DEBUG_LOG_INFO("extra animation success");
+    DEBUG_LOG_INFO("extra animation success.press any key exit.");
+
+    getchar();
 
     return 0;
 }
@@ -213,7 +223,12 @@ void ParseNodeRecursive(FbxNode* pNode){
 
             animation.frame_count_=animation.frame_bones_matrix_vec_.size();
 
-            animation.Write(fmt::format("../data/animation/fbx_extra_{}.skeleton_anim", animation.name_).c_str());
+            // 写入文件
+            std::filesystem::path path(src_file_path);
+            std::string src_file_name = path.filename().stem().string();
+            std::string dst_file_name=fmt::format("{}_{}.skeleton_anim",src_file_name,animation.name_);
+            path.replace_filename(dst_file_name);
+            animation.Write(path.string());
         }
     }
     // 遍历子节点，递归

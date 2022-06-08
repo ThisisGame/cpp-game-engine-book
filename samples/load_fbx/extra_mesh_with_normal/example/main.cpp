@@ -145,8 +145,8 @@ int main(int argc,char** argv){
     // 递归解析节点
     ParseNode(mScene->GetRootNode());
 
-    DEBUG_LOG_INFO("extra mesh success");
-
+    DEBUG_LOG_INFO("extra mesh success.press any key exit.");
+    getchar();
     return 0;
 }
 
