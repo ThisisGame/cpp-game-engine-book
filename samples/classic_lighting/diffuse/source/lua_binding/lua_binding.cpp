@@ -95,7 +95,10 @@ void LuaBinding::BindLua() {
                                              sol::meta_function::to_string,[] (const glm::vec3* vec) -> std::string {return glm::to_string(*vec);},
                                              sol::meta_function::addition,[] (const glm::vec3* vec_a,const  glm::vec3* vec_b) {return (*vec_a)+(*vec_b);},
                                              sol::meta_function::subtraction,[] (const glm::vec3* vec_a,const  glm::vec3* vec_b) {return (*vec_a)-(*vec_b);},
-                                             sol::meta_function::multiplication,[] (const glm::vec3* vec,const float a) {return (*vec)*a;},
+                                             sol::meta_function::multiplication,sol::overload(
+                                                     [] (const glm::vec3* vec,const float a) {return (*vec)*a;},
+                                                     [] (const glm::vec3* a,const glm::vec3* b) {return (*a)*(*b);}
+                                                     ),
                                              sol::meta_function::division,[] (const glm::vec3* vec,const float a) {return (*vec)/a;},
                                              sol::meta_function::unary_minus,[] (const glm::vec3* vec) {return (*vec)*-1;},
                                              sol::meta_function::equal_to,[] (const glm::vec3* vec_a,const  glm::vec3* vec_b) {return (*vec_a)==(*vec_b);}
@@ -117,7 +120,10 @@ void LuaBinding::BindLua() {
                                              sol::meta_function::to_string,[] (const glm::vec4* vec) {return glm::to_string(*vec);},
                                              sol::meta_function::addition,[] (const glm::vec4* vec_a,const  glm::vec4* vec_b) {return (*vec_a)+(*vec_b);},
                                              sol::meta_function::subtraction,[] (const glm::vec4* vec_a,const  glm::vec4* vec_b) {return (*vec_a)-(*vec_b);},
-                                             sol::meta_function::multiplication,[] (const glm::vec4* vec,const float a) {return (*vec)*a;},
+                                             sol::meta_function::multiplication,sol::overload(
+                                                     [] (const glm::vec4* vec,const float a) {return (*vec)*a;},
+                                                     [] (const glm::vec4* a,const glm::vec4* b) {return (*a)*(*b);}
+                                                     ),
                                              sol::meta_function::division,[] (const glm::vec4* vec,const float a) {return (*vec)/a;},
                                              sol::meta_function::unary_minus,[] (const glm::vec4* vec) {return (*vec)*-1;},
                                              sol::meta_function::equal_to,[] (const glm::vec4* vec_a,const  glm::vec4* vec_b) {return (*vec_a)==(*vec_b);}

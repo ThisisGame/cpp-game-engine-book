@@ -67,7 +67,7 @@ void MeshRenderer::Render() {
     glm::mat4 eulerAngleYXZ = glm::eulerAngleYXZ(glm::radians(rotation.y), glm::radians(rotation.x), glm::radians(rotation.z));
     glm::mat4 scale = glm::scale(transform->scale()); //缩放;
     glm::mat4 model = trans*scale*eulerAngleYXZ;
-    glm::mat4 mvp=projection*view * model;
+//    glm::mat4 mvp=projection*view * model;
 
     //主动获取 MeshFilter 组件
     auto component_mesh_filter=game_object()->GetComponent<MeshFilter>();
@@ -109,7 +109,9 @@ void MeshRenderer::Render() {
         RenderTaskProducer::ProduceRenderTaskSetEnableState(GL_BLEND,true);
         RenderTaskProducer::ProduceRenderTaskSetBlenderFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         //上传mvp矩阵
-        RenderTaskProducer::ProduceRenderTaskSetUniformMatrix4fv(shader_program_handle, "u_mvp", false,mvp);
+        RenderTaskProducer::ProduceRenderTaskSetUniformMatrix4fv(shader_program_handle, "u_model", false,model);
+        RenderTaskProducer::ProduceRenderTaskSetUniformMatrix4fv(shader_program_handle, "u_view", false,view);
+        RenderTaskProducer::ProduceRenderTaskSetUniformMatrix4fv(shader_program_handle, "u_projection", false,projection);
 
         //上传Texture
         std::vector<std::pair<std::string,Texture2D*>> textures=material_->textures();

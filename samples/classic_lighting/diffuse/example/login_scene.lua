@@ -62,7 +62,7 @@ end
 function LoginScene:CreatePlayer()
     --创建骨骼蒙皮动画
     self.go_skeleton_=GameObject.new("skeleton")
-    self.go_skeleton_:AddComponent(Transform):set_position(glm.vec3(0, 4, 0))
+    self.go_skeleton_:AddComponent(Transform):set_position(glm.vec3(0, 0, 0))
     self.go_skeleton_:GetComponent(Transform):set_rotation(glm.vec3(0, 0, 0))
     local anim_clip_name="animation/fbx_extra_basic_plane_bones_basic_plane_bones_basic_plane_bones_armatureaction_basic_plane_.skeleton_anim"
     self.go_skeleton_:AddComponent(Animation):LoadAnimationClipFromFile(anim_clip_name,"idle")
@@ -97,6 +97,8 @@ function LoginScene:Update()
         self.environment_:set_ambient_color(glm.vec3(0.0,1.0,0.0))
     elseif Input.GetKeyUp(KeyCode.KEY_CODE_B) then
         self.environment_:set_ambient_color(glm.vec3(0.0,0.0,1.0))
+    elseif Input.GetKeyUp(KeyCode.KEY_CODE_W) then
+        self.environment_:set_ambient_color(glm.vec3(1.0,1.0,1.0))
     end
 
     --方向上下切换环境光强度
@@ -111,6 +113,10 @@ function LoginScene:Update()
     --设置环境光颜色和强度
     self.material_:SetUniform3f("u_ambient_light_color",self.environment_:ambient_color())
     self.material_:SetUniform1f("u_ambient_light_intensity",self.environment_:ambient_color_intensity())
+    --设置灯光位置、颜色、强度
+    self.material_:SetUniform3f("u_light_pos",glm.vec3(0,10,0))
+    self.material_:SetUniform3f("u_light_color",glm.vec3(1.0,0.0,0.0))
+    self.material_:SetUniform1f("u_light_intensity",1.0)
 
     --鼠标滚轮控制相机远近
     self.go_camera_:GetComponent(Transform):set_position(self.go_camera_:GetComponent(Transform):position() *(10 - Input.mouse_scroll())/10)
