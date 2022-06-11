@@ -27,6 +27,9 @@ public:
     /// 获取当前帧最新的骨骼矩阵
     std::vector<glm::mat4>& GetCurrentFrameBoneMatrix();
 
+    /// 获取当前帧最新的用于法线计算的 位移矩阵
+    std::vector<glm::mat3>& GetCurrentFrameNormalBoneMatrix();
+
 public:
     /// 播放骨骼动画
     void Play();
@@ -58,6 +61,8 @@ private:
     std::vector<std::string> bone_names_;
     /// 每一帧每一个骨骼的位移矩阵
     std::vector<std::vector<glm::mat4>> bone_matrix_frames_vector_;
+    /// 每一帧每一个骨骼的 用于法线计算的 位移矩阵
+    std::vector<std::vector<glm::mat3>> normal_bone_matrix_frames_vector_;
     /// 骨骼动画开始播放时间
     float start_time_=0.0f;
     /// 骨骼动画是否在播放

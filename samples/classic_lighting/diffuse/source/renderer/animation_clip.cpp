@@ -70,12 +70,15 @@ void AnimationClip::LoadFromFile(const char *file_path) {
     for (int frame_index = 0; frame_index < frame_count_; frame_index++) {
         //读取一帧的骨骼矩阵
         std::vector<glm::mat4> bone_matrices;
+        std::vector<glm::mat3> normal_bone_matrices;
         for (unsigned short bone_index = 0; bone_index < bone_count; bone_index++) {
             glm::mat4 bone_matrix;
             input_file_stream.read(reinterpret_cast<char *>(&bone_matrix), sizeof(float) * 16);
             bone_matrices.push_back(bone_matrix);
+            normal_bone_matrices.push_back(glm::mat3(glm::transpose(glm::inverse(bone_matrix))));
         }
         bone_matrix_frames_vector_.push_back(bone_matrices);
+        normal_bone_matrix_frames_vector_.push_back(normal_bone_matrices);
     }
     input_file_stream.close();
 }
@@ -105,6 +108,14 @@ std::vector<glm::mat4>& AnimationClip::GetCurrentFrameBoneMatrix(){
     }
     return bone_matrix_frames_vector_[current_frame_];
 //    return bone_matrix_frames_vector_[19];
+}
+
+std::vector<glm::mat3>& AnimationClip::GetCurrentFrameNormalBoneMatrix(){
+    if (is_playing_== false){
+        DEBUG_LOG_ERROR("AnimationClip is not playing");
+    }
+    return normal_bone_matrix_frames_vector_[current_frame_];
+//    return normal_bone_matrix_frames_vector_[19];
 }
 
 
