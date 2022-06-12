@@ -12,3 +12,4 @@ cmake-build-release
 .vscode
 .PVS-Studio.i
 .PVS-Studio
+*.bak
