@@ -22,6 +22,10 @@ SkinnedMeshRenderer::SkinnedMeshRenderer():MeshRenderer() {
 
 }
 
+SkinnedMeshRenderer::~SkinnedMeshRenderer() {
+
+}
+
 void SkinnedMeshRenderer::Update() {
     EASY_FUNCTION(profiler::colors::Pink); // 标记函数
     //主动获取 MeshFilter 组件
@@ -112,6 +116,7 @@ void SkinnedMeshRenderer::Update() {
     EASY_END_BLOCK;
 }
 
-SkinnedMeshRenderer::~SkinnedMeshRenderer() {
-
+void SkinnedMeshRenderer::Render() {
+    EASY_FUNCTION(profiler::colors::Pink); // 标记函数
+    MeshRenderer::Render();
 }

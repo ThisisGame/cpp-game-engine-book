@@ -60,15 +60,15 @@ void Material::Parse(const string& material_path) {
 
 
 void Material::SetUniform1i(const std::string& shader_property_name, int value) {
-    uniform_1i_vec_.emplace_back(shader_property_name, value);
+    uniform_1i_map_[shader_property_name]= value;
 }
 
 void Material::SetUniform1f(const std::string& shader_property_name, float value) {
-    uniform_1f_vec_.emplace_back(shader_property_name, value);
+    uniform_1f_map_[shader_property_name]=  value;
 }
 
 void Material::SetUniform3f(const std::string& shader_property_name,glm::vec3& value){
-    uniform_3f_vec_.emplace_back(shader_property_name, value);
+    uniform_3f_map_[shader_property_name]= value;
 }
 
 void Material::SetTexture(const string& property, Texture2D *texture2D) {
@@ -77,7 +77,7 @@ void Material::SetTexture(const string& property, Texture2D *texture2D) {
             delete(pair.second);
             pair.second=texture2D;
             break;
-        }
+    }
     }
 }
 

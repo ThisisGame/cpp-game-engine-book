@@ -20,7 +20,7 @@ public:
     void SetMaterial(Material* material);//设置Material
     Material* material(){return material_;}
 
-    void Render();//渲染
+    virtual void Render();//渲染
 private:
     Material* material_;
 

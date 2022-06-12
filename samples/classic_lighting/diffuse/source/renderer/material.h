@@ -6,8 +6,8 @@
 #define UNTITLED_MATERIAL_H
 
 #include <string>
-#include <vector>
 #include <map>
+#include <unordered_map>
 #include <glm/glm.hpp>
 
 
@@ -32,17 +32,17 @@ public:
     void SetTexture(const std::string& property, Texture2D* texture2D);
 
     std::vector<std::pair<std::string,Texture2D*>>& textures(){return textures_;}
-    std::vector<std::pair<std::string,int>>& uniform_1i_vec(){return uniform_1i_vec_;}
-    std::vector<std::pair<std::string,float>>& uniform_1f_vec(){return uniform_1f_vec_;}
-    std::vector<std::pair<std::string,glm::vec3>>& uniform_3f_vec(){return uniform_3f_vec_;}
+    std::unordered_map<std::string,int>& uniform_1i_map(){return uniform_1i_map_;}
+    std::unordered_map<std::string,float>& uniform_1f_map(){return uniform_1f_map_;}
+    std::unordered_map<std::string,glm::vec3>& uniform_3f_map(){return uniform_3f_map_;}
 
 private:
     Shader* shader_{};
     std::vector<std::pair<std::string,Texture2D*>> textures_;
 
-    std::vector<std::pair<std::string,int>> uniform_1i_vec_;
-    std::vector<std::pair<std::string,float>> uniform_1f_vec_;
-    std::vector<std::pair<std::string,glm::vec3>> uniform_3f_vec_;
+    std::unordered_map<std::string,int> uniform_1i_map_;
+    std::unordered_map<std::string,float> uniform_1f_map_;
+    std::unordered_map<std::string,glm::vec3> uniform_3f_map_;
 };
 
 
