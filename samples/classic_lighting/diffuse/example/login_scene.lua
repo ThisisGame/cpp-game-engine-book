@@ -39,10 +39,11 @@ function LoginScene:Awake()
     self:CreatePlayer()
 end
 
+--- 环境光设置
 function LoginScene:CreateEnvironment()
     self.environment_=Environment.new()
     self.environment_:set_ambient_color(glm.vec3(1.0,1.0,1.0))
-    self.environment_:set_ambient_color_intensity(0.7)
+    self.environment_:set_ambient_color_intensity(0.3)
 end
 
 --- 创建主相机
@@ -50,8 +51,8 @@ function LoginScene:CreateMainCamera()
     --创建相机1 GameObject
     self.go_camera_= GameObject.new("main_camera")
     --挂上 Transform 组件
-    self.go_camera_:AddComponent(Transform):set_position(glm.vec3(0, 10, 20))
-    self.go_camera_:GetComponent(Transform):set_rotation(glm.vec3(-10, 0, 0))
+    self.go_camera_:AddComponent(Transform):set_position(glm.vec3(0, 0, 10))
+    self.go_camera_:GetComponent(Transform):set_rotation(glm.vec3(0, 0, 0))
     --挂上 Camera 组件
     self.camera_=self.go_camera_:AddComponent(Camera)
     --设置为黑色背景
@@ -90,32 +91,12 @@ function LoginScene:Update()
     self.camera_:SetView(glm.vec3(0.0,0.0,0.0), glm.vec3(0.0,1.0,0.0))
     self.camera_:SetPerspective(60, Screen.aspect_ratio(), 1, 1000)
 
-    --按键R G B切换环境光颜色
-    if Input.GetKeyUp(KeyCode.KEY_CODE_R) then
-        self.environment_:set_ambient_color(glm.vec3(1.0,0.0,0.0))
-    elseif Input.GetKeyUp(KeyCode.KEY_CODE_G) then
-        self.environment_:set_ambient_color(glm.vec3(0.0,1.0,0.0))
-    elseif Input.GetKeyUp(KeyCode.KEY_CODE_B) then
-        self.environment_:set_ambient_color(glm.vec3(0.0,0.0,1.0))
-    elseif Input.GetKeyUp(KeyCode.KEY_CODE_W) then
-        self.environment_:set_ambient_color(glm.vec3(1.0,1.0,1.0))
-    end
-
-    --方向上下切换环境光强度
-    local ambient_light_intensity=self.environment_:ambient_color_intensity()
-    if Input.GetKeyDown(KeyCode.KEY_CODE_UP) then
-        ambient_light_intensity=ambient_light_intensity+Time:delta_time()*0.5
-    elseif Input.GetKeyDown(KeyCode.KEY_CODE_DOWN) then
-        ambient_light_intensity=ambient_light_intensity-Time:delta_time()*0.5
-    end
-    self.environment_:set_ambient_color_intensity(math.clamp(ambient_light_intensity,0,1))
-
     --设置环境光颜色和强度
     self.material_:SetUniform3f("u_ambient_light_color",self.environment_:ambient_color())
     self.material_:SetUniform1f("u_ambient_light_intensity",self.environment_:ambient_color_intensity())
     --设置灯光位置、颜色、强度
-    self.material_:SetUniform3f("u_light_pos",glm.vec3(0,10,0))
-    self.material_:SetUniform3f("u_light_color",glm.vec3(1.0,0.0,0.0))
+    self.material_:SetUniform3f("u_light_pos",glm.vec3(0,0,20))
+    self.material_:SetUniform3f("u_light_color",glm.vec3(1.0,1.0,1.0))
     self.material_:SetUniform1f("u_light_intensity",1.0)
 
     --鼠标滚轮控制相机远近
