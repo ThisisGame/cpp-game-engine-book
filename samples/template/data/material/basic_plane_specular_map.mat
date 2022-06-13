@@ -1,0 +1,4 @@
+<material shader="shader/specular_map">
+    <texture name="u_diffuse_texture" image="images/plane_albedo.cpt"/>
+	<texture name="u_specular_texture" image="images/plane_metal.cpt"/>
+</material>
