@@ -101,7 +101,7 @@ function LoginScene:Update()
     local camera_position=self.go_camera_:GetComponent(Transform):position()
     self.material_:SetUniform3f("u_view_pos",camera_position)
     --设置物体反射度、高光强度
-    self.material_:SetUniform1f("u_specular_highlight_intensity",1.0)
+    --self.material_:SetUniform1f("u_specular_highlight_intensity",1.0)
     self.material_:SetUniform1f("u_specular_highlight_shininess",32.0)
 
 
