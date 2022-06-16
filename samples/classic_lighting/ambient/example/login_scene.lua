@@ -42,7 +42,7 @@ end
 --- 环境光设置
 function LoginScene:CreateEnvironment()
     self.environment_=Environment.new()
-    self.environment_:set_ambient_color(glm.vec3(1.0,1.0,1.0))
+    self.environment_:set_ambient_color(glm.vec3(1.0,1.0,0.0))
     self.environment_:set_ambient_color_intensity(0.3)
 end
 
