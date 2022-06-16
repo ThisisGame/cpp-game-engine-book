@@ -13,6 +13,7 @@ require("control/key_code")
 require("utils/screen")
 require("utils/time")
 require("lighting/environment")
+require("lighting/light")
 
 LoginScene=class("LoginScene",Component)
 
@@ -28,6 +29,7 @@ function LoginScene:ctor()
     self.animation_clip_ = nil --- 骨骼动画片段
     self.material_ = nil --材质
     self.environment_=nil --环境
+    self.light_=nil --灯光
 end
 
 function LoginScene:Awake()
@@ -35,14 +37,25 @@ function LoginScene:Awake()
     LoginScene.super.Awake(self)
 
     self:CreateEnvironment()
+    self:CreateLight()
     self:CreateMainCamera()
-    self:CreatePlayer()
+    self:CreateModel()
 end
 
+--- 创建环境
 function LoginScene:CreateEnvironment()
     self.environment_=Environment.new()
     self.environment_:set_ambient_color(glm.vec3(1.0,1.0,1.0))
     self.environment_:set_ambient_color_intensity(0.3)
+end
+
+--- 创建灯
+function LoginScene:CreateLight()
+    local go_light= GameObject.new("light")
+    go_light:AddComponent(Transform):set_position(glm.vec3(0,0,20))
+    local light=go_light:AddComponent(Light)
+    light:set_color(glm.vec3(1.0,1.0,1.0))
+    light:set_intensity(1.0)
 end
 
 --- 创建主相机
@@ -58,8 +71,8 @@ function LoginScene:CreateMainCamera()
     self.camera_:set_clear_color(0,0,0,1)
 end
 
---- 创建Player
-function LoginScene:CreatePlayer()
+--- 创建模型
+function LoginScene:CreateModel()
     --创建骨骼蒙皮动画
     self.go_skeleton_=GameObject.new("skeleton")
     self.go_skeleton_:AddComponent(Transform):set_position(glm.vec3(0, 0, 0))
@@ -96,9 +109,10 @@ function LoginScene:Update()
     self.environment_:Update()
 
     --设置灯光位置、颜色、强度
-    self.material_:SetUniform3f("u_light.pos",glm.vec3(0,0,20))
-    self.material_:SetUniform3f("u_light.color",glm.vec3(1.0,1.0,1.0))
-    self.material_:SetUniform1f("u_light.intensity",1.0)
+    --self.material_:SetUniform3f("u_light.pos",glm.vec3(0,0,20))
+    --self.material_:SetUniform3f("u_light.color",glm.vec3(1.0,1.0,1.0))
+    --self.material_:SetUniform1f("u_light.intensity",1.0)
+
     --设置观察者世界坐标(即相机位置)
     local camera_position=self.go_camera_:GetComponent(Transform):position()
     self.material_:SetUniform3f("u_view_pos",camera_position)

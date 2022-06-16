@@ -41,6 +41,7 @@ extern "C"{
 #include "physics/sphere_collider.h"
 #include "physics/box_collider.h"
 #include "lighting/environment.h"
+#include "lighting/light.h"
 
 sol::state LuaBinding::sol_state_;
 
@@ -593,6 +594,13 @@ void LuaBinding::BindLua() {
                 "set_ambient_color_intensity", &Environment::set_ambient_color_intensity,
                 "ambient_color_intensity", &Environment::ambient_color_intensity,
                 "Update", &Environment::Update
+        );
+        cpp_ns_table.new_usertype<Light>("Light",sol::call_constructor,sol::constructors<Light()>(),
+                sol::base_classes,sol::bases<Component>(),
+                "color", &Light::color,
+                "set_color", &Light::set_color,
+                "intensity", &Light::intensity,
+                "set_intensity", &Light::set_intensity
         );
     }
 

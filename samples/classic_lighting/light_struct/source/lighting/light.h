@@ -20,6 +20,9 @@ public:
     float intensity() const{return intensity_;};
     void set_intensity(float intensity){intensity_ = intensity;};
 
+public:
+    void Update() override;
+
 private:
     glm::vec3 color_;//颜色
     float intensity_;//强度

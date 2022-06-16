@@ -12,7 +12,6 @@ Environment::Environment():
 }
 
 void Environment::Update() {
-    //遍历所有相机，每个相机的View Projection，都用来做一次渲染。
     GameObject::Foreach([this](GameObject* game_object){
         if(game_object->active()==false){
             return;
