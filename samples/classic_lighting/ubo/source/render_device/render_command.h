@@ -12,6 +12,7 @@ enum RenderCommand {
     COMPILE_SHADER,//编译着色器
     USE_SHADER_PROGRAM,//使用着色器程序
     CREATE_VAO,//创建VAO
+    CREATE_UBO,//创建UBO
     UPDATE_VBO_SUB_DATA,//更新VBO数据
     CREATE_COMPRESSED_TEX_IMAGE2D,//创建压缩纹理
     CREATE_TEX_IMAGE2D,//创建纹理

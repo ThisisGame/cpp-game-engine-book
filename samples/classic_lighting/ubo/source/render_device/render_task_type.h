@@ -176,6 +176,19 @@ public:
     void* vertex_data_;//顶点数据
 };
 
+/// 创建UBO任务
+class RenderTaskCreateUBO: public RenderTaskBase{
+public:
+    RenderTaskCreateUBO(){
+        render_command_=RenderCommand::CREATE_UBO;
+    }
+    ~RenderTaskCreateUBO(){
+    }
+public:
+    unsigned int shader_program_handle_=0;//着色器程序句柄
+    unsigned int ubo_handle_=0;//VBO句柄
+};
+
 /// 设置状态，开启或关闭
 class RenderTaskSetEnableState: public RenderTaskBase{
 public:

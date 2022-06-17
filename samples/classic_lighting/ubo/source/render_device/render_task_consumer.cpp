@@ -256,6 +256,67 @@ void RenderTaskConsumer::UpdateVBOSubData(RenderTaskBase *task_base) {
         DEBUG_LOG_INFO("glBufferSubData cost {}",stopwatch.microseconds());
 }
 
+void RenderTaskConsumer::CreateUBO(RenderTaskBase *task_base) {
+    RenderTaskCreateUBO* task=dynamic_cast<RenderTaskCreateUBO*>(task_base);
+    GLuint shader_program=GPUResourceMapper::GetShaderProgram(task->shader_program_handle_);
+    GLint attribute_pos_location = glGetAttribLocation(shader_program, "a_pos");__CHECK_GL_ERROR__
+    GLint attribute_color_location = glGetAttribLocation(shader_program, "a_color");__CHECK_GL_ERROR__
+    GLint attribute_uv_location = glGetAttribLocation(shader_program, "a_uv");__CHECK_GL_ERROR__
+    GLint attribute_normal_location = glGetAttribLocation(shader_program, "a_normal");__CHECK_GL_ERROR__
+
+    GLuint vertex_buffer_object,element_buffer_object,vertex_array_object;
+    //在GPU上创建缓冲区对象
+    glGenBuffers(1,&vertex_buffer_object);__CHECK_GL_ERROR__
+    //将缓冲区对象指定为顶点缓冲区对象
+    glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer_object);__CHECK_GL_ERROR__
+    //上传顶点数据到缓冲区对象
+    glBufferData(GL_ARRAY_BUFFER, task->vertex_data_size_, task->vertex_data_, GL_DYNAMIC_DRAW);__CHECK_GL_ERROR__
+    //将主线程中产生的VBO句柄 映射到 VBO
+    GPUResourceMapper::MapVBO(task->vbo_handle_, vertex_buffer_object);
+
+    //在GPU上创建缓冲区对象
+    glGenBuffers(1,&element_buffer_object);__CHECK_GL_ERROR__
+    //将缓冲区对象指定为顶点索引缓冲区对象
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_buffer_object);__CHECK_GL_ERROR__
+    //上传顶点索引数据到缓冲区对象
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, task->vertex_index_data_size_, task->vertex_index_data_, GL_STATIC_DRAW);__CHECK_GL_ERROR__
+
+    glGenVertexArrays(1,&vertex_array_object);__CHECK_GL_ERROR__
+
+    //设置VAO
+    glBindVertexArray(vertex_array_object);__CHECK_GL_ERROR__
+    {
+        //指定当前使用的VBO
+        glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer_object);__CHECK_GL_ERROR__
+        //将Shader变量(a_pos)和顶点坐标VBO句柄进行关联，最后的0表示数据偏移量。
+        glVertexAttribPointer(attribute_pos_location, 3, GL_FLOAT, false, task->vertex_data_stride_, 0);__CHECK_GL_ERROR__
+        //启用顶点Shader属性(a_color)，指定与顶点颜色数据进行关联
+        if(attribute_color_location>=0){
+            glVertexAttribPointer(attribute_color_location, 4, GL_FLOAT, false, task->vertex_data_stride_, (void*)(sizeof(float) * 3));__CHECK_GL_ERROR__
+        }
+        //将Shader变量(a_uv)和顶点UV坐标VBO句柄进行关联，最后的0表示数据偏移量。
+        glVertexAttribPointer(attribute_uv_location, 2, GL_FLOAT, false, task->vertex_data_stride_, (void*)(sizeof(float) * (3 + 4)));__CHECK_GL_ERROR__
+        //将Shader变量(a_normal)和顶点法线VBO句柄进行关联，最后的0表示数据偏移量。
+        if(attribute_normal_location>=0) {
+            glVertexAttribPointer(attribute_normal_location, 3, GL_FLOAT, false, task->vertex_data_stride_,(void *) (sizeof(float) * (3 + 4 + 2)));__CHECK_GL_ERROR__
+        }
+
+        glEnableVertexAttribArray(attribute_pos_location);__CHECK_GL_ERROR__
+        if(attribute_color_location>=0){
+            glEnableVertexAttribArray(attribute_color_location);__CHECK_GL_ERROR__
+        }
+        glEnableVertexAttribArray(attribute_uv_location);__CHECK_GL_ERROR__
+        if(attribute_normal_location>=0){
+            glEnableVertexAttribArray(attribute_normal_location);__CHECK_GL_ERROR__
+        }
+
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_buffer_object);__CHECK_GL_ERROR__
+    }
+    glBindBuffer(GL_ARRAY_BUFFER, 0);__CHECK_GL_ERROR__
+    //将主线程中产生的VAO句柄 映射到 VAO
+    GPUResourceMapper::MapVAO(task->vao_handle_, vertex_array_object);
+}
+
 void RenderTaskConsumer::SetEnableState(RenderTaskBase *task_base) {
     RenderTaskSetEnableState* task= dynamic_cast<RenderTaskSetEnableState*>(task_base);
     if(task->enable_){
