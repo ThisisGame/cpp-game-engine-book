@@ -60,6 +60,10 @@ private:
     /// \param task_base
     static void CreateUBO(RenderTaskBase* task_base);
 
+    /// 更新UBO
+    /// \param task_base
+    static void UpdateUBOSubData(RenderTaskBase* task_base);
+
     /// 设置状态,开启或关闭
     /// \param task_base
     static void SetEnableState(RenderTaskBase* task_base);

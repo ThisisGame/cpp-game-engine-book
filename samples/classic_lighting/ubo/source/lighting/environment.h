@@ -29,6 +29,8 @@ public:
 private:
     glm::vec3 ambient_color_;// 环境颜色
     float ambient_color_intensity_;// 环境颜色强度
+
+    unsigned int uniform_buffer_object_handle_=0;//Uniform缓冲区对象句柄
 };
 
 

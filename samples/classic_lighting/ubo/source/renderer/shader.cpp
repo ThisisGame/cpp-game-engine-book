@@ -18,6 +18,7 @@ using std::endl;
 using std::pair;
 
 unordered_map<string,Shader*> Shader::kShaderMap;
+unordered_map<string,unsigned short> Shader::uniform_block_array_={{"Ambient",16},{"Light",28}};
 
 Shader::Shader()=default;
 
@@ -41,18 +42,30 @@ Shader* Shader::Find(string shader_name) {
 void Shader::Parse(string shader_name) {
     shader_name_=shader_name;
 
-    //组装完整文件路径
+    // 组装完整文件路径
     string vertex_shader_file_path=Application::data_path()+shader_name+".vert";
     string fragment_shader_file_path=Application::data_path()+shader_name+".frag";
 
-    //读取顶点Shader代码
+    // 读取顶点Shader代码
     ifstream vertex_shader_input_file_stream(vertex_shader_file_path);
     string vertex_shader_source((std::istreambuf_iterator<char>(vertex_shader_input_file_stream)),std::istreambuf_iterator<char>());
-    //读取片段Shader代码
+    // 读取片段Shader代码
     ifstream fragment_shader_input_file_stream(fragment_shader_file_path);
     string fragment_shader_source((std::istreambuf_iterator<char>(fragment_shader_input_file_stream)),std::istreambuf_iterator<char>());
 
     CreateShaderProgram(vertex_shader_source.c_str(), fragment_shader_source.c_str());
+
+    // 串联uniform block与binding point。之前已经串联了UBO和binding point，这样三者就联系起来了。
+    // 当前shader程序执行到需要uniform block的数据时，就以它的index，找到binding point。
+    // 而binding point与UBO是一一对应的，那么就找到UBO取数据。
+    // 如此，后续更新UBO数据，就会直接影响到Shader程序中的uniform block值。
+    for (int i = 0; i < uniform_block_array_.size(); ++i) {
+        string uniform_block_name=uniform_block_array_[i].first;
+        GLuint uniform_block_index = glGetUniformBlockIndex(shader_program, uniform_block_name);
+        GLuint uniform_block_binding_point=i;
+        glUniformBlockBinding(shader_program, uniform_block_index, uniform_block_binding_point);
+        uniform_block_binding_point_map_[uniform_block_name]=uniform_block_binding_point;
+    }
 }
 
 void Shader::CreateShaderProgram(const char* vertex_shader_text, const char* fragment_shader_text) {

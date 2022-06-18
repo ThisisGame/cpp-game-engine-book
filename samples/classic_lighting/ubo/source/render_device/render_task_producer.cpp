@@ -134,6 +134,25 @@ void RenderTaskProducer::ProduceRenderTaskUpdateVBOSubData(unsigned int vbo_hand
     RenderTaskQueue::Push(task);
 }
 
+void RenderTaskProducer::ProduceRenderTaskCreateUBO(unsigned int shader_program_handle,unsigned int ubo_handle,
+                                                    char* uniform_block_name,unsigned short uniform_block_data_size,
+                                                    void* uniform_block_data){
+    EASY_FUNCTION();
+    RenderTaskCreateUBO* task=new RenderTaskCreateUBO();
+    task->shader_program_handle_=shader_program_handle;
+    task->ubo_handle_=ubo_handle;
+
+    task->uniform_block_name_= static_cast<char *>(malloc(strlen(uniform_block_name) + 1));
+    strcpy(task->uniform_block_name_, uniform_block_name);
+
+    task->uniform_block_data_size_=uniform_block_data_size;
+
+    task->uniform_block_data_= malloc(uniform_block_data_size);
+    memcpy(task->uniform_block_data_, uniform_block_data, uniform_block_data_size);
+
+    RenderTaskQueue::Push(task);
+}
+
 void RenderTaskProducer::ProduceRenderTaskSetEnableState(unsigned int state, bool enable) {
     EASY_FUNCTION();
     RenderTaskSetEnableState* task=new RenderTaskSetEnableState();

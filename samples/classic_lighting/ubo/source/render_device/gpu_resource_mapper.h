@@ -85,16 +85,37 @@ public:
         return texture_map_[texture_handle];
     }
 
+    /// 生成UBO句柄
+    static unsigned int GenerateUBOHandle(){
+        return ++ubo_index_;
+    }
+
+    /// 映射UBO
+    /// \param ubo_handle
+    /// \param ubo_id
+    static void MapUBO(unsigned int ubo_handle, GLuint ubo_id){
+        ubo_map_[ubo_handle] = ubo_id;
+    }
+
+    /// 获取UBO
+    /// \param ubo_handle
+    /// \return
+    static GLuint GetUBO(unsigned int ubo_handle){
+        return ubo_map_[ubo_handle];
+    }
+
 private:
     static unsigned int shader_program_index_;//Shader程序索引
     static unsigned int vao_index_;//VAO索引
     static unsigned int vbo_index_;//VBO索引
     static unsigned int texture_index_;//Texture索引
+    static unsigned int ubo_index_;//UBO索引
 
     static std::unordered_map<unsigned int, GLuint> shader_program_map_;//Shader程序映射表
     static std::unordered_map<unsigned int, GLuint> vao_map_;//VAO映射表
     static std::unordered_map<unsigned int, GLuint> vbo_map_;//VBO映射表
     static std::unordered_map<unsigned int, GLuint> texture_map_;//Texture映射表
+    static std::unordered_map<unsigned int, GLuint> ubo_map_;//UBO映射表
 };
 
 

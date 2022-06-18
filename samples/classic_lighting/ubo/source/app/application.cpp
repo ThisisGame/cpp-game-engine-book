@@ -4,6 +4,7 @@
 
 #include "application.h"
 #include <memory>
+#include <iostream>
 #include "rttr/registration"
 #include "easy/profiler.h"
 #include "glad/gl.h"
@@ -21,6 +22,7 @@
 #include "component/game_object.h"
 #include "renderer/camera.h"
 #include "renderer/mesh_renderer.h"
+#include "renderer/shader.h"
 #include "control/input.h"
 #include "utils/screen.h"
 #include "render_device/render_task_consumer.h"
@@ -110,6 +112,21 @@ void Application::Init() {
     glfwSetMouseButtonCallback(glfw_window_,mouse_button_callback);
     glfwSetScrollCallback(glfw_window_,mouse_scroll_callback);
     glfwSetCursorPosCallback(glfw_window_,mouse_move_callback);
+
+    //初始化UBO
+    std::vector<pair<string,unsigned short>> uniform_block_name_array=Shader::uniform_block_array();
+    for (int i = 0; i < uniform_block_name_array.size(); ++i) {
+        GLuint uniform_buffer_object;
+        glGenBuffers(1, &uniform_buffer_object);
+        glBindBuffer(GL_UNIFORM_BUFFER, uniform_buffer_object);
+        //先不填数据
+        unsigned short uniform_block_data_size=uniform_block_name_array[i].second;
+        glBufferData(GL_UNIFORM_BUFFER, uniform_block_data_size, NULL, GL_DYNAMIC_DRAW);
+        //串联 UBO 和 binding point 绑定
+        GLuint uniform_block_binding_point=i;
+        glBindBufferBase(GL_UNIFORM_BUFFER, uniform_block_binding_point, uniform_buffer_object);
+    }
+
 
     //初始化渲染任务消费者(单独渲染线程)
     RenderTaskConsumer::Init(glfw_window_);

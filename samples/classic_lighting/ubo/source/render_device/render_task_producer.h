@@ -78,6 +78,15 @@ public:
     /// \param vertex_data
     static void ProduceRenderTaskUpdateVBOSubData(unsigned int vbo_handle,unsigned int vertex_data_size,void* vertex_data);
 
+    /// 发出任务：创建UBO
+    /// \param shader_program_handle
+    /// \param ubo_handle
+    /// \param uniform_block_name
+    /// \param uniform_block_data_size
+    /// \param uniform_block_data
+    static void ProduceRenderTaskCreateUBO(unsigned int shader_program_handle,unsigned int ubo_handle,char* uniform_block_name,unsigned short uniform_block_data_size,void* uniform_block_data);
+
+
     /// 发出任务：设置状态,开启或关闭
     static void ProduceRenderTaskSetEnableState(unsigned int state,bool enable);
 

@@ -186,7 +186,26 @@ public:
     }
 public:
     unsigned int shader_program_handle_=0;//着色器程序句柄
-    unsigned int ubo_handle_=0;//VBO句柄
+    unsigned int ubo_handle_=0;//UBO句柄
+    char* uniform_block_name_;
+    unsigned short uniform_block_data_size_;//数据大小
+    void* uniform_block_data_;//数据
+};
+
+/// 更新UBO数据
+class RenderTaskUpdateUBOSubData:public RenderTaskBase{
+public:
+    RenderTaskUpdateUBOSubData(){
+        render_command_=RenderCommand::UPDATE_UBO_SUB_DATA;
+    }
+    ~RenderTaskUpdateUBOSubData(){
+
+    }
+public:
+    unsigned int shader_program_handle_=0;//着色器程序句柄
+    unsigned int ubo_handle_=0;//UBO句柄
+    char* uniform_name_array_;
+    int uniform_name_count_;
 };
 
 /// 设置状态，开启或关闭
