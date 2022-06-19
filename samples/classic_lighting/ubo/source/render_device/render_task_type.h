@@ -59,6 +59,18 @@ public:
     unsigned int shader_program_handle_= 0;
 };
 
+/// 任务：串联uniform block与binding point。
+class RenderTaskConnectUniformBlockAndBindingPoint: public RenderTaskBase{
+public:
+    RenderTaskConnectUniformBlockAndBindingPoint(){
+        render_command_=RenderCommand::CONNECT_UNIFORM_BLOCK_AND_BINDING_POINT;
+    }
+    ~RenderTaskConnectUniformBlockAndBindingPoint(){
+    }
+public:
+    unsigned int shader_program_handle_= 0;
+};
+
 /// 使用着色器程序任务
 class RenderTaskUseShaderProgram: public RenderTaskBase{
 public:

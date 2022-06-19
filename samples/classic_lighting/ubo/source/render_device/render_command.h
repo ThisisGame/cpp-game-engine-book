@@ -10,6 +10,7 @@ enum RenderCommand {
     NONE,
     UPDATE_SCREEN_SIZE,//更新游戏画面尺寸
     COMPILE_SHADER,//编译着色器
+    CONNECT_UNIFORM_BLOCK_AND_BINDING_POINT,//串联uniform block与binding point。
     USE_SHADER_PROGRAM,//使用着色器程序
     CREATE_VAO,//创建VAO
     UPDATE_VBO_SUB_DATA,//更新VBO数据

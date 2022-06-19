@@ -39,18 +39,11 @@ private:
     unsigned int shader_program_handle_;//Shader程序句柄;
 
     unordered_map<string,unsigned int> uniform_block_binding_point_map_;//uniform black对应的binding point;
-
 public:
     static Shader* Find(string shader_name);//查找或创建Shader
 
-    static vector<pair<string,unsigned short>>& uniform_block_array(){
-        return uniform_block_array_;
-    }
-
 private:
     static unordered_map<string,Shader*> kShaderMap;//已经创建的Shader
-
-    static vector<pair<string,unsigned short>> uniform_block_array_;//所有Shader的uniform block统计。
 };
 
 

@@ -20,6 +20,10 @@ public:
     /// \param shader_program_handle Shader程序句柄
     static void ProduceRenderTaskCompileShader(const char* vertex_shader_source,const char* fragment_shader_source,unsigned int shader_program_handle);
 
+    /// 发出任务：串联uniform block与binding point。
+    /// \param shader_program_handle Shader程序句柄
+    static void ProduceRenderTaskConnectUniformBlockAndBindingPoint(unsigned int shader_program_handle);
+
     /// 发出任务：使用Shader程序
     static void ProduceRenderTaskUseShaderProgram(unsigned int shader_program_handle);
 

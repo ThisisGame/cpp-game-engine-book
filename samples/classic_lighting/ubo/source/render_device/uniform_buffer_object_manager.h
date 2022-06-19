@@ -11,6 +11,10 @@
 
 
 class UniformBufferObjectManager {
+public:
+    /// 初始化UBO
+    static void CreateUniformBufferObject();
+
     class UniformBlock{
     public:
         std::string uniform_block_name_;
@@ -18,9 +22,10 @@ class UniformBufferObjectManager {
         unsigned int binding_point_;
         unsigned int uniform_buffer_object_;
     };
-public:
-    /// 初始化UBO
-    static void CreateUniformBufferObject();
+
+    static std::vector<UniformBlock>& UniformBlockArray(){
+        return kUniformBlockArray;
+    }
 
 private:
     static std::vector<UniformBlock> kUniformBlockArray;//所有Shader的uniform block统计。

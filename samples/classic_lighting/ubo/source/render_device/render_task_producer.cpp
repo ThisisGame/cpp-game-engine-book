@@ -30,6 +30,15 @@ void RenderTaskProducer::ProduceRenderTaskCompileShader(const char* vertex_shade
     RenderTaskQueue::Push(task);
 }
 
+/// 发出任务：串联uniform block与binding point。
+/// \param shader_program_handle Shader程序句柄
+void RenderTaskProducer::ProduceRenderTaskConnectUniformBlockAndBindingPoint(unsigned int shader_program_handle){
+    EASY_FUNCTION();
+    RenderTaskConnectUniformBlockAndBindingPoint* task=new RenderTaskConnectUniformBlockAndBindingPoint();
+    task->shader_program_handle_=shader_program_handle;
+    RenderTaskQueue::Push(task);
+}
+
 void RenderTaskProducer::ProduceRenderTaskUseShaderProgram(unsigned int shader_program_handle) {
     EASY_FUNCTION();
     RenderTaskUseShaderProgram* render_task_use_shader_program=new RenderTaskUseShaderProgram();

@@ -22,7 +22,7 @@
 #include "gpu_resource_mapper.h"
 #include "render_task_queue.h"
 #include "utils/screen.h"
-#include "renderer/shader.h"
+#include "render_device/uniform_buffer_object_manager.h"
 
 GLFWwindow* RenderTaskConsumer::window_;
 std::thread RenderTaskConsumer::render_thread_;
@@ -108,6 +108,24 @@ void RenderTaskConsumer::CompileShader(RenderTaskBase* task_base){
     }
     //将主线程中产生的Shader程序句柄 映射到 Shader程序
     GPUResourceMapper::MapShaderProgram(task->shader_program_handle_, shader_program);
+}
+
+void RenderTaskConsumer::ConnectUniformBlockAndBindingPoint(RenderTaskBase *task_base) {
+    RenderTaskConnectUniformBlockAndBindingPoint* task= dynamic_cast<RenderTaskConnectUniformBlockAndBindingPoint*>(task_base);
+    GLuint shader_program = GPUResourceMapper::GetShaderProgram(task->shader_program_handle_);
+
+    std::vector<UniformBufferObjectManager::UniformBlock> uniform_block_array=UniformBufferObjectManager::UniformBlockArray();
+    for (int i = 0; i < uniform_block_array.size(); ++i) {
+        //找到UniformBlock在当前Shader程序的index
+        std::string uniform_block_name=uniform_block_array[i].uniform_block_name_;
+        GLuint uniform_block_index = glGetUniformBlockIndex(shader_program, uniform_block_name.c_str());
+        if(uniform_block_index==GL_INVALID_INDEX){//当前Shader程序没有这个UniformBlock
+            continue;
+        }
+        //关联当前Shader的UniformBlock到BindingPoint，这样间接与UniformBufferObject有了联系。
+        GLuint uniform_block_binding_point=uniform_block_array[i].binding_point_;
+        glUniformBlockBinding(shader_program, uniform_block_index, uniform_block_binding_point);
+    }
 }
 
 void RenderTaskConsumer::UseShaderProgram(RenderTaskBase *task_base) {
@@ -402,18 +420,7 @@ void RenderTaskConsumer::ProcessTask() {
     glfwSwapInterval(1);
 
     //初始化UBO
-    std::vector<std::pair<std::string,unsigned short>> uniform_block_array=Shader::uniform_block_array();
-    for (int i = 0; i < uniform_block_array.size(); ++i) {
-        GLuint uniform_buffer_object;
-        glGenBuffers(1, &uniform_buffer_object);
-        glBindBuffer(GL_UNIFORM_BUFFER, uniform_buffer_object);
-        //先不填数据
-        unsigned short uniform_block_data_size=uniform_block_array[i].second;
-        glBufferData(GL_UNIFORM_BUFFER, uniform_block_data_size, NULL, GL_DYNAMIC_DRAW);
-        //串联 UBO 和 binding point 绑定
-        GLuint uniform_block_binding_point=i;
-        glBindBufferBase(GL_UNIFORM_BUFFER, uniform_block_binding_point, uniform_buffer_object);
-    }
+    UniformBufferObjectManager::CreateUniformBufferObject();
 
     while (!glfwWindowShouldClose(window_))
     {
@@ -433,6 +440,10 @@ void RenderTaskConsumer::ProcessTask() {
                 }
                 case RenderCommand::COMPILE_SHADER:{
                     CompileShader(render_task);
+                    break;
+                }
+                case RenderCommand::CONNECT_UNIFORM_BLOCK_AND_BINDING_POINT:{
+                    ConnectUniformBlockAndBindingPoint(render_task);
                     break;
                 }
                 case RenderCommand::USE_SHADER_PROGRAM:{

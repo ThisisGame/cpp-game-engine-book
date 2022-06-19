@@ -12,13 +12,12 @@ std::vector<UniformBufferObjectManager::UniformBlock> UniformBufferObjectManager
 
 void UniformBufferObjectManager::CreateUniformBufferObject(){
     for (int i = 0; i < kUniformBlockArray.size(); ++i) {
-        GLuint uniform_buffer_object;
-        glGenBuffers(1, &uniform_buffer_object);
-        glBindBuffer(GL_UNIFORM_BUFFER, uniform_buffer_object);
+        glGenBuffers(1, &kUniformBlockArray[i].uniform_buffer_object_);
+        glBindBuffer(GL_UNIFORM_BUFFER, kUniformBlockArray[i].uniform_buffer_object_);
         //先不填数据
         unsigned short uniform_block_data_size=kUniformBlockArray[i].uniform_block_size_;
         glBufferData(GL_UNIFORM_BUFFER, uniform_block_data_size, NULL, GL_DYNAMIC_DRAW);
         //串联 UBO 和 binding point 绑定
-        glBindBufferBase(GL_UNIFORM_BUFFER, kUniformBlockArray[i].binding_point_, uniform_buffer_object);
+        glBindBufferBase(GL_UNIFORM_BUFFER, kUniformBlockArray[i].binding_point_, kUniformBlockArray[i].uniform_buffer_object_);
     }
 }

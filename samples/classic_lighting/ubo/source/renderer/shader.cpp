@@ -10,6 +10,7 @@
 #include "app/application.h"
 #include "render_device/gpu_resource_mapper.h"
 #include "render_device/render_task_producer.h"
+#include "render_device/uniform_buffer_object_manager.h"
 
 using std::ifstream;
 using std::ios;
@@ -18,7 +19,6 @@ using std::endl;
 using std::pair;
 
 unordered_map<string,Shader*> Shader::kShaderMap;
-vector<pair<string,unsigned short>> Shader::uniform_block_array_={{"Ambient",16},{"Light",28}};
 
 Shader::Shader()=default;
 
@@ -64,13 +64,7 @@ void Shader::CreateShaderProgram(const char* vertex_shader_text, const char* fra
 }
 
 void Shader::ConnectUniformBlockAndBindingPoint() {
-    for (int i = 0; i < uniform_block_array_.size(); ++i) {
-        string uniform_block_name=uniform_block_array_[i].first;
-        GLuint uniform_block_index = glGetUniformBlockIndex(shader_program, uniform_block_name);
-        GLuint uniform_block_binding_point=i;
-        glUniformBlockBinding(shader_program, uniform_block_index, uniform_block_binding_point);
-        uniform_block_binding_point_map_[uniform_block_name]=uniform_block_binding_point;
-    }
+    RenderTaskProducer::ProduceRenderTaskConnectUniformBlockAndBindingPoint(shader_program_handle_);
 }
 
 void Shader::Active() {
