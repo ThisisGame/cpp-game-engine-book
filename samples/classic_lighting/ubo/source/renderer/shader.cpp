@@ -18,7 +18,7 @@ using std::endl;
 using std::pair;
 
 unordered_map<string,Shader*> Shader::kShaderMap;
-unordered_map<string,unsigned short> Shader::uniform_block_array_={{"Ambient",16},{"Light",28}};
+vector<pair<string,unsigned short>> Shader::uniform_block_array_={{"Ambient",16},{"Light",28}};
 
 Shader::Shader()=default;
 
@@ -54,11 +54,16 @@ void Shader::Parse(string shader_name) {
     string fragment_shader_source((std::istreambuf_iterator<char>(fragment_shader_input_file_stream)),std::istreambuf_iterator<char>());
 
     CreateShaderProgram(vertex_shader_source.c_str(), fragment_shader_source.c_str());
+    ConnectUniformBlockAndBindingPoint();
+}
 
-    // 串联uniform block与binding point。之前已经串联了UBO和binding point，这样三者就联系起来了。
-    // 当前shader程序执行到需要uniform block的数据时，就以它的index，找到binding point。
-    // 而binding point与UBO是一一对应的，那么就找到UBO取数据。
-    // 如此，后续更新UBO数据，就会直接影响到Shader程序中的uniform block值。
+void Shader::CreateShaderProgram(const char* vertex_shader_text, const char* fragment_shader_text) {
+    //编译Shader任务
+    shader_program_handle_=GPUResourceMapper::GenerateShaderProgramHandle();
+    RenderTaskProducer::ProduceRenderTaskCompileShader(vertex_shader_text, fragment_shader_text, shader_program_handle_);
+}
+
+void Shader::ConnectUniformBlockAndBindingPoint() {
     for (int i = 0; i < uniform_block_array_.size(); ++i) {
         string uniform_block_name=uniform_block_array_[i].first;
         GLuint uniform_block_index = glGetUniformBlockIndex(shader_program, uniform_block_name);
@@ -66,12 +71,6 @@ void Shader::Parse(string shader_name) {
         glUniformBlockBinding(shader_program, uniform_block_index, uniform_block_binding_point);
         uniform_block_binding_point_map_[uniform_block_name]=uniform_block_binding_point;
     }
-}
-
-void Shader::CreateShaderProgram(const char* vertex_shader_text, const char* fragment_shader_text) {
-    //编译Shader任务
-    shader_program_handle_=GPUResourceMapper::GenerateShaderProgramHandle();
-    RenderTaskProducer::ProduceRenderTaskCompileShader(vertex_shader_text, fragment_shader_text, shader_program_handle_);
 }
 
 void Shader::Active() {

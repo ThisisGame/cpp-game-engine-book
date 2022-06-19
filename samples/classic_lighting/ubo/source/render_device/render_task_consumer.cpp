@@ -22,6 +22,7 @@
 #include "gpu_resource_mapper.h"
 #include "render_task_queue.h"
 #include "utils/screen.h"
+#include "renderer/shader.h"
 
 GLFWwindow* RenderTaskConsumer::window_;
 std::thread RenderTaskConsumer::render_thread_;
@@ -399,6 +400,20 @@ void RenderTaskConsumer::ProcessTask() {
     glfwMakeContextCurrent(window_);
     gladLoadGL(glfwGetProcAddress);
     glfwSwapInterval(1);
+
+    //初始化UBO
+    std::vector<std::pair<std::string,unsigned short>> uniform_block_array=Shader::uniform_block_array();
+    for (int i = 0; i < uniform_block_array.size(); ++i) {
+        GLuint uniform_buffer_object;
+        glGenBuffers(1, &uniform_buffer_object);
+        glBindBuffer(GL_UNIFORM_BUFFER, uniform_buffer_object);
+        //先不填数据
+        unsigned short uniform_block_data_size=uniform_block_array[i].second;
+        glBufferData(GL_UNIFORM_BUFFER, uniform_block_data_size, NULL, GL_DYNAMIC_DRAW);
+        //串联 UBO 和 binding point 绑定
+        GLuint uniform_block_binding_point=i;
+        glBindBufferBase(GL_UNIFORM_BUFFER, uniform_block_binding_point, uniform_buffer_object);
+    }
 
     while (!glfwWindowShouldClose(window_))
     {

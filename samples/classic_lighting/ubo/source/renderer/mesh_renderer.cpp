@@ -95,7 +95,13 @@ void MeshRenderer::Render() {
         vertex_array_object_handle_=GPUResourceMapper::GenerateVAOHandle();
         vertex_buffer_object_handle_=GPUResourceMapper::GenerateVBOHandle();
         //发出任务：创建VAO
-        RenderTaskProducer::ProduceRenderTaskCreateVAO(shader_program_handle, vertex_array_object_handle_,vertex_buffer_object_handle_, mesh->vertex_num_ * sizeof(MeshFilter::Vertex), sizeof(MeshFilter::Vertex), mesh->vertex_data_, mesh->vertex_index_num_ * sizeof(unsigned short), mesh->vertex_index_data_);
+        RenderTaskProducer::ProduceRenderTaskCreateVAO(shader_program_handle, vertex_array_object_handle_,
+                                                       vertex_buffer_object_handle_,
+                                                       mesh->vertex_num_ * sizeof(MeshFilter::Vertex),
+                                                       sizeof(MeshFilter::Vertex),
+                                                       mesh->vertex_data_,
+                                                       mesh->vertex_index_num_ * sizeof(unsigned short),
+                                                       mesh->vertex_index_data_);
     }
     else{
         //发出任务：更新VBO
