@@ -6,14 +6,14 @@ uniform sampler2D u_diffuse_texture;//颜色纹理
 layout(std140) uniform Ambient {
     vec3  light_color;//环境光 alignment:16 offset:0
     float light_intensity;//环境光强度 alignment:4 offset:16
-};
+}u_ambient;
 
 //灯光
 layout(std140) uniform Light {
     vec3  pos;
     vec3  color;
     float intensity;
-};
+}u_light;
 
 uniform vec3 u_view_pos;
 //uniform float u_specular_highlight_intensity;//镜面高光强度
