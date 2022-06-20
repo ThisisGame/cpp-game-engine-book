@@ -86,7 +86,7 @@ function LoginScene:CreateModel()
 
     --手动创建Material
     self.material_ = Material.new()--设置材质
-    self.material_:Parse("material/basic_plane_light_struct.mat")
+    self.material_:Parse("material/basic_plane_light_ubo.mat")
 
     --挂上 MeshRenderer 组件
     local skinned_mesh_renderer= self.go_skeleton_:AddComponent(SkinnedMeshRenderer)

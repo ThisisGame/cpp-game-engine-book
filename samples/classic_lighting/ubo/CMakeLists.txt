@@ -41,9 +41,9 @@ file(COPY "../../template/data/images/plane_metal.cpt" DESTINATION "../data/imag
 file(COPY "../../template/data/model/basic_plane_model_basic_plane.mesh" DESTINATION "../data/model/")
 file(COPY "../../template/data/model/fbx_extra_basic_plane.weight" DESTINATION "../data/model/")
 file(COPY "../../template/data/animation/fbx_extra_basic_plane_bones_basic_plane_bones_basic_plane_bones_armatureaction_basic_plane_.skeleton_anim" DESTINATION "../data/animation/")
-file(COPY "../../template/data/shader/light_struct.vert" DESTINATION "../data/shader/")
-file(COPY "../../template/data/shader/light_struct.frag" DESTINATION "../data/shader/")
-file(COPY "../../template/data/material/basic_plane_light_struct.mat" DESTINATION "../data/material/")
+file(COPY "../../template/data/shader/light_ubo.vert" DESTINATION "../data/shader/")
+file(COPY "../../template/data/shader/light_ubo.frag" DESTINATION "../data/shader/")
+file(COPY "../../template/data/material/basic_plane_light_ubo.mat" DESTINATION "../data/material/")
 
 #头文件目录
 include_directories("depends")
