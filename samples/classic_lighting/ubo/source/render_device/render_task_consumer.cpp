@@ -114,7 +114,7 @@ void RenderTaskConsumer::ConnectUniformBlockAndBindingPoint(RenderTaskBase *task
     RenderTaskConnectUniformBlockAndBindingPoint* task= dynamic_cast<RenderTaskConnectUniformBlockAndBindingPoint*>(task_base);
     GLuint shader_program = GPUResourceMapper::GetShaderProgram(task->shader_program_handle_);
 
-    std::vector<UniformBufferObjectManager::UniformBlock> uniform_block_array=UniformBufferObjectManager::UniformBlockArray();
+    std::vector<UniformBlockBindingInfo> uniform_block_array= UniformBufferObjectManager::UniformBlockBindingInfoArray();
     for (int i = 0; i < uniform_block_array.size(); ++i) {
         //找到UniformBlock在当前Shader程序的index
         std::string uniform_block_name=uniform_block_array[i].uniform_block_name_;
@@ -124,7 +124,7 @@ void RenderTaskConsumer::ConnectUniformBlockAndBindingPoint(RenderTaskBase *task
         }
         //关联当前Shader的UniformBlock到BindingPoint，这样间接与UniformBufferObject有了联系。
         GLuint uniform_block_binding_point=uniform_block_array[i].binding_point_;
-        glUniformBlockBinding(shader_program, uniform_block_index, uniform_block_binding_point);
+        glUniformBlockBinding(shader_program, uniform_block_index, uniform_block_binding_point);__CHECK_GL_ERROR__
     }
 }
 
