@@ -8,30 +8,30 @@
 
 std::vector<UniformBlockBindingInfo> UniformBufferObjectManager::kUniformBlockBindingInfoArray={
         {"Ambient",16,0,0},
-//        {"Light",28,1,0}
+        {"Light",32,1,0}
 };
 
-glm::vec3 light_color(1.0,0.0,0.0);
-float light_intensity=0.3;
+glm::vec3 ambient_light_color(1.0, 1.0, 1.0);
+float ambient_light_intensity=0.3;
 
-glm::vec3 pos(0,0,0);
-glm::vec3 color(1.0,1.0,1.0);
-float intensity=1.0;
+glm::vec3 light_pos(0, 0, 20);
+glm::vec3 light_color(1.0, 1.0, 1.0);
+float light_intensity=1.0;
 
 std::unordered_map<std::string,UniformBlock> UniformBufferObjectManager::kUniformBlockMap={
         {"Ambient",{
             {
-                    {"u_ambient_light_color",0,sizeof(glm::vec3), &light_color[0]},
-                    {"u_ambient_light_intensity",12,sizeof(float), &light_intensity}
+                    {"u_ambient_light_color",0,sizeof(glm::vec3), &ambient_light_color[0]},
+                    {"u_ambient_light_intensity",12,sizeof(float), &ambient_light_intensity}
                 }
          }},
-//         {"Light",{
-//                {
-//                        {"pos",0,sizeof(glm::vec3), &pos[0]},
-//                        {"color",16,sizeof(glm::vec3), &color[0]},
-//                        {"intensity",32,sizeof(float), &intensity}
-//                }
-//         }}
+         {"Light",{
+                {
+                        {"u_light_pos",0,sizeof(glm::vec3), &light_pos[0]},
+                        {"u_light_color",16,sizeof(glm::vec3), &light_color[0]},
+                        {"u_light_intensity",28,sizeof(float), &light_intensity}
+                }
+         }}
 };
 
 void UniformBufferObjectManager::CreateUniformBufferObject(){
