@@ -118,7 +118,7 @@ void RenderTaskConsumer::ConnectUniformBlockAndBindingPoint(RenderTaskBase *task
     for (int i = 0; i < uniform_block_array.size(); ++i) {
         //找到UniformBlock在当前Shader程序的index
         std::string uniform_block_name=uniform_block_array[i].uniform_block_name_;
-        GLuint uniform_block_index = glGetUniformBlockIndex(shader_program, uniform_block_name.c_str());
+        GLuint uniform_block_index = glGetUniformBlockIndex(shader_program, uniform_block_name.c_str());__CHECK_GL_ERROR__
         if(uniform_block_index==GL_INVALID_INDEX){//当前Shader程序没有这个UniformBlock
             continue;
         }
