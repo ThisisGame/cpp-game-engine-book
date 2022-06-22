@@ -52,3 +52,32 @@ void UniformBufferObjectManager::CreateUniformBufferObject(){
         glBindBufferBase(GL_UNIFORM_BUFFER, uniform_block_binding_info.binding_point_, uniform_block_binding_info.uniform_buffer_object_);__CHECK_GL_ERROR__
     }
 }
+
+void UniformBufferObjectManager::UpdateUniformBufferSubData(std::string& uniform_block_name,std::string& uniform_block_member_name,void* data){
+    for (int i = 0; i < kUniformBlockBindingInfoArray.size(); ++i) {
+        UniformBlockBindingInfo& uniform_block_binding_info=kUniformBlockBindingInfoArray[i];
+        if(uniform_block_binding_info.uniform_block_name_!=uniform_block_name){
+            continue;
+        }
+
+        glBindBuffer(GL_UNIFORM_BUFFER, uniform_block_binding_info.uniform_buffer_object_);__CHECK_GL_ERROR__
+
+        UniformBlock uniform_block=kUniformBlockMap[uniform_block_binding_info.uniform_block_name_];
+        for (auto& uniform_block_member:uniform_block.uniform_block_member_vec_) {
+            if(uniform_block_member.member_name_!=uniform_block_member_name){
+                continue;
+            }
+
+            glBufferSubData(GL_UNIFORM_BUFFER, uniform_block_member.offset_, uniform_block_member.data_size_, uniform_block_member.data_);__CHECK_GL_ERROR__
+        }
+
+        glBindBuffer(GL_UNIFORM_BUFFER, 0);__CHECK_GL_ERROR__
+    }
+}
+
+void UniformBufferObjectManager::SetUniform1f(const std::string& uniform_block_name,std::string& uniform_block_member_name,float value){
+
+}
+void UniformBufferObjectManager::SetUniform3f(const std::string& uniform_block_name,std::string& uniform_block_member_name,glm::vec3& value){
+    
+}
