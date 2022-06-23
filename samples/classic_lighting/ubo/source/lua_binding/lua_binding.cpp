@@ -592,8 +592,7 @@ void LuaBinding::BindLua() {
                 "set_ambient_color", &Environment::set_ambient_color,
                 "ambient_color", &Environment::ambient_color,
                 "set_ambient_color_intensity", &Environment::set_ambient_color_intensity,
-                "ambient_color_intensity", &Environment::ambient_color_intensity,
-                "Update", &Environment::Update
+                "ambient_color_intensity", &Environment::ambient_color_intensity
         );
         cpp_ns_table.new_usertype<Light>("Light",sol::call_constructor,sol::constructors<Light()>(),
                 sol::base_classes,sol::bases<Component>(),

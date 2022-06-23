@@ -8,6 +8,7 @@
 #include "component/transform.h"
 #include "renderer/mesh_renderer.h"
 #include "renderer/material.h"
+#include "render_device/uniform_buffer_object_manager.h"
 
 using namespace rttr;
 RTTR_REGISTRATION//注册反射
@@ -20,20 +21,17 @@ Light::Light():Component() {}
 
 Light::~Light() {}
 
-void Light::Update() {
-//    GameObject::Foreach([this](GameObject* iterate_game_object){
-//        if(iterate_game_object->active() == false){
-//            return;
-//        }
-//        MeshRenderer* mesh_renderer=iterate_game_object->GetComponent<MeshRenderer>();
-//        if(mesh_renderer== nullptr){
-//            return;
-//        }
-//        Material* material = mesh_renderer->material();
-//        //设置灯光位置、颜色、强度
-//        glm::vec3 light_position=game_object()->GetComponent<Transform>()->position();
-//        material->SetUniform3f("u_light.pos",light_position);
-//        material->SetUniform3f("u_light.color",color_);
-//        material->SetUniform1f("u_light.intensity",intensity_);
-//    });
+void Light::Update(){
+    glm::vec3 light_position=game_object()->GetComponent<Transform>()->position();
+    UniformBufferObjectManager::UpdateUniformBlockSubData3f("Light","u_light_pos",light_position);
 }
+
+void Light::set_color(glm::vec3 color){
+    color_ = color;
+    UniformBufferObjectManager::UpdateUniformBlockSubData3f("Light","u_light_color",color_);
+};
+
+void Light::set_intensity(float intensity){
+    intensity_ = intensity;
+    UniformBufferObjectManager::UpdateUniformBlockSubData1f("Light","u_light_intensity",intensity_);
+};

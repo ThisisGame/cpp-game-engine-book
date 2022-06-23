@@ -5,31 +5,27 @@
 #include "uniform_buffer_object_manager.h"
 #include <glad/gl.h>
 #include "utils/debug.h"
+#include "render_task_type.h"
+#include "render_task_queue.h"
+#include "render_task_producer.h"
 
 std::vector<UniformBlockBindingInfo> UniformBufferObjectManager::kUniformBlockBindingInfoArray={
         {"Ambient",16,0,0},
         {"Light",32,1,0}
 };
 
-glm::vec3 ambient_light_color(1.0, 1.0, 1.0);
-float ambient_light_intensity=0.3;
-
-glm::vec3 light_pos(0, 0, 20);
-glm::vec3 light_color(1.0, 1.0, 1.0);
-float light_intensity=1.0;
-
 std::unordered_map<std::string,UniformBlock> UniformBufferObjectManager::kUniformBlockMap={
         {"Ambient",{
             {
-                    {"u_ambient_light_color",0,sizeof(glm::vec3), &ambient_light_color[0]},
-                    {"u_ambient_light_intensity",12,sizeof(float), &ambient_light_intensity}
+                    {"u_ambient_light_color",0,sizeof(glm::vec3), nullptr},
+                    {"u_ambient_light_intensity",12,sizeof(float), nullptr}
                 }
          }},
          {"Light",{
                 {
-                        {"u_light_pos",0,sizeof(glm::vec3), &light_pos[0]},
-                        {"u_light_color",16,sizeof(glm::vec3), &light_color[0]},
-                        {"u_light_intensity",28,sizeof(float), &light_intensity}
+                        {"u_light_pos",0,sizeof(glm::vec3), nullptr},
+                        {"u_light_color",16,sizeof(glm::vec3), nullptr},
+                        {"u_light_intensity",28,sizeof(float), nullptr}
                 }
          }}
 };
@@ -43,41 +39,19 @@ void UniformBufferObjectManager::CreateUniformBufferObject(){
         unsigned short uniform_block_data_size=uniform_block_binding_info.uniform_block_size_;
         glBufferData(GL_UNIFORM_BUFFER, uniform_block_data_size, NULL, GL_STATIC_DRAW);__CHECK_GL_ERROR__
 
-        UniformBlock uniform_block=kUniformBlockMap[uniform_block_binding_info.uniform_block_name_];
-        for (auto& uniform_block_member:uniform_block.uniform_block_member_vec_) {
-            glBufferSubData(GL_UNIFORM_BUFFER, uniform_block_member.offset_, uniform_block_member.data_size_, uniform_block_member.data_);__CHECK_GL_ERROR__
-        }
-
         //串联 UBO 和 binding point 绑定
         glBindBufferBase(GL_UNIFORM_BUFFER, uniform_block_binding_info.binding_point_, uniform_block_binding_info.uniform_buffer_object_);__CHECK_GL_ERROR__
     }
 }
 
-void UniformBufferObjectManager::UpdateUniformBufferSubData(std::string& uniform_block_name,std::string& uniform_block_member_name,void* data){
-    for (int i = 0; i < kUniformBlockBindingInfoArray.size(); ++i) {
-        UniformBlockBindingInfo& uniform_block_binding_info=kUniformBlockBindingInfoArray[i];
-        if(uniform_block_binding_info.uniform_block_name_!=uniform_block_name){
-            continue;
-        }
-
-        glBindBuffer(GL_UNIFORM_BUFFER, uniform_block_binding_info.uniform_buffer_object_);__CHECK_GL_ERROR__
-
-        UniformBlock uniform_block=kUniformBlockMap[uniform_block_binding_info.uniform_block_name_];
-        for (auto& uniform_block_member:uniform_block.uniform_block_member_vec_) {
-            if(uniform_block_member.member_name_!=uniform_block_member_name){
-                continue;
-            }
-
-            glBufferSubData(GL_UNIFORM_BUFFER, uniform_block_member.offset_, uniform_block_member.data_size_, uniform_block_member.data_);__CHECK_GL_ERROR__
-        }
-
-        glBindBuffer(GL_UNIFORM_BUFFER, 0);__CHECK_GL_ERROR__
-    }
+void UniformBufferObjectManager::UpdateUniformBlockSubData1f(std::string uniform_block_name, std::string uniform_block_member_name, float value){
+    void* data= malloc(sizeof(float));
+    memcpy(data,&value,sizeof(float));
+    RenderTaskProducer::ProduceRenderTaskUpdateUBOSubData(uniform_block_name,uniform_block_member_name,data);
 }
 
-void UniformBufferObjectManager::SetUniform1f(const std::string& uniform_block_name,std::string& uniform_block_member_name,float value){
-
-}
-void UniformBufferObjectManager::SetUniform3f(const std::string& uniform_block_name,std::string& uniform_block_member_name,glm::vec3& value){
-    
+void UniformBufferObjectManager::UpdateUniformBlockSubData3f(std::string uniform_block_name, std::string uniform_block_member_name, glm::vec3& value){
+    void* data= malloc(sizeof(glm::vec3));
+    memcpy(data,&value,sizeof(glm::vec3));
+    RenderTaskProducer::ProduceRenderTaskUpdateUBOSubData(uniform_block_name,uniform_block_member_name,data);
 }

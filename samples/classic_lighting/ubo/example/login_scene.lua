@@ -103,16 +103,6 @@ function LoginScene:Update()
     self.camera_:SetView(glm.vec3(0.0,0.0,0.0), glm.vec3(0.0,1.0,0.0))
     self.camera_:SetPerspective(60, Screen.aspect_ratio(), 1, 1000)
 
-    --设置环境光颜色和强度
-    --self.material_:SetUniform3f("u_ambient.light_color",self.environment_:ambient_color())
-    --self.material_:SetUniform1f("u_ambient.light_intensity",self.environment_:ambient_color_intensity())
-    self.environment_:Update()
-
-    --设置灯光位置、颜色、强度
-    --self.material_:SetUniform3f("u_light.pos",glm.vec3(0,0,20))
-    --self.material_:SetUniform3f("u_light.color",glm.vec3(1.0,1.0,1.0))
-    --self.material_:SetUniform1f("u_light.intensity",1.0)
-
     --设置观察者世界坐标(即相机位置)
     local camera_position=self.go_camera_:GetComponent(Transform):position()
     self.material_:SetUniform3f("u_view_pos",camera_position)

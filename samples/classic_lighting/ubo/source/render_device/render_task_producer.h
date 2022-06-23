@@ -5,8 +5,10 @@
 #ifndef UNTITLED_RENDER_TASK_PRODUCER_H
 #define UNTITLED_RENDER_TASK_PRODUCER_H
 
+#include <string>
 #include <glad/gl.h>
 #include <glm/glm.hpp>
+
 
 /// 渲染任务生产者
 class RenderTaskProducer {
@@ -88,7 +90,7 @@ public:
     /// \param uniform_block_name
     /// \param uniform_block_data_size
     /// \param uniform_block_data
-    static void ProduceRenderTaskCreateUBO(unsigned int shader_program_handle,unsigned int ubo_handle,char* uniform_block_name,unsigned short uniform_block_data_size,void* uniform_block_data);
+    static void ProduceRenderTaskUpdateUBOSubData(std::string uniform_block_name, std::string uniform_block_member_name, void* data);
 
 
     /// 发出任务：设置状态,开启或关闭

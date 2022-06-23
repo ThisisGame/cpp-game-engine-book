@@ -8,22 +8,21 @@
 #include "renderer/material.h"
 #include "render_device/gpu_resource_mapper.h"
 #include "render_device/render_task_producer.h"
+#include "render_device/uniform_buffer_object_manager.h"
 
 Environment::Environment():
     ambient_color_(glm::vec3(1.0f, 1.0f, 1.0f)),ambient_color_intensity_(1.0f),uniform_buffer_object_handle_(0) {
 }
 
-void Environment::Update() {
-//    GameObject::Foreach([this](GameObject* game_object){
-//        if(game_object->active()==false){
-//            return;
-//        }
-//        MeshRenderer* mesh_renderer=game_object->GetComponent<MeshRenderer>();
-//        if(mesh_renderer== nullptr){
-//            return;
-//        }
-//        Material* material = mesh_renderer->material();
-//        material->SetUniform3f("u_ambient.light_color",ambient_color_);
-//        material->SetUniform1f("u_ambient.light_intensity",ambient_color_intensity_);
-//    });
+/// 设置环境颜色
+void Environment::set_ambient_color(const glm::vec3 &ambient_color) {
+    ambient_color_ = ambient_color;
+    UniformBufferObjectManager::UpdateUniformBlockSubData3f("Ambient","u_ambient_light_color",ambient_color_);
+}
+
+
+/// 设置环境强度
+void Environment::set_ambient_color_intensity(float ambient_color_intensity){
+    ambient_color_intensity_ = ambient_color_intensity;
+    UniformBufferObjectManager::UpdateUniformBlockSubData1f("Ambient","u_ambient_light_intensity",ambient_color_intensity_);
 }

@@ -211,13 +211,12 @@ public:
         render_command_=RenderCommand::UPDATE_UBO_SUB_DATA;
     }
     ~RenderTaskUpdateUBOSubData(){
-
+        free(data);
     }
 public:
-    unsigned int shader_program_handle_=0;//着色器程序句柄
-    unsigned int ubo_handle_=0;//UBO句柄
-    char* uniform_name_array_;
-    int uniform_name_count_;
+    std::string uniform_block_name;
+    std::string uniform_block_member_name;
+    void* data;
 };
 
 /// 设置状态，开启或关闭

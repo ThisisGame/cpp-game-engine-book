@@ -14,11 +14,11 @@ public:
     Light();
     ~Light();
 
-    glm::vec3 color() const{return color_;};
-    void set_color(glm::vec3 color){color_ = color;};
+    glm::vec3 color() const{return color_;}
+    void set_color(glm::vec3 color);
 
-    float intensity() const{return intensity_;};
-    void set_intensity(float intensity){intensity_ = intensity;};
+    float intensity() const{return intensity_;}
+    void set_intensity(float intensity);
 
 public:
     void Update() override;
