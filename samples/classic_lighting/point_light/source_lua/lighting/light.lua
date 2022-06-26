@@ -6,7 +6,7 @@
 
 require("lua_extension")
 
---- @class Light : Component @灯
+--- @class Light : Component @光
 Light=class("Light",Component)
 
 function Light:ctor()
@@ -18,18 +18,24 @@ function Light:InitCppComponent()
     self.cpp_component_instance_=Cpp.Light() --创建对应的C++实例
 end
 
+--- 颜色
 function Light:color()
     return self.cpp_component_instance_:color()
 end
 
+--- 设置颜色
+--- @param color glm.vec3 颜色
 function Light:set_color(color)
     return self.cpp_component_instance_:set_color(color)
 end
 
+--- 强度
 function Light:intensity()
     return self.cpp_component_instance_:intensity()
 end
 
+--- 设置强度
+--- @param intensity number 强度
 function Light:set_intensity(intensity)
     return self.cpp_component_instance_:set_intensity(intensity)
 end

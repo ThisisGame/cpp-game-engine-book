@@ -2,8 +2,8 @@
 // Created by captainchen on 2022/6/6.
 //
 
-#ifndef INTEGRATE_PHYSX_LIGHT_H
-#define INTEGRATE_PHYSX_LIGHT_H
+#ifndef ENGINE_LIGHTING_LIGHT_H
+#define ENGINE_LIGHTING_LIGHT_H
 
 #include <glm/glm.hpp>
 #include "component/component.h"
@@ -20,10 +20,7 @@ public:
     float intensity() const{return intensity_;}
     void set_intensity(float intensity);
 
-public:
-    void Update() override;
-
-private:
+protected:
     glm::vec3 color_;//颜色
     float intensity_;//强度
 
@@ -31,4 +28,4 @@ RTTR_ENABLE();
 };
 
 
-#endif //INTEGRATE_PHYSX_LIGHT_H
+#endif //ENGINE_LIGHTING_LIGHT_H

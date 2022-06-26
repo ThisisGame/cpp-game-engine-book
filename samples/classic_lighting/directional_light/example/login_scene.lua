@@ -13,7 +13,7 @@ require("control/key_code")
 require("utils/screen")
 require("utils/time")
 require("lighting/environment")
-require("lighting/light")
+require("lighting/directional_light")
 
 LoginScene=class("LoginScene",Component)
 
@@ -51,10 +51,10 @@ end
 
 --- 创建灯
 function LoginScene:CreateLight()
-    self.go_light_= GameObject.new("light")
+    self.go_light_= GameObject.new("directional_light")
     self.go_light_:AddComponent(Transform)
 
-    local light=self.go_light_:AddComponent(Light)
+    local light=self.go_light_:AddComponent(DirectionalLight)
     light:set_color(glm.vec3(1.0,1.0,1.0))
     light:set_intensity(1.0)
 end

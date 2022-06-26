@@ -44,5 +44,5 @@ void main()
     float specular_highlight_intensity = texture(u_specular_texture,v_uv).r;//从纹理中获取高光强度
     vec3 specular_color = u_light_color * spec * specular_highlight_intensity * texture(u_diffuse_texture,v_uv).rgb;
 
-    o_fragColor = vec4(ambient_color + diffuse_color,1.0);
+    o_fragColor = vec4(ambient_color + diffuse_color + specular_color,1.0);
 }

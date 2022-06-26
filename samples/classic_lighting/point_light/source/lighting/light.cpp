@@ -24,13 +24,6 @@ Light::Light():Component() {}
 
 Light::~Light() {}
 
-void Light::Update(){
-    glm::vec3 rotation=game_object()->GetComponent<Transform>()->rotation();
-    glm::mat4 eulerAngleYXZ = glm::eulerAngleYXZ(glm::radians(rotation.y), glm::radians(rotation.x), glm::radians(rotation.z));
-    glm::vec3 light_rotation=glm::vec3(eulerAngleYXZ * glm::vec4(0,0,-1,0));
-    UniformBufferObjectManager::UpdateUniformBlockSubData3f("Light","u_light_dir",light_rotation);
-}
-
 void Light::set_color(glm::vec3 color){
     color_ = color;
     UniformBufferObjectManager::UpdateUniformBlockSubData3f("Light","u_light_color",color_);

@@ -42,6 +42,8 @@ extern "C"{
 #include "physics/box_collider.h"
 #include "lighting/environment.h"
 #include "lighting/light.h"
+#include "lighting/directional_light.h"
+#include "lighting/point_light.h"
 
 sol::state LuaBinding::sol_state_;
 
@@ -601,6 +603,18 @@ void LuaBinding::BindLua() {
                 "intensity", &Light::intensity,
                 "set_intensity", &Light::set_intensity
         );
+        cpp_ns_table.new_usertype<DirectionalLight>("DirectionalLight", sol::call_constructor, sol::constructors<DirectionalLight()>(),
+                                                sol::base_classes, sol::bases<Light,Component>()
+        );
+        cpp_ns_table.new_usertype<PointLight>("PointLight", sol::call_constructor, sol::constructors<PointLight()>(),
+                sol::base_classes, sol::bases<Light,Component>(),
+                        "attenuation_constant", &PointLight::attenuation_constant,
+                        "set_attenuation_constant", &PointLight::set_attenuation_constant,
+                        "attenuation_linear", &PointLight::attenuation_linear,
+                        "set_attenuation_linear", &PointLight::set_attenuation_linear,
+                        "attenuation_quadratic", &PointLight::attenuation_quadratic,
+                        "set_attenuation_quadratic", &PointLight::set_attenuation_quadratic
+        );
     }
 
     // physics
@@ -614,11 +628,11 @@ void LuaBinding::BindLua() {
                                             "AttachColliderShape", &RigidActor::AttachColliderShape
         );
         cpp_ns_table.new_usertype<RigidDynamic>("RigidDynamic", sol::call_constructor, sol::constructors<RigidDynamic()>(),
-                                              sol::base_classes, sol::bases<Component>(),
+                                              sol::base_classes, sol::bases<RigidActor,Component>(),
                                               "set_enable_ccd",&RigidDynamic::set_enable_ccd
         );
         cpp_ns_table.new_usertype<RigidStatic>("RigidStatic", sol::call_constructor, sol::constructors<RigidStatic()>(),
-                                             sol::base_classes, sol::bases<Component>()
+                                             sol::base_classes, sol::bases<RigidActor,Component>()
         );
         cpp_ns_table.new_usertype<Collider>("Collider",sol::call_constructor,sol::constructors<Collider()>(),
                                           sol::base_classes,sol::bases<Component>(),

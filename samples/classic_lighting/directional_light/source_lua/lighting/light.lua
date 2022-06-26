@@ -6,7 +6,7 @@
 
 require("lua_extension")
 
---- @class Light : Component @灯
+--- @class Light : Component @光
 Light=class("Light",Component)
 
 function Light:ctor()

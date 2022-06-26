@@ -2,8 +2,8 @@
 // Created by captainchen on 2022/6/7.
 //
 
-#ifndef INTEGRATE_PHYSX_ENVIRONMENT_H
-#define INTEGRATE_PHYSX_ENVIRONMENT_H
+#ifndef ENGINE_LIGHTING_ENVIRONMENT_H
+#define ENGINE_LIGHTING_ENVIRONMENT_H
 
 #include <glm/glm.hpp>
 
@@ -31,4 +31,4 @@ private:
 };
 
 
-#endif //INTEGRATE_PHYSX_ENVIRONMENT_H
+#endif //ENGINE_LIGHTING_ENVIRONMENT_H

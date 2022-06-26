@@ -10,9 +10,13 @@ layout(std140) uniform Ambient {
 
 //灯光
 layout(std140) uniform Light {
-    vec3  u_light_dir;//方向 alignment:12 offset:0
-    vec3  u_light_color;//颜色 alignment:12 offset:12
-    float u_light_intensity;//强度 alignment:4 offset:24
+    vec3  u_light_pos;//位置 alignment:16 offset:0
+    vec3  u_light_color;//颜色 alignment:12 offset:16
+    float u_light_intensity;//强度 alignment:4 offset:28
+
+    float u_light_constant;//点光衰减常数项 alignment:4 offset:32
+    float u_light_linear;//点光衰减一次项 alignment:4 offset:36
+    float u_light_quadratic;//点光衰减二次项 alignment:4 offset:40
 };
 
 uniform vec3 u_view_pos;
@@ -33,7 +37,7 @@ void main()
 
     //diffuse
     vec3 normal=normalize(v_normal);
-    vec3 light_dir=normalize(-u_light_dir);
+    vec3 light_dir=normalize(u_light_pos - v_frag_pos);
     float diffuse_intensity = max(dot(normal,light_dir),0.0);
     vec3 diffuse_color = u_light_color * diffuse_intensity * u_light_intensity * texture(u_diffuse_texture,v_uv).rgb;
 
@@ -44,5 +48,9 @@ void main()
     float specular_highlight_intensity = texture(u_specular_texture,v_uv).r;//从纹理中获取高光强度
     vec3 specular_color = u_light_color * spec * specular_highlight_intensity * texture(u_diffuse_texture,v_uv).rgb;
 
-    o_fragColor = vec4(ambient_color + diffuse_color,1.0);
+    // attenuation
+    float distance=length(u_light_pos - v_frag_pos);
+    float attenuation = 1.0 / (u_light_constant + u_light_linear * distance + u_light_quadratic * (distance * distance));
+
+    o_fragColor = vec4(ambient_color + diffuse_color*attenuation + specular_color*attenuation,1.0);
 }

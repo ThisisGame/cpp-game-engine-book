@@ -13,7 +13,7 @@ require("control/key_code")
 require("utils/screen")
 require("utils/time")
 require("lighting/environment")
-require("lighting/light")
+require("lighting/point_light")
 
 LoginScene=class("LoginScene",Component)
 
@@ -51,12 +51,17 @@ end
 
 --- 创建灯
 function LoginScene:CreateLight()
-    self.go_light_= GameObject.new("light")
-    self.go_light_:AddComponent(Transform)
+    self.go_light_= GameObject.new("point_light")
+    self.go_light_:AddComponent(Transform):set_position(glm.vec3(0,0,20))
+    ---@type PointLight
+    local light=self.go_light_:AddComponent(PointLight)
 
-    local light=self.go_light_:AddComponent(Light)
     light:set_color(glm.vec3(1.0,1.0,1.0))
     light:set_intensity(1.0)
+    --衰减曲线 https://wiki.ogre3d.org/tiki-index.php?page=-Point+Light+Attenuation
+    light:set_attenuation_constant(1.0)
+    light:set_attenuation_linear(0.014)
+    light:set_attenuation_quadratic(0.0007)
 end
 
 --- 创建主相机
@@ -87,7 +92,7 @@ function LoginScene:CreateModel()
 
     --手动创建Material
     self.material_ = Material.new()--设置材质
-    self.material_:Parse("material/basic_plane_directional_light.mat")
+    self.material_:Parse("material/basic_plane_point_light.mat")
 
     --挂上 MeshRenderer 组件
     local skinned_mesh_renderer= self.go_skeleton_:AddComponent(SkinnedMeshRenderer)
@@ -109,9 +114,6 @@ function LoginScene:Update()
     self.material_:SetUniform3f("u_view_pos",camera_position)
     --设置物体反射度、高光强度
     self.material_:SetUniform1f("u_specular_highlight_shininess",32.0)
-
-    --6s 绕Y旋转一圈
-    self.go_light_:GetComponent(Transform):set_rotation(glm.vec3(0,(Time:TimeSinceStartup()*60)%360,0))
 
     --鼠标滚轮控制相机远近
     self.go_camera_:GetComponent(Transform):set_position(self.go_camera_:GetComponent(Transform):position() *(10 - Input.mouse_scroll())/10)
