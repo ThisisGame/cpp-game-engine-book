@@ -11,7 +11,7 @@
 
 std::vector<UniformBlockBindingInfo> UniformBufferObjectManager::kUniformBlockBindingInfoArray={
         {"Ambient",16,0,0},
-        {"Light",44,1,0}
+        {"Light",44*2,1,0}
 };
 
 std::unordered_map<std::string,UniformBlock> UniformBufferObjectManager::kUniformBlockMap={
