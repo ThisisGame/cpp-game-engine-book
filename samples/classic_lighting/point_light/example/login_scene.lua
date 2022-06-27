@@ -52,7 +52,7 @@ end
 --- 创建灯
 function LoginScene:CreateLight()
     self.go_light_= GameObject.new("point_light")
-    self.go_light_:AddComponent(Transform):set_position(glm.vec3(0,0,20))
+    self.go_light_:AddComponent(Transform):set_position(glm.vec3(0,0,5))
     ---@type PointLight
     local light=self.go_light_:AddComponent(PointLight)
 
@@ -60,8 +60,8 @@ function LoginScene:CreateLight()
     light:set_intensity(1.0)
     --衰减曲线 https://wiki.ogre3d.org/tiki-index.php?page=-Point+Light+Attenuation
     light:set_attenuation_constant(1.0)
-    light:set_attenuation_linear(0.014)
-    light:set_attenuation_quadratic(0.0007)
+    light:set_attenuation_linear( 0.35)
+    light:set_attenuation_quadratic( 0.44)
 end
 
 --- 创建主相机
@@ -75,6 +75,9 @@ function LoginScene:CreateMainCamera()
     self.camera_=self.go_camera_:AddComponent(Camera)
     --设置为黑色背景
     self.camera_:set_clear_color(0,0,0,1)
+    self.camera_:set_depth(0)
+    self.camera_:SetView(glm.vec3(0.0,0.0,0.0), glm.vec3(0.0,1.0,0.0))
+    self.camera_:SetPerspective(60, Screen.aspect_ratio(), 1, 1000)
 end
 
 --- 创建模型
@@ -105,15 +108,17 @@ end
 function LoginScene:Update()
     --print("LoginScene:Update")
     LoginScene.super.Update(self)
-    self.camera_:set_depth(0)
-    self.camera_:SetView(glm.vec3(0.0,0.0,0.0), glm.vec3(0.0,1.0,0.0))
-    self.camera_:SetPerspective(60, Screen.aspect_ratio(), 1, 1000)
 
     --设置观察者世界坐标(即相机位置)
     local camera_position=self.go_camera_:GetComponent(Transform):position()
     self.material_:SetUniform3f("u_view_pos",camera_position)
     --设置物体反射度、高光强度
     self.material_:SetUniform1f("u_specular_highlight_shininess",32.0)
+
+    --local z=math.sin(Time:TimeSinceStartup())
+    --z=z/2+0.5
+    --z=z*10
+    --self.go_light_:GetComponent(Transform):set_position(glm.vec3(z,0,10))
 
     --鼠标滚轮控制相机远近
     self.go_camera_:GetComponent(Transform):set_position(self.go_camera_:GetComponent(Transform):position() *(10 - Input.mouse_scroll())/10)
