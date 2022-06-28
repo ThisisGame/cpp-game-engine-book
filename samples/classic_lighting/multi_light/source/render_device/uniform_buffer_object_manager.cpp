@@ -11,7 +11,7 @@
 
 std::vector<UniformBlockBindingInfo> UniformBufferObjectManager::kUniformBlockBindingInfoArray={
         {"Ambient",16,0,0},
-        {"Light",44*2,1,0}
+        {"MultiLight",44*2,1,0}
 };
 
 std::unordered_map<std::string,UniformBlock> UniformBufferObjectManager::kUniformBlockMap={
@@ -21,14 +21,21 @@ std::unordered_map<std::string,UniformBlock> UniformBufferObjectManager::kUnifor
                     {"u_ambient_light_intensity",12,sizeof(float), nullptr}
                 }
          }},
-         {"Light",{
+         {"MultiLight",{
                 {
-                        {"u_light_pos",0,sizeof(glm::vec3), nullptr},
-                        {"u_light_color",16,sizeof(glm::vec3), nullptr},
-                        {"u_light_intensity",28,sizeof(float), nullptr},
-                        {"u_light_constant",32,sizeof(float), nullptr},
-                        {"u_light_linear",36,sizeof(float), nullptr},
-                        {"u_light_quadratic",40,sizeof(float), nullptr}
+                        {"u_light_array[0].u_light_pos",0,sizeof(glm::vec3), nullptr},
+                        {"u_light_array[0].u_light_color",16,sizeof(glm::vec3), nullptr},
+                        {"u_light_array[0].u_light_intensity",28,sizeof(float), nullptr},
+                        {"u_light_array[0].u_light_constant",32,sizeof(float), nullptr},
+                        {"u_light_array[0].u_light_linear",36,sizeof(float), nullptr},
+                        {"u_light_array[0].u_light_quadratic",40,sizeof(float), nullptr},
+
+                        {"u_light_array[1].u_light_pos",44+0,sizeof(glm::vec3), nullptr},
+                        {"u_light_array[1].u_light_color",44+16,sizeof(glm::vec3), nullptr},
+                        {"u_light_array[1].u_light_intensity",44+28,sizeof(float), nullptr},
+                        {"u_light_array[1].u_light_constant",44+32,sizeof(float), nullptr},
+                        {"u_light_array[1].u_light_linear",44+36,sizeof(float), nullptr},
+                        {"u_light_array[1].u_light_quadratic",44+40,sizeof(float), nullptr}
                 }
          }}
 };

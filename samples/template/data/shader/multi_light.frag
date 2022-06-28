@@ -9,7 +9,7 @@ layout(std140) uniform Ambient {
 };
 
 //灯光
-layout(std140) uniform Light {
+struct Light {
     vec3  u_light_pos;//位置 alignment:16 offset:0
     vec3  u_light_color;//颜色 alignment:12 offset:16
     float u_light_intensity;//强度 alignment:4 offset:28
@@ -17,6 +17,11 @@ layout(std140) uniform Light {
     float u_light_constant;//点光衰减常数项 alignment:4 offset:32
     float u_light_linear;//点光衰减一次项 alignment:4 offset:36
     float u_light_quadratic;//点光衰减二次项 alignment:4 offset:40
+};
+
+//灯光数组
+layout(std140) uniform MultiLight {
+    Light u_light_array[10];
 };
 
 uniform vec3 u_view_pos;

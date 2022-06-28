@@ -20,9 +20,12 @@ RTTR_REGISTRATION//注册反射
             .constructor<>()(rttr::policy::ctor::as_raw_ptr);
 }
 
+unsigned short PointLight::light_count_=0;
+
 PointLight::PointLight():Light(),attenuation_constant_(0),attenuation_linear_(0),attenuation_quadratic_(0)
 {
-
+    light_id_=light_count_;
+    light_count_++;
 }
 
 PointLight::~PointLight() {

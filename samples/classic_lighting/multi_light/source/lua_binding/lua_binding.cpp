@@ -598,6 +598,7 @@ void LuaBinding::BindLua() {
         );
         cpp_ns_table.new_usertype<Light>("Light",sol::call_constructor,sol::constructors<Light()>(),
                 sol::base_classes,sol::bases<Component>(),
+                "light_id", &Light::light_id,
                 "color", &Light::color,
                 "set_color", &Light::set_color,
                 "intensity", &Light::intensity,

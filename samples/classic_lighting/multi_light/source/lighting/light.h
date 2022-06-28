@@ -14,6 +14,8 @@ public:
     Light();
     ~Light();
 
+    unsigned short light_id(){return light_id_;}
+
     glm::vec3 color() const{return color_;}
     void set_color(glm::vec3 color);
 
@@ -21,6 +23,7 @@ public:
     void set_intensity(float intensity);
 
 protected:
+    unsigned short light_id_;
     glm::vec3 color_;//颜色
     float intensity_;//强度
 

@@ -20,7 +20,10 @@ RTTR_REGISTRATION//注册反射
             .constructor<>()(rttr::policy::ctor::as_raw_ptr);
 }
 
-Light::Light():Component() {}
+
+Light::Light():Component() {
+
+}
 
 Light::~Light() {}
 
