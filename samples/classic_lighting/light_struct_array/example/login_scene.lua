@@ -13,7 +13,7 @@ require("control/key_code")
 require("utils/screen")
 require("utils/time")
 require("lighting/environment")
-require("lighting/point_light")
+require("lighting/light")
 
 LoginScene=class("LoginScene",Component)
 
@@ -29,7 +29,7 @@ function LoginScene:ctor()
     self.animation_clip_ = nil --- 骨骼动画片段
     self.material_ = nil --材质
     self.environment_=nil --环境
-    self.go_light_=nil --灯光
+    self.light_=nil --灯光
 end
 
 function LoginScene:Awake()
@@ -51,17 +51,11 @@ end
 
 --- 创建灯
 function LoginScene:CreateLight()
-    self.go_light_= GameObject.new("point_light")
-    self.go_light_:AddComponent(Transform):set_position(glm.vec3(0,0,5))
-    ---@type PointLight
-    local light=self.go_light_:AddComponent(PointLight)
-
+    local go_light= GameObject.new("light")
+    go_light:AddComponent(Transform):set_position(glm.vec3(0,0,20))
+    local light=go_light:AddComponent(Light)
     light:set_color(glm.vec3(1.0,1.0,1.0))
     light:set_intensity(1.0)
-    --衰减曲线 https://wiki.ogre3d.org/tiki-index.php?page=-Point+Light+Attenuation
-    light:set_attenuation_constant(1.0)
-    light:set_attenuation_linear( 0.35)
-    light:set_attenuation_quadratic( 0.44)
 end
 
 --- 创建主相机
@@ -75,9 +69,6 @@ function LoginScene:CreateMainCamera()
     self.camera_=self.go_camera_:AddComponent(Camera)
     --设置为黑色背景
     self.camera_:set_clear_color(0,0,0,1)
-    self.camera_:set_depth(0)
-    self.camera_:SetView(glm.vec3(0.0,0.0,0.0), glm.vec3(0.0,1.0,0.0))
-    self.camera_:SetPerspective(60, Screen.aspect_ratio(), 1, 1000)
 end
 
 --- 创建模型
@@ -95,7 +86,7 @@ function LoginScene:CreateModel()
 
     --手动创建Material
     self.material_ = Material.new()--设置材质
-    self.material_:Parse("material/basic_plane_multi_light.mat")
+    self.material_:Parse("material/basic_plane_light_struct_array.mat")
 
     --挂上 MeshRenderer 组件
     local skinned_mesh_renderer= self.go_skeleton_:AddComponent(SkinnedMeshRenderer)
@@ -108,12 +99,26 @@ end
 function LoginScene:Update()
     --print("LoginScene:Update")
     LoginScene.super.Update(self)
+    self.camera_:set_depth(0)
+    self.camera_:SetView(glm.vec3(0.0,0.0,0.0), glm.vec3(0.0,1.0,0.0))
+    self.camera_:SetPerspective(60, Screen.aspect_ratio(), 1, 1000)
+
+    --设置环境光颜色和强度
+    --self.material_:SetUniform3f("u_ambient.light_color",self.environment_:ambient_color())
+    --self.material_:SetUniform1f("u_ambient.light_intensity",self.environment_:ambient_color_intensity())
+    self.environment_:Update()
+
+    --设置灯光位置、颜色、强度
+    --self.material_:SetUniform3f("u_light.pos",glm.vec3(0,0,20))
+    --self.material_:SetUniform3f("u_light.color",glm.vec3(1.0,1.0,1.0))
+    --self.material_:SetUniform1f("u_light.intensity",1.0)
 
     --设置观察者世界坐标(即相机位置)
     local camera_position=self.go_camera_:GetComponent(Transform):position()
     self.material_:SetUniform3f("u_view_pos",camera_position)
     --设置物体反射度、高光强度
     self.material_:SetUniform1f("u_specular_highlight_shininess",32.0)
+
 
     --鼠标滚轮控制相机远近
     self.go_camera_:GetComponent(Transform):set_position(self.go_camera_:GetComponent(Transform):position() *(10 - Input.mouse_scroll())/10)

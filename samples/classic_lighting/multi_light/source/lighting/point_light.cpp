@@ -34,20 +34,24 @@ PointLight::~PointLight() {
 
 void PointLight::set_attenuation_constant(float attenuation_constant){
     attenuation_constant_ = attenuation_constant;
-    UniformBufferObjectManager::UpdateUniformBlockSubData1f("Light","u_light_constant",attenuation_constant_);
+    std::string uniform_block_member_name=fmt::format("u_light_array[{}].u_light_constant",light_id_);
+    UniformBufferObjectManager::UpdateUniformBlockSubData1f("MultiLight",uniform_block_member_name,attenuation_constant_);
 }
 
 void PointLight::set_attenuation_linear(float attenuation_linear){
     attenuation_linear_ = attenuation_linear;
-    UniformBufferObjectManager::UpdateUniformBlockSubData1f("Light","u_light_linear",attenuation_linear_);
+    std::string uniform_block_member_name=fmt::format("u_light_array[{}].u_light_linear",light_id_);
+    UniformBufferObjectManager::UpdateUniformBlockSubData1f("MultiLight",uniform_block_member_name,attenuation_linear_);
 }
 
 void PointLight::set_attenuation_quadratic(float attenuation_quadratic){
     attenuation_quadratic_ = attenuation_quadratic;
-    UniformBufferObjectManager::UpdateUniformBlockSubData1f("Light","u_light_quadratic",attenuation_quadratic_);
+    std::string uniform_block_member_name=fmt::format("u_light_array[{}].u_light_quadratic",light_id_);
+    UniformBufferObjectManager::UpdateUniformBlockSubData1f("MultiLight",uniform_block_member_name,attenuation_quadratic_);
 }
 
 void PointLight::Update(){
     glm::vec3 light_position=game_object()->GetComponent<Transform>()->position();
-    UniformBufferObjectManager::UpdateUniformBlockSubData3f("Light","u_light_pos",light_position);
+    std::string uniform_block_member_name=fmt::format("u_light_array[{}].u_light_pos",light_id_);
+    UniformBufferObjectManager::UpdateUniformBlockSubData3f("MultiLight",uniform_block_member_name,light_position);
 }

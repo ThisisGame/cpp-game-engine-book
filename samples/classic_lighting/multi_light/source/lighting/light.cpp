@@ -29,10 +29,12 @@ Light::~Light() {}
 
 void Light::set_color(glm::vec3 color){
     color_ = color;
-    UniformBufferObjectManager::UpdateUniformBlockSubData3f("Light","u_light_color",color_);
+    std::string uniform_block_member_name=fmt::format("u_light_array[{}].u_light_color",light_id_);
+    UniformBufferObjectManager::UpdateUniformBlockSubData3f("MultiLight",uniform_block_member_name,color_);
 };
 
 void Light::set_intensity(float intensity){
     intensity_ = intensity;
-    UniformBufferObjectManager::UpdateUniformBlockSubData1f("Light","u_light_intensity",intensity_);
+    std::string uniform_block_member_name=fmt::format("u_light_array[{}].u_light_intensity",light_id_);
+    UniformBufferObjectManager::UpdateUniformBlockSubData1f("MultiLight",uniform_block_member_name,intensity_);
 };
