@@ -21,7 +21,7 @@ struct Light {
 
 //灯光数组
 layout(std140) uniform MultiLight {
-    Light u_light_array[1];
+    Light u_light_array[2];
 };
 
 uniform vec3 u_view_pos;
@@ -39,23 +39,30 @@ void main()
 {
     //ambient
     vec3 ambient_color = u_ambient_light_color * u_ambient_light_intensity * texture(u_diffuse_texture,v_uv).rgb;
+    vec3 total_diffuse_color;
+    vec3 total_specular_color;
 
-    //diffuse
-    vec3 normal=normalize(v_normal);
-    vec3 light_dir=normalize(u_light_array[0].u_light_pos - v_frag_pos);
-    float diffuse_intensity = max(dot(normal,light_dir),0.0);
-    vec3 diffuse_color = u_light_array[0].u_light_color * diffuse_intensity * u_light_array[0].u_light_intensity * texture(u_diffuse_texture,v_uv).rgb;
+    for(int i=0;i<2;i++){
+        //diffuse
+        vec3 normal=normalize(v_normal);
+        vec3 light_dir=normalize(u_light_array[i].u_light_pos - v_frag_pos);
+        float diffuse_intensity = max(dot(normal,light_dir),0.0);
+        vec3 diffuse_color = u_light_array[i].u_light_color * diffuse_intensity * u_light_array[i].u_light_intensity * texture(u_diffuse_texture,v_uv).rgb;
 
-    //specular
-    vec3 reflect_dir=reflect(-light_dir,v_normal);
-    vec3 view_dir=normalize(u_view_pos-v_frag_pos);
-    float spec=pow(max(dot(view_dir,reflect_dir),0.0),u_specular_highlight_shininess);
-    float specular_highlight_intensity = texture(u_specular_texture,v_uv).r;//从纹理中获取高光强度
-    vec3 specular_color = u_light_array[0].u_light_color * spec * specular_highlight_intensity * texture(u_diffuse_texture,v_uv).rgb;
+        //specular
+        vec3 reflect_dir=reflect(-light_dir,v_normal);
+        vec3 view_dir=normalize(u_view_pos-v_frag_pos);
+        float spec=pow(max(dot(view_dir,reflect_dir),0.0),u_specular_highlight_shininess);
+        float specular_highlight_intensity = texture(u_specular_texture,v_uv).r;//从纹理中获取高光强度
+        vec3 specular_color = u_light_array[i].u_light_color * spec * specular_highlight_intensity * texture(u_diffuse_texture,v_uv).rgb;
 
-    // attenuation
-    float distance=length(u_light_array[0].u_light_pos - v_frag_pos);
-    float attenuation = 1.0 / (u_light_array[0].u_light_constant + u_light_array[0].u_light_linear * distance + u_light_array[0].u_light_quadratic * (distance * distance));
+        // attenuation
+        float distance=length(u_light_array[i].u_light_pos - v_frag_pos);
+        float attenuation = 1.0 / (u_light_array[i].u_light_constant + u_light_array[i].u_light_linear * distance + u_light_array[i].u_light_quadratic * (distance * distance));
 
-    o_fragColor = vec4(ambient_color + diffuse_color*attenuation + specular_color*attenuation,1.0);
+        total_diffuse_color=total_diffuse_color+diffuse_color*attenuation;
+        total_specular_color=total_specular_color+specular_color*attenuation;
+    }
+
+    o_fragColor = vec4(ambient_color + total_diffuse_color + total_specular_color,1.0);
 }
