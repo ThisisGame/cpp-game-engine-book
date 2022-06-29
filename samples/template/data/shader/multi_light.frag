@@ -19,9 +19,11 @@ struct Light {
     float u_light_quadratic;//点光衰减二次项 alignment:4 offset:40
 };
 
+#define MAX_LIGHT_NUM 2
+
 //灯光数组
-layout(std140) uniform MultiLight {
-    Light u_light_array[2];
+layout(std140) uniform MultiplePointLights {
+    Light u_light_array[MAX_LIGHT_NUM];
 };
 
 uniform vec3 u_view_pos;
@@ -42,7 +44,7 @@ void main()
     vec3 total_diffuse_color;
     vec3 total_specular_color;
 
-    for(int i=0;i<2;i++){
+    for(int i=0;i<MAX_LIGHT_NUM;i++){
         //diffuse
         vec3 normal=normalize(v_normal);
         vec3 light_dir=normalize(u_light_array[i].u_light_pos - v_frag_pos);

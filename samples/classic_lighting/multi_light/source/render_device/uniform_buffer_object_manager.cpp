@@ -13,22 +13,23 @@
 
 std::vector<UniformBlockBindingInfo> UniformBufferObjectManager::kUniformBlockBindingInfoArray={
         {"Ambient",16,0,0},
-        {"MultiLight",48*2,1,0}
-//        {"MultiLight",44,1,0}
+        {"MultiplePointLights",48*2,1,0}
 };
 
 std::unordered_map<std::string,UniformBlock> UniformBufferObjectManager::kUniformBlockMap;
 
 void UniformBufferObjectManager::Init(){
+    //环境光
     kUniformBlockMap["Ambient"]={
             {
                     {"u_ambient_light_color",0,sizeof(glm::vec3), nullptr},
                     {"u_ambient_light_intensity",12,sizeof(float), nullptr}
             }
     };
-    kUniformBlockMap["MultiLight"]={{}};
+    //点光源数组
+    kUniformBlockMap["MultiplePointLights"]={{}};
     for(int i=0;i<MAX_LIGHT_NUM;i++){
-        std::vector<UniformBlockMember>& uniform_block_member_vec=kUniformBlockMap["MultiLight"].uniform_block_member_vec_;
+        std::vector<UniformBlockMember>& uniform_block_member_vec=kUniformBlockMap["MultiplePointLights"].uniform_block_member_vec_;
         uniform_block_member_vec.push_back({fmt::format("u_light_array[{}].u_light_pos",i),48*i+0,sizeof(glm::vec3), nullptr});
         uniform_block_member_vec.push_back({fmt::format("u_light_array[{}].u_light_color",i),48*i+16,sizeof(glm::vec3), nullptr});
         uniform_block_member_vec.push_back({fmt::format("u_light_array[{}].u_light_intensity",i),48*i+28,sizeof(float), nullptr});
