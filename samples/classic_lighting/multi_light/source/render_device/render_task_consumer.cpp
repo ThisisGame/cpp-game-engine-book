@@ -429,6 +429,7 @@ void RenderTaskConsumer::ProcessTask() {
     glfwSwapInterval(1);
 
     //初始化UBO
+    UniformBufferObjectManager::Init();
     UniformBufferObjectManager::CreateUniformBufferObject();
 
     while (!glfwWindowShouldClose(window_))

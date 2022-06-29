@@ -55,6 +55,8 @@ public:
         return kUniformBlockMap;
     }
 
+    static void Init();
+
     /// 初始化UBO
     static void CreateUniformBufferObject();
 

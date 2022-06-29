@@ -17,10 +17,10 @@ public:
     unsigned short light_id(){return light_id_;}
 
     glm::vec3 color() const{return color_;}
-    void set_color(glm::vec3 color);
+    virtual void set_color(glm::vec3 color){color_ = color;}
 
     float intensity() const{return intensity_;}
-    void set_intensity(float intensity);
+    virtual void set_intensity(float intensity){intensity_ = intensity;}
 
 protected:
     unsigned short light_id_;

@@ -29,6 +29,16 @@ DirectionalLight::~DirectionalLight() {
 
 }
 
+void DirectionalLight::set_color(glm::vec3 color){
+    Light::set_color(color);
+    UniformBufferObjectManager::UpdateUniformBlockSubData3f("Light","u_light_color",color_);
+};
+
+void DirectionalLight::set_intensity(float intensity){
+    Light::set_intensity(intensity);
+    UniformBufferObjectManager::UpdateUniformBlockSubData1f("Light","u_light_intensity",intensity_);
+};
+
 void DirectionalLight::Update(){
     glm::vec3 rotation=game_object()->GetComponent<Transform>()->rotation();
     glm::mat4 eulerAngleYXZ = glm::eulerAngleYXZ(glm::radians(rotation.y), glm::radians(rotation.x), glm::radians(rotation.z));

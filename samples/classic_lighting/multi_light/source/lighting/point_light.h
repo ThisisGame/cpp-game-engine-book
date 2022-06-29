@@ -15,6 +15,10 @@ public:
     PointLight();
     ~PointLight();
 
+    virtual void set_color(glm::vec3 color) override;
+
+    virtual void set_intensity(float intensity) override;
+
     float attenuation_constant() const{return attenuation_constant_;}
     void set_attenuation_constant(float attenuation_constant);
 

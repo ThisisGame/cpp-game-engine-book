@@ -9,37 +9,34 @@
 #include "render_task_queue.h"
 #include "render_task_producer.h"
 
+#define MAX_LIGHT_NUM 2 //最大灯光数量
+
 std::vector<UniformBlockBindingInfo> UniformBufferObjectManager::kUniformBlockBindingInfoArray={
         {"Ambient",16,0,0},
         {"MultiLight",48*2,1,0}
 //        {"MultiLight",44,1,0}
 };
 
-std::unordered_map<std::string,UniformBlock> UniformBufferObjectManager::kUniformBlockMap={
-        {"Ambient",{
+std::unordered_map<std::string,UniformBlock> UniformBufferObjectManager::kUniformBlockMap;
+
+void UniformBufferObjectManager::Init(){
+    kUniformBlockMap["Ambient"]={
             {
                     {"u_ambient_light_color",0,sizeof(glm::vec3), nullptr},
                     {"u_ambient_light_intensity",12,sizeof(float), nullptr}
-                }
-         }},
-         {"MultiLight",{
-                {
-                        {"u_light_array[0].u_light_pos",0,sizeof(glm::vec3), nullptr},
-                        {"u_light_array[0].u_light_color",16,sizeof(glm::vec3), nullptr},
-                        {"u_light_array[0].u_light_intensity",28,sizeof(float), nullptr},
-                        {"u_light_array[0].u_light_constant",32,sizeof(float), nullptr},
-                        {"u_light_array[0].u_light_linear",36,sizeof(float), nullptr},
-                        {"u_light_array[0].u_light_quadratic",40,sizeof(float), nullptr},
-
-                        {"u_light_array[1].u_light_pos",48+0,sizeof(glm::vec3), nullptr},
-                        {"u_light_array[1].u_light_color",48+16,sizeof(glm::vec3), nullptr},
-                        {"u_light_array[1].u_light_intensity",48+28,sizeof(float), nullptr},
-                        {"u_light_array[1].u_light_constant",48+32,sizeof(float), nullptr},
-                        {"u_light_array[1].u_light_linear",48+36,sizeof(float), nullptr},
-                        {"u_light_array[1].u_light_quadratic",48+40,sizeof(float), nullptr}
-                }
-         }}
-};
+            }
+    };
+    kUniformBlockMap["MultiLight"]={{}};
+    for(int i=0;i<MAX_LIGHT_NUM;i++){
+        std::vector<UniformBlockMember>& uniform_block_member_vec=kUniformBlockMap["MultiLight"].uniform_block_member_vec_;
+        uniform_block_member_vec.push_back({fmt::format("u_light_array[{}].u_light_pos",i),48*i+0,sizeof(glm::vec3), nullptr});
+        uniform_block_member_vec.push_back({fmt::format("u_light_array[{}].u_light_color",i),48*i+16,sizeof(glm::vec3), nullptr});
+        uniform_block_member_vec.push_back({fmt::format("u_light_array[{}].u_light_intensity",i),48*i+28,sizeof(float), nullptr});
+        uniform_block_member_vec.push_back({fmt::format("u_light_array[{}].u_light_constant",i),48*i+32,sizeof(float), nullptr});
+        uniform_block_member_vec.push_back({fmt::format("u_light_array[{}].u_light_linear",i),48*i+36,sizeof(float), nullptr});
+        uniform_block_member_vec.push_back({fmt::format("u_light_array[{}].u_light_quadratic",i),48*i+40,sizeof(float), nullptr});
+    }
+}
 
 void UniformBufferObjectManager::CreateUniformBufferObject(){
     for (int i = 0; i < kUniformBlockBindingInfoArray.size(); ++i) {
