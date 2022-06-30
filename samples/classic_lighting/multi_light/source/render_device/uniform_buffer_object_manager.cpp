@@ -11,23 +11,23 @@
 
 #define MAX_LIGHT_NUM 2 //最大灯光数量
 
-std::vector<UniformBlockBindingInfo> UniformBufferObjectManager::kUniformBlockBindingInfoArray={
-        {"u_ambient_light",16,0,0},
-        {"u_point_light_array",48*2,1,0}
+std::vector<UniformBlockInstanceBindingInfo> UniformBufferObjectManager::kUniformBlockInstanceBindingInfoArray={
+        {"u_ambient_light","Ambient",16,0,0},
+        {"u_point_light_array","MultiplePointLights",48*2,1,0}
 };
 
 std::unordered_map<std::string,UniformBlock> UniformBufferObjectManager::kUniformBlockMap;
 
 void UniformBufferObjectManager::Init(){
     //环境光
-    kUniformBlockMap["u_ambient_light"]={
+    kUniformBlockMap["Ambient"]={
             {
                     {"color",0,sizeof(glm::vec3), nullptr},
                     {"intensity",12,sizeof(float), nullptr}
             }
     };
     //点光源数组
-    kUniformBlockMap["u_point_light_array"]={{}};
+    kUniformBlockMap["MultiplePointLights"]={{}};
     for(int i=0;i<MAX_LIGHT_NUM;i++){
         std::vector<UniformBlockMember>& uniform_block_member_vec=kUniformBlockMap["u_point_light_array"].uniform_block_member_vec_;
         uniform_block_member_vec.push_back({fmt::format("array_data[{}].pos",i),48*i+0,sizeof(glm::vec3), nullptr});
@@ -40,8 +40,8 @@ void UniformBufferObjectManager::Init(){
 }
 
 void UniformBufferObjectManager::CreateUniformBufferObject(){
-    for (int i = 0; i < kUniformBlockBindingInfoArray.size(); ++i) {
-        UniformBlockBindingInfo& uniform_block_binding_info=kUniformBlockBindingInfoArray[i];
+    for (int i = 0; i < kUniformBlockInstanceBindingInfoArray.size(); ++i) {
+        UniformBlockInstanceBindingInfo& uniform_block_binding_info=kUniformBlockInstanceBindingInfoArray[i];
         glGenBuffers(1, &uniform_block_binding_info.uniform_buffer_object_);__CHECK_GL_ERROR__
         glBindBuffer(GL_UNIFORM_BUFFER, uniform_block_binding_info.uniform_buffer_object_);__CHECK_GL_ERROR__
         //先不填数据

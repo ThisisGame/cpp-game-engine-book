@@ -59,13 +59,13 @@ public:
     unsigned int shader_program_handle_= 0;
 };
 
-/// 任务：串联uniform block与binding point。
-class RenderTaskConnectUniformBlockAndBindingPoint: public RenderTaskBase{
+/// 任务：串联uniform block实例与binding point。
+class RenderTaskConnectUniformBlockInstanceAndBindingPoint: public RenderTaskBase{
 public:
-    RenderTaskConnectUniformBlockAndBindingPoint(){
-        render_command_=RenderCommand::CONNECT_UNIFORM_BLOCK_AND_BINDING_POINT;
+    RenderTaskConnectUniformBlockInstanceAndBindingPoint(){
+        render_command_=RenderCommand::CONNECT_UNIFORM_BLOCK_INSTANCE_AND_BINDING_POINT;
     }
-    ~RenderTaskConnectUniformBlockAndBindingPoint(){
+    ~RenderTaskConnectUniformBlockInstanceAndBindingPoint(){
     }
 public:
     unsigned int shader_program_handle_= 0;
@@ -214,8 +214,8 @@ public:
         free(data);
     }
 public:
-    std::string uniform_block_name;
-    std::string uniform_block_member_name;
+    std::string uniform_block_instance_name_;
+    std::string uniform_block_member_name_;
     void* data;
 };
 

@@ -11,8 +11,9 @@
 #include <glm/glm.hpp>
 
 /// Uniform Block <==> Binding Point <==> Uniform Buffer Object
-class UniformBlockBindingInfo{
+class UniformBlockInstanceBindingInfo{
 public:
+    std::string uniform_block_instance_name_;
     std::string uniform_block_name_;
     unsigned short uniform_block_size_;
     unsigned int binding_point_;
@@ -45,8 +46,8 @@ class UniformBufferObjectManager {
 public:
     /// 返回所有Shader的uniform block信息。
     /// \return
-    static std::vector<UniformBlockBindingInfo>& UniformBlockBindingInfoArray(){
-        return kUniformBlockBindingInfoArray;
+    static std::vector<UniformBlockInstanceBindingInfo>& UniformBlockInstanceBindingInfoArray(){
+        return kUniformBlockInstanceBindingInfoArray;
     }
 
     /// 返回所有Uniform block结构。
@@ -73,7 +74,7 @@ public:
     static void UpdateUniformBlockSubData3f(std::string uniform_block_name, std::string uniform_block_member_name, glm::vec3& value);
 
 private:
-    static std::vector<UniformBlockBindingInfo> kUniformBlockBindingInfoArray;//统计所有Shader的uniform block信息。
+    static std::vector<UniformBlockInstanceBindingInfo> kUniformBlockInstanceBindingInfoArray;//统计所有Shader的uniform block信息。
 
     static std::unordered_map<std::string,UniformBlock> kUniformBlockMap;//映射Uniform block结构。
 };
