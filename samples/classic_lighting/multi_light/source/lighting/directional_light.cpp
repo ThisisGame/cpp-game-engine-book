@@ -31,12 +31,12 @@ DirectionalLight::~DirectionalLight() {
 
 void DirectionalLight::set_color(glm::vec3 color){
     Light::set_color(color);
-    UniformBufferObjectManager::UpdateUniformBlockSubData3f("Light","u_light_color",color_);
+    UniformBufferObjectManager::UpdateUniformBlockSubData3f("Light","color",color_);
 };
 
 void DirectionalLight::set_intensity(float intensity){
     Light::set_intensity(intensity);
-    UniformBufferObjectManager::UpdateUniformBlockSubData1f("Light","u_light_intensity",intensity_);
+    UniformBufferObjectManager::UpdateUniformBlockSubData1f("Light","intensity",intensity_);
 };
 
 void DirectionalLight::Update(){
