@@ -2,18 +2,26 @@
 
 uniform sampler2D u_diffuse_texture;//颜色纹理
 
+struct Ambient{
+    vec3  color;//环境光 alignment:12 offset:0
+    float intensity;//环境光强度 alignment:4 offset:16
+};
+
 //环境光
-layout(std140) uniform Ambient {
-    vec3  u_ambient_light_color;//环境光 alignment:12 offset:0
-    float u_ambient_light_intensity;//环境光强度 alignment:4 offset:16
+layout(std140) uniform AmbientBlock {
+    Ambient data;
+}u_ambient;
+
+struct Light {
+    vec3  pos;//位置 alignment:12 offset:0
+    vec3  color;//颜色 alignment:12 offset:12
+    float intensity;//强度 alignment:4 offset:24
 };
 
 //灯光
-layout(std140) uniform Light {
-    vec3  u_light_pos;//位置 alignment:12 offset:0
-    vec3  u_light_color;//颜色 alignment:12 offset:12
-    float u_light_intensity;//强度 alignment:4 offset:24
-};
+layout(std140) uniform LightBlock {
+    Light data;
+}u_light;
 
 uniform vec3 u_view_pos;
 //uniform float u_specular_highlight_intensity;//镜面高光强度
@@ -29,20 +37,20 @@ layout(location = 0) out vec4 o_fragColor;
 void main()
 {
     //ambient
-    vec3 ambient_color = u_ambient_light_color * u_ambient_light_intensity * texture(u_diffuse_texture,v_uv).rgb;
+    vec3 ambient_color = u_ambient.data.color * u_ambient.data.intensity * texture(u_diffuse_texture,v_uv).rgb;
 
     //diffuse
     vec3 normal=normalize(v_normal);
-    vec3 light_dir=normalize(u_light_pos - v_frag_pos);
+    vec3 light_dir=normalize(u_light.data.pos - v_frag_pos);
     float diffuse_intensity = max(dot(normal,light_dir),0.0);
-    vec3 diffuse_color = u_light_color * diffuse_intensity * u_light_intensity * texture(u_diffuse_texture,v_uv).rgb;
+    vec3 diffuse_color = u_light.data.color * diffuse_intensity * u_light.data.intensity * texture(u_diffuse_texture,v_uv).rgb;
 
     //specular
     vec3 reflect_dir=reflect(-light_dir,v_normal);
     vec3 view_dir=normalize(u_view_pos-v_frag_pos);
     float spec=pow(max(dot(view_dir,reflect_dir),0.0),u_specular_highlight_shininess);
     float specular_highlight_intensity = texture(u_specular_texture,v_uv).r;//从纹理中获取高光强度
-    vec3 specular_color = u_light_color * spec * specular_highlight_intensity * texture(u_diffuse_texture,v_uv).rgb;
+    vec3 specular_color = u_light.data.color * spec * specular_highlight_intensity * texture(u_diffuse_texture,v_uv).rgb;
 
     o_fragColor = vec4(ambient_color + diffuse_color + specular_color,1.0);
 }

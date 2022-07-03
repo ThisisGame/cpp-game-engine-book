@@ -23,15 +23,15 @@ Light::~Light() {}
 
 void Light::Update(){
     glm::vec3 light_position=game_object()->GetComponent<Transform>()->position();
-    UniformBufferObjectManager::UpdateUniformBlockSubData3f("Light","u_light_pos",light_position);
+    UniformBufferObjectManager::UpdateUniformBlockSubData3f("LightBlock","data.pos",light_position);
 }
 
 void Light::set_color(glm::vec3 color){
     color_ = color;
-    UniformBufferObjectManager::UpdateUniformBlockSubData3f("Light","u_light_color",color_);
+    UniformBufferObjectManager::UpdateUniformBlockSubData3f("LightBlock","data.color",color_);
 };
 
 void Light::set_intensity(float intensity){
     intensity_ = intensity;
-    UniformBufferObjectManager::UpdateUniformBlockSubData1f("Light","u_light_intensity",intensity_);
+    UniformBufferObjectManager::UpdateUniformBlockSubData1f("LightBlock","data.intensity",intensity_);
 };

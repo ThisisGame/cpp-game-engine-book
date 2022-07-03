@@ -10,22 +10,22 @@
 #include "render_task_producer.h"
 
 std::vector<UniformBlockBindingInfo> UniformBufferObjectManager::kUniformBlockBindingInfoArray={
-        {"Ambient",16,0,0},
-        {"Light",32,1,0}
+        {"AmbientBlock",16,0,0},
+        {"LightBlock",32,1,0}
 };
 
 std::unordered_map<std::string,UniformBlock> UniformBufferObjectManager::kUniformBlockMap={
-        {"Ambient",{
+        {"AmbientBlock",{
             {
-                    {"u_ambient_light_color",0,sizeof(glm::vec3), nullptr},
-                    {"u_ambient_light_intensity",12,sizeof(float), nullptr}
+                    {"data.color",0,sizeof(glm::vec3), nullptr},
+                    {"data.intensity",12,sizeof(float), nullptr}
                 }
          }},
-         {"Light",{
+         {"LightBlock",{
                 {
-                        {"u_light_pos",0,sizeof(glm::vec3), nullptr},
-                        {"u_light_color",16,sizeof(glm::vec3), nullptr},
-                        {"u_light_intensity",28,sizeof(float), nullptr}
+                        {"data.pos",0,sizeof(glm::vec3), nullptr},
+                        {"data.color",16,sizeof(glm::vec3), nullptr},
+                        {"data.intensity",28,sizeof(float), nullptr}
                 }
          }}
 };
