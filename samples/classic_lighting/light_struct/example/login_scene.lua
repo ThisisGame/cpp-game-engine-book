@@ -27,6 +27,7 @@ function LoginScene:ctor()
     self.go_skeleton_ = nil --骨骼蒙皮动画物体
     self.animation_ = nil--骨骼动画
     self.animation_clip_ = nil --- 骨骼动画片段
+    --@type Material
     self.material_ = nil --材质
     self.environment_=nil --环境
     self.light_=nil --灯光
