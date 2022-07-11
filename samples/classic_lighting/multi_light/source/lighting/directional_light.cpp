@@ -20,9 +20,12 @@ RTTR_REGISTRATION//注册反射
             .constructor<>()(rttr::policy::ctor::as_raw_ptr);
 }
 
+unsigned short DirectionalLight::light_count_=0;
+
 DirectionalLight::DirectionalLight():Light()
 {
-
+    light_id_=light_count_;
+    light_count_++;
 }
 
 DirectionalLight::~DirectionalLight() {
@@ -31,17 +34,20 @@ DirectionalLight::~DirectionalLight() {
 
 void DirectionalLight::set_color(glm::vec3 color){
     Light::set_color(color);
-    UniformBufferObjectManager::UpdateUniformBlockSubData3f("Light","color",color_);
+    std::string uniform_block_member_name=fmt::format("data[{}].color",light_id_);
+    UniformBufferObjectManager::UpdateUniformBlockSubData3f("u_directional_light_array",uniform_block_member_name,color_);
 };
 
 void DirectionalLight::set_intensity(float intensity){
     Light::set_intensity(intensity);
-    UniformBufferObjectManager::UpdateUniformBlockSubData1f("Light","intensity",intensity_);
+    std::string uniform_block_member_name=fmt::format("data[{}].intensity",light_id_);
+    UniformBufferObjectManager::UpdateUniformBlockSubData1f("u_directional_light_array",uniform_block_member_name,intensity_);
 };
 
 void DirectionalLight::Update(){
     glm::vec3 rotation=game_object()->GetComponent<Transform>()->rotation();
     glm::mat4 eulerAngleYXZ = glm::eulerAngleYXZ(glm::radians(rotation.y), glm::radians(rotation.x), glm::radians(rotation.z));
     glm::vec3 light_rotation=glm::vec3(eulerAngleYXZ * glm::vec4(0,0,-1,0));
-    UniformBufferObjectManager::UpdateUniformBlockSubData3f("Light","u_light_dir",light_rotation);
+    std::string uniform_block_member_name=fmt::format("data[{}].dir",light_id_);
+    UniformBufferObjectManager::UpdateUniformBlockSubData3f("u_directional_light_array",uniform_block_member_name,light_rotation);
 }

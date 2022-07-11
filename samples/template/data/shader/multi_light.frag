@@ -12,6 +12,19 @@ layout(std140) uniform AmbientBlock {
     Ambient data;
 }u_ambient;
 
+//方向光
+struct DirectionalLight {
+    vec3  dir;//方向 alignment:12 offset:0
+    vec3  color;//颜色 alignment:12 offset:16
+    float intensity;//强度 alignment:4 offset:28
+};
+
+#define DIRECTIONAL_LIGHT_MAX_NUM 2
+
+layout(std140) uniform DirectionalLightBlock {
+    DirectionalLight data[DIRECTIONAL_LIGHT_MAX_NUM];
+}u_directional_light_array;
+
 //点光
 struct PointLight {
     vec3  pos;//位置 alignment:16 offset:0
@@ -23,11 +36,11 @@ struct PointLight {
     float quadratic;//点光衰减二次项 alignment:4 offset:40
 };
 
-#define MAX_LIGHT_NUM 2
+#define POINT_LIGHT_MAX_NUM 2
 
 //灯光数组
 layout(std140) uniform PointLightBlock {
-    PointLight data[MAX_LIGHT_NUM];
+    PointLight data[POINT_LIGHT_MAX_NUM];
 }u_point_light_array;
 
 uniform vec3 u_view_pos;
@@ -48,7 +61,27 @@ void main()
     vec3 total_diffuse_color;
     vec3 total_specular_color;
 
-    for(int i=0;i<MAX_LIGHT_NUM;i++){
+    //directional light
+    for(int i=0;i<DIRECTIONAL_LIGHT_MAX_NUM;i++){
+        //diffuse
+        vec3 normal=normalize(v_normal);
+        vec3 light_dir=normalize(-u_directional_light_array.data[i].dir);
+        float diffuse_intensity = max(dot(normal,light_dir),0.0);
+        vec3 diffuse_color = u_directional_light_array.data[i].color * diffuse_intensity * u_directional_light_array.data[i].intensity * texture(u_diffuse_texture,v_uv).rgb;
+
+        //specular
+        vec3 reflect_dir=reflect(-light_dir,v_normal);
+        vec3 view_dir=normalize(u_view_pos-v_frag_pos);
+        float spec=pow(max(dot(view_dir,reflect_dir),0.0),u_specular_highlight_shininess);
+        float specular_highlight_intensity = texture(u_specular_texture,v_uv).r;//从纹理中获取高光强度
+        vec3 specular_color = u_directional_light_array.data[i].color * spec * u_directional_light_array.data[i].intensity * texture(u_diffuse_texture,v_uv).rgb;
+
+        total_diffuse_color=total_diffuse_color+diffuse_color;
+        total_specular_color=total_specular_color+specular_color;
+    }
+
+    //point light
+    for(int i=0;i<POINT_LIGHT_MAX_NUM;i++){
         //diffuse
         vec3 normal=normalize(v_normal);
         vec3 light_dir=normalize(u_point_light_array.data[i].pos - v_frag_pos);

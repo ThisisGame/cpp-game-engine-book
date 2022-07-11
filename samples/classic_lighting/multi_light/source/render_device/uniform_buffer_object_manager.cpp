@@ -9,11 +9,13 @@
 #include "render_task_queue.h"
 #include "render_task_producer.h"
 
-#define MAX_LIGHT_NUM 2 //最大灯光数量
+#define DIRECTIONAL_LIGHT_MAX_NUM 2 //最大点光源数量
+#define POINT_LIGHT_MAX_NUM 2 //最大点光源数量
 
 std::vector<UniformBlockInstanceBindingInfo> UniformBufferObjectManager::kUniformBlockInstanceBindingInfoArray={
         {"u_ambient","AmbientBlock",16,0,0},
-        {"u_point_light_array","PointLightBlock",48*2,1,0}
+        {"u_directional_light_array","DirectionalLightBlock",32*DIRECTIONAL_LIGHT_MAX_NUM,1,0},
+        {"u_point_light_array","PointLightBlock",48*POINT_LIGHT_MAX_NUM,2,0}
 };
 
 std::unordered_map<std::string,UniformBlock> UniformBufferObjectManager::kUniformBlockMap;
@@ -26,16 +28,30 @@ void UniformBufferObjectManager::Init(){
                     {"data.intensity",12,sizeof(float), nullptr}
             }
     };
+
+    //方向光
+    kUniformBlockMap["DirectionalLightBlock"]={{}};
+    {
+        std::vector<UniformBlockMember>& uniform_block_member_vec=kUniformBlockMap["DirectionalLightBlock"].uniform_block_member_vec_;
+        for(int i=0;i<POINT_LIGHT_MAX_NUM;i++){
+            uniform_block_member_vec.push_back({fmt::format("data[{}].dir",i),32*i+0,sizeof(glm::vec3), nullptr});
+            uniform_block_member_vec.push_back({fmt::format("data[{}].color",i),32*i+16,sizeof(glm::vec3), nullptr});
+            uniform_block_member_vec.push_back({fmt::format("data[{}].intensity",i),32*i+28,sizeof(float), nullptr});
+        }
+    }
+
     //点光源数组
     kUniformBlockMap["PointLightBlock"]={{}};
-    std::vector<UniformBlockMember>& uniform_block_member_vec=kUniformBlockMap["PointLightBlock"].uniform_block_member_vec_;
-    for(int i=0;i<MAX_LIGHT_NUM;i++){
-        uniform_block_member_vec.push_back({fmt::format("data[{}].pos",i),48*i+0,sizeof(glm::vec3), nullptr});
-        uniform_block_member_vec.push_back({fmt::format("data[{}].color",i),48*i+16,sizeof(glm::vec3), nullptr});
-        uniform_block_member_vec.push_back({fmt::format("data[{}].intensity",i),48*i+28,sizeof(float), nullptr});
-        uniform_block_member_vec.push_back({fmt::format("data[{}].constant",i),48*i+32,sizeof(float), nullptr});
-        uniform_block_member_vec.push_back({fmt::format("data[{}].linear",i),48*i+36,sizeof(float), nullptr});
-        uniform_block_member_vec.push_back({fmt::format("data[{}].quadratic",i),48*i+40,sizeof(float), nullptr});
+    {
+        std::vector<UniformBlockMember>& uniform_block_member_vec=kUniformBlockMap["PointLightBlock"].uniform_block_member_vec_;
+        for(int i=0;i<POINT_LIGHT_MAX_NUM;i++){
+            uniform_block_member_vec.push_back({fmt::format("data[{}].pos",i),48*i+0,sizeof(glm::vec3), nullptr});
+            uniform_block_member_vec.push_back({fmt::format("data[{}].color",i),48*i+16,sizeof(glm::vec3), nullptr});
+            uniform_block_member_vec.push_back({fmt::format("data[{}].intensity",i),48*i+28,sizeof(float), nullptr});
+            uniform_block_member_vec.push_back({fmt::format("data[{}].constant",i),48*i+32,sizeof(float), nullptr});
+            uniform_block_member_vec.push_back({fmt::format("data[{}].linear",i),48*i+36,sizeof(float), nullptr});
+            uniform_block_member_vec.push_back({fmt::format("data[{}].quadratic",i),48*i+40,sizeof(float), nullptr});
+        }
     }
 }
 

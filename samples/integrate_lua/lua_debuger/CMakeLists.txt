@@ -8,7 +8,7 @@ if (MSVC)
     add_compile_options(/wd4819)#忽略保存为unicode警告
 endif ()
 
-set(CMAKE_CXX_FLAGS "-Wno-inconsistent-missing-override")
+
 
 #拷贝depends目录
 file(COPY "../../template/depends/lua/" DESTINATION "../depends/lua/")

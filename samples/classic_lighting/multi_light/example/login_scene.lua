@@ -14,6 +14,7 @@ require("utils/screen")
 require("utils/time")
 require("lighting/environment")
 require("lighting/point_light")
+require("lighting/directional_light")
 
 LoginScene=class("LoginScene",Component)
 
@@ -29,8 +30,8 @@ function LoginScene:ctor()
     self.animation_clip_ = nil --- 骨骼动画片段
     self.material_ = nil --材质
     self.environment_=nil --环境
-    self.go_light_1_=nil --灯光
-    self.go_light_2_=nil --灯光
+    self.go_point_light_1_=nil --灯光
+    self.go_point_light_2_=nil --灯光
 end
 
 function LoginScene:Awake()
@@ -38,8 +39,10 @@ function LoginScene:Awake()
     LoginScene.super.Awake(self)
 
     self:CreateEnvironment()
-    self:CreateLight1()
-    self:CreateLight2()
+    self:CreateDirectionalLight1()
+    self:CreateDirectionalLight2()
+    self:CreatePointLight1()
+    self:CreatePointLight2()
     self:CreateMainCamera()
     self:CreateModel()
 end
@@ -51,14 +54,36 @@ function LoginScene:CreateEnvironment()
     self.environment_:set_ambient_color_intensity(0.3)
 end
 
---- 创建灯
-function LoginScene:CreateLight1()
-    self.go_light_1_= GameObject.new("point_light")
-    self.go_light_1_:AddComponent(Transform):set_position(glm.vec3(-2,0,5))
-    ---@type PointLight
-    local light=self.go_light_1_:AddComponent(PointLight)
+--- 创建方向光1
+function LoginScene:CreateDirectionalLight1()
+    self.go_directional_light_1_= GameObject.new("directional_light_1")
+    self.go_directional_light_1_:AddComponent(Transform)
+    self.go_directional_light_1_:GetComponent(Transform):set_rotation(glm.vec3(0,60,0))
 
+    local light=self.go_directional_light_1_:AddComponent(DirectionalLight)
     light:set_color(glm.vec3(1.0,1.0,1.0))
+    light:set_intensity(1.0)
+end
+
+--- 创建方向光2
+function LoginScene:CreateDirectionalLight2()
+    self.go_directional_light_2_= GameObject.new("directional_light_2")
+    self.go_directional_light_2_:AddComponent(Transform)
+    self.go_directional_light_2_:GetComponent(Transform):set_rotation(glm.vec3(240,0,0))
+
+    local light=self.go_directional_light_2_:AddComponent(DirectionalLight)
+    light:set_color(glm.vec3(1.0,1.0,1.0))
+    light:set_intensity(1.0)
+end
+
+--- 创建点光源1
+function LoginScene:CreatePointLight1()
+    self.go_point_light_1_= GameObject.new("point_light_1")
+    self.go_point_light_1_:AddComponent(Transform):set_position(glm.vec3(-2,0,5))
+    ---@type PointLight
+    local light=self.go_point_light_1_:AddComponent(PointLight)
+
+    light:set_color(glm.vec3(1.0,0.0,0.0))
     light:set_intensity(1.0)
     --衰减曲线 https://wiki.ogre3d.org/tiki-index.php?page=-Point+Light+Attenuation
     light:set_attenuation_constant(1.0)
@@ -66,15 +91,15 @@ function LoginScene:CreateLight1()
     light:set_attenuation_quadratic( 0.44)
 end
 
-function LoginScene:CreateLight2()
-    self.go_light_2_= GameObject.new("point_light")
-    self.go_light_2_:AddComponent(Transform):set_position(glm.vec3(2,0,5))
+--- 创建点光源2
+function LoginScene:CreatePointLight2()
+    self.go_point_light_2_= GameObject.new("point_light_2")
+    self.go_point_light_2_:AddComponent(Transform):set_position(glm.vec3(2,0,5))
     ---@type PointLight
-    local light=self.go_light_2_:AddComponent(PointLight)
+    local light=self.go_point_light_2_:AddComponent(PointLight)
 
-    light:set_color(glm.vec3(1.0,1.0,1.0))
+    light:set_color(glm.vec3(0.0,1.0,0.0))
     light:set_intensity(1.0)
-    --衰减曲线 https://wiki.ogre3d.org/tiki-index.php?page=-Point+Light+Attenuation
     light:set_attenuation_constant(1.0)
     light:set_attenuation_linear( 0.35)
     light:set_attenuation_quadratic( 0.44)
