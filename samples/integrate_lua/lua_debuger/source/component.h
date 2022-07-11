@@ -22,7 +22,7 @@ public:
 
     /// 设置对应的Lua组件
     /// \param lua_component_instance
-    void set_lua_component_instance(sol::table& lua_component_instance){
+    void set_lua_component_instance(sol::table lua_component_instance){
         lua_component_instance_=lua_component_instance;
     }
 

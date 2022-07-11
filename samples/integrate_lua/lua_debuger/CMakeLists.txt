@@ -8,6 +8,8 @@ if (MSVC)
     add_compile_options(/wd4819)#忽略保存为unicode警告
 endif ()
 
+set(CMAKE_CXX_FLAGS "-Wno-inconsistent-missing-override")
+
 #拷贝depends目录
 file(COPY "../../template/depends/lua/" DESTINATION "../depends/lua/")
 file(COPY "../../template/depends/luasocket-3.0.0/src/" DESTINATION "../depends/luasocket/")
@@ -36,6 +38,21 @@ if (MSVC)
             depends/luasocket/wsocket.c
             )
     link_libraries(ws2_32)
+else()
+    set(luasocket_c depends/luasocket/auxiliar.c
+            depends/luasocket/buffer.c
+            depends/luasocket/compat.c
+            depends/luasocket/except.c
+            depends/luasocket/inet.c
+            depends/luasocket/io.c
+            depends/luasocket/luasocket.c
+            depends/luasocket/options.c
+            depends/luasocket/select.c
+            depends/luasocket/tcp.c
+            depends/luasocket/timeout.c
+            depends/luasocket/udp.c
+            depends/luasocket/usocket.c
+            )
 endif()
 
 file(GLOB_RECURSE lua_c "depends/lua/src/*.c")

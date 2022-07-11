@@ -12,10 +12,10 @@ class GLFWwindow;
 class RenderTaskConsumer;
 class Application {
 public:
-    static void set_title(std::string& title){title_=title;}
+    static void set_title(std::string title){title_=title;}
 
     static const std::string& data_path(){return data_path_;}
-    static void set_data_path(std::string& data_path){data_path_=data_path;}
+    static void set_data_path(std::string data_path){data_path_=data_path;}
 
     /// 初始化OpenGL
     static void Init();
