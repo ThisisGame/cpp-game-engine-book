@@ -9,9 +9,9 @@
 #include "render_task_queue.h"
 #include "render_task_producer.h"
 
-std::vector<UniformBlockBindingInfo> UniformBufferObjectManager::kUniformBlockBindingInfoArray={
-        {"AmbientBlock",16,0,0},
-        {"LightBlock",32,1,0}
+std::vector<UniformBlockInstanceBindingInfo> UniformBufferObjectManager::kUniformBlockInstanceBindingInfoArray={
+        {"u_ambient","AmbientBlock",16,0,0},
+        {"u_light","LightBlock",32,1,0}
 };
 
 std::unordered_map<std::string,UniformBlock> UniformBufferObjectManager::kUniformBlockMap={
@@ -31,8 +31,8 @@ std::unordered_map<std::string,UniformBlock> UniformBufferObjectManager::kUnifor
 };
 
 void UniformBufferObjectManager::CreateUniformBufferObject(){
-    for (int i = 0; i < kUniformBlockBindingInfoArray.size(); ++i) {
-        UniformBlockBindingInfo& uniform_block_binding_info=kUniformBlockBindingInfoArray[i];
+    for (int i = 0; i < kUniformBlockInstanceBindingInfoArray.size(); ++i) {
+        UniformBlockInstanceBindingInfo& uniform_block_binding_info=kUniformBlockInstanceBindingInfoArray[i];
         glGenBuffers(1, &uniform_block_binding_info.uniform_buffer_object_);__CHECK_GL_ERROR__
         glBindBuffer(GL_UNIFORM_BUFFER, uniform_block_binding_info.uniform_buffer_object_);__CHECK_GL_ERROR__
         //先不填数据

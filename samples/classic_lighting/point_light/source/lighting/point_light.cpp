@@ -31,20 +31,20 @@ PointLight::~PointLight() {
 
 void PointLight::set_attenuation_constant(float attenuation_constant){
     attenuation_constant_ = attenuation_constant;
-    UniformBufferObjectManager::UpdateUniformBlockSubData1f("Light","u_light_constant",attenuation_constant_);
+    UniformBufferObjectManager::UpdateUniformBlockSubData1f("PointLight","u_light_constant",attenuation_constant_);
 }
 
 void PointLight::set_attenuation_linear(float attenuation_linear){
     attenuation_linear_ = attenuation_linear;
-    UniformBufferObjectManager::UpdateUniformBlockSubData1f("Light","u_light_linear",attenuation_linear_);
+    UniformBufferObjectManager::UpdateUniformBlockSubData1f("PointLight","u_light_linear",attenuation_linear_);
 }
 
 void PointLight::set_attenuation_quadratic(float attenuation_quadratic){
     attenuation_quadratic_ = attenuation_quadratic;
-    UniformBufferObjectManager::UpdateUniformBlockSubData1f("Light","u_light_quadratic",attenuation_quadratic_);
+    UniformBufferObjectManager::UpdateUniformBlockSubData1f("PointLight","u_light_quadratic",attenuation_quadratic_);
 }
 
 void PointLight::Update(){
     glm::vec3 light_position=game_object()->GetComponent<Transform>()->position();
-    UniformBufferObjectManager::UpdateUniformBlockSubData3f("Light","u_light_pos",light_position);
+    UniformBufferObjectManager::UpdateUniformBlockSubData3f("PointLight","u_light_pos",light_position);
 }

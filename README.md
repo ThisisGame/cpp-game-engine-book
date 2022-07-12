@@ -159,7 +159,7 @@ Blender建模、FMOD、WWise音频制作，我都录制了视频。
 目前适配Windows与MacOS。
 
 ```diff
-- 由于Arm版Mac只支持OpenGL Core，所以《6.2 OpenGL Core Profile》之前的章节实例无法在Arm版Mac运行。
+- 由于Arm版Mac只支持OpenGL Core，所以《6.3 OpenGL Core Profile》之前的章节实例无法在Arm版Mac运行。
 ```
 
 #### 为何不使用VisualStudio？
