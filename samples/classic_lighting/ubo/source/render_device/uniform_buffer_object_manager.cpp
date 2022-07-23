@@ -41,6 +41,8 @@ void UniformBufferObjectManager::CreateUniformBufferObject(){
 
         //串联 UBO 和 binding point 绑定
         glBindBufferBase(GL_UNIFORM_BUFFER, uniform_block_binding_info.binding_point_, uniform_block_binding_info.uniform_buffer_object_);__CHECK_GL_ERROR__
+
+        glBindBuffer(GL_UNIFORM_BUFFER, 0);__CHECK_GL_ERROR__
     }
 }
 
