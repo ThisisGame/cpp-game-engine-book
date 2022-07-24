@@ -115,6 +115,8 @@
     * [23.2 漫反射光照模型](23. classic_lighting/23.2 diffuse_light.md)
     * [23.3 镜面高光光照模型](23. classic_lighting/23.3 specular_highlight.md)
     * [23.4 高光贴图](23. classic_lighting/23.4 specular_map.md)
+    * [23.5 Shader结构体](23. classic_lighting/23.5 shader_struct.md)
+    * [23.6 Uniform Buffer Object](23. classic_lighting/23.6 ubo.md)
 * [88. VSCode扩展开发与定制](88. vscode_extension_dev/88. vscode_extension_dev.md)
     * [88.1 第一个VSCode扩展程序](88. vscode_extension_dev/88.1 first_extension.md)
     * [88.2 从源码编译VSCode](88. vscode_extension_dev/88.2 vscode_opensource.md)

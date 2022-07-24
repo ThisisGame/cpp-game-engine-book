@@ -33,7 +33,6 @@ public:
     std::string member_name_;
     int offset_;
     short data_size_;
-    void* data_;
 };
 
 /// Uniform Block 结构信息

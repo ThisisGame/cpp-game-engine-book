@@ -4,7 +4,7 @@ uniform sampler2D u_diffuse_texture;//颜色纹理
 
 struct Ambient{
     vec3  color;//环境光 alignment:12 offset:0
-    float intensity;//环境光强度 alignment:4 offset:16
+    float intensity;//环境光强度 alignment:4 offset:12
 };
 
 //环境光
@@ -14,8 +14,8 @@ layout(std140) uniform AmbientBlock {
 
 struct Light {
     vec3  pos;//位置 alignment:12 offset:0
-    vec3  color;//颜色 alignment:12 offset:12
-    float intensity;//强度 alignment:4 offset:24
+    vec3  color;//颜色 alignment:12 offset:16
+    float intensity;//强度 alignment:4 offset:28
 };
 
 //灯光

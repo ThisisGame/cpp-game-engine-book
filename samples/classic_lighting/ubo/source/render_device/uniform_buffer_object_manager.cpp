@@ -17,15 +17,15 @@ std::vector<UniformBlockInstanceBindingInfo> UniformBufferObjectManager::kUnifor
 std::unordered_map<std::string,UniformBlock> UniformBufferObjectManager::kUniformBlockMap={
         {"AmbientBlock",{
             {
-                    {"data.color",0,sizeof(glm::vec3), nullptr},
-                    {"data.intensity",12,sizeof(float), nullptr}
+                    {"data.color",0,sizeof(glm::vec3)},
+                    {"data.intensity",12,sizeof(float)}
                 }
          }},
          {"LightBlock",{
                 {
-                        {"data.pos",0,sizeof(glm::vec3), nullptr},
-                        {"data.color",16,sizeof(glm::vec3), nullptr},
-                        {"data.intensity",28,sizeof(float), nullptr}
+                        {"data.pos",0,sizeof(glm::vec3)},
+                        {"data.color",16,sizeof(glm::vec3)},
+                        {"data.intensity",28,sizeof(float)}
                 }
          }}
 };
