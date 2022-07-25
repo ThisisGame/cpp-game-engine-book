@@ -9,30 +9,35 @@
 #include "render_task_queue.h"
 #include "render_task_producer.h"
 
-std::vector<UniformBlockBindingInfo> UniformBufferObjectManager::kUniformBlockBindingInfoArray={
-        {"Ambient",16,0,0},
-        {"Light",32,1,0}
+std::vector<UniformBlockInstanceBindingInfo> UniformBufferObjectManager::kUniformBlockInstanceBindingInfoArray={
+        {"u_ambient","AmbientBlock",16,0,0},
+        {"u_directional_light","DirectionalLightBlock",32,1,0}
 };
 
-std::unordered_map<std::string,UniformBlock> UniformBufferObjectManager::kUniformBlockMap={
-        {"Ambient",{
+std::unordered_map<std::string,UniformBlock> UniformBufferObjectManager::kUniformBlockMap;
+
+void UniformBufferObjectManager::Init(){
+    //环境光
+    kUniformBlockMap["AmbientBlock"]={
             {
-                    {"u_ambient_light_color",0,sizeof(glm::vec3), nullptr},
-                    {"u_ambient_light_intensity",12,sizeof(float), nullptr}
-                }
-         }},
-         {"Light",{
-                {
-                        {"u_light_dir",0,sizeof(glm::vec3), nullptr},
-                        {"u_light_color",16,sizeof(glm::vec3), nullptr},
-                        {"u_light_intensity",28,sizeof(float), nullptr}
-                }
-         }}
-};
+                    {"data.color",0,sizeof(glm::vec3)},
+                    {"data.intensity",12,sizeof(float)}
+            }
+    };
+
+    //方向光
+    kUniformBlockMap["DirectionalLightBlock"]={
+            {
+                    {"data.dir",0,sizeof(glm::vec3)},
+                    {"data.color",16,sizeof(glm::vec3)},
+                    {"data.intensity",28,sizeof(float)}
+            }
+    };
+}
 
 void UniformBufferObjectManager::CreateUniformBufferObject(){
-    for (int i = 0; i < kUniformBlockBindingInfoArray.size(); ++i) {
-        UniformBlockBindingInfo& uniform_block_binding_info=kUniformBlockBindingInfoArray[i];
+    for (int i = 0; i < kUniformBlockInstanceBindingInfoArray.size(); ++i) {
+        UniformBlockInstanceBindingInfo& uniform_block_binding_info=kUniformBlockInstanceBindingInfoArray[i];
         glGenBuffers(1, &uniform_block_binding_info.uniform_buffer_object_);__CHECK_GL_ERROR__
         glBindBuffer(GL_UNIFORM_BUFFER, uniform_block_binding_info.uniform_buffer_object_);__CHECK_GL_ERROR__
         //先不填数据
@@ -44,14 +49,14 @@ void UniformBufferObjectManager::CreateUniformBufferObject(){
     }
 }
 
-void UniformBufferObjectManager::UpdateUniformBlockSubData1f(std::string uniform_block_name, std::string uniform_block_member_name, float value){
+void UniformBufferObjectManager::UpdateUniformBlockSubData1f(std::string uniform_block_instance_name, std::string uniform_block_member_name, float value){
     void* data= malloc(sizeof(float));
     memcpy(data,&value,sizeof(float));
-    RenderTaskProducer::ProduceRenderTaskUpdateUBOSubData(uniform_block_name,uniform_block_member_name,data);
+    RenderTaskProducer::ProduceRenderTaskUpdateUBOSubData(uniform_block_instance_name, std::move(uniform_block_member_name), data);
 }
 
-void UniformBufferObjectManager::UpdateUniformBlockSubData3f(std::string uniform_block_name, std::string uniform_block_member_name, glm::vec3& value){
+void UniformBufferObjectManager::UpdateUniformBlockSubData3f(std::string uniform_block_instance_name, std::string uniform_block_member_name, glm::vec3& value){
     void* data= malloc(sizeof(glm::vec3));
     memcpy(data,&value,sizeof(glm::vec3));
-    RenderTaskProducer::ProduceRenderTaskUpdateUBOSubData(uniform_block_name,uniform_block_member_name,data);
+    RenderTaskProducer::ProduceRenderTaskUpdateUBOSubData(uniform_block_instance_name, uniform_block_member_name, data);
 }

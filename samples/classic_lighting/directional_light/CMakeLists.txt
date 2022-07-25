@@ -1,5 +1,5 @@
 ﻿cmake_minimum_required(VERSION 3.17)
-project(ubo)
+project(directional_light)
 
 set(CMAKE_CXX_STANDARD 17)
 

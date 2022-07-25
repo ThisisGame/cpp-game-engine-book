@@ -143,11 +143,11 @@ void RenderTaskProducer::ProduceRenderTaskUpdateVBOSubData(unsigned int vbo_hand
     RenderTaskQueue::Push(task);
 }
 
-void RenderTaskProducer::ProduceRenderTaskUpdateUBOSubData(std::string uniform_block_name,
+void RenderTaskProducer::ProduceRenderTaskUpdateUBOSubData(std::string uniform_block_instance_name,
                                                            std::string uniform_block_member_name, void* data){
     EASY_FUNCTION();
     RenderTaskUpdateUBOSubData* task=new RenderTaskUpdateUBOSubData();
-    task->uniform_block_instance_name_=uniform_block_name;
+    task->uniform_block_instance_name_=uniform_block_instance_name;
     task->uniform_block_member_name_=uniform_block_member_name;
     task->data=data;
     RenderTaskQueue::Push(task);

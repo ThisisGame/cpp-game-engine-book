@@ -24,8 +24,8 @@ void UniformBufferObjectManager::Init(){
     //环境光
     kUniformBlockMap["AmbientBlock"]={
             {
-                    {"data.color",0,sizeof(glm::vec3), nullptr},
-                    {"data.intensity",12,sizeof(float), nullptr}
+                    {"data.color",0,sizeof(glm::vec3)},
+                    {"data.intensity",12,sizeof(float)}
             }
     };
 
@@ -34,9 +34,9 @@ void UniformBufferObjectManager::Init(){
     {
         std::vector<UniformBlockMember>& uniform_block_member_vec=kUniformBlockMap["DirectionalLightBlock"].uniform_block_member_vec_;
         for(int i=0;i<POINT_LIGHT_MAX_NUM;i++){
-            uniform_block_member_vec.push_back({fmt::format("data[{}].dir",i),32*i+0,sizeof(glm::vec3), nullptr});
-            uniform_block_member_vec.push_back({fmt::format("data[{}].color",i),32*i+16,sizeof(glm::vec3), nullptr});
-            uniform_block_member_vec.push_back({fmt::format("data[{}].intensity",i),32*i+28,sizeof(float), nullptr});
+            uniform_block_member_vec.push_back({fmt::format("data[{}].dir",i),32*i+0,sizeof(glm::vec3)});
+            uniform_block_member_vec.push_back({fmt::format("data[{}].color",i),32*i+16,sizeof(glm::vec3)});
+            uniform_block_member_vec.push_back({fmt::format("data[{}].intensity",i),32*i+28,sizeof(float)});
         }
     }
 
@@ -45,12 +45,12 @@ void UniformBufferObjectManager::Init(){
     {
         std::vector<UniformBlockMember>& uniform_block_member_vec=kUniformBlockMap["PointLightBlock"].uniform_block_member_vec_;
         for(int i=0;i<POINT_LIGHT_MAX_NUM;i++){
-            uniform_block_member_vec.push_back({fmt::format("data[{}].pos",i),48*i+0,sizeof(glm::vec3), nullptr});
-            uniform_block_member_vec.push_back({fmt::format("data[{}].color",i),48*i+16,sizeof(glm::vec3), nullptr});
-            uniform_block_member_vec.push_back({fmt::format("data[{}].intensity",i),48*i+28,sizeof(float), nullptr});
-            uniform_block_member_vec.push_back({fmt::format("data[{}].constant",i),48*i+32,sizeof(float), nullptr});
-            uniform_block_member_vec.push_back({fmt::format("data[{}].linear",i),48*i+36,sizeof(float), nullptr});
-            uniform_block_member_vec.push_back({fmt::format("data[{}].quadratic",i),48*i+40,sizeof(float), nullptr});
+            uniform_block_member_vec.push_back({fmt::format("data[{}].pos",i),48*i+0,sizeof(glm::vec3)});
+            uniform_block_member_vec.push_back({fmt::format("data[{}].color",i),48*i+16,sizeof(glm::vec3)});
+            uniform_block_member_vec.push_back({fmt::format("data[{}].intensity",i),48*i+28,sizeof(float)});
+            uniform_block_member_vec.push_back({fmt::format("data[{}].constant",i),48*i+32,sizeof(float)});
+            uniform_block_member_vec.push_back({fmt::format("data[{}].linear",i),48*i+36,sizeof(float)});
+            uniform_block_member_vec.push_back({fmt::format("data[{}].quadratic",i),48*i+40,sizeof(float)});
         }
     }
 }
@@ -69,14 +69,14 @@ void UniformBufferObjectManager::CreateUniformBufferObject(){
     }
 }
 
-void UniformBufferObjectManager::UpdateUniformBlockSubData1f(std::string uniform_block_name, std::string uniform_block_member_name, float value){
+void UniformBufferObjectManager::UpdateUniformBlockSubData1f(std::string uniform_block_instance_name, std::string uniform_block_member_name, float value){
     void* data= malloc(sizeof(float));
     memcpy(data,&value,sizeof(float));
-    RenderTaskProducer::ProduceRenderTaskUpdateUBOSubData(uniform_block_name,std::move(uniform_block_member_name),data);
+    RenderTaskProducer::ProduceRenderTaskUpdateUBOSubData(uniform_block_instance_name, std::move(uniform_block_member_name), data);
 }
 
-void UniformBufferObjectManager::UpdateUniformBlockSubData3f(std::string uniform_block_name, std::string uniform_block_member_name, glm::vec3& value){
+void UniformBufferObjectManager::UpdateUniformBlockSubData3f(std::string uniform_block_instance_name, std::string uniform_block_member_name, glm::vec3& value){
     void* data= malloc(sizeof(glm::vec3));
     memcpy(data,&value,sizeof(glm::vec3));
-    RenderTaskProducer::ProduceRenderTaskUpdateUBOSubData(uniform_block_name,uniform_block_member_name,data);
+    RenderTaskProducer::ProduceRenderTaskUpdateUBOSubData(uniform_block_instance_name, uniform_block_member_name, data);
 }

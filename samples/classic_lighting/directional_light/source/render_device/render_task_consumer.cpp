@@ -110,20 +110,20 @@ void RenderTaskConsumer::CompileShader(RenderTaskBase* task_base){
     GPUResourceMapper::MapShaderProgram(task->shader_program_handle_, shader_program);
 }
 
-void RenderTaskConsumer::ConnectUniformBlockAndBindingPoint(RenderTaskBase *task_base) {
-    RenderTaskConnectUniformBlockAndBindingPoint* task= dynamic_cast<RenderTaskConnectUniformBlockAndBindingPoint*>(task_base);
+void RenderTaskConsumer::ConnectUniformBlockInstanceAndBindingPoint(RenderTaskBase *task_base) {
+    RenderTaskConnectUniformBlockInstanceAndBindingPoint* task= dynamic_cast<RenderTaskConnectUniformBlockInstanceAndBindingPoint*>(task_base);
     GLuint shader_program = GPUResourceMapper::GetShaderProgram(task->shader_program_handle_);
 
-    std::vector<UniformBlockBindingInfo> uniform_block_binding_info_array= UniformBufferObjectManager::UniformBlockBindingInfoArray();
-    for (int i = 0; i < uniform_block_binding_info_array.size(); ++i) {
-        //找到UniformBlock在当前Shader程序的index
-        std::string uniform_block_name=uniform_block_binding_info_array[i].uniform_block_name_;
+    std::vector<UniformBlockInstanceBindingInfo> uniform_block_instance_binding_info_array= UniformBufferObjectManager::UniformBlockInstanceBindingInfoArray();
+    for (int i = 0; i < uniform_block_instance_binding_info_array.size(); ++i) {
+        //找到UniformBlock在当前Shader程序的index。(注意这里是用uniform_block_name_，而不是uniform_block_instance_name_)
+        std::string uniform_block_name=uniform_block_instance_binding_info_array[i].uniform_block_name_;
         GLuint uniform_block_index = glGetUniformBlockIndex(shader_program, uniform_block_name.c_str());__CHECK_GL_ERROR__
         if(uniform_block_index==GL_INVALID_INDEX){//当前Shader程序没有这个UniformBlock
             continue;
         }
         //关联当前Shader的UniformBlock到BindingPoint，这样间接与UniformBufferObject有了联系。
-        GLuint uniform_block_binding_point=uniform_block_binding_info_array[i].binding_point_;
+        GLuint uniform_block_binding_point=uniform_block_instance_binding_info_array[i].binding_point_;
         glUniformBlockBinding(shader_program, uniform_block_index, uniform_block_binding_point);__CHECK_GL_ERROR__
     }
 }
@@ -303,23 +303,27 @@ void RenderTaskConsumer::CreateUBO(RenderTaskBase *task_base) {
 void RenderTaskConsumer::UpdateUBOSubData(RenderTaskBase* task_base){
     RenderTaskUpdateUBOSubData* task=dynamic_cast<RenderTaskUpdateUBOSubData*>(task_base);
 
-    std::vector<UniformBlockBindingInfo>& uniform_block_binding_info_array= UniformBufferObjectManager::UniformBlockBindingInfoArray();
+    std::vector<UniformBlockInstanceBindingInfo>& uniform_block_instance_binding_info_array= UniformBufferObjectManager::UniformBlockInstanceBindingInfoArray();
     std::unordered_map<std::string,UniformBlock>& uniform_block_map= UniformBufferObjectManager::UniformBlockMap();
 
-    for (int i = 0; i < uniform_block_binding_info_array.size(); ++i) {
-        UniformBlockBindingInfo& uniform_block_binding_info=uniform_block_binding_info_array[i];
-        if(uniform_block_binding_info.uniform_block_name_!=task->uniform_block_name){
+    for (int i = 0; i < uniform_block_instance_binding_info_array.size(); ++i) {
+        //找到UniformBlock实例信息
+        UniformBlockInstanceBindingInfo& uniform_block_instance_binding_info=uniform_block_instance_binding_info_array[i];
+        if(uniform_block_instance_binding_info.uniform_block_instance_name_ != task->uniform_block_instance_name_){
             continue;
         }
 
-        glBindBuffer(GL_UNIFORM_BUFFER, uniform_block_binding_info.uniform_buffer_object_);__CHECK_GL_ERROR__
+        glBindBuffer(GL_UNIFORM_BUFFER, uniform_block_instance_binding_info.uniform_buffer_object_);__CHECK_GL_ERROR__
 
-        UniformBlock uniform_block=uniform_block_map[uniform_block_binding_info.uniform_block_name_];
+        //以UniformBlock实例对应的UniformBlock名，获取对应的结构信息。
+        UniformBlock uniform_block=uniform_block_map[uniform_block_instance_binding_info.uniform_block_name_];
         for (auto& uniform_block_member:uniform_block.uniform_block_member_vec_) {
-            if(uniform_block_member.member_name_!=task->uniform_block_member_name){
+            //找到对应的成员变量。
+            if(uniform_block_member.member_name_!=task->uniform_block_member_name_){
                 continue;
             }
 
+            //更新对应成员变量数据。
             glBufferSubData(GL_UNIFORM_BUFFER, uniform_block_member.offset_, uniform_block_member.data_size_, task->data);__CHECK_GL_ERROR__
         }
 
@@ -429,6 +433,7 @@ void RenderTaskConsumer::ProcessTask() {
     glfwSwapInterval(1);
 
     //初始化UBO
+    UniformBufferObjectManager::Init();
     UniformBufferObjectManager::CreateUniformBufferObject();
 
     while (!glfwWindowShouldClose(window_))
@@ -451,8 +456,8 @@ void RenderTaskConsumer::ProcessTask() {
                     CompileShader(render_task);
                     break;
                 }
-                case RenderCommand::CONNECT_UNIFORM_BLOCK_AND_BINDING_POINT:{
-                    ConnectUniformBlockAndBindingPoint(render_task);
+                case RenderCommand::CONNECT_UNIFORM_BLOCK_INSTANCE_AND_BINDING_POINT:{
+                    ConnectUniformBlockInstanceAndBindingPoint(render_task);
                     break;
                 }
                 case RenderCommand::USE_SHADER_PROGRAM:{

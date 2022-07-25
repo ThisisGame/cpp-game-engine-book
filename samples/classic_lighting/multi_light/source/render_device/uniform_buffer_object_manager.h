@@ -33,7 +33,6 @@ public:
     std::string member_name_;
     int offset_;
     short data_size_;
-    void* data_;
 };
 
 /// Uniform Block 结构信息
@@ -62,16 +61,16 @@ public:
     static void CreateUniformBufferObject();
 
     /// 更新UBO数据(float)
-    /// \param uniform_block_name
+    /// \param uniform_block_instance_name
     /// \param uniform_block_member_name
     /// \param value
-    static void UpdateUniformBlockSubData1f(std::string uniform_block_name, std::string uniform_block_member_name, float value);
+    static void UpdateUniformBlockSubData1f(std::string uniform_block_instance_name, std::string uniform_block_member_name, float value);
 
     /// 更新UBO数据(vec3)
-    /// \param uniform_block_name
+    /// \param uniform_block_instance_name
     /// \param uniform_block_member_name
     /// \param value
-    static void UpdateUniformBlockSubData3f(std::string uniform_block_name, std::string uniform_block_member_name, glm::vec3& value);
+    static void UpdateUniformBlockSubData3f(std::string uniform_block_instance_name, std::string uniform_block_member_name, glm::vec3& value);
 
 private:
     static std::vector<UniformBlockInstanceBindingInfo> kUniformBlockInstanceBindingInfoArray;//统计所有Shader的uniform block信息。
