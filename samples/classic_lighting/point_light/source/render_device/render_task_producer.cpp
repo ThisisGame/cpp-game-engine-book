@@ -34,7 +34,7 @@ void RenderTaskProducer::ProduceRenderTaskCompileShader(const char* vertex_shade
 /// \param shader_program_handle Shader程序句柄
 void RenderTaskProducer::ProduceRenderTaskConnectUniformBlockAndBindingPoint(unsigned int shader_program_handle){
     EASY_FUNCTION();
-    RenderTaskConnectUniformBlockAndBindingPoint* task=new RenderTaskConnectUniformBlockAndBindingPoint();
+    RenderTaskConnectUniformBlockInstanceAndBindingPoint* task=new RenderTaskConnectUniformBlockInstanceAndBindingPoint();
     task->shader_program_handle_=shader_program_handle;
     RenderTaskQueue::Push(task);
 }
@@ -143,12 +143,12 @@ void RenderTaskProducer::ProduceRenderTaskUpdateVBOSubData(unsigned int vbo_hand
     RenderTaskQueue::Push(task);
 }
 
-void RenderTaskProducer::ProduceRenderTaskUpdateUBOSubData(std::string uniform_block_name,
+void RenderTaskProducer::ProduceRenderTaskUpdateUBOSubData(std::string uniform_block_instance_name,
                                                            std::string uniform_block_member_name, void* data){
     EASY_FUNCTION();
     RenderTaskUpdateUBOSubData* task=new RenderTaskUpdateUBOSubData();
-    task->uniform_block_name=uniform_block_name;
-    task->uniform_block_member_name=uniform_block_member_name;
+    task->uniform_block_instance_name_=uniform_block_instance_name;
+    task->uniform_block_member_name_=uniform_block_member_name;
     task->data=data;
     RenderTaskQueue::Push(task);
 }

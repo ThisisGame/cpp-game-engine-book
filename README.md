@@ -64,16 +64,15 @@
 
 * 每一篇都从入门角度编写，一些名词，能和其他名词关联的我都会尽量关联。
   例如Shader的编译与Link，我用C语言的编译来对比。
-  <table>
-  <tr ><td></td><td bgcolor="AliceBlue"><b>C语言</td><td bgcolor="AliceBlue"><b>Shader</td></tr>
-  <tr><td><b>目标硬件</td><td>CPU</td><td>GPU</td></tr>
-  <tr><td rowspan="6"><b>编译流程</td><td>创建项目</td><td>创建GPU程序</td></tr>
-  <tr><td>创建多个代码文件</td><td>创建Shader对象(顶点Shader和片段Shader) </td></tr>
-  <tr><td>编写多个代码</td><td>上传Shader源码到Shader对象</td></tr>
-  <tr><td>编译代码</td><td>编译Shader</td></tr>
-  <tr><td>添加到链接列表</td><td>添加到链接列表</td></tr>
-  <tr><td>链接</td><td>链接</td></tr>
-  </table>
+  |   |   C语言| Shader|
+  |---|---|---|
+  |  目标硬件 | CPU  |GPU|
+  |编译流程|创建项目|创建GPU程序|
+  ||创建编写多个C代码文件|创建编写Shader(顶点Shader和片段Shader)|
+  ||把C代码发给编译器|把Shader代码发送到编译器|
+  ||编译C代码|编译Shader代码|
+  ||添加到链接列表|添加到链接列表|
+  ||链接|链接|
 
 * 每一小节开头就贴上了这一节项目地址，把文件夹拖到CLion里面立即可以调试。
   ![](imgs/ieg_open_source/project_dir_line.jpg)
@@ -85,18 +84,10 @@
 
 从最简单的三角形绘制，到骨骼动画渲染、灯光阴影、多线程、物理、寻路AI、音频解析都会进行介绍。
 
-<table>
-    <tr>
-        <td><img src="imgs/opengl_draw_polygon/draw_triangle/draw_triangle.png" width=300></td>
-        <td><img src="imgs/texture_make_beautiful/draw_cube_texture/draw_cube_urban.gif" width=300></td>
-        <td><img src="imgs/ieg_open_source/draw_blender_mesh.jpg" width=300></td>
-    </tr>
-    <tr>
-        <td><img src="imgs/ieg_open_source/draw_ttf_font_freetype_color.jpg" width=300></td>
-        <td><img src="imgs/ieg_open_source/gui.gif" width=300></td>
-        <td><img src="imgs/ieg_open_source/fbx_skinned_mesh.gif" width=300></td>
-    </tr>
-</table>
+| ![](imgs/opengl_draw_polygon/draw_triangle/draw_triangle.png)  |  ![](imgs/texture_make_beautiful/draw_cube_texture/draw_cube_urban.gif) |  ![](imgs/ieg_open_source/draw_blender_mesh.jpg) |
+|---|---|---|
+|![](imgs/ieg_open_source/draw_ttf_font_freetype_color.jpg)|![](imgs/ieg_open_source/gui.gif)|![](imgs/ieg_open_source/fbx_skinned_mesh.gif)|
+
 
 #### 引擎生态
 
@@ -106,18 +97,11 @@ Blender建模、FMOD、WWise音频制作，我都录制了视频。
 
 其他的Substance、Toolbag插件开发，Renderdoc DrawCall分析都有简单介绍。
 
-<table>
-    <tr>
-        <td><img src="imgs/ieg_open_source/blender_1_hq720.jpg" width=300></td>
-        <td><img src="imgs/ieg_open_source/substance_painter_1_hq720.jpg" width=300></td>
-        <td><img src="imgs/ieg_open_source/toolbag_1_hq720.jpg" width=300></td>
-    </tr>
-    <tr>
-        <td><img src="imgs/ieg_open_source/fmod_2_hq720.jpg" width=300></td>
-        <td><img src="imgs/ieg_open_source/wwise_1_hq720.jpg" width=300></td>
-        <td><img src="imgs/ieg_open_source/renderdoc_hq720.jpg" width=300></td>
-    </tr>
-</table>
+
+| ![](imgs/ieg_open_source/blender_1_hq720.jpg)  |  ![](imgs/ieg_open_source/substance_painter_1_hq720.jpg) | ![](imgs/ieg_open_source/toolbag_1_hq720.jpg)|
+|---|---|---|
+| ![](imgs/ieg_open_source/fmod_2_hq720.jpg)  |  ![](imgs/ieg_open_source/wwise_1_hq720.jpg) | ![](imgs/ieg_open_source/renderdoc_hq720.jpg)|
+
 
 #### 短期目标
 
@@ -125,13 +109,8 @@ Blender建模、FMOD、WWise音频制作，我都录制了视频。
 
 有了一定功能后，就会基于现有功能开发一个小游戏，阶段性成就才能长时间坚持。
 
-<table>
-    <tr>
-        <td><img src="imgs/ieg_open_source/hunter_need_head_phone.jpg" width=300></td>
-        <td><img src="imgs/ieg_open_source/empty_960_640.jpg" width=300></td>
-        <td><img src="imgs/ieg_open_source/empty_960_640.jpg" width=300></td>
-    </tr>
-</table>
+| ![](imgs/ieg_open_source/hunter_need_head_phone.jpg)  |  ![](imgs/ieg_open_source/empty_960_640.jpg) | ![](imgs/ieg_open_source/empty_960_640.jpg)|
+|---|---|---|
 
 ## 快速上手 Getting Start
 
@@ -181,13 +160,10 @@ VisualStudio C++只支持Windows，Mac上就需要XCode，增加了学习成本�
 * 你可以直接打开在线阅读：`http://www.thisisgame.com.cn/tutorial?book=cpp-game-engine-book&lang=zh&md=Introduction.md`
 * 本书是开源的，你可以fork本项目，然后修改代码，然后提交合并请求。
 * 欢迎大家提Issue，反馈遇到的问题。内网可以直接联系我。也可以加入q群(879187705)讨论，得到答案后，更新issue，方便其他人查询。
-  <table>
-  <tr>
-    <td align="center">
-    <img src="imgs/readme/qq_qrcode.png" alt="游戏引擎 浅入浅出 QQ群" class="transparent">
-    </td>
-  </tr>
-  </table>
+  
+  | ![](imgs/readme/qq_qrcode.png)  |
+  |---|
+
 
 ## 团队介绍 Members
 
@@ -197,25 +173,8 @@ VisualStudio C++只支持Windows，Mac上就需要XCode，增加了学习成本�
 
 项目使用CLion IDE，使用PVS-Studio作为代码扫描分析工具，感谢其提供的开源许可。
 
-<table>
-  <tr>
-    <td align="center">
-        <a href="https://pvs-studio.com/">
-            <img src="https://cdn.pvs-studio.com/static/images/logo/pvs_logo_4.svg" width="100px;" alt="pvs-studio" border="1" border-style="solid"/>
-            <br />
-            <sub><b>PVS-Studio</b></sub>
-        </a>
-        <br />
-        </a>
-    </td>
-    <td align="center">
-        <a href="https://jb.gg/OpenSource">
-            <img src="https://resources.jetbrains.com/storage/products/jetbrains/img/meta/preview.png" width="100px" alt="JetBrains" border="1" border-style="solid"/>
-            <br />
-            <sub><b>JetBrains</b></sub>
-        </a>
-        <br />
-    </td>
-  </tr>
-</table>
+| ![](imgs/readme/pvsstudio.png)  |  ![](imgs/readme/jetbrains-variant-4.png) |
+|---|---|
+|  PVS-Studio |  JetBrains |
+
 

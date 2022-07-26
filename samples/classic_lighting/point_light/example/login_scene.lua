@@ -56,7 +56,7 @@ function LoginScene:CreateLight()
     ---@type PointLight
     local light=self.go_light_:AddComponent(PointLight)
 
-    light:set_color(glm.vec3(1.0,1.0,1.0))
+    light:set_color(glm.vec3(1.0,0.0,0.0))
     light:set_intensity(1.0)
     --衰减曲线 https://wiki.ogre3d.org/tiki-index.php?page=-Point+Light+Attenuation
     light:set_attenuation_constant(1.0)

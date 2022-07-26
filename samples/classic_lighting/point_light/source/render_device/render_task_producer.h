@@ -87,10 +87,10 @@ public:
     /// 发出任务：创建UBO
     /// \param shader_program_handle
     /// \param ubo_handle
-    /// \param uniform_block_name
+    /// \param uniform_block_instance_name
     /// \param uniform_block_data_size
     /// \param uniform_block_data
-    static void ProduceRenderTaskUpdateUBOSubData(std::string uniform_block_name, std::string uniform_block_member_name, void* data);
+    static void ProduceRenderTaskUpdateUBOSubData(std::string uniform_block_instance_name, std::string uniform_block_member_name, void* data);
 
 
     /// 发出任务：设置状态,开启或关闭

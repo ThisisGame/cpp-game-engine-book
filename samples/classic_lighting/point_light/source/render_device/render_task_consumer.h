@@ -28,9 +28,9 @@ private:
     /// \param task_base
     static void CompileShader(RenderTaskBase *task_base);
 
-    /// 串联uniform block与binding point。
+    /// 串联uniform block实例与binding point。
     /// \param task_base
-    static void ConnectUniformBlockAndBindingPoint(RenderTaskBase *task_base);
+    static void ConnectUniformBlockInstanceAndBindingPoint(RenderTaskBase *task_base);
 
     /// 使用Shader程序
     static void UseShaderProgram(RenderTaskBase *task_base);

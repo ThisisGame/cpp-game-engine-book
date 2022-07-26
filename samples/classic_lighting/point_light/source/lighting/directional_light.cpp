@@ -20,18 +20,26 @@ RTTR_REGISTRATION//注册反射
             .constructor<>()(rttr::policy::ctor::as_raw_ptr);
 }
 
-DirectionalLight::DirectionalLight():Light()
-{
-
+DirectionalLight::DirectionalLight():Light() {
 }
 
 DirectionalLight::~DirectionalLight() {
 
 }
 
-void DirectionalLight::Update(){
+void DirectionalLight::set_color(glm::vec3 color) {
+    Light::set_color(color);
+    UniformBufferObjectManager::UpdateUniformBlockSubData3f("u_directional_light","data.color",color_);
+};
+
+void DirectionalLight::set_intensity(float intensity) {
+    Light::set_intensity(intensity);
+    UniformBufferObjectManager::UpdateUniformBlockSubData1f("u_directional_light","data.intensity",intensity_);
+};
+
+void DirectionalLight::Update() {
     glm::vec3 rotation=game_object()->GetComponent<Transform>()->rotation();
     glm::mat4 eulerAngleYXZ = glm::eulerAngleYXZ(glm::radians(rotation.y), glm::radians(rotation.x), glm::radians(rotation.z));
-    glm::vec3 light_rotation=glm::vec3(eulerAngleYXZ * glm::vec4(0,0,-1,0));
-    UniformBufferObjectManager::UpdateUniformBlockSubData3f("Light","u_light_dir",light_rotation);
+    glm::vec3 light_rotation=glm::vec3(eulerAngleYXZ * glm::vec4(0,0,-1,0));//Transform旋转 * 默认朝向
+    UniformBufferObjectManager::UpdateUniformBlockSubData3f("u_directional_light","data.dir",light_rotation);
 }

@@ -11,8 +11,9 @@
 #include <glm/glm.hpp>
 
 /// Uniform Block <==> Binding Point <==> Uniform Buffer Object
-class UniformBlockBindingInfo{
+class UniformBlockInstanceBindingInfo{
 public:
+    std::string uniform_block_instance_name_;
     std::string uniform_block_name_;
     unsigned short uniform_block_size_;
     unsigned int binding_point_;
@@ -32,7 +33,6 @@ public:
     std::string member_name_;
     int offset_;
     short data_size_;
-    void* data_;
 };
 
 /// Uniform Block 结构信息
@@ -45,8 +45,8 @@ class UniformBufferObjectManager {
 public:
     /// 返回所有Shader的uniform block信息。
     /// \return
-    static std::vector<UniformBlockBindingInfo>& UniformBlockBindingInfoArray(){
-        return kUniformBlockBindingInfoArray;
+    static std::vector<UniformBlockInstanceBindingInfo>& UniformBlockInstanceBindingInfoArray(){
+        return kUniformBlockInstanceBindingInfoArray;
     }
 
     /// 返回所有Uniform block结构。
@@ -55,23 +55,25 @@ public:
         return kUniformBlockMap;
     }
 
+    static void Init();
+
     /// 初始化UBO
     static void CreateUniformBufferObject();
 
     /// 更新UBO数据(float)
-    /// \param uniform_block_name
+    /// \param uniform_block_instance_name
     /// \param uniform_block_member_name
     /// \param value
-    static void UpdateUniformBlockSubData1f(std::string uniform_block_name, std::string uniform_block_member_name, float value);
+    static void UpdateUniformBlockSubData1f(std::string uniform_block_instance_name, std::string uniform_block_member_name, float value);
 
     /// 更新UBO数据(vec3)
-    /// \param uniform_block_name
+    /// \param uniform_block_instance_name
     /// \param uniform_block_member_name
     /// \param value
-    static void UpdateUniformBlockSubData3f(std::string uniform_block_name, std::string uniform_block_member_name, glm::vec3& value);
+    static void UpdateUniformBlockSubData3f(std::string uniform_block_instance_name, std::string uniform_block_member_name, glm::vec3& value);
 
 private:
-    static std::vector<UniformBlockBindingInfo> kUniformBlockBindingInfoArray;//统计所有Shader的uniform block信息。
+    static std::vector<UniformBlockInstanceBindingInfo> kUniformBlockInstanceBindingInfoArray;//统计所有Shader的uniform block信息。
 
     static std::unordered_map<std::string,UniformBlock> kUniformBlockMap;//映射Uniform block结构。
 };
