@@ -20,12 +20,18 @@ public:
     virtual void set_intensity(float intensity) override;
 
     float attenuation_constant() const{return attenuation_constant_;}
+    /// 设置衰减常数项
+    /// \param attenuation_constant
     void set_attenuation_constant(float attenuation_constant);
 
     float attenuation_linear() const{return attenuation_linear_;}
+    /// 设置衰减一次项
+    /// \param attenuation_linear
     void set_attenuation_linear(float attenuation_linear);
 
     float attenuation_quadratic() const{return attenuation_quadratic_;}
+    /// 设置衰减二次项
+    /// \param attenuation_quadratic
     void set_attenuation_quadratic(float attenuation_quadratic);
 
 public:
