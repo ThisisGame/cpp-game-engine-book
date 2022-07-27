@@ -10,6 +10,7 @@
 * [2. Opengl开发环境搭建](2. opengl_dev_env/2. opengl_dev_env.md)
     * [2.1 Opengl到底是什么](2. opengl_dev_env/2.1 what_exactly_is_opengl.md)
     * [2.2 搭建Opengl开发环境](2. opengl_dev_env/2.2 build_opengl_development_environment.md)
+    * [2.3 使用VisualStudio开发](2. opengl_dev_env/2.3 dev_with_visualstudio.md)
 * [3. 绘制多边形](3. draw_polygon/3. draw_polygon.md)
     * [3.1 画个三角形](3. draw_polygon/3.1 draw_triangle.md)
     * [3.2 画个正方形](3. draw_polygon/3.2 draw_square.md)
