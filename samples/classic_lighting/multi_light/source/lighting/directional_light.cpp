@@ -20,13 +20,13 @@ RTTR_REGISTRATION//注册反射
             .constructor<>()(rttr::policy::ctor::as_raw_ptr);
 }
 
-unsigned short DirectionalLight::light_count_=0;
+unsigned int DirectionalLight::light_count_=0;
 
 DirectionalLight::DirectionalLight():Light()
 {
     light_id_=light_count_;
     light_count_++;
-    UniformBufferObjectManager::UpdateUniformBlockSubData1f("u_directional_light_array","actually_used_count",light_count_);
+    UniformBufferObjectManager::UpdateUniformBlockSubData1i("u_directional_light_array","actually_used_count",light_count_);
 }
 
 DirectionalLight::~DirectionalLight() {

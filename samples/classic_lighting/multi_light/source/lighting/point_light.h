@@ -36,7 +36,7 @@ private:
     float attenuation_linear_;//点光衰减一次项
     float attenuation_quadratic_;//点光衰减二次项
 
-    static unsigned short light_count_;//灯光数量
+    static unsigned int light_count_;//灯光数量
 
 RTTR_ENABLE(Light);
 };

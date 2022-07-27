@@ -85,7 +85,6 @@ function LoginScene:CreatePointLight1()
 
     light:set_color(glm.vec3(1.0,0.0,0.0))
     light:set_intensity(1.0)
-    --衰减曲线 https://wiki.ogre3d.org/tiki-index.php?page=-Point+Light+Attenuation
     light:set_attenuation_constant(1.0)
     light:set_attenuation_linear( 0.35)
     light:set_attenuation_quadratic( 0.44)

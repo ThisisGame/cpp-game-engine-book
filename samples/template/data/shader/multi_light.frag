@@ -19,10 +19,11 @@ struct DirectionalLight {
     float intensity;//强度 alignment:4 offset:28
 };
 
-#define DIRECTIONAL_LIGHT_MAX_NUM 2
+#define DIRECTIONAL_LIGHT_MAX_NUM 128
 
 layout(std140) uniform DirectionalLightBlock {
     DirectionalLight data[DIRECTIONAL_LIGHT_MAX_NUM];
+    int actually_used_count;//实际创建的灯光数量
 }u_directional_light_array;
 
 //点光
@@ -36,11 +37,12 @@ struct PointLight {
     float quadratic;//点光衰减二次项 alignment:4 offset:40
 };
 
-#define POINT_LIGHT_MAX_NUM 2
+#define POINT_LIGHT_MAX_NUM 128
 
 //灯光数组
 layout(std140) uniform PointLightBlock {
     PointLight data[POINT_LIGHT_MAX_NUM];
+    int actually_used_count;//实际创建的灯光数量
 }u_point_light_array;
 
 uniform vec3 u_view_pos;
@@ -62,43 +64,49 @@ void main()
     vec3 total_specular_color;
 
     //directional light
-    for(int i=0;i<DIRECTIONAL_LIGHT_MAX_NUM;i++){
-        //diffuse
-        vec3 normal=normalize(v_normal);
-        vec3 light_dir=normalize(-u_directional_light_array.data[i].dir);
-        float diffuse_intensity = max(dot(normal,light_dir),0.0);
-        vec3 diffuse_color = u_directional_light_array.data[i].color * diffuse_intensity * u_directional_light_array.data[i].intensity * texture(u_diffuse_texture,v_uv).rgb;
+    for(int i=0;i<u_directional_light_array.actually_used_count;i++){
+        DirectionalLight directional_light=u_directional_light_array.data[i];
 
-        //specular
+        //diffuse 计算漫反射光照
+        vec3 normal=normalize(v_normal);
+        vec3 light_dir=normalize(-directional_light.dir);
+        float diffuse_intensity = max(dot(normal,light_dir),0.0);
+        vec3 diffuse_color = directional_light.color * diffuse_intensity * directional_light.intensity * texture(u_diffuse_texture,v_uv).rgb;
+
+        //specular 计算高光
         vec3 reflect_dir=reflect(-light_dir,v_normal);
         vec3 view_dir=normalize(u_view_pos-v_frag_pos);
         float spec=pow(max(dot(view_dir,reflect_dir),0.0),u_specular_highlight_shininess);
         float specular_highlight_intensity = texture(u_specular_texture,v_uv).r;//从纹理中获取高光强度
-        vec3 specular_color = u_directional_light_array.data[i].color * spec * u_directional_light_array.data[i].intensity * texture(u_diffuse_texture,v_uv).rgb;
+        vec3 specular_color = directional_light.color * spec * directional_light.intensity * texture(u_diffuse_texture,v_uv).rgb;
 
+        //将每一个方向光的计算结果叠加
         total_diffuse_color=total_diffuse_color+diffuse_color;
         total_specular_color=total_specular_color+specular_color;
     }
 
     //point light
-    for(int i=0;i<POINT_LIGHT_MAX_NUM;i++){
-        //diffuse
-        vec3 normal=normalize(v_normal);
-        vec3 light_dir=normalize(u_point_light_array.data[i].pos - v_frag_pos);
-        float diffuse_intensity = max(dot(normal,light_dir),0.0);
-        vec3 diffuse_color = u_point_light_array.data[i].color * diffuse_intensity * u_point_light_array.data[i].intensity * texture(u_diffuse_texture,v_uv).rgb;
+    for(int i=0;i<u_point_light_array.actually_used_count;i++){
+        PointLight point_light=u_point_light_array.data[i];
 
-        //specular
+        //diffuse 计算漫反射光照
+        vec3 normal=normalize(v_normal);
+        vec3 light_dir=normalize(point_light.pos - v_frag_pos);
+        float diffuse_intensity = max(dot(normal,light_dir),0.0);
+        vec3 diffuse_color = point_light.color * diffuse_intensity * point_light.intensity * texture(u_diffuse_texture,v_uv).rgb;
+
+        //specular 计算高光
         vec3 reflect_dir=reflect(-light_dir,v_normal);
         vec3 view_dir=normalize(u_view_pos-v_frag_pos);
         float spec=pow(max(dot(view_dir,reflect_dir),0.0),u_specular_highlight_shininess);
         float specular_highlight_intensity = texture(u_specular_texture,v_uv).r;//从纹理中获取高光强度
-        vec3 specular_color = u_point_light_array.data[i].color * spec * specular_highlight_intensity * texture(u_diffuse_texture,v_uv).rgb;
+        vec3 specular_color = point_light.color * spec * specular_highlight_intensity * texture(u_diffuse_texture,v_uv).rgb;
 
-        // attenuation
-        float distance=length(u_point_light_array.data[i].pos - v_frag_pos);
-        float attenuation = 1.0 / (u_point_light_array.data[i].constant + u_point_light_array.data[i].linear * distance + u_point_light_array.data[i].quadratic * (distance * distance));
+        //attenuation 计算点光源衰减值
+        float distance=length(point_light.pos - v_frag_pos);
+        float attenuation = 1.0 / (point_light.constant + point_light.linear * distance + point_light.quadratic * (distance * distance));
 
+        //将每一个点光源的计算结果叠加
         total_diffuse_color=total_diffuse_color+diffuse_color*attenuation;
         total_specular_color=total_specular_color+specular_color*attenuation;
     }

@@ -72,6 +72,12 @@ public:
     /// \param value
     static void UpdateUniformBlockSubData3f(std::string uniform_block_instance_name, std::string uniform_block_member_name, glm::vec3& value);
 
+    /// 更新UBO数据(int)
+    /// \param uniform_block_instance_name
+    /// \param uniform_block_member_name
+    /// \param value
+    static void UpdateUniformBlockSubData1i(std::string uniform_block_instance_name, std::string uniform_block_member_name, int value);
+
 private:
     static std::vector<UniformBlockInstanceBindingInfo> kUniformBlockInstanceBindingInfoArray;//统计所有Shader的uniform block信息。
 

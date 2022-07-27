@@ -9,8 +9,8 @@
 #include "render_task_queue.h"
 #include "render_task_producer.h"
 
-#define DIRECTIONAL_LIGHT_MAX_NUM 2 //最大方向光数量
-#define POINT_LIGHT_MAX_NUM 2 //最大点光源数量
+#define DIRECTIONAL_LIGHT_MAX_NUM 128 //最大方向光数量
+#define POINT_LIGHT_MAX_NUM 128 //最大点光源数量
 
 std::vector<UniformBlockInstanceBindingInfo> UniformBufferObjectManager::kUniformBlockInstanceBindingInfoArray={
         {"u_ambient","AmbientBlock",16,0,0},
@@ -81,4 +81,10 @@ void UniformBufferObjectManager::UpdateUniformBlockSubData3f(std::string uniform
     void* data= malloc(sizeof(glm::vec3));
     memcpy(data,&value,sizeof(glm::vec3));
     RenderTaskProducer::ProduceRenderTaskUpdateUBOSubData(uniform_block_instance_name, uniform_block_member_name, data);
+}
+
+void UniformBufferObjectManager::UpdateUniformBlockSubData1i(std::string uniform_block_instance_name, std::string uniform_block_member_name, int value){
+    void* data= malloc(sizeof(int));
+    memcpy(data,&value,sizeof(int));
+    RenderTaskProducer::ProduceRenderTaskUpdateUBOSubData(uniform_block_instance_name, std::move(uniform_block_member_name), data);
 }

@@ -23,7 +23,7 @@ public:
     void Update() override;
 
 private:
-    static unsigned short light_count_;//灯光数量
+    static unsigned int light_count_;//灯光数量
 
 RTTR_ENABLE(Light);
 };
