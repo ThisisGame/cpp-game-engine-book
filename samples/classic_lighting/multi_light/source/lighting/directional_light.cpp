@@ -26,6 +26,7 @@ DirectionalLight::DirectionalLight():Light()
 {
     light_id_=light_count_;
     light_count_++;
+    UniformBufferObjectManager::UpdateUniformBlockSubData1f("u_directional_light_array","actually_used_count",light_count_);
 }
 
 DirectionalLight::~DirectionalLight() {

@@ -9,13 +9,13 @@
 #include "render_task_queue.h"
 #include "render_task_producer.h"
 
-#define DIRECTIONAL_LIGHT_MAX_NUM 2 //最大点光源数量
+#define DIRECTIONAL_LIGHT_MAX_NUM 2 //最大方向光数量
 #define POINT_LIGHT_MAX_NUM 2 //最大点光源数量
 
 std::vector<UniformBlockInstanceBindingInfo> UniformBufferObjectManager::kUniformBlockInstanceBindingInfoArray={
         {"u_ambient","AmbientBlock",16,0,0},
-        {"u_directional_light_array","DirectionalLightBlock",32*DIRECTIONAL_LIGHT_MAX_NUM,1,0},
-        {"u_point_light_array","PointLightBlock",48*POINT_LIGHT_MAX_NUM,2,0}
+        {"u_directional_light_array","DirectionalLightBlock",32*DIRECTIONAL_LIGHT_MAX_NUM+sizeof(int),1,0},
+        {"u_point_light_array","PointLightBlock",48*POINT_LIGHT_MAX_NUM+sizeof(int),2,0}
 };
 
 std::unordered_map<std::string,UniformBlock> UniformBufferObjectManager::kUniformBlockMap;
@@ -38,6 +38,7 @@ void UniformBufferObjectManager::Init(){
             uniform_block_member_vec.push_back({fmt::format("data[{}].color",i),32*i+16,sizeof(glm::vec3)});
             uniform_block_member_vec.push_back({fmt::format("data[{}].intensity",i),32*i+28,sizeof(float)});
         }
+        uniform_block_member_vec.push_back({"actually_used_count",32*POINT_LIGHT_MAX_NUM,sizeof(int)});
     }
 
     //点光源数组
@@ -52,6 +53,7 @@ void UniformBufferObjectManager::Init(){
             uniform_block_member_vec.push_back({fmt::format("data[{}].linear",i),48*i+36,sizeof(float)});
             uniform_block_member_vec.push_back({fmt::format("data[{}].quadratic",i),48*i+40,sizeof(float)});
         }
+        uniform_block_member_vec.push_back({"actually_used_count",48*POINT_LIGHT_MAX_NUM,sizeof(int)});
     }
 }
 
