@@ -141,11 +141,13 @@ Blender建模、FMOD、WWise音频制作，我都录制了视频。
 - 由于Arm版Mac只支持OpenGL Core，所以《6.3 OpenGL Core Profile》之前的章节实例无法在Arm版Mac运行。
 ```
 
-#### 为何不使用VisualStudio？
+#### 如何使用VisualStudio开发？
 
-为了简单，CLion支持Windows与Mac。
+随书实例使用CLion开发，CLion支持Windows与Mac，跨平台不需要额外学习成本。
 
-VisualStudio C++只支持Windows，Mac上就需要XCode，增加了学习成本。
+VisualStudio从2019开始支持CMake项目，所以在Windows上也可以使用VisualStudio2019及以上版本打开随书实例CLion项目。
+
+具体请参考 [2.3 使用VisualStudio开发](https://www.thisisgame.com.cn/tutorial?book=cpp-game-engine-book&lang=zh&md=2.%20opengl_dev_env/2.3%20dev_with_visualstudio.md)
 
 ## 行为准则 Code Of Conduct
 
