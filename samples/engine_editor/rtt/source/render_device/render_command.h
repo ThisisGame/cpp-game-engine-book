@@ -32,6 +32,7 @@ enum RenderCommand {
     SET_STENCIL_FUNC,//设置模板测试函数
     SET_STENCIL_OP,//设置模板操作
     SET_STENCIL_BUFFER_CLEAR_VALUE,//设置清除模板缓冲值
+    CREATE_FBO,//创建FBO
     END_FRAME,//帧结束
 };
 

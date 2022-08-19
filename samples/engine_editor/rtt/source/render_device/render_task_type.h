@@ -71,6 +71,7 @@ public:
     unsigned int shader_program_handle_= 0;
 };
 
+
 /// 使用着色器程序任务
 class RenderTaskUseShaderProgram: public RenderTaskBase{
 public:
@@ -375,6 +376,19 @@ public:
     ~RenderTaskSetStencilBufferClearValue(){}
 public:
     int clear_value_;
+};
+
+
+/// 创建FBO任务
+class RenderTaskCreateFBO: public RenderTaskBase{
+public:
+    RenderTaskCreateFBO(){
+        render_command_=RenderCommand::CREATE_FBO;
+    }
+    ~RenderTaskCreateFBO(){
+    }
+public:
+    unsigned int fbo_handle_=0;//UBO句柄
 };
 
 /// 特殊任务：帧结束标志，渲染线程收到这个任务后，刷新缓冲区，设置帧结束。

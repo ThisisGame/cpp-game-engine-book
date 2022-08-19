@@ -8,6 +8,7 @@
 #include <glm/gtx/euler_angles.hpp>
 #include <glad/gl.h>
 #include <rttr/registration>
+#include "render_texture.h"
 #include "component/game_object.h"
 #include "component/transform.h"
 #include "render_device/render_task_producer.h"
@@ -23,7 +24,9 @@ RTTR_REGISTRATION//注册反射
 std::vector<Camera*> Camera::all_camera_;
 Camera* Camera::current_camera_;
 
-Camera::Camera():Component(),clear_color_(49.f/255,77.f/255,121.f/255,1.f),clear_flag_(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT|GL_STENCIL_BUFFER_BIT),depth_(0),culling_mask_(0x01) {
+Camera::Camera():Component(),clear_color_(49.f/255,77.f/255,121.f/255,1.f),
+    clear_flag_(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT|GL_STENCIL_BUFFER_BIT),depth_(0),culling_mask_(0x01),
+    target_render_texture_(nullptr) {
     //默认获取现有Camera最大depth，设置当前Camera.depth +1
     if (all_camera_.size()>0){
         unsigned char max_depth=all_camera_.back()->depth();
@@ -61,6 +64,16 @@ void Camera::SetOrthographic(float left,float right,float bottom,float top,float
 void Camera::Clear() {
     RenderTaskProducer::ProduceRenderTaskSetClearFlagAndClearColorBuffer(clear_flag_, clear_color_.r, clear_color_.g,
                                                                          clear_color_.b, clear_color_.a);
+}
+
+void Camera::CheckRenderToTexture(){
+    if(target_render_texture_== nullptr){//没有设置目标RenderTexture
+        return;
+    }
+    if(target_render_texture_->frame_buffer_object_id()>0){//已经生成了FBO
+        return;
+    }
+
 }
 
 void Camera::set_depth(unsigned char depth) {

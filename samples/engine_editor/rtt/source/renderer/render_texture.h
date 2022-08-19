@@ -8,6 +8,8 @@
 
 class RenderTexture {
 public:
+    RenderTexture();
+
     unsigned int frame_buffer_object_id(){
         return frame_buffer_object_id_;
     }
@@ -16,6 +18,8 @@ public:
     }
 
 private:
+    unsigned short width_;
+    unsigned short height_;
     unsigned int frame_buffer_object_id_;//关联的FBO
 };
 
