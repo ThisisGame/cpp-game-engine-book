@@ -19,6 +19,7 @@ enum BufferClearFlag{
     CLEAR_STENCIL_BUFFER=GL_STENCIL_BUFFER_BIT,
 };
 
+class RenderTexture;
 class Camera: public Component {
 public:
     Camera();
@@ -62,6 +63,9 @@ public:
     /// 刷帧清屏
     void Clear();
 
+    /// 检查target_render_texture_是否设置，是则使用FBO，渲染到RenderTexture。
+    void CheckRenderToTexture();
+
     unsigned char depth(){return depth_;}
 
     /// 设置 depth，触发相机排序
@@ -80,6 +84,11 @@ public:
     };
     CameraUseFor camera_use_for(){return camera_use_for_;}
 
+    /// 设置渲染目标RenderTexture
+    /// \param render_texture
+    void set_target_render_texture(RenderTexture* render_texture){
+        target_render_texture_=render_texture;
+    }
 protected:
     glm::mat4 view_mat4_;//指定相机坐标和朝向
     glm::mat4 projection_mat4_;//指定相机范围
@@ -92,6 +101,8 @@ protected:
     unsigned char culling_mask_;//控制渲染哪些Layer的物体
 
     CameraUseFor camera_use_for_=CameraUseFor::SCENE;
+
+    RenderTexture* target_render_texture_;//渲染目标RenderTexture
 public:
     /// 遍历所有Camera
     /// \param func
