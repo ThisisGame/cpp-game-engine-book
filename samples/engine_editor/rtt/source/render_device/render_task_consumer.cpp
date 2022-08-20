@@ -413,9 +413,56 @@ void RenderTaskConsumer::SetStencilOp(RenderTaskBase* task_base){
     glStencilOp(task->fail_op_, task->z_test_fail_op_, task->z_test_pass_op_);__CHECK_GL_ERROR__
 }
 
+/// 设置清除模板缓冲值
 void RenderTaskConsumer::SetStencilBufferClearValue(RenderTaskBase* task_base){
     RenderTaskSetStencilBufferClearValue* task=dynamic_cast<RenderTaskSetStencilBufferClearValue*>(task_base);
     glClearStencil(task->clear_value_);__CHECK_GL_ERROR__
+}
+
+/// 创建FBO任务
+void RenderTaskConsumer::CreateFBO(RenderTaskBase* task_base){
+    RenderTaskCreateFBO* task=dynamic_cast<RenderTaskCreateFBO*>(task_base);
+    //查询当前GL实现所支持的最大的RenderBufferSize,就是尺寸
+    GLint support_size=0;
+    glGetIntegerv(GL_MAX_RENDERBUFFER_SIZE, &support_size);
+    //如果我们设定的尺寸超过了所支持的尺寸，就抛出错误
+    if (support_size <= task->width_ || support_size <= task->height_) {
+        DEBUG_LOG_ERROR("CreateFBO FBO Size Too Large!Not Support!");
+        return;
+    }
+    GLuint frame_buffer_object_id=0;
+    glGenFramebuffers(1, &frame_buffer_object_id);__CHECK_GL_ERROR__
+    if(frame_buffer_object_id==0){
+        DEBUG_LOG_ERROR("CreateFBO FBO Error!");
+        return;
+    }
+    GPUResourceMapper::MapFBO(task->fbo_handle_, frame_buffer_object_id);
+}
+
+/// 绑定使用FBO任务
+void RenderTaskConsumer::BindFBO(RenderTaskBase* task_base){
+    RenderTaskBindFBO* task=dynamic_cast<RenderTaskBindFBO*>(task_base);
+    GLuint frame_buffer_object_id = GPUResourceMapper::GetFBO(task->fbo_handle_);
+    glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer_object_id);__CHECK_GL_ERROR__
+    //检测帧缓冲区完整性，如果完整的话就开始进行绘制
+    GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);__CHECK_GL_ERROR__
+    if (status != GL_FRAMEBUFFER_COMPLETE) {
+        DEBUG_LOG_ERROR("BindFBO FBO Status Error!");
+        return;
+    }
+}
+
+/// 取消使用FBO任务
+void RenderTaskConsumer::UnBindFBO(RenderTaskBase* task_base){
+    RenderTaskBindFBO* task=dynamic_cast<RenderTaskBindFBO*>(task_base);
+    glBindFramebuffer(GL_FRAMEBUFFER, GL_NONE);__CHECK_GL_ERROR__
+}
+
+/// 删除帧缓冲区对象(FBO)
+void RenderTaskConsumer::DeleteFBO(RenderTaskBase* task_base){
+    RenderTaskBindFBO* task=dynamic_cast<RenderTaskBindFBO*>(task_base);
+    GLuint frame_buffer_object_id = GPUResourceMapper::GetFBO(task->fbo_handle_);
+    glDeleteFramebuffers(1,&frame_buffer_object_id);
 }
 
 /// 结束一帧
@@ -542,6 +589,22 @@ void RenderTaskConsumer::ProcessTask() {
                 }
                 case RenderCommand::SET_STENCIL_BUFFER_CLEAR_VALUE:{
                     SetStencilBufferClearValue(render_task);
+                    break;
+                }
+                case RenderCommand::CREATE_FBO:{
+                    CreateFBO(render_task);
+                    break;
+                }
+                case RenderCommand::BIND_FBO:{
+                    BindFBO(render_task);
+                    break;
+                }
+                case RenderCommand::UNBIND_FBO:{
+                    UnBindFBO(render_task);
+                    break;
+                }
+                case RenderCommand::DELETE_FBO:{
+                    DeleteFBO(render_task);
                     break;
                 }
                 case RenderCommand::END_FRAME:{

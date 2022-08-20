@@ -63,9 +63,6 @@ public:
     /// 刷帧清屏
     void Clear();
 
-    /// 检查target_render_texture_是否设置，是则使用FBO，渲染到RenderTexture。
-    void CheckRenderToTexture();
-
     unsigned char depth(){return depth_;}
 
     /// 设置 depth，触发相机排序
@@ -75,8 +72,6 @@ public:
     unsigned char culling_mask(){return culling_mask_;}
     void set_culling_mask(unsigned char culling_mask){culling_mask_=culling_mask;}
 
-
-
     /// 相机用于
     enum CameraUseFor{
         UI,
@@ -84,11 +79,15 @@ public:
     };
     CameraUseFor camera_use_for(){return camera_use_for_;}
 
+    /// 检查target_render_texture_是否设置，是则使用FBO，渲染到RenderTexture。
+    void CheckRenderToTexture();
+
     /// 设置渲染目标RenderTexture
     /// \param render_texture
-    void set_target_render_texture(RenderTexture* render_texture){
-        target_render_texture_=render_texture;
-    }
+    void set_target_render_texture(RenderTexture* render_texture);
+
+    /// 清空渲染目标RenderTexture
+    void clear_target_render_texture();
 protected:
     glm::mat4 view_mat4_;//指定相机坐标和朝向
     glm::mat4 projection_mat4_;//指定相机范围

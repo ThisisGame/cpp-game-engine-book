@@ -12,6 +12,7 @@
 #include "component/game_object.h"
 #include "component/transform.h"
 #include "render_device/render_task_producer.h"
+#include "render_device/gpu_resource_mapper.h"
 
 
 using namespace rttr;
@@ -70,10 +71,32 @@ void Camera::CheckRenderToTexture(){
     if(target_render_texture_== nullptr){//没有设置目标RenderTexture
         return;
     }
-    if(target_render_texture_->frame_buffer_object_id()>0){//已经生成了FBO
+    if(target_render_texture_->in_use()){
         return;
     }
+    if(target_render_texture_->frame_buffer_object_handle() == 0){//还没有初始化，没有生成FBO。
+        return;
+    }
+    RenderTaskProducer::ProduceRenderTaskBindFBO(target_render_texture_->frame_buffer_object_handle());
+    target_render_texture_->set_in_use(true);
+}
 
+void Camera::set_target_render_texture(RenderTexture* render_texture){
+    if(render_texture== nullptr){
+        clear_target_render_texture();
+    }
+    target_render_texture_=render_texture;
+}
+
+void Camera::clear_target_render_texture() {
+    if(target_render_texture_== nullptr){//没有设置目标RenderTexture
+        return;
+    }
+    if(target_render_texture_->in_use()== false){
+        return;
+    }
+    RenderTaskProducer::ProduceRenderTaskUnBindFBO(target_render_texture_->frame_buffer_object_handle());
+    target_render_texture_->set_in_use(false);
 }
 
 void Camera::set_depth(unsigned char depth) {

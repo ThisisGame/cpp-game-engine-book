@@ -33,6 +33,16 @@ public:
         return ++texture_index_;
     }
 
+    /// 生成UBO句柄
+    static unsigned int GenerateUBOHandle(){
+        return ++ubo_index_;
+    }
+
+    /// 生成FBO句柄
+    static unsigned int GenerateFBOHandle(){
+        return ++fbo_index_;
+    }
+
     /// 映射Shader程序
     /// \param shader_program_handle
     /// \param shader_program_id
@@ -57,6 +67,20 @@ public:
     /// 映射Texture
     static void MapTexture(unsigned int texture_handle, GLuint texture_id){
         texture_map_[texture_handle] = texture_id;
+    }
+
+    /// 映射UBO
+    /// \param ubo_handle
+    /// \param ubo_id
+    static void MapUBO(unsigned int ubo_handle, GLuint ubo_id){
+        ubo_map_[ubo_handle] = ubo_id;
+    }
+
+    /// 映射FBO
+    /// \param fbo_handle
+    /// \param fbo_id
+    static void MapFBO(unsigned int fbo_handle, GLuint fbo_id){
+        ubo_map_[fbo_handle] = fbo_id;
     }
 
     /// 获取Shader程序
@@ -85,23 +109,18 @@ public:
         return texture_map_[texture_handle];
     }
 
-    /// 生成UBO句柄
-    static unsigned int GenerateUBOHandle(){
-        return ++ubo_index_;
-    }
-
-    /// 映射UBO
-    /// \param ubo_handle
-    /// \param ubo_id
-    static void MapUBO(unsigned int ubo_handle, GLuint ubo_id){
-        ubo_map_[ubo_handle] = ubo_id;
-    }
-
     /// 获取UBO
     /// \param ubo_handle
     /// \return
     static GLuint GetUBO(unsigned int ubo_handle){
         return ubo_map_[ubo_handle];
+    }
+
+    /// 获取FBO
+    /// \param fbo_handle
+    /// \return
+    static GLuint GetFBO(unsigned int fbo_handle){
+        return fbo_map_[fbo_handle];
     }
 
 private:
@@ -110,12 +129,14 @@ private:
     static unsigned int vbo_index_;//VBO索引
     static unsigned int texture_index_;//Texture索引
     static unsigned int ubo_index_;//UBO索引
+    static unsigned int fbo_index_;//FBO索引
 
     static std::unordered_map<unsigned int, GLuint> shader_program_map_;//Shader程序映射表
     static std::unordered_map<unsigned int, GLuint> vao_map_;//VAO映射表
     static std::unordered_map<unsigned int, GLuint> vbo_map_;//VBO映射表
     static std::unordered_map<unsigned int, GLuint> texture_map_;//Texture映射表
     static std::unordered_map<unsigned int, GLuint> ubo_map_;//UBO映射表
+    static std::unordered_map<unsigned int, GLuint> fbo_map_;//FBO映射表
 };
 
 

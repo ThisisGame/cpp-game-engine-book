@@ -160,6 +160,20 @@ public:
     /// 设置清除模板缓冲值
     static void ProduceRenderTaskSetStencilBufferClearValue(int clear_value);
 
+    /// 创建帧缓冲区对象(FBO)
+    /// \param fbo_handle FBO句柄
+    /// \param width 帧缓冲区尺寸(宽)
+    /// \param height 帧缓冲区尺寸(高)
+    static void ProduceRenderTaskCreateFBO(int fbo_handle,unsigned short width,unsigned short height);
+
+    /// 绑定使用帧缓冲区对象(FBO)
+    static void ProduceRenderTaskBindFBO(int fbo_handle);
+
+    /// 取消使用帧缓冲区对象(FBO)
+    static void ProduceRenderTaskUnBindFBO(int fbo_handle);
+
+    /// 删除帧缓冲区对象(FBO)
+    static void ProduceRenderTaskDeleteFBO(int fbo_handle);
 
     /// 发出特殊任务：渲染结束
     static void ProduceRenderTaskEndFrame();

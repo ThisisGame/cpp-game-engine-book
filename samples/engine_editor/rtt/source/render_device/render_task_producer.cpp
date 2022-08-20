@@ -267,6 +267,32 @@ void RenderTaskProducer::ProduceRenderTaskSetStencilBufferClearValue(int clear_v
     RenderTaskQueue::Push(task);
 }
 
+void RenderTaskProducer::ProduceRenderTaskCreateFBO(int fbo_handle,unsigned short width,unsigned short height){
+    RenderTaskCreateFBO* task=new RenderTaskCreateFBO();
+    task->fbo_handle_=fbo_handle;
+    task->width_=width;
+    task->height_=height;
+    RenderTaskQueue::Push(task);
+}
+
+void RenderTaskProducer::ProduceRenderTaskBindFBO(int fbo_handle){
+    RenderTaskBindFBO* task=new RenderTaskBindFBO();
+    task->fbo_handle_=fbo_handle;
+    RenderTaskQueue::Push(task);
+}
+
+void RenderTaskProducer::ProduceRenderTaskUnBindFBO(int fbo_handle){
+    RenderTaskUnBindFBO* task=new RenderTaskUnBindFBO();
+    task->fbo_handle_=fbo_handle;
+    RenderTaskQueue::Push(task);
+}
+
+void RenderTaskProducer::ProduceRenderTaskDeleteFBO(int fbo_handle){
+    RenderTaskDeleteFBO* task=new RenderTaskDeleteFBO();
+    task->fbo_handle_=fbo_handle;
+    RenderTaskQueue::Push(task);
+}
+
 void RenderTaskProducer::ProduceRenderTaskEndFrame() {
     EASY_FUNCTION();
     RenderTaskEndFrame* render_task_frame_end=new RenderTaskEndFrame();

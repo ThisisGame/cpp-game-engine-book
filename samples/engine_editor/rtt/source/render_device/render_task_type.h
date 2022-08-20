@@ -388,7 +388,45 @@ public:
     ~RenderTaskCreateFBO(){
     }
 public:
-    unsigned int fbo_handle_=0;//UBO句柄
+    unsigned int fbo_handle_=0;//FBO句柄
+    unsigned short width_=128;//帧缓冲区尺寸(宽)
+    unsigned short height_=128;//帧缓冲区尺寸(高)
+};
+
+/// 绑定使用FBO任务
+class RenderTaskBindFBO: public RenderTaskBase{
+public:
+    RenderTaskBindFBO(){
+        render_command_=RenderCommand::BIND_FBO;
+    }
+    ~RenderTaskBindFBO(){
+    }
+public:
+    unsigned int fbo_handle_=0;//FBO句柄
+};
+
+/// 取消使用FBO任务
+class RenderTaskUnBindFBO: public RenderTaskBase{
+public:
+    RenderTaskUnBindFBO(){
+        render_command_=RenderCommand::UNBIND_FBO;
+    }
+    ~RenderTaskUnBindFBO(){
+    }
+public:
+    unsigned int fbo_handle_=0;//FBO句柄
+};
+
+/// 删除帧缓冲区对象(FBO)任务
+class RenderTaskDeleteFBO: public RenderTaskBase{
+public:
+    RenderTaskDeleteFBO(){
+        render_command_=RenderCommand::DELETE_FBO;
+    }
+    ~RenderTaskDeleteFBO(){
+    }
+public:
+    unsigned int fbo_handle_=0;//FBO句柄
 };
 
 /// 特殊任务：帧结束标志，渲染线程收到这个任务后，刷新缓冲区，设置帧结束。
