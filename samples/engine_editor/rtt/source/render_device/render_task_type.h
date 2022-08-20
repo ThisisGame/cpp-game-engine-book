@@ -391,6 +391,8 @@ public:
     unsigned int fbo_handle_=0;//FBO句柄
     unsigned short width_=128;//帧缓冲区尺寸(宽)
     unsigned short height_=128;//帧缓冲区尺寸(高)
+    unsigned int color_texture_handle_=0;//FBO颜色附着点关联的颜色纹理
+    unsigned int depth_texture_handle_=0;//FBO深度附着点关联的深度纹理
 };
 
 /// 绑定使用FBO任务

@@ -579,7 +579,7 @@ void LuaBinding::BindLua() {
                                            "Play", &Animation::Play,
                                            "current_animation_clip", &Animation::current_animation_clip
         );
-        cpp_ns_table.new_usertype<RenderTexture>("RenderTexture",
+        cpp_ns_table.new_usertype<RenderTexture>("RenderTexture",sol::call_constructor,sol::constructors<RenderTexture()>(),
                                                  "Init", &RenderTexture::Init,
                                                  "width", &RenderTexture::width,
                                                  "height", &RenderTexture::height,

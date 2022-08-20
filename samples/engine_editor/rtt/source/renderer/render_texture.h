@@ -42,10 +42,10 @@ public:
     }
 private:
     unsigned short width_;
-
-private:
     unsigned short height_;
     unsigned int frame_buffer_object_handle_;//关联的FBO Handle
+    unsigned int color_texture_handle_;//FBO颜色附着点关联的颜色纹理
+    unsigned int depth_texture_handle_;//FBO深度附着点关联的深度纹理
     bool in_use_;//正在被使用
 };
 

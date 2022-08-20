@@ -267,11 +267,13 @@ void RenderTaskProducer::ProduceRenderTaskSetStencilBufferClearValue(int clear_v
     RenderTaskQueue::Push(task);
 }
 
-void RenderTaskProducer::ProduceRenderTaskCreateFBO(int fbo_handle,unsigned short width,unsigned short height){
+void RenderTaskProducer::ProduceRenderTaskCreateFBO(int fbo_handle,unsigned short width,unsigned short height,unsigned int color_texture_handle,unsigned int depth_texture_handle){
     RenderTaskCreateFBO* task=new RenderTaskCreateFBO();
     task->fbo_handle_=fbo_handle;
     task->width_=width;
     task->height_=height;
+    task->color_texture_handle_=color_texture_handle;
+    task->depth_texture_handle_=depth_texture_handle;
     RenderTaskQueue::Push(task);
 }
 

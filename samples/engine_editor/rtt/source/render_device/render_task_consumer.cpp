@@ -437,17 +437,36 @@ void RenderTaskConsumer::CreateFBO(RenderTaskBase* task_base){
         return;
     }
     GPUResourceMapper::MapFBO(task->fbo_handle_, frame_buffer_object_id);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer_object_id);__CHECK_GL_ERROR__
+    //创建颜色纹理并绑定到FBO颜色附着点
+    GLuint color_texture;
+    glGenTextures(1, &color_texture);__CHECK_GL_ERROR__
+    glBindTexture(GL_TEXTURE_2D, color_texture);__CHECK_GL_ERROR__
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, task->width_, task->height_, 0, GL_RGB, GL_UNSIGNED_SHORT_5_6_5, NULL);__CHECK_GL_ERROR__
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);__CHECK_GL_ERROR__
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);__CHECK_GL_ERROR__
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, color_texture, 0);__CHECK_GL_ERROR__
+    //创建深度纹理并绑定到FBO深度附着点
+    GLuint depth_texture;
+    glGenTextures(1, &depth_texture);__CHECK_GL_ERROR__
+    glBindTexture(GL_TEXTURE_2D, depth_texture);__CHECK_GL_ERROR__
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, task->width_, task->height_, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT, NULL);__CHECK_GL_ERROR__
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);__CHECK_GL_ERROR__
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);__CHECK_GL_ERROR__
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depth_texture, 0);__CHECK_GL_ERROR__
 }
 
 /// 绑定使用FBO任务
 void RenderTaskConsumer::BindFBO(RenderTaskBase* task_base){
     RenderTaskBindFBO* task=dynamic_cast<RenderTaskBindFBO*>(task_base);
+
     GLuint frame_buffer_object_id = GPUResourceMapper::GetFBO(task->fbo_handle_);
     glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer_object_id);__CHECK_GL_ERROR__
     //检测帧缓冲区完整性，如果完整的话就开始进行绘制
     GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);__CHECK_GL_ERROR__
     if (status != GL_FRAMEBUFFER_COMPLETE) {
-        DEBUG_LOG_ERROR("BindFBO FBO Status Error!");
+        DEBUG_LOG_ERROR("BindFBO FBO Error,Status:{} !",status);
         return;
     }
 }

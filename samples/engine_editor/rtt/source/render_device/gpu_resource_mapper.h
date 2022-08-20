@@ -80,7 +80,7 @@ public:
     /// \param fbo_handle
     /// \param fbo_id
     static void MapFBO(unsigned int fbo_handle, GLuint fbo_id){
-        ubo_map_[fbo_handle] = fbo_id;
+        fbo_map_[fbo_handle] = fbo_id;
     }
 
     /// 获取Shader程序

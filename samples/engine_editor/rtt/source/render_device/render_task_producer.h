@@ -164,7 +164,7 @@ public:
     /// \param fbo_handle FBO句柄
     /// \param width 帧缓冲区尺寸(宽)
     /// \param height 帧缓冲区尺寸(高)
-    static void ProduceRenderTaskCreateFBO(int fbo_handle,unsigned short width,unsigned short height);
+    static void ProduceRenderTaskCreateFBO(int fbo_handle,unsigned short width,unsigned short height,unsigned int color_texture_handle,unsigned int depth_texture_handle);
 
     /// 绑定使用帧缓冲区对象(FBO)
     static void ProduceRenderTaskBindFBO(int fbo_handle);

@@ -8,6 +8,7 @@ require("renderer/animation")
 require("renderer/animation_clip")
 require("renderer/skinned_mesh_renderer")
 require("renderer/texture_2d")
+require("renderer/render_texture")
 require("control/input")
 require("control/key_code")
 require("utils/screen")
@@ -25,6 +26,8 @@ function LoginScene:ctor()
     self.go_camera_ = nil
     ---@field camera_ Camera @场景相机
     self.camera_ = nil
+    ---@field render_texture_ RenderTexture
+    self.render_texture_ = nil
     self.go_skeleton_ = nil --骨骼蒙皮动画物体
     self.animation_ = nil--骨骼动画
     self.animation_clip_ = nil --- 骨骼动画片段
@@ -118,6 +121,10 @@ function LoginScene:CreateMainCamera()
     self.camera_:set_depth(0)
     self.camera_:SetView(glm.vec3(0.0,0.0,0.0), glm.vec3(0.0,1.0,0.0))
     self.camera_:SetPerspective(60, Screen.aspect_ratio(), 1, 1000)
+    --设置RenderTexture
+    self.render_texture_ = RenderTexture.new()
+    self.render_texture_:Init(Screen:width(),Screen:height())
+    self.camera_:set_target_render_texture(self.render_texture_)
 end
 
 --- 创建模型
