@@ -52,3 +52,11 @@ end
 function RenderTexture:set_in_use(in_use)
     return self.cpp_class_instance_:set_in_use(in_use)
 end
+
+function RenderTexture:color_texture_2d()
+    return self.cpp_class_instance_:color_texture_2d()
+end
+
+function RenderTexture:depth_texture_2d()
+    return self.cpp_class_instance_:depth_texture_2d()
+end

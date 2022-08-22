@@ -40,6 +40,12 @@ public:
     void set_in_use(bool in_use){
         in_use_=in_use;
     }
+    Texture2D* color_texture_2d(){
+        return color_texture_2d_;
+    }
+    Texture2D* depth_texture_2d(){
+        return depth_texture_2d_;
+    }
 private:
     unsigned short width_;
     unsigned short height_;

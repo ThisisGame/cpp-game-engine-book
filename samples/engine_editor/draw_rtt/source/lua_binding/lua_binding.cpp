@@ -587,7 +587,9 @@ void LuaBinding::BindLua() {
                                                  "set_height", &RenderTexture::set_height,
                                                  "in_use", &RenderTexture::in_use,
                                                  "set_in_use", &RenderTexture::set_in_use,
-                                                 "frame_buffer_object_handle", &RenderTexture::frame_buffer_object_handle
+                                                 "frame_buffer_object_handle", &RenderTexture::frame_buffer_object_handle,
+                                                 "color_texture_2d", &RenderTexture::color_texture_2d,
+                                                 "depth_texture_2d", &RenderTexture::depth_texture_2d
         );
     }
 
