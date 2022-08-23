@@ -37,6 +37,7 @@ file(COPY "../../template/depends/SPSCQueue-1.1/" DESTINATION "../depends/spscqu
 
 #拷贝data文件
 file(COPY "../../template/data/audio/integrate_physx/" DESTINATION "../data/audio/")
+file(COPY "../../template/data/images/need_head_phone.cpt" DESTINATION "../data/images/")
 file(COPY "../../template/data/images/plane_albedo.cpt" DESTINATION "../data/images/")
 file(COPY "../../template/data/images/plane_metal.cpt" DESTINATION "../data/images/")
 file(COPY "../../template/data/model/basic_plane_model_basic_plane.mesh" DESTINATION "../data/model/")
@@ -44,7 +45,10 @@ file(COPY "../../template/data/model/fbx_extra_basic_plane.weight" DESTINATION "
 file(COPY "../../template/data/animation/fbx_extra_basic_plane_bones_basic_plane_bones_basic_plane_bones_armatureaction_basic_plane_.skeleton_anim" DESTINATION "../data/animation/")
 file(COPY "../../template/data/shader/multi_light.vert" DESTINATION "../data/shader/")
 file(COPY "../../template/data/shader/multi_light.frag" DESTINATION "../data/shader/")
+file(COPY "../../template/data/shader/unlit.vert" DESTINATION "../data/shader/")
+file(COPY "../../template/data/shader/unlit.frag" DESTINATION "../data/shader/")
 file(COPY "../../template/data/material/basic_plane_multi_light.mat" DESTINATION "../data/material/")
+file(COPY "../../template/data/material/ui_image.mat" DESTINATION "../data/material/")
 
 #头文件目录
 include_directories("depends")

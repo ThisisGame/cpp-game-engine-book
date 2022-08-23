@@ -16,6 +16,8 @@ require("utils/time")
 require("lighting/environment")
 require("lighting/point_light")
 require("lighting/directional_light")
+require("ui/ui_camera")
+require("ui/ui_image")
 
 LoginScene=class("LoginScene",Component)
 
@@ -157,21 +159,21 @@ end
 
 function LoginScene:CreateUI()
     -- 创建UI相机 GameObject
-    self.go_camera_ui_=GameObject("ui_camera")
+    self.go_camera_ui_=GameObject.new("ui_camera")
     -- 挂上 Transform 组件
-    local transform_camera_ui=self.go_camera_ui_:AddComponent("Transform")
+    local transform_camera_ui=self.go_camera_ui_:AddComponent(Transform)
     transform_camera_ui:set_position(glm.vec3(0, 0, 10))
     -- 挂上 Camera 组件
-    local camera_ui=self.go_camera_ui_:AddComponent("UICamera")
+    local camera_ui=self.go_camera_ui_:AddComponent(UICamera)
     -- 设置正交相机
     camera_ui:SetView(glm.vec3(0, 0, 0), glm.vec3(0, 1, 0))
     camera_ui:SetOrthographic(-Screen.width()/2,Screen.width()/2,-Screen.height()/2,Screen.height()/2,-100,100)
 
     -- 创建 UIImage
-    self.go_ui_image_=GameObject("image")
-    self.go_ui_image_:AddComponent("Transform"):set_position(glm.vec3(-480, -320, 0))
+    self.go_ui_image_=GameObject.new("image")
+    self.go_ui_image_:AddComponent(Transform):set_position(glm.vec3(-480, -320, 0))
     -- 挂上 UIImage 组件
-    local ui_image_mod_bag=self.go_ui_image_:AddComponent("UIImage")
+    local ui_image_mod_bag=self.go_ui_image_:AddComponent(UIImage)
     ui_image_mod_bag:set_texture(Texture2D.LoadFromFile("images/need_head_phone.cpt"))
 end
 
