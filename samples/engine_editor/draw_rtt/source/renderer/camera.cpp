@@ -81,6 +81,20 @@ void Camera::CheckRenderToTexture(){
     target_render_texture_->set_in_use(true);
 }
 
+void Camera::CheckCancelRenderToTexture(){
+    if(target_render_texture_== nullptr){//没有设置目标RenderTexture
+        return;
+    }
+    if(target_render_texture_->in_use()==false){
+        return;
+    }
+    if(target_render_texture_->frame_buffer_object_handle() == 0){//还没有初始化，没有生成FBO。
+        return;
+    }
+    RenderTaskProducer::ProduceRenderTaskUnBindFBO(target_render_texture_->frame_buffer_object_handle());
+    target_render_texture_->set_in_use(false);
+}
+
 void Camera::set_target_render_texture(RenderTexture* render_texture){
     if(render_texture== nullptr){
         clear_target_render_texture();
@@ -119,6 +133,7 @@ void Camera::Foreach(std::function<void()> func) {
         current_camera_->CheckRenderToTexture();
         current_camera_->Clear();
         func();
+        current_camera_->CheckCancelRenderToTexture();
     }
 }
 

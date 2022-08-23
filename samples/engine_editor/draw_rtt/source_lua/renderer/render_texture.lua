@@ -11,6 +11,8 @@ RenderTexture=class("RenderTexture",CppClass)
 
 function RenderTexture:ctor()
     RenderTexture.super.ctor(self)
+    ---@field color_texture_2d_ Texture2D
+    self.color_texture_2d_=nil
 end
 
 --- 实例化C++ Class
@@ -54,7 +56,11 @@ function RenderTexture:set_in_use(in_use)
 end
 
 function RenderTexture:color_texture_2d()
-    return self.cpp_class_instance_:color_texture_2d()
+    if self.color_texture_2d_==nil then
+        local cpp_color_texture_2d=self.cpp_class_instance_:color_texture_2d()
+        self.color_texture_2d_=Texture2D.new_with(cpp_color_texture_2d)
+    end
+    return self.color_texture_2d_
 end
 
 function RenderTexture:depth_texture_2d()

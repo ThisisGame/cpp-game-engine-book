@@ -128,7 +128,7 @@ function LoginScene:CreateMainCamera()
     self.camera_:SetPerspective(60, Screen.aspect_ratio(), 1, 1000)
     --设置RenderTexture
     self.render_texture_ = RenderTexture.new()
-    self.render_texture_:Init(480,320)
+    self.render_texture_:Init(960,640)
     self.camera_:set_target_render_texture(self.render_texture_)
 end
 
@@ -174,7 +174,7 @@ function LoginScene:CreateUI()
     self.go_ui_image_:AddComponent(Transform):set_position(glm.vec3(-480, -320, 0))
     -- 挂上 UIImage 组件
     local ui_image_mod_bag=self.go_ui_image_:AddComponent(UIImage)
-    ui_image_mod_bag:set_texture(Texture2D.LoadFromFile("images/need_head_phone.cpt"))
+    ui_image_mod_bag:set_texture(self.render_texture_:color_texture_2d())
 end
 
 function LoginScene:Update()
