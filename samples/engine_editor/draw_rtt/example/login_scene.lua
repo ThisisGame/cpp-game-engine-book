@@ -16,6 +16,7 @@ require("utils/time")
 require("lighting/environment")
 require("lighting/point_light")
 require("lighting/directional_light")
+require("ui/rect_transform")
 require("ui/ui_camera")
 require("ui/ui_image")
 
@@ -175,7 +176,9 @@ function LoginScene:CreateUI()
     -- 创建 UIImage
     self.go_ui_image_=GameObject.new("image")
     self.go_ui_image_:set_layer(2)
-    self.go_ui_image_:AddComponent(Transform):set_position(glm.vec3(-480, -320, 0))
+    -- 设置尺寸
+    local rect_transform=self.go_ui_image_:AddComponent(RectTransform)
+    rect_transform:set_rect(glm.vec2(480,320))
     -- 挂上 UIImage 组件
     local ui_image_mod_bag=self.go_ui_image_:AddComponent(UIImage)
     ui_image_mod_bag:set_texture(self.render_texture_:color_texture_2d())

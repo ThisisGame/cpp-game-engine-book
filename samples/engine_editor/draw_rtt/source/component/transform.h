@@ -21,7 +21,7 @@ public:
     void set_rotation(glm::vec3 rotation){rotation_=rotation;}
     void set_scale(glm::vec3 scale){scale_=scale;}
 
-private:
+protected:
     glm::vec3 position_;
     glm::vec3 rotation_;
     glm::vec3 scale_;

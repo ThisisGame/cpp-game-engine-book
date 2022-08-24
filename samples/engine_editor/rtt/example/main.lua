@@ -7,7 +7,7 @@ require("login_scene")
 function main()
     Debug.ConnectDebugServer()
 
-    Application:set_title("[ubo]")
+    Application:set_title("[rtt]")
     Application:set_data_path("../data/")--设置资源目录
     Application:Init()--初始化引擎
 

@@ -10,6 +10,7 @@
 #include "renderer/material.h"
 #include "renderer/mesh_renderer.h"
 #include "render_device/render_task_producer.h"
+#include "rect_transform.h"
 #include "utils/debug.h"
 
 using namespace rttr;
@@ -40,12 +41,22 @@ void UIImage::Update() {
     }
     MeshFilter* mesh_filter=game_object()->GetComponent<MeshFilter>();
     if(mesh_filter== nullptr){
+        int width=texture2D_->width();
+        int height=texture2D_->height();
+        //从RectTransform拿到显示大小
+        RectTransform* rect_transform=game_object()->GetComponent<RectTransform>();
+        if(rect_transform!= nullptr){
+            width=rect_transform->rect().x;
+            height=rect_transform->rect().y;
+        }
         //创建 MeshFilter
+        float half_width=width/2;
+        float half_height=height/2;
         std::vector<MeshFilter::Vertex> vertex_vector={
-                { {0.f, 0.0f, 0.0f}, {1.0f,1.0f,1.0f,1.0f},   {0.f, 0.f} },
-                { {texture2D_->width(), 0.0f, 0.0f}, {1.0f,1.0f,1.0f,1.0f},   {1.f, 0.f} },
-                { {texture2D_->width(),  texture2D_->height(), 0.0f}, {1.0f,1.0f,1.0f,1.0f},   {1.f, 1.f} },
-                { {0.f,  texture2D_->height(), 0.0f}, {1.0f,1.0f,1.0f,1.0f},   {0.f, 1.f} }
+                { {-half_width, -half_height, 0.0f}, {1.0f,1.0f,1.0f,1.0f},   {0.f, 0.f} },
+                { {half_width, -half_height, 0.0f}, {1.0f,1.0f,1.0f,1.0f},   {1.f, 0.f} },
+                { {half_width,  half_height, 0.0f}, {1.0f,1.0f,1.0f,1.0f},   {1.f, 1.f} },
+                { {-half_width,  half_height, 0.0f}, {1.0f,1.0f,1.0f,1.0f},   {0.f, 1.f} }
         };
         std::vector<unsigned short> index_vector={
                 0,1,2,
