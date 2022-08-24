@@ -124,6 +124,7 @@ function LoginScene:CreateMainCamera()
     --设置为黑色背景
     self.camera_:set_clear_color(0,0,0,1)
     self.camera_:set_depth(0)
+    self.camera_:set_culling_mask(1)
     self.camera_:SetView(glm.vec3(0.0,0.0,0.0), glm.vec3(0.0,1.0,0.0))
     self.camera_:SetPerspective(60, Screen.aspect_ratio(), 1, 1000)
     --设置RenderTexture
@@ -136,6 +137,7 @@ end
 function LoginScene:CreateModel()
     --创建骨骼蒙皮动画
     self.go_skeleton_=GameObject.new("skeleton")
+    self.go_skeleton_:set_layer(1)
     self.go_skeleton_:AddComponent(Transform):set_position(glm.vec3(0, 0, 0))
     self.go_skeleton_:GetComponent(Transform):set_rotation(glm.vec3(0, 0, 0))
     local anim_clip_name="animation/fbx_extra_basic_plane_bones_basic_plane_bones_basic_plane_bones_armatureaction_basic_plane_.skeleton_anim"
@@ -165,12 +167,14 @@ function LoginScene:CreateUI()
     transform_camera_ui:set_position(glm.vec3(0, 0, 10))
     -- 挂上 Camera 组件
     local camera_ui=self.go_camera_ui_:AddComponent(UICamera)
+    camera_ui:set_culling_mask(2)
     -- 设置正交相机
     camera_ui:SetView(glm.vec3(0, 0, 0), glm.vec3(0, 1, 0))
     camera_ui:SetOrthographic(-Screen.width()/2,Screen.width()/2,-Screen.height()/2,Screen.height()/2,-100,100)
 
     -- 创建 UIImage
     self.go_ui_image_=GameObject.new("image")
+    self.go_ui_image_:set_layer(2)
     self.go_ui_image_:AddComponent(Transform):set_position(glm.vec3(-480, -320, 0))
     -- 挂上 UIImage 组件
     local ui_image_mod_bag=self.go_ui_image_:AddComponent(UIImage)
