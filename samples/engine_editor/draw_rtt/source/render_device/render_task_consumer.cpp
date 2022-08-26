@@ -397,8 +397,9 @@ void RenderTaskConsumer::BindVAOAndDrawElements(RenderTaskBase *task_base) {
 /// \param task_base
 void RenderTaskConsumer::SetClearFlagAndClearColorBuffer(RenderTaskBase* task_base){
     RenderTaskClear* task=dynamic_cast<RenderTaskClear*>(task_base);
-    glClear(task->clear_flag_);__CHECK_GL_ERROR__
+    glDebugMessageInsert(GL_DEBUG_SOURCE_APPLICATION,GL_DEBUG_TYPE_MARKER,1,GL_DEBUG_SEVERITY_NOTIFICATION,0, nullptr);__CHECK_GL_ERROR__
     glClearColor(task->clear_color_r_,task->clear_color_g_,task->clear_color_b_,task->clear_color_a_);__CHECK_GL_ERROR__
+    glClear(task->clear_flag_);__CHECK_GL_ERROR__
 }
 
 /// 设置模板测试函数
