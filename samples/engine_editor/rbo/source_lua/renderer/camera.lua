@@ -111,3 +111,10 @@ end
 function Camera:clear_target_render_texture()
     self.cpp_component_instance_:clear_target_render_texture()
 end
+
+--- 设置ViewPort大小
+--- @param view_port_width
+--- @param view_port_height
+function Camera:set_view_port_size(view_port_width,view_port_height)
+    return self.cpp_component_instance_:set_view_port_size(view_port_width,view_port_height)
+end

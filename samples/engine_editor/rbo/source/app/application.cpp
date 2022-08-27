@@ -79,7 +79,7 @@ static void mouse_scroll_callback(GLFWwindow* window, double x, double y)
 //    std::cout<<"mouse_scroll_callback:"<<x<<","<<y<<std::endl;
 }
 
-void Application::Init() {
+void Application::Init(unsigned short window_width,unsigned short window_height) {
     EASY_MAIN_THREAD;
     profiler::startListen();// 启动profiler服务器，等待gui连接。
 
@@ -100,7 +100,7 @@ void Application::Init() {
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 #endif
 
-    glfw_window_ = glfwCreateWindow(960, 640, title_.c_str(), NULL, NULL);
+    glfw_window_ = glfwCreateWindow(window_width, window_height, title_.c_str(), NULL, NULL);
     if (!glfw_window_)
     {
         DEBUG_LOG_ERROR("glfwCreateWindow error!");
@@ -116,8 +116,6 @@ void Application::Init() {
     //初始化渲染任务消费者(单独渲染线程)
     RenderTaskConsumer::Init(glfw_window_);
 
-    UpdateScreenSize();
-
     //初始化 fmod
     Audio::Init();
     Physics::Init();
@@ -127,7 +125,6 @@ void Application::Init() {
 void Application::Update(){
     EASY_FUNCTION(profiler::colors::Magenta); // 标记函数
     Time::Update();
-    UpdateScreenSize();
 
     GameObject::Foreach([](GameObject* game_object){
         if(game_object->active()){
@@ -205,8 +202,4 @@ void Application::Run() {
 
     glfwTerminate();
     exit(EXIT_SUCCESS);
-}
-
-void Application::UpdateScreenSize() {
-    RenderTaskProducer::ProduceRenderTaskUpdateScreenSize();
 }

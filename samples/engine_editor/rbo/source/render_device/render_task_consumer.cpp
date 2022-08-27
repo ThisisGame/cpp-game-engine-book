@@ -42,10 +42,8 @@ void RenderTaskConsumer::Exit() {
 /// 更新游戏画面尺寸
 void RenderTaskConsumer::UpdateScreenSize(RenderTaskBase* task_base) {
     RenderTaskUpdateScreenSize* task= dynamic_cast<RenderTaskUpdateScreenSize*>(task_base);
-    int width, height;
-    glfwGetFramebufferSize(window_, &width, &height);
-    glViewport(0, 0, width, height);
-    Screen::set_width_height(width,height);
+    glViewport(0, 0, task->view_port_width_, task->view_port_height_);
+    Screen::set_width_height(task->view_port_width_,task->view_port_height_);
 }
 
 /// 编译、链接Shader

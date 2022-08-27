@@ -90,6 +90,16 @@ public:
 
     /// 清空渲染目标RenderTexture
     void clear_target_render_texture();
+
+    /// 设置当前相机对应的ViewPort大小
+    /// \param view_port_width
+    /// \param view_port_height
+    void set_view_port_size(unsigned short view_port_width,unsigned short view_port_height){
+        view_port_width_=view_port_width;
+        view_port_height_=view_port_height;
+    }
+
+    void UpdateViewPortSize();
 protected:
     glm::mat4 view_mat4_;//指定相机坐标和朝向
     glm::mat4 projection_mat4_;//指定相机范围
@@ -104,6 +114,9 @@ protected:
     CameraUseFor camera_use_for_=CameraUseFor::SCENE;
 
     RenderTexture* target_render_texture_;//渲染目标RenderTexture
+
+    unsigned short view_port_width_;
+    unsigned short view_port_height_;
 public:
     /// 遍历所有Camera
     /// \param func

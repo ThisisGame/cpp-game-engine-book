@@ -14,7 +14,7 @@
 class RenderTaskProducer {
 public:
     /// 发出任务：更新游戏窗口尺寸
-    static void ProduceRenderTaskUpdateScreenSize();
+    static void ProduceRenderTaskUpdateScreenSize(unsigned short view_port_width,unsigned short view_port_height);
 
     /// 发出任务：编译Shader
     /// \param vertex_shader_source 顶点shader源码

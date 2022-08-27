@@ -121,6 +121,10 @@ void Camera::set_depth(unsigned char depth) {
     Sort();
 }
 
+void Camera::UpdateViewPortSize(){
+    RenderTaskProducer::ProduceRenderTaskUpdateScreenSize(view_port_width_,view_port_height_);
+}
+
 void Camera::Sort() {
     std::sort(all_camera_.begin(),all_camera_.end(),[](Camera* a, Camera* b){
         return a->depth() < b->depth();
@@ -130,6 +134,7 @@ void Camera::Sort() {
 void Camera::Foreach(std::function<void()> func) {
     for (auto iter=all_camera_.begin();iter!=all_camera_.end();iter++){
         current_camera_=*iter;
+        current_camera_->UpdateViewPortSize();
         current_camera_->CheckRenderToTexture();
         current_camera_->Clear();
         func();

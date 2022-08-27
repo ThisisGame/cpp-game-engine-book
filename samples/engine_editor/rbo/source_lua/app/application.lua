@@ -10,8 +10,11 @@ Application={
 
 }
 
-function Application:Init()
-    Cpp.Application.Init()
+--- 初始化程序
+--- @param window_width number @窗口宽
+--- @param window_height number @窗口高
+function Application:Init(window_width,window_height)
+    Cpp.Application.Init(window_width,window_height)
 end
 
 --- 开始引擎主循环
@@ -29,8 +32,4 @@ end
 --- @param data_path string @资源目录
 function Application:set_data_path(data_path)
     Cpp.Application.set_data_path(data_path)
-end
-
-function Application:UpdateScreenSize()
-    return Cpp.Application.UpdateScreenSize()
 end

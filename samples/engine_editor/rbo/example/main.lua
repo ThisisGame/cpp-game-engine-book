@@ -1,5 +1,5 @@
 require("utils/debug")
-require("utils/application")
+require("app/application")
 require("component/game_object")
 require("component/transform")
 require("login_scene")
@@ -9,7 +9,7 @@ function main()
 
     Application:set_title("[draw_rtt]")
     Application:set_data_path("../data/")--设置资源目录
-    Application:Init()--初始化引擎
+    Application:Init(1400,900)--初始化引擎
 
     local go=GameObject.new("LoginSceneGo")
     local transform=go:AddComponent(Transform)

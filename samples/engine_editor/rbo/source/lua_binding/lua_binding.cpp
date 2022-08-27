@@ -523,7 +523,9 @@ void LuaBinding::BindLua() {
                                         "Sort",&Camera::Sort,
                                         "CheckRenderToTexture",&Camera::CheckRenderToTexture,
                                         "set_target_render_texture",&Camera::set_target_render_texture,
-                                        "clear_target_render_texture",&Camera::clear_target_render_texture
+                                        "clear_target_render_texture",&Camera::clear_target_render_texture,
+                                        "set_view_port_size",&Camera::set_view_port_size,
+                                        "UpdateViewPortSize",&Camera::UpdateViewPortSize
         );
 
         cpp_ns_table.new_enum<BufferClearFlag,true>("BufferClearFlag",{
@@ -697,7 +699,6 @@ void LuaBinding::BindLua() {
                                              "set_data_path",&Application::set_data_path,
                                              "Init",&Application::Init,
                                              "Run",&Application::Run,
-                                             "UpdateScreenSize",&Application::UpdateScreenSize,
                                              "Update",&Application::Update,
                                              "Render",&Application::Render
         );

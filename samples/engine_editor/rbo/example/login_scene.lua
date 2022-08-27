@@ -122,12 +122,13 @@ function LoginScene:CreateMainCamera()
     self.go_camera_:GetComponent(Transform):set_rotation(glm.vec3(0, 0, 0))
     --挂上 Camera 组件
     self.camera_=self.go_camera_:AddComponent(Camera)
+    self.camera_:set_view_port_size(960,640)
     --设置为黑色背景
     self.camera_:set_clear_color(0,0,0,1)
     self.camera_:set_depth(0)
     self.camera_:set_culling_mask(1)
     self.camera_:SetView(glm.vec3(0.0,0.0,0.0), glm.vec3(0.0,1.0,0.0))
-    self.camera_:SetPerspective(60, Screen.aspect_ratio(), 1, 1000)
+    self.camera_:SetPerspective(60, Screen:aspect_ratio(), 1, 1000)
     --设置RenderTexture
     self.render_texture_ = RenderTexture.new()
     self.render_texture_:Init(960,640)
@@ -168,6 +169,7 @@ function LoginScene:CreateUI()
     transform_camera_ui:set_position(glm.vec3(0, 0, 10))
     -- 挂上 Camera 组件
     local camera_ui=self.go_camera_ui_:AddComponent(UICamera)
+    camera_ui:set_view_port_size(1400,900)
     camera_ui:set_culling_mask(2)
     -- 设置正交相机
     camera_ui:SetView(glm.vec3(0, 0, 0), glm.vec3(0, 1, 0))

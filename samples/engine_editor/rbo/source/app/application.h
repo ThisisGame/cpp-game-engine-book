@@ -18,11 +18,9 @@ public:
     static void set_data_path(std::string data_path){data_path_=data_path;}
 
     /// 初始化OpenGL
-    static void Init();
+    static void Init(unsigned short window_width,unsigned short window_height);
 
     static void Run();
-
-    static void UpdateScreenSize();
 
     /// 每一帧内逻辑代码。
     static void Update();

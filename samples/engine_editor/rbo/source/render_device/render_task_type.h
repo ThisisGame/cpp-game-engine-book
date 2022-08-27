@@ -41,6 +41,9 @@ public:
         render_command_=RenderCommand::UPDATE_SCREEN_SIZE;
     }
     ~RenderTaskUpdateScreenSize(){}
+public:
+    unsigned short view_port_width_;
+    unsigned short view_port_height_;
 };
 
 /// 编译着色器任务

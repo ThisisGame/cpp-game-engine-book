@@ -7,9 +7,11 @@
 #include "render_task_type.h"
 #include "render_task_queue.h"
 
-void RenderTaskProducer::ProduceRenderTaskUpdateScreenSize() {
+void RenderTaskProducer::ProduceRenderTaskUpdateScreenSize(unsigned short view_port_width,unsigned short view_port_height) {
     EASY_FUNCTION();
     RenderTaskUpdateScreenSize* task=new RenderTaskUpdateScreenSize();
+    task->view_port_width_=view_port_width;
+    task->view_port_height_=view_port_height;
     RenderTaskQueue::Push(task);
 }
 
