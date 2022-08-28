@@ -43,7 +43,6 @@ void RenderTaskConsumer::Exit() {
 void RenderTaskConsumer::UpdateScreenSize(RenderTaskBase* task_base) {
     RenderTaskUpdateScreenSize* task= dynamic_cast<RenderTaskUpdateScreenSize*>(task_base);
     glViewport(0, 0, task->view_port_width_, task->view_port_height_);
-    Screen::set_width_height(task->view_port_width_,task->view_port_height_);
 }
 
 /// 编译、链接Shader

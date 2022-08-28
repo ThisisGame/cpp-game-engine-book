@@ -13,6 +13,7 @@
 #include "component/transform.h"
 #include "render_device/render_task_producer.h"
 #include "render_device/gpu_resource_mapper.h"
+#include "utils/screen.h"
 
 
 using namespace rttr;
@@ -119,6 +120,15 @@ void Camera::set_depth(unsigned char depth) {
     }
     depth_=depth;
     Sort();
+}
+
+/// 设置当前相机对应的ViewPort大小
+/// \param view_port_width
+/// \param view_port_height
+void Camera::set_view_port_size(unsigned short view_port_width,unsigned short view_port_height){
+    view_port_width_=view_port_width;
+    view_port_height_=view_port_height;
+    Screen::set_width_height(view_port_width_,view_port_height_);
 }
 
 void Camera::UpdateViewPortSize(){
