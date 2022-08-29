@@ -436,20 +436,35 @@ void RenderTaskConsumer::CreateFBO(RenderTaskBase* task_base){
     GPUResourceMapper::MapFBO(task->fbo_handle_, frame_buffer_object_id);
 
     glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer_object_id);__CHECK_GL_ERROR__
-    //颜色纹理并绑定到FBO颜色附着点
-    GLuint color_texture=GPUResourceMapper::GetTexture(task->color_texture_handle_);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, color_texture, 0);__CHECK_GL_ERROR__
-    //深度纹理并绑定到FBO深度附着点
-    GLuint depth_texture=GPUResourceMapper::GetTexture(task->depth_texture_handle_);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depth_texture, 0);__CHECK_GL_ERROR__
+//    //颜色纹理并绑定到FBO颜色附着点
+//    GLuint color_texture=GPUResourceMapper::GetTexture(task->color_texture_handle_);
+//    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, color_texture, 0);__CHECK_GL_ERROR__
+//    //深度纹理并绑定到FBO深度附着点
+//    GLuint depth_texture=GPUResourceMapper::GetTexture(task->depth_texture_handle_);
+//    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depth_texture, 0);__CHECK_GL_ERROR__
+
+    GLuint renderer_buffer_object_id=0;
+    glGenRenderbuffers(1,&renderer_buffer_object_id);
+    glBindRenderbuffer(GL_RENDERBUFFER,renderer_buffer_object_id);
+    glRenderbufferStorage(GL_RENDERBUFFER,GL_RGBA,task->width_,task->height_);
+    glFramebufferRenderbuffer(GL_DRAW_FRAMEBUFFER,GL_COLOR_ATTACHMENT0,GL_RENDERBUFFER,renderer_buffer_object_id); //把渲染缓存关联到帧缓存
+
+    glBindFramebuffer(GL_FRAMEBUFFER, GL_NONE);__CHECK_GL_ERROR__
 }
+
+//https://www.cnblogs.com/xin-lover/p/8977307.html
 
 /// 绑定使用FBO任务
 void RenderTaskConsumer::BindFBO(RenderTaskBase* task_base){
     RenderTaskBindFBO* task=dynamic_cast<RenderTaskBindFBO*>(task_base);
 
+    //首先获取当前默认帧缓冲区的 id
+    GLint default_frame_buffer_id = GL_NONE;
+    glGetIntegerv(GL_FRAMEBUFFER_BINDING, &default_frame_buffer_id);
+
     GLuint frame_buffer_object_id = GPUResourceMapper::GetFBO(task->fbo_handle_);
-    glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer_object_id);__CHECK_GL_ERROR__
+//    glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer_object_id);__CHECK_GL_ERROR__
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER,frame_buffer_object_id);__CHECK_GL_ERROR__
     //检测帧缓冲区完整性，如果完整的话就开始进行绘制
     GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);__CHECK_GL_ERROR__
     if (status != GL_FRAMEBUFFER_COMPLETE) {
@@ -460,8 +475,20 @@ void RenderTaskConsumer::BindFBO(RenderTaskBase* task_base){
 
 /// 取消使用FBO任务
 void RenderTaskConsumer::UnBindFBO(RenderTaskBase* task_base){
-    RenderTaskBindFBO* task=dynamic_cast<RenderTaskBindFBO*>(task_base);
-    glBindFramebuffer(GL_FRAMEBUFFER, GL_NONE);__CHECK_GL_ERROR__
+    RenderTaskUnBindFBO* task=dynamic_cast<RenderTaskUnBindFBO*>(task_base);
+    GLuint frame_buffer_object_id = GPUResourceMapper::GetFBO(task->fbo_handle_);
+
+//    glBindFramebuffer(GL_FRAMEBUFFER, GL_NONE);__CHECK_GL_ERROR__
+
+    //指定缓存操作的源和目的
+    glBindFramebuffer(GL_READ_FRAMEBUFFER,frame_buffer_object_id);__CHECK_GL_ERROR__
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER,GL_NONE);__CHECK_GL_ERROR__
+
+    //拷贝
+    glBlitFramebuffer(0,0,960,640,100,100,960,640,GL_COLOR_BUFFER_BIT,GL_NEAREST);
+    glFlush();
+
+    glBindFramebuffer(GL_READ_FRAMEBUFFER,GL_NONE);__CHECK_GL_ERROR__
 }
 
 /// 删除帧缓冲区对象(FBO)

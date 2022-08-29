@@ -53,7 +53,7 @@ function LoginScene:Awake()
     self:CreatePointLight2()
     self:CreateMainCamera()
     self:CreateModel()
-    self:CreateUI()
+    --self:CreateUI()
 end
 
 --- 创建环境
