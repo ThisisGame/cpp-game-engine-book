@@ -7,7 +7,7 @@
 #include "render_device/gpu_resource_mapper.h"
 #include "render_device/render_task_producer.h"
 
-RenderTexture::RenderTexture(): width_(128), height_(128), frame_buffer_object_handle_(0),in_use_(false),
+RenderTexture::RenderTexture():RenderTarget(),width_(128), height_(128), frame_buffer_object_handle_(0),in_use_(false),
                                 color_texture_2d_(nullptr),depth_texture_2d_(nullptr) {
 }
 
