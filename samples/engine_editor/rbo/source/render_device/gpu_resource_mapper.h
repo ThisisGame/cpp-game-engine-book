@@ -17,70 +17,11 @@ public:
         return ++shader_program_index_;
     }
 
-    /// 生成VAO句柄
-    /// \return
-    static unsigned int GenerateVAOHandle(){
-        return ++vao_index_;
-    }
-
-    /// 生成VBO句柄
-    static unsigned int GenerateVBOHandle(){
-        return ++vbo_index_;
-    }
-
-    /// 生成Texture句柄
-    static unsigned int GenerateTextureHandle(){
-        return ++texture_index_;
-    }
-
-    /// 生成UBO句柄
-    static unsigned int GenerateUBOHandle(){
-        return ++ubo_index_;
-    }
-
-    /// 生成FBO句柄
-    static unsigned int GenerateFBOHandle(){
-        return ++fbo_index_;
-    }
-
     /// 映射Shader程序
     /// \param shader_program_handle
     /// \param shader_program_id
     static void MapShaderProgram(unsigned int shader_program_handle, GLuint shader_program_id){
         shader_program_map_[shader_program_handle] = shader_program_id;
-    }
-
-    /// 映射VAO
-    /// \param vao_handle
-    /// \param vao_id
-    static void MapVAO(unsigned int vao_handle, GLuint vao_id){
-        vao_map_[vao_handle] = vao_id;
-    }
-
-    /// 映射VBO
-    /// \param vbo_handle
-    /// \param vbo_id
-    static void MapVBO(unsigned int vbo_handle, GLuint vbo_id){
-        vbo_map_[vbo_handle] = vbo_id;
-    }
-
-    /// 映射Texture
-    static void MapTexture(unsigned int texture_handle, GLuint texture_id){
-        texture_map_[texture_handle] = texture_id;
-    }
-
-    /// 映射UBO
-    /// \param ubo_handle
-    /// \param ubo_id
-    static void MapUBO(unsigned int ubo_handle, GLuint ubo_id){
-        ubo_map_[ubo_handle] = ubo_id;
-    }
-
-    /// 映射FBO
-    /// \param fbo_handle
-    /// \param fbo_id
-    static void MapFBO(unsigned int fbo_handle, GLuint fbo_id){
-        fbo_map_[fbo_handle] = fbo_id;
     }
 
     /// 获取Shader程序
@@ -90,11 +31,36 @@ public:
         return shader_program_map_[shader_program_handle];
     }
 
+    /// 生成VAO句柄
+    /// \return
+    static unsigned int GenerateVAOHandle(){
+        return ++vao_index_;
+    }
+
+    /// 映射VAO
+    /// \param vao_handle
+    /// \param vao_id
+    static void MapVAO(unsigned int vao_handle, GLuint vao_id){
+        vao_map_[vao_handle] = vao_id;
+    }
+
     /// 获取VAO
     /// \param vao_handle
     /// \return
     static GLuint GetVAO(unsigned int vao_handle){
         return vao_map_[vao_handle];
+    }
+
+    /// 生成VBO句柄
+    static unsigned int GenerateVBOHandle(){
+        return ++vbo_index_;
+    }
+
+    /// 映射VBO
+    /// \param vbo_handle
+    /// \param vbo_id
+    static void MapVBO(unsigned int vbo_handle, GLuint vbo_id){
+        vbo_map_[vbo_handle] = vbo_id;
     }
 
     /// 获取VBO
@@ -104,9 +70,31 @@ public:
         return vbo_map_[vbo_handle];
     }
 
+    /// 生成Texture句柄
+    static unsigned int GenerateTextureHandle(){
+        return ++texture_index_;
+    }
+
+    /// 映射Texture
+    static void MapTexture(unsigned int texture_handle, GLuint texture_id){
+        texture_map_[texture_handle] = texture_id;
+    }
+
     /// 获取Texture
     static GLuint GetTexture(unsigned int texture_handle){
         return texture_map_[texture_handle];
+    }
+
+    /// 生成UBO句柄
+    static unsigned int GenerateUBOHandle(){
+        return ++ubo_index_;
+    }
+
+    /// 映射UBO
+    /// \param ubo_handle
+    /// \param ubo_id
+    static void MapUBO(unsigned int ubo_handle, GLuint ubo_id){
+        ubo_map_[ubo_handle] = ubo_id;
     }
 
     /// 获取UBO
@@ -116,11 +104,42 @@ public:
         return ubo_map_[ubo_handle];
     }
 
+    /// 生成FBO句柄
+    static unsigned int GenerateFBOHandle(){
+        return ++fbo_index_;
+    }
+
+    /// 映射FBO
+    /// \param fbo_handle
+    /// \param fbo_id
+    static void MapFBO(unsigned int fbo_handle, GLuint fbo_id){
+        fbo_map_[fbo_handle] = fbo_id;
+    }
+
     /// 获取FBO
     /// \param fbo_handle
     /// \return
     static GLuint GetFBO(unsigned int fbo_handle){
         return fbo_map_[fbo_handle];
+    }
+
+    /// 生成RBO句柄
+    static unsigned int GenerateRBOHandle(){
+        return ++rbo_index_;
+    }
+
+    /// 映射RBO
+    /// \param rbo_handle
+    /// \param rbo_id
+    static void MapRBO(unsigned int rbo_handle, GLuint rbo_id){
+        rbo_map_[rbo_handle] = rbo_id;
+    }
+
+    /// 获取RBO
+    /// \param rbo_handle
+    /// \return
+    static GLuint GetRBO(unsigned int rbo_handle){
+        return rbo_map_[rbo_handle];
     }
 
 private:
@@ -130,6 +149,7 @@ private:
     static unsigned int texture_index_;//Texture索引
     static unsigned int ubo_index_;//UBO索引
     static unsigned int fbo_index_;//FBO索引
+    static unsigned int rbo_index_;//RBO索引
 
     static std::unordered_map<unsigned int, GLuint> shader_program_map_;//Shader程序映射表
     static std::unordered_map<unsigned int, GLuint> vao_map_;//VAO映射表
@@ -137,6 +157,7 @@ private:
     static std::unordered_map<unsigned int, GLuint> texture_map_;//Texture映射表
     static std::unordered_map<unsigned int, GLuint> ubo_map_;//UBO映射表
     static std::unordered_map<unsigned int, GLuint> fbo_map_;//FBO映射表
+    static std::unordered_map<unsigned int, GLuint> rbo_map_;//RBO映射表
 };
 
 

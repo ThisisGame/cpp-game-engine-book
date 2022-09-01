@@ -271,13 +271,11 @@ void RenderTaskProducer::ProduceRenderTaskSetStencilBufferClearValue(int clear_v
     RenderTaskQueue::Push(task);
 }
 
-void RenderTaskProducer::ProduceRenderTaskCreateFBO(int fbo_handle,unsigned short width,unsigned short height,unsigned int color_texture_handle,unsigned int depth_texture_handle){
+void RenderTaskProducer::ProduceRenderTaskCreateFBO(int fbo_handle,unsigned short width,unsigned short height){
     RenderTaskCreateFBO* task=new RenderTaskCreateFBO();
     task->fbo_handle_=fbo_handle;
     task->width_=width;
     task->height_=height;
-    task->color_texture_handle_=color_texture_handle;
-    task->depth_texture_handle_=depth_texture_handle;
     RenderTaskQueue::Push(task);
 }
 
@@ -296,6 +294,36 @@ void RenderTaskProducer::ProduceRenderTaskUnBindFBO(int fbo_handle){
 void RenderTaskProducer::ProduceRenderTaskDeleteFBO(int fbo_handle){
     RenderTaskDeleteFBO* task=new RenderTaskDeleteFBO();
     task->fbo_handle_=fbo_handle;
+    RenderTaskQueue::Push(task);
+}
+
+void RenderTaskProducer::ProduceRenderTaskCreateRBO(int rbo_handle,unsigned short width,unsigned short height){
+    RenderTaskCreateRBO* task=new RenderTaskCreateRBO();
+    task->rbo_handle_=rbo_handle;
+    task->width_=width;
+    task->height_=height;
+    RenderTaskQueue::Push(task);
+}
+
+void RenderTaskProducer::ProduceRenderTaskDeleteRBO(int rbo_handle){
+    RenderTaskDeleteRBO* task=new RenderTaskDeleteRBO();
+    task->rbo_handle_=rbo_handle;
+    RenderTaskQueue::Push(task);
+}
+
+
+void RenderTaskProducer::ProduceRenderTaskFBOAttachRBO(int fbo_handle,int rbo_handle){
+    RenderTaskFBOAttachRBO* task=new RenderTaskFBOAttachRBO();
+    task->fbo_handle_=fbo_handle;
+    task->rbo_handle_=rbo_handle;
+    RenderTaskQueue::Push(task);
+}
+
+void RenderTaskProducer::ProduceRenderTaskFBOAttachTexture(int fbo_handle,int rbo_handle,unsigned int color_texture_handle,unsigned int depth_texture_handle){
+    RenderTaskFBOAttachTexture* task=new RenderTaskFBOAttachTexture();
+    task->fbo_handle_=fbo_handle;
+    task->color_texture_handle_=color_texture_handle;
+    task->depth_texture_handle_=depth_texture_handle;
     RenderTaskQueue::Push(task);
 }
 

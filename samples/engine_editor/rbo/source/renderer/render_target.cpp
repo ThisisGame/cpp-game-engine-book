@@ -4,6 +4,7 @@
 
 #include "render_target.h"
 #include "render_device/render_task_producer.h"
+#include "render_device/gpu_resource_mapper.h"
 
 RenderTarget::RenderTarget():width_(128), height_(128), frame_buffer_object_handle_(0),in_use_(false) {
 }
@@ -17,4 +18,7 @@ RenderTarget::~RenderTarget() {
 void RenderTarget::Init(unsigned short width, unsigned short height) {
     width_=width;
     height_=height;
+    //创建FBO任务
+    frame_buffer_object_handle_ = GPUResourceMapper::GenerateFBOHandle();
+    RenderTaskProducer::ProduceRenderTaskCreateFBO(frame_buffer_object_handle_,width_,height_);
 }

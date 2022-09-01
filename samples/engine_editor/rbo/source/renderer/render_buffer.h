@@ -11,6 +11,10 @@ class RenderBuffer:public RenderTarget {
 public:
     RenderBuffer();
     ~RenderBuffer();
+
+    virtual void Init(unsigned short width,unsigned short height) override;
+private:
+    unsigned int render_buffer_object_handle_;//关联的RBO Handle
 };
 
 

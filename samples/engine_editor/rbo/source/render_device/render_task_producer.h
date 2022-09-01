@@ -164,7 +164,7 @@ public:
     /// \param fbo_handle FBO句柄
     /// \param width 帧缓冲区尺寸(宽)
     /// \param height 帧缓冲区尺寸(高)
-    static void ProduceRenderTaskCreateFBO(int fbo_handle,unsigned short width,unsigned short height,unsigned int color_texture_handle,unsigned int depth_texture_handle);
+    static void ProduceRenderTaskCreateFBO(int fbo_handle,unsigned short width,unsigned short height);
 
     /// 绑定使用帧缓冲区对象(FBO)
     static void ProduceRenderTaskBindFBO(int fbo_handle);
@@ -174,6 +174,36 @@ public:
 
     /// 删除帧缓冲区对象(FBO)
     static void ProduceRenderTaskDeleteFBO(int fbo_handle);
+
+    /// 创建渲染缓冲区对象(RBO)
+    /// \param rbo_handle RBO句柄
+    /// \param width 缓冲区尺寸(宽)
+    /// \param height 缓冲区尺寸(高)
+    static void ProduceRenderTaskCreateRBO(int rbo_handle,unsigned short width,unsigned short height);
+
+    /// 删除渲染缓冲区对象(RBO)
+    static void ProduceRenderTaskDeleteRBO(int rbo_handle);
+
+    /// FBO附着点指定RBO任务
+    static void ProduceRenderTaskFBOAttachRBO(int fbo_handle,int rbo_handle);
+
+    /// FBO附着点指定Texture任务
+    static void ProduceRenderTaskFBOAttachTexture(int fbo_handle,int rbo_handle,unsigned int color_texture_handle,unsigned int depth_texture_handle);
+
+    /// 将像素块从读取的帧缓冲区(GL_READ_FRAMEBUFFER)复制到绘制帧缓冲区(GL_DRAW_FRAMEBUFFER) 任务
+    /// \param src_fbo_handle 源FrameBuffer(GL_READ_FRAMEBUFFER) 句柄
+    /// \param dst_fbo_handle
+    /// \param src_x
+    /// \param src_y
+    /// \param src_width
+    /// \param src_height
+    /// \param dst_x
+    /// \param dst_y
+    /// \param dst_width
+    /// \param dst_height
+    /// \param mask
+    /// \param filter
+    static void ProduceRenderTaskBlitFrameBuffer(unsigned int src_fbo_handle,unsigned int dst_fbo_handle,int src_x,int src_y,int src_width,int src_height,int dst_x,int dst_y,int dst_width,int dst_height,unsigned int mask,unsigned int filter);
 
     /// 发出特殊任务：渲染结束
     static void ProduceRenderTaskEndFrame();

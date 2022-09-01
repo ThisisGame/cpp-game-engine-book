@@ -14,12 +14,12 @@ public:
     };
 
     RenderTarget();
-    ~RenderTarget();
+    virtual ~RenderTarget();
 
     /// 初始化RenderTexture，在GPU生成帧缓冲区对象(FrameBufferObject)
     /// \param width
     /// \param height
-    void Init(unsigned short width,unsigned short height);
+    virtual void Init(unsigned short width,unsigned short height);
 
     unsigned short width(){
         return width_;
@@ -46,7 +46,7 @@ public:
         in_use_=in_use;
     }
 
-private:
+protected:
     unsigned short width_;
     unsigned short height_;
     unsigned int frame_buffer_object_handle_;//关联的FBO Handle

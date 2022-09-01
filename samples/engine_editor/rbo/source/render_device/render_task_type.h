@@ -395,8 +395,6 @@ public:
     unsigned int fbo_handle_=0;//FBO句柄
     unsigned short width_=128;//帧缓冲区尺寸(宽)
     unsigned short height_=128;//帧缓冲区尺寸(高)
-    unsigned int color_texture_handle_=0;//FBO颜色附着点关联的颜色纹理
-    unsigned int depth_texture_handle_=0;//FBO深度附着点关联的深度纹理
 };
 
 /// 绑定使用FBO任务
@@ -433,6 +431,82 @@ public:
     }
 public:
     unsigned int fbo_handle_=0;//FBO句柄
+};
+
+/// 创建RBO任务
+class RenderTaskCreateRBO: public RenderTaskBase{
+public:
+    RenderTaskCreateRBO(){
+        render_command_=RenderCommand::CREATE_RBO;
+    }
+    ~RenderTaskCreateRBO(){
+    }
+public:
+    unsigned int rbo_handle_=0;//RBO句柄
+    unsigned short width_=128;
+    unsigned short height_=128;
+};
+
+/// 删除RBO任务
+class RenderTaskDeleteRBO: public RenderTaskBase{
+public:
+    RenderTaskDeleteRBO(){
+        render_command_=RenderCommand::DELETE_RBO;
+    }
+    ~RenderTaskDeleteRBO(){
+    }
+public:
+    unsigned int rbo_handle_=0;//RBO句柄
+};
+
+/// FBO附着点指定RBO任务
+class RenderTaskFBOAttachRBO: public RenderTaskBase{
+public:
+    RenderTaskFBOAttachRBO(){
+        render_command_=RenderCommand::FBO_ATTACH_RBO;
+    }
+    ~RenderTaskFBOAttachRBO(){
+    }
+public:
+    unsigned int fbo_handle_=0;//FBO句柄
+    unsigned int rbo_handle_=0;//RBO句柄
+};
+
+/// FBO附着点指定Texture 任务
+class RenderTaskFBOAttachTexture: public RenderTaskBase{
+public:
+    RenderTaskFBOAttachTexture(){
+        render_command_=RenderCommand::FBO_ATTACH_TEXTURE;
+    }
+    ~RenderTaskFBOAttachTexture(){
+    }
+public:
+    unsigned int fbo_handle_=0;//FBO句柄
+    unsigned int color_texture_handle_=0;//FBO颜色附着点关联的颜色纹理
+    unsigned int depth_texture_handle_=0;//FBO深度附着点关联的深度纹理
+};
+
+/// 将像素块从读取的帧缓冲区(GL_READ_FRAMEBUFFER)复制到绘制帧缓冲区(GL_DRAW_FRAMEBUFFER) 任务
+class RenderTaskBlitFrameBuffer: public RenderTaskBase{
+public:
+    RenderTaskBlitFrameBuffer(){
+        render_command_=RenderCommand::BLIT_FRAME_BUFFER;
+    }
+    ~RenderTaskBlitFrameBuffer(){
+    }
+public:
+    unsigned int src_fbo_handle_=0;//源FrameBuffer(GL_READ_FRAMEBUFFER) 句柄
+    unsigned int dst_fbo_handle_=0;//目标FrameBuffer(GL_DRAW_FRAMEBUFFER) 句柄
+    int src_x_=0;
+    int src_y_=0;
+    int src_width_=0;
+    int src_height_=0;
+    int dst_x_=0;
+    int dst_y_=0;
+    int dst_width_=0;
+    int dst_height_=0;
+    unsigned int mask_=0;//标志的按位或，指示要复制哪些缓冲区，允许的标志是GL_COLOR_BUFFER_BIT，GL_DEPTH_BUFFER_BIT和GL_STENCIL_BUFFER_BIT。
+    unsigned int filter_=0;//指定在拉伸图像时要应用的插值。 必须为GL_NEAREST或GL_LINEAR。
 };
 
 /// 特殊任务：帧结束标志，渲染线程收到这个任务后，刷新缓冲区，设置帧结束。

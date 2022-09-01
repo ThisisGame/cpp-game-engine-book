@@ -125,6 +125,18 @@ private:
     /// 删除帧缓冲区对象(FBO)
     static void DeleteFBO(RenderTaskBase* task_base);
 
+    /// 创建渲染缓冲区对象(RBO)
+    static void CreateRBO(RenderTaskBase* task_base);
+
+    /// 删除渲染缓冲区对象(RBO)
+    static void DeleteRBO(RenderTaskBase* task_base);
+
+    /// FBO附着点指定RBO任务
+    static void FBOAttachRBO(RenderTaskBase* task_base);
+
+    /// FBO附着点指定Texture任务
+    static void FBOAttachTexture(RenderTaskBase* task_base);
+
     /// 结束一帧
     /// \param task_base
     static void EndFrame(RenderTaskBase *task_base);

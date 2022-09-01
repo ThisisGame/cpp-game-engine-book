@@ -12,6 +12,7 @@ public:
     RenderTexture();
     ~RenderTexture();
 
+    virtual void Init(unsigned short width,unsigned short height) override;
 
     Texture2D* color_texture_2d(){
         return color_texture_2d_;
