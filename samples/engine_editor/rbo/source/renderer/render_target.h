@@ -1,4 +1,4 @@
-//
+﻿//
 // Created by captainchen on 2022/8/30.
 //
 
@@ -9,17 +9,24 @@
 class RenderTarget {
 public:
     enum RenderTargetType{
+        None,
         RenderTexture,
         RenderBuffer
     };
 
-    RenderTarget();
+    RenderTarget(RenderTargetType render_target_type);
     virtual ~RenderTarget();
 
     /// 初始化RenderTexture，在GPU生成帧缓冲区对象(FrameBufferObject)
     /// \param width
     /// \param height
     virtual void Init(unsigned short width,unsigned short height);
+
+    /// 渲染目标类型
+    /// \return
+    RenderTargetType render_target_type(){
+        return render_target_type_;
+    }
 
     unsigned short width(){
         return width_;
@@ -47,6 +54,7 @@ public:
     }
 
 protected:
+    RenderTargetType render_target_type_;//当前渲染目标类型
     unsigned short width_;
     unsigned short height_;
     unsigned int frame_buffer_object_handle_;//关联的FBO Handle

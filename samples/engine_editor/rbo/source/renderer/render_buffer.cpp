@@ -1,4 +1,4 @@
-//
+﻿//
 // Created by captainchen on 2022/8/30.
 //
 
@@ -6,7 +6,7 @@
 #include "render_device/gpu_resource_mapper.h"
 #include "render_device/render_task_producer.h"
 
-RenderBuffer::RenderBuffer():RenderTarget() {
+RenderBuffer::RenderBuffer():RenderTarget(RenderTargetType::RenderBuffer) {
 }
 
 RenderBuffer::~RenderBuffer() {

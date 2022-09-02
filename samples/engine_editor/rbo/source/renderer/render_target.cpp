@@ -1,4 +1,4 @@
-//
+﻿//
 // Created by captainchen on 2022/8/30.
 //
 
@@ -6,7 +6,7 @@
 #include "render_device/render_task_producer.h"
 #include "render_device/gpu_resource_mapper.h"
 
-RenderTarget::RenderTarget():width_(128), height_(128), frame_buffer_object_handle_(0),in_use_(false) {
+RenderTarget::RenderTarget(RenderTargetType render_target_type):render_target_type_(render_target_type),width_(128), height_(128), frame_buffer_object_handle_(0),in_use_(false) {
 }
 
 RenderTarget::~RenderTarget() {

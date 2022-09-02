@@ -436,8 +436,6 @@ void RenderTaskConsumer::CreateFBO(RenderTaskBase* task_base){
     GPUResourceMapper::MapFBO(task->fbo_handle_, frame_buffer_object_id);
 }
 
-//https://www.cnblogs.com/xin-lover/p/8977307.html
-
 /// 绑定使用FBO任务
 void RenderTaskConsumer::BindFBO(RenderTaskBase* task_base){
     RenderTaskBindFBO* task=dynamic_cast<RenderTaskBindFBO*>(task_base);
@@ -459,19 +457,7 @@ void RenderTaskConsumer::BindFBO(RenderTaskBase* task_base){
 /// 取消使用FBO任务
 void RenderTaskConsumer::UnBindFBO(RenderTaskBase* task_base){
     RenderTaskUnBindFBO* task=dynamic_cast<RenderTaskUnBindFBO*>(task_base);
-    GLuint frame_buffer_object_id = GPUResourceMapper::GetFBO(task->fbo_handle_);
-
     glBindFramebuffer(GL_FRAMEBUFFER, GL_NONE);__CHECK_GL_ERROR__
-
-    //指定缓存操作的源和目的
-    glBindFramebuffer(GL_READ_FRAMEBUFFER,frame_buffer_object_id);__CHECK_GL_ERROR__
-    glBindFramebuffer(GL_DRAW_FRAMEBUFFER,GL_NONE);__CHECK_GL_ERROR__
-
-    //拷贝
-    glBlitFramebuffer(0,0,960,640,100,100,960,640,GL_COLOR_BUFFER_BIT,GL_NEAREST);
-    glFlush();
-
-    glBindFramebuffer(GL_READ_FRAMEBUFFER,GL_NONE);__CHECK_GL_ERROR__
 }
 
 /// 删除帧缓冲区对象(FBO)
@@ -499,7 +485,6 @@ void RenderTaskConsumer::CreateRBO(RenderTaskBase* task_base){
 /// 删除渲染缓冲区对象(RBO)
 void RenderTaskConsumer::DeleteRBO(RenderTaskBase* task_base){
     RenderTaskDeleteRBO* task=dynamic_cast<RenderTaskDeleteRBO*>(task_base);
-    GLuint frame_buffer_object_id = GPUResourceMapper::GetFBO(task->fbo_handle_);
     GLuint renderer_buffer_object_id = GPUResourceMapper::GetRBO(task->rbo_handle_);
     glDeleteRenderbuffers(1,&renderer_buffer_object_id);
 }
@@ -533,6 +518,28 @@ void RenderTaskConsumer::FBOAttachTexture(RenderTaskBase* task_base){
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depth_texture, 0);__CHECK_GL_ERROR__
 
     glBindFramebuffer(GL_FRAMEBUFFER, GL_NONE);__CHECK_GL_ERROR__
+}
+
+/// 将像素块从读取的帧缓冲区(GL_READ_FRAMEBUFFER)复制到绘制帧缓冲区(GL_DRAW_FRAMEBUFFER)任务
+void RenderTaskConsumer::BlitFrameBuffer(RenderTaskBase* task_base){
+    RenderTaskBlitFrameBuffer* task=dynamic_cast<RenderTaskBlitFrameBuffer*>(task_base);
+
+    GLuint src_frame_buffer_object_id = GPUResourceMapper::GetFBO(task->src_fbo_handle_);
+    GLuint dst_frame_buffer_object_id = GL_NONE;
+    if(task->dst_fbo_handle_>0){
+        dst_frame_buffer_object_id = GPUResourceMapper::GetFBO(task->dst_fbo_handle_);
+    }
+
+    //指定缓存操作的源和目的
+    glBindFramebuffer(GL_READ_FRAMEBUFFER,task->src_fbo_handle_);__CHECK_GL_ERROR__
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER,task->dst_fbo_handle_);__CHECK_GL_ERROR__
+
+    //拷贝
+    glBlitFramebuffer(task->src_x_,task->src_y_,task->src_width_,task->src_height_,task->dst_x_,task->dst_y_,task->dst_width_,task->dst_height_,task->mask_,task->filter_);
+    glFlush();
+
+    glBindFramebuffer(GL_READ_FRAMEBUFFER,GL_NONE);__CHECK_GL_ERROR__
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER,GL_NONE);__CHECK_GL_ERROR__
 }
 
 /// 结束一帧
@@ -691,6 +698,10 @@ void RenderTaskConsumer::ProcessTask() {
                 }
                 case RenderCommand::FBO_ATTACH_TEXTURE:{
                     FBOAttachTexture(render_task);
+                    break;
+                }
+                case RenderCommand::BLIT_FRAME_BUFFER:{
+                    BlitFrameBuffer(render_task);
                     break;
                 }
                 case RenderCommand::END_FRAME:{

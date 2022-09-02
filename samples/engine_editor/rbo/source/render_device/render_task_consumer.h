@@ -137,6 +137,9 @@ private:
     /// FBO附着点指定Texture任务
     static void FBOAttachTexture(RenderTaskBase* task_base);
 
+    /// 将像素块从读取的帧缓冲区(GL_READ_FRAMEBUFFER)复制到绘制帧缓冲区(GL_DRAW_FRAMEBUFFER)任务
+    static void BlitFrameBuffer(RenderTaskBase* task_base);
+
     /// 结束一帧
     /// \param task_base
     static void EndFrame(RenderTaskBase *task_base);

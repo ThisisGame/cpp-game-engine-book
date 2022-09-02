@@ -7,7 +7,7 @@
 #include "render_task_type.h"
 #include "render_task_queue.h"
 
-void RenderTaskProducer::ProduceRenderTaskUpdateScreenSize(unsigned short view_port_width,unsigned short view_port_height) {
+void RenderTaskProducer::ProduceRenderTaskUpdateScreenSize(ushort view_port_width,ushort view_port_height) {
     EASY_FUNCTION();
     RenderTaskUpdateScreenSize* task=new RenderTaskUpdateScreenSize();
     task->view_port_width_=view_port_width;
@@ -19,7 +19,7 @@ void RenderTaskProducer::ProduceRenderTaskUpdateScreenSize(unsigned short view_p
 /// \param vertex_shader_source 顶点shader源码
 /// \param fragment_shader_source 片段shader源码
 /// \param shader_program_handle Shader程序句柄
-void RenderTaskProducer::ProduceRenderTaskCompileShader(const char* vertex_shader_source,const char* fragment_shader_source,unsigned int shader_program_handle){
+void RenderTaskProducer::ProduceRenderTaskCompileShader(const char* vertex_shader_source,const char* fragment_shader_source,uint shader_program_handle){
     EASY_FUNCTION();
     RenderTaskCompileShader* task=new RenderTaskCompileShader();
     task->vertex_shader_source_= static_cast<char *>(malloc(strlen(vertex_shader_source) + 1));
@@ -34,23 +34,23 @@ void RenderTaskProducer::ProduceRenderTaskCompileShader(const char* vertex_shade
 
 /// 发出任务：串联uniform block与binding point。
 /// \param shader_program_handle Shader程序句柄
-void RenderTaskProducer::ProduceRenderTaskConnectUniformBlockAndBindingPoint(unsigned int shader_program_handle){
+void RenderTaskProducer::ProduceRenderTaskConnectUniformBlockAndBindingPoint(uint shader_program_handle){
     EASY_FUNCTION();
     RenderTaskConnectUniformBlockInstanceAndBindingPoint* task=new RenderTaskConnectUniformBlockInstanceAndBindingPoint();
     task->shader_program_handle_=shader_program_handle;
     RenderTaskQueue::Push(task);
 }
 
-void RenderTaskProducer::ProduceRenderTaskUseShaderProgram(unsigned int shader_program_handle) {
+void RenderTaskProducer::ProduceRenderTaskUseShaderProgram(uint shader_program_handle) {
     EASY_FUNCTION();
     RenderTaskUseShaderProgram* render_task_use_shader_program=new RenderTaskUseShaderProgram();
     render_task_use_shader_program->shader_program_handle_=shader_program_handle;
     RenderTaskQueue::Push(render_task_use_shader_program);
 }
 
-void RenderTaskProducer::ProduceRenderTaskCreateCompressedTexImage2D(unsigned int texture_handle, int width,
-                                                                     int height, unsigned int texture_format,
-                                                                     unsigned int compress_size,
+void RenderTaskProducer::ProduceRenderTaskCreateCompressedTexImage2D(uint texture_handle, int width,
+                                                                     int height, uint texture_format,
+                                                                     uint compress_size,
                                                                      unsigned char *data) {
     EASY_FUNCTION();
     RenderTaskCreateCompressedTexImage2D* task=new RenderTaskCreateCompressedTexImage2D();
@@ -65,9 +65,9 @@ void RenderTaskProducer::ProduceRenderTaskCreateCompressedTexImage2D(unsigned in
     RenderTaskQueue::Push(task);
 }
 
-void RenderTaskProducer::ProduceRenderTaskCreateTexImage2D(unsigned int texture_handle, int width, int height,
-                                                           unsigned int gl_texture_format, unsigned int client_format,
-                                                           unsigned int data_type, unsigned int data_size,
+void RenderTaskProducer::ProduceRenderTaskCreateTexImage2D(uint texture_handle, int width, int height,
+                                                           uint gl_texture_format, uint client_format,
+                                                           uint data_type, uint data_size,
                                                            unsigned char *data) {
     EASY_FUNCTION();
     RenderTaskCreateTexImage2D* task=new RenderTaskCreateTexImage2D();
@@ -85,19 +85,19 @@ void RenderTaskProducer::ProduceRenderTaskCreateTexImage2D(unsigned int texture_
     RenderTaskQueue::Push(task);
 }
 
-void RenderTaskProducer::ProduceRenderTaskDeleteTextures(int size, unsigned int* texture_handle_array) {
+void RenderTaskProducer::ProduceRenderTaskDeleteTextures(int size, uint* texture_handle_array) {
     EASY_FUNCTION();
     RenderTaskDeleteTextures* task=new RenderTaskDeleteTextures();
     //拷贝数据
-    task->texture_handle_array_= (unsigned int*)malloc(sizeof(unsigned int)*size);
-    memcpy(task->texture_handle_array_, texture_handle_array, sizeof(unsigned int) * size);
+    task->texture_handle_array_= (uint*)malloc(sizeof(uint)*size);
+    memcpy(task->texture_handle_array_, texture_handle_array, sizeof(uint) * size);
     task->texture_count_=size;
     RenderTaskQueue::Push(task);
 }
 
-void RenderTaskProducer::ProduceRenderTaskUpdateTextureSubImage2D(unsigned int texture_handle, int x, int y, int width, int height,
-                                                                  unsigned int client_format, unsigned int data_type,
-                                                                  unsigned char *data,unsigned int data_size) {
+void RenderTaskProducer::ProduceRenderTaskUpdateTextureSubImage2D(uint texture_handle, int x, int y, int width, int height,
+                                                                  uint client_format, uint data_type,
+                                                                  unsigned char *data,uint data_size) {
     EASY_FUNCTION();
     RenderTaskUpdateTextureSubImage2D* task=new RenderTaskUpdateTextureSubImage2D();
     task->texture_handle_=texture_handle;
@@ -114,9 +114,9 @@ void RenderTaskProducer::ProduceRenderTaskUpdateTextureSubImage2D(unsigned int t
     RenderTaskQueue::Push(task);
 }
 
-void RenderTaskProducer::ProduceRenderTaskCreateVAO(unsigned int shader_program_handle, unsigned int vao_handle,unsigned int vbo_handle,
-                                                    unsigned int vertex_data_size, unsigned int vertex_data_stride,
-                                                    void *vertex_data, unsigned int vertex_index_data_size,
+void RenderTaskProducer::ProduceRenderTaskCreateVAO(uint shader_program_handle, uint vao_handle,uint vbo_handle,
+                                                    uint vertex_data_size, uint vertex_data_stride,
+                                                    void *vertex_data, uint vertex_index_data_size,
                                                     void *vertex_index_data) {
     EASY_FUNCTION();
     RenderTaskCreateVAO* task=new RenderTaskCreateVAO();
@@ -135,7 +135,7 @@ void RenderTaskProducer::ProduceRenderTaskCreateVAO(unsigned int shader_program_
     RenderTaskQueue::Push(task);
 }
 
-void RenderTaskProducer::ProduceRenderTaskUpdateVBOSubData(unsigned int vbo_handle, unsigned int vertex_data_size,
+void RenderTaskProducer::ProduceRenderTaskUpdateVBOSubData(uint vbo_handle, uint vertex_data_size,
                                                            void *vertex_data) {
     EASY_FUNCTION();
     RenderTaskUpdateVBOSubData* task=new RenderTaskUpdateVBOSubData();
@@ -157,7 +157,7 @@ void RenderTaskProducer::ProduceRenderTaskUpdateUBOSubData(std::string uniform_b
     RenderTaskQueue::Push(task);
 }
 
-void RenderTaskProducer::ProduceRenderTaskSetEnableState(unsigned int state, bool enable) {
+void RenderTaskProducer::ProduceRenderTaskSetEnableState(uint state, bool enable) {
     EASY_FUNCTION();
     RenderTaskSetEnableState* task=new RenderTaskSetEnableState();
     task->state_=state;
@@ -165,8 +165,8 @@ void RenderTaskProducer::ProduceRenderTaskSetEnableState(unsigned int state, boo
     RenderTaskQueue::Push(task);
 }
 
-void RenderTaskProducer::ProduceRenderTaskSetBlenderFunc(unsigned int source_blending_factor,
-                                                         unsigned int destination_blending_factor) {
+void RenderTaskProducer::ProduceRenderTaskSetBlenderFunc(uint source_blending_factor,
+                                                         uint destination_blending_factor) {
     EASY_FUNCTION();
     RenderTaskSetBlenderFunc* task=new RenderTaskSetBlenderFunc();
     task->source_blending_factor_=source_blending_factor;
@@ -174,7 +174,7 @@ void RenderTaskProducer::ProduceRenderTaskSetBlenderFunc(unsigned int source_ble
     RenderTaskQueue::Push(task);
 }
 
-void RenderTaskProducer::ProduceRenderTaskSetUniformMatrix4fv(unsigned int shader_program_handle,
+void RenderTaskProducer::ProduceRenderTaskSetUniformMatrix4fv(uint shader_program_handle,
                                                               const char *uniform_name, bool transpose, glm::mat4& matrix) {
     EASY_FUNCTION();
     RenderTaskSetUniformMatrix4fv* task=new RenderTaskSetUniformMatrix4fv();
@@ -186,7 +186,7 @@ void RenderTaskProducer::ProduceRenderTaskSetUniformMatrix4fv(unsigned int shade
     RenderTaskQueue::Push(task);
 }
 
-void RenderTaskProducer::ProduceRenderTaskActiveAndBindTexture(unsigned int texture_uint, unsigned int texture_handle) {
+void RenderTaskProducer::ProduceRenderTaskActiveAndBindTexture(uint texture_uint, uint texture_handle) {
     EASY_FUNCTION();
     RenderTaskActiveAndBindTexture* task=new RenderTaskActiveAndBindTexture();
     task->texture_uint_=texture_uint;
@@ -194,7 +194,7 @@ void RenderTaskProducer::ProduceRenderTaskActiveAndBindTexture(unsigned int text
     RenderTaskQueue::Push(task);
 }
 
-void RenderTaskProducer::ProduceRenderTaskSetUniform1i(unsigned int shader_program_handle, const char *uniform_name,
+void RenderTaskProducer::ProduceRenderTaskSetUniform1i(uint shader_program_handle, const char *uniform_name,
                                                        int value) {
     EASY_FUNCTION();
     RenderTaskSetUniform1i* task=new RenderTaskSetUniform1i();
@@ -205,7 +205,7 @@ void RenderTaskProducer::ProduceRenderTaskSetUniform1i(unsigned int shader_progr
     RenderTaskQueue::Push(task);
 }
 
-void RenderTaskProducer::ProduceRenderTaskSetUniform1f(unsigned int shader_program_handle, const char *uniform_name,
+void RenderTaskProducer::ProduceRenderTaskSetUniform1f(uint shader_program_handle, const char *uniform_name,
                                                        float value) {
     EASY_FUNCTION();
     RenderTaskSetUniform1f* task=new RenderTaskSetUniform1f();
@@ -216,7 +216,7 @@ void RenderTaskProducer::ProduceRenderTaskSetUniform1f(unsigned int shader_progr
     RenderTaskQueue::Push(task);
 }
 
-void RenderTaskProducer::ProduceRenderTaskSetUniform3f(unsigned int shader_program_handle, const char *uniform_name,
+void RenderTaskProducer::ProduceRenderTaskSetUniform3f(uint shader_program_handle, const char *uniform_name,
                                                        glm::vec3 value) {
     EASY_FUNCTION();
     RenderTaskSetUniform3f* task=new RenderTaskSetUniform3f();
@@ -227,7 +227,7 @@ void RenderTaskProducer::ProduceRenderTaskSetUniform3f(unsigned int shader_progr
     RenderTaskQueue::Push(task);
 }
 
-void RenderTaskProducer::ProduceRenderTaskBindVAOAndDrawElements(unsigned int vao_handle, unsigned int vertex_index_num) {
+void RenderTaskProducer::ProduceRenderTaskBindVAOAndDrawElements(uint vao_handle, uint vertex_index_num) {
     EASY_FUNCTION();
     RenderTaskBindVAOAndDrawElements* task=new RenderTaskBindVAOAndDrawElements();
     task->vao_handle_=vao_handle;
@@ -235,7 +235,7 @@ void RenderTaskProducer::ProduceRenderTaskBindVAOAndDrawElements(unsigned int va
     RenderTaskQueue::Push(task);
 }
 
-void RenderTaskProducer::ProduceRenderTaskSetClearFlagAndClearColorBuffer(unsigned int clear_flag, float clear_color_r, float clear_color_g, float clear_color_b, float clear_color_a){
+void RenderTaskProducer::ProduceRenderTaskSetClearFlagAndClearColorBuffer(uint clear_flag, float clear_color_r, float clear_color_g, float clear_color_b, float clear_color_a){
     EASY_FUNCTION();
     RenderTaskClear* task=new RenderTaskClear();
     task->clear_flag_=clear_flag;
@@ -246,7 +246,7 @@ void RenderTaskProducer::ProduceRenderTaskSetClearFlagAndClearColorBuffer(unsign
     RenderTaskQueue::Push(task);
 }
 
-void RenderTaskProducer::ProduceRenderTaskSetStencilFunc(unsigned int stencil_func,int stencil_ref,unsigned int stencil_mask){
+void RenderTaskProducer::ProduceRenderTaskSetStencilFunc(uint stencil_func,int stencil_ref,uint stencil_mask){
     EASY_FUNCTION();
     RenderTaskSetStencilFunc* task=new RenderTaskSetStencilFunc();
     task->stencil_func_=stencil_func;
@@ -255,7 +255,7 @@ void RenderTaskProducer::ProduceRenderTaskSetStencilFunc(unsigned int stencil_fu
     RenderTaskQueue::Push(task);
 }
 
-void RenderTaskProducer::ProduceRenderTaskSetStencilOp(unsigned int fail_op_,unsigned int z_test_fail_op_,unsigned int z_test_pass_op_){
+void RenderTaskProducer::ProduceRenderTaskSetStencilOp(uint fail_op_,uint z_test_fail_op_,uint z_test_pass_op_){
     EASY_FUNCTION();
     RenderTaskSetStencilOp* task=new RenderTaskSetStencilOp();
     task->fail_op_=fail_op_;
@@ -271,7 +271,7 @@ void RenderTaskProducer::ProduceRenderTaskSetStencilBufferClearValue(int clear_v
     RenderTaskQueue::Push(task);
 }
 
-void RenderTaskProducer::ProduceRenderTaskCreateFBO(int fbo_handle,unsigned short width,unsigned short height){
+void RenderTaskProducer::ProduceRenderTaskCreateFBO(int fbo_handle,ushort width,ushort height){
     RenderTaskCreateFBO* task=new RenderTaskCreateFBO();
     task->fbo_handle_=fbo_handle;
     task->width_=width;
@@ -297,7 +297,7 @@ void RenderTaskProducer::ProduceRenderTaskDeleteFBO(int fbo_handle){
     RenderTaskQueue::Push(task);
 }
 
-void RenderTaskProducer::ProduceRenderTaskCreateRBO(int rbo_handle,unsigned short width,unsigned short height){
+void RenderTaskProducer::ProduceRenderTaskCreateRBO(int rbo_handle,ushort width,ushort height){
     RenderTaskCreateRBO* task=new RenderTaskCreateRBO();
     task->rbo_handle_=rbo_handle;
     task->width_=width;
@@ -319,11 +319,29 @@ void RenderTaskProducer::ProduceRenderTaskFBOAttachRBO(int fbo_handle,int rbo_ha
     RenderTaskQueue::Push(task);
 }
 
-void RenderTaskProducer::ProduceRenderTaskFBOAttachTexture(int fbo_handle,int rbo_handle,unsigned int color_texture_handle,unsigned int depth_texture_handle){
+void RenderTaskProducer::ProduceRenderTaskFBOAttachTexture(int fbo_handle,int rbo_handle,uint color_texture_handle,uint depth_texture_handle){
     RenderTaskFBOAttachTexture* task=new RenderTaskFBOAttachTexture();
     task->fbo_handle_=fbo_handle;
     task->color_texture_handle_=color_texture_handle;
     task->depth_texture_handle_=depth_texture_handle;
+    RenderTaskQueue::Push(task);
+}
+
+void ProduceRenderTaskBlitFrameBuffer(uint src_fbo_handle,uint dst_fbo_handle,int src_x,int src_y,int src_width,
+                                      int src_height,int dst_x,int dst_y,int dst_width,int dst_height,uint mask,uint filter){
+    RenderTaskBlitFrameBuffer* task=new RenderTaskBlitFrameBuffer();
+    task->src_fbo_handle_=src_fbo_handle;
+    task->dst_fbo_handle_=dst_fbo_handle;
+    task->src_x_=src_x;
+    task->src_y_=src_y;
+    task->src_width_=src_width;
+    task->src_height_=src_height;
+    task->dst_x_=dst_x;
+    task->dst_y_=dst_y;
+    task->dst_width_=dst_width;
+    task->dst_height_=dst_height;
+    task->mask_=mask;
+    task->filter_=filter;
     RenderTaskQueue::Push(task);
 }
 
