@@ -22,6 +22,11 @@ public:
     /// \param height
     virtual void Init(unsigned short width,unsigned short height);
 
+    /// 使用
+    virtual void Bind();
+
+    virtual void UnBind();
+
     /// 渲染目标类型
     /// \return
     RenderTargetType render_target_type(){
@@ -48,9 +53,6 @@ public:
     /// 是否正在被使用
     bool in_use(){
         return in_use_;
-    }
-    void set_in_use(bool in_use){
-        in_use_=in_use;
     }
 
 protected:

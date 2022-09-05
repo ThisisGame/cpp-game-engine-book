@@ -22,3 +22,13 @@ void RenderTarget::Init(unsigned short width, unsigned short height) {
     frame_buffer_object_handle_ = GPUResourceMapper::GenerateFBOHandle();
     RenderTaskProducer::ProduceRenderTaskCreateFBO(frame_buffer_object_handle_,width_,height_);
 }
+
+void RenderTarget::Bind() {
+    in_use_=true;
+    RenderTaskProducer::ProduceRenderTaskBindFBO(frame_buffer_object_handle_);
+}
+
+void RenderTarget::UnBind() {
+    in_use_=false;
+    RenderTaskProducer::ProduceRenderTaskUnBindFBO(frame_buffer_object_handle_);
+}

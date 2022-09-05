@@ -19,16 +19,16 @@ enum BufferClearFlag{
     CLEAR_STENCIL_BUFFER=GL_STENCIL_BUFFER_BIT,
 };
 
-class RenderTexture;
+class RenderTarget;
 class Camera: public Component {
 public:
     Camera();
     ~Camera();
 
     /// 设置相机位置 朝向
-    /// \param cameraFowrad 相机朝前方向
+    /// \param cameraForward 相机朝前方向
     /// \param cameraUp 相机朝上方向
-    void SetView(const glm::vec3& cameraFowrad,const glm::vec3& cameraUp);
+    void SetView(const glm::vec3& cameraForward, const glm::vec3& cameraUp);
     /// 设置相机视野
     /// \param fovDegrees   相机视野 可视角度
     /// \param aspectRatio  宽高比
@@ -79,17 +79,17 @@ public:
     };
     CameraUseFor camera_use_for(){return camera_use_for_;}
 
-    /// 检查target_render_texture_是否设置，是则使用FBO，渲染到RenderTexture。
-    void CheckRenderToTexture();
+    /// 检查render_target_是否设置，是则使用FBO，渲染到RenderTexture/RenderBuffer。
+    void CheckRenderTarget();
 
-    void CheckCancelRenderToTexture();
+    void CheckCancelRenderTarget();
 
-    /// 设置渲染目标RenderTexture
-    /// \param render_texture
-    void set_target_render_texture(RenderTexture* render_texture);
+    /// 设置渲染目标RenderTarget
+    /// \param render_target
+    void set_render_target(RenderTarget* render_target);
 
-    /// 清空渲染目标RenderTexture
-    void clear_target_render_texture();
+    /// 清空渲染目标RenderTarget
+    void clear_render_target();
 
     /// 设置当前相机对应的ViewPort大小
     /// \param view_port_width
@@ -110,7 +110,7 @@ protected:
 
     CameraUseFor camera_use_for_=CameraUseFor::SCENE;
 
-    RenderTexture* target_render_texture_;//渲染目标RenderTexture
+    RenderTarget* render_target_;//渲染目标 可选RenderTexture/RenderBuffer
 
     unsigned short view_port_width_;
     unsigned short view_port_height_;

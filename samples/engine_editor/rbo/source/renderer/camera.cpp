@@ -28,7 +28,7 @@ Camera* Camera::current_camera_;
 
 Camera::Camera():Component(),clear_color_(49.f/255,77.f/255,121.f/255,1.f),
     clear_flag_(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT|GL_STENCIL_BUFFER_BIT),depth_(0),culling_mask_(0x01),
-    target_render_texture_(nullptr) {
+    render_target_(nullptr) {
     //默认获取现有Camera最大depth，设置当前Camera.depth +1
     if (all_camera_.size()>0){
         unsigned char max_depth=all_camera_.back()->depth();
@@ -68,50 +68,48 @@ void Camera::Clear() {
                                                                          clear_color_.b, clear_color_.a);
 }
 
-void Camera::CheckRenderToTexture(){
-    if(target_render_texture_== nullptr){//没有设置目标RenderTexture
+void Camera::CheckRenderTarget(){
+    if(render_target_== nullptr){//没有设置RenderTarget
         return;
     }
-    if(target_render_texture_->in_use()){
+    if(render_target_->in_use()){
         return;
     }
-    if(target_render_texture_->frame_buffer_object_handle() == 0){//还没有初始化，没有生成FBO。
+    if(render_target_->frame_buffer_object_handle() == 0){//还没有初始化，没有生成FBO。
         return;
     }
-    RenderTaskProducer::ProduceRenderTaskBindFBO(target_render_texture_->frame_buffer_object_handle());
-    target_render_texture_->set_in_use(true);
+    render_target_->Bind();
 }
 
-void Camera::CheckCancelRenderToTexture(){
-    if(target_render_texture_== nullptr){//没有设置目标RenderTexture
+void Camera::CheckCancelRenderTarget(){
+    if(render_target_== nullptr){//没有设置目标RenderTexture
         return;
     }
-    if(target_render_texture_->in_use()==false){
+    if(render_target_->in_use()==false){
         return;
     }
-    if(target_render_texture_->frame_buffer_object_handle() == 0){//还没有初始化，没有生成FBO。
+    if(render_target_->frame_buffer_object_handle() == 0){//还没有初始化，没有生成FBO。
         return;
     }
-    RenderTaskProducer::ProduceRenderTaskUnBindFBO(target_render_texture_->frame_buffer_object_handle());
-    target_render_texture_->set_in_use(false);
+    render_target_->UnBind();
 }
 
-void Camera::set_target_render_texture(RenderTexture* render_texture){
-    if(render_texture== nullptr){
+void Camera::set_render_target(RenderTexture* render_target){
+    if(render_target == nullptr){
         clear_target_render_texture();
     }
-    target_render_texture_=render_texture;
+    render_target_=render_target;
 }
 
-void Camera::clear_target_render_texture() {
-    if(target_render_texture_== nullptr){//没有设置目标RenderTexture
+void Camera::clear_render_target() {
+    if(render_target_== nullptr){//没有设置目标RenderTexture
         return;
     }
-    if(target_render_texture_->in_use()== false){
+    if(render_target_->in_use()== false){
         return;
     }
-    RenderTaskProducer::ProduceRenderTaskUnBindFBO(target_render_texture_->frame_buffer_object_handle());
-    target_render_texture_->set_in_use(false);
+    RenderTaskProducer::ProduceRenderTaskUnBindFBO(render_target_->frame_buffer_object_handle());
+    render_target_->set_in_use(false);
 }
 
 void Camera::set_depth(unsigned char depth) {
@@ -144,11 +142,11 @@ void Camera::Sort() {
 void Camera::Foreach(std::function<void()> func) {
     for (auto iter=all_camera_.begin();iter!=all_camera_.end();iter++){
         current_camera_=*iter;
-        current_camera_->UpdateViewPortSize();
-        current_camera_->CheckRenderToTexture();
+        current_camera_->UpdateViewPortSize();//更新ViewPort尺寸
+        current_camera_->CheckRenderTarget();//检查是否渲染到FBO
         current_camera_->Clear();
         func();
-        current_camera_->CheckCancelRenderToTexture();
+        current_camera_->CheckCancelRenderTarget();//检查是否取消渲染到FBO
     }
 }
 
