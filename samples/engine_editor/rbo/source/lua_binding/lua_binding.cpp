@@ -25,6 +25,7 @@ extern "C"{
 #include "renderer/animation_clip.h"
 #include "renderer/animation.h"
 #include "renderer/render_texture.h"
+#include "renderer/render_buffer.h"
 #include "ui/rect_transform.h"
 #include "ui/ui_button.h"
 #include "ui/ui_camera.h"
@@ -521,9 +522,9 @@ void LuaBinding::BindLua() {
                                         "Foreach",&Camera::Foreach,
                                         "current_camera",&Camera::current_camera,
                                         "Sort",&Camera::Sort,
-                                        "CheckRenderToTexture",&Camera::CheckRenderToTexture,
-                                        "set_target_render_texture",&Camera::set_target_render_texture,
-                                        "clear_target_render_texture",&Camera::clear_target_render_texture,
+                                        "CheckRenderTarget",&Camera::CheckRenderTarget,
+                                        "set_render_target",&Camera::set_render_target,
+                                        "clear_render_target",&Camera::clear_render_target,
                                         "set_view_port_size",&Camera::set_view_port_size,
                                         "UpdateViewPortSize",&Camera::UpdateViewPortSize
         );
@@ -600,17 +601,26 @@ void LuaBinding::BindLua() {
                                            "Play", &Animation::Play,
                                            "current_animation_clip", &Animation::current_animation_clip
         );
+        cpp_ns_table.new_usertype<RenderTexture>("RenderTarget",sol::call_constructor,sol::constructors<RenderTarget()>(),
+                                                 "Init", &RenderTarget::Init,
+                                                 "Bind", &RenderTarget::Bind,
+                                                 "UnBind", &RenderTarget::UnBind,
+                                                 "render_target_type", &RenderTarget::render_target_type,
+                                                 "width", &RenderTarget::width,
+                                                 "height", &RenderTarget::height,
+                                                 "set_width", &RenderTarget::set_width,
+                                                 "set_height", &RenderTarget::set_height,
+                                                 "frame_buffer_object_handle", &RenderTarget::frame_buffer_object_handle,
+                                                 "in_use", &RenderTarget::in_use
+        );
         cpp_ns_table.new_usertype<RenderTexture>("RenderTexture",sol::call_constructor,sol::constructors<RenderTexture()>(),
-                                                 "Init", &RenderTexture::Init,
-                                                 "width", &RenderTexture::width,
-                                                 "height", &RenderTexture::height,
-                                                 "set_width", &RenderTexture::set_width,
-                                                 "set_height", &RenderTexture::set_height,
-                                                 "in_use", &RenderTexture::in_use,
-                                                 "set_in_use", &RenderTexture::set_in_use,
-                                                 "frame_buffer_object_handle", &RenderTexture::frame_buffer_object_handle,
+                                                 sol::base_classes,sol::bases<RenderTarget>(),
                                                  "color_texture_2d", &RenderTexture::color_texture_2d,
                                                  "depth_texture_2d", &RenderTexture::depth_texture_2d
+        );
+        cpp_ns_table.new_usertype<RenderBuffer>("RenderBuffer",sol::call_constructor,sol::constructors<RenderBuffer()>(),
+                                                 sol::base_classes,sol::bases<RenderTarget>(),
+                                                 "render_buffer_object_handle", &RenderBuffer::render_buffer_object_handle
         );
     }
 

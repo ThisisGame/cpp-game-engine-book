@@ -94,9 +94,9 @@ void Camera::CheckCancelRenderTarget(){
     render_target_->UnBind();
 }
 
-void Camera::set_render_target(RenderTexture* render_target){
+void Camera::set_render_target(RenderTarget* render_target){
     if(render_target == nullptr){
-        clear_target_render_texture();
+        clear_render_target();
     }
     render_target_=render_target;
 }
@@ -108,8 +108,7 @@ void Camera::clear_render_target() {
     if(render_target_->in_use()== false){
         return;
     }
-    RenderTaskProducer::ProduceRenderTaskUnBindFBO(render_target_->frame_buffer_object_handle());
-    render_target_->set_in_use(false);
+    render_target_->UnBind();
 }
 
 void Camera::set_depth(unsigned char depth) {

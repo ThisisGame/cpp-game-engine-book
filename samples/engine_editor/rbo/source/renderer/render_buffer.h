@@ -13,6 +13,10 @@ public:
     ~RenderBuffer();
 
     virtual void Init(unsigned short width,unsigned short height) override;
+
+    unsigned int render_buffer_object_handle(){
+        return render_buffer_object_handle_;
+    }
 private:
     unsigned int render_buffer_object_handle_;//关联的RBO Handle
 };
