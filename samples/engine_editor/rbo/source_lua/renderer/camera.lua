@@ -101,15 +101,15 @@ function Camera:CheckRenderToTexture()
     self.cpp_component_instance_:CheckRenderToTexture()
 end
 
---- 设置渲染目标RenderTexture
---- @param render_texture RenderTexture @目标RenderTexture
-function Camera:set_target_render_texture(render_texture)
-    self.cpp_component_instance_:set_target_render_texture(render_texture:cpp_class_instance())
+--- 设置渲染目标
+--- @param render_target RenderTarget @目标
+function Camera:set_render_target(render_target)
+    self.cpp_component_instance_:set_render_target(render_target:cpp_class_instance())
 end
 
---- 清空渲染目标RenderTexture
-function Camera:clear_target_render_texture()
-    self.cpp_component_instance_:clear_target_render_texture()
+--- 清空渲染目标
+function Camera:clear_render_target()
+    self.cpp_component_instance_:clear_render_target()
 end
 
 --- 设置ViewPort大小

@@ -5,15 +5,14 @@
 #ifndef RBO_RENDER_TARGET_H
 #define RBO_RENDER_TARGET_H
 
+enum RenderTargetType{
+    None,
+    RenderTargetTexture,
+    RenderTargetBuffer
+};
 
 class RenderTarget {
 public:
-    enum RenderTargetType{
-        None,
-        RenderTexture,
-        RenderBuffer
-    };
-
     RenderTarget(RenderTargetType render_target_type);
     virtual ~RenderTarget();
 

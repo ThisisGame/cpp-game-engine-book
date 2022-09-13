@@ -601,7 +601,12 @@ void LuaBinding::BindLua() {
                                            "Play", &Animation::Play,
                                            "current_animation_clip", &Animation::current_animation_clip
         );
-        cpp_ns_table.new_usertype<RenderTexture>("RenderTarget",sol::call_constructor,sol::constructors<RenderTarget()>(),
+        cpp_ns_table.new_enum<RenderTargetType,true>("RenderTargetType",{
+                {"None",RenderTargetType::None},
+                {"RenderTargetTexture",RenderTargetType::RenderTargetTexture},
+                {"RenderTargetBuffer",RenderTargetType::RenderTargetBuffer}
+        });
+        cpp_ns_table.new_usertype<RenderTarget>("RenderTarget",sol::call_constructor,sol::constructors<RenderTarget(RenderTargetType)>(),
                                                  "Init", &RenderTarget::Init,
                                                  "Bind", &RenderTarget::Bind,
                                                  "UnBind", &RenderTarget::UnBind,
@@ -620,7 +625,8 @@ void LuaBinding::BindLua() {
         );
         cpp_ns_table.new_usertype<RenderBuffer>("RenderBuffer",sol::call_constructor,sol::constructors<RenderBuffer()>(),
                                                  sol::base_classes,sol::bases<RenderTarget>(),
-                                                 "render_buffer_object_handle", &RenderBuffer::render_buffer_object_handle
+                                                 "render_buffer_object_handle", &RenderBuffer::render_buffer_object_handle,
+                                                "BlitFrameBuffer", &RenderBuffer::BlitFrameBuffer
         );
     }
 

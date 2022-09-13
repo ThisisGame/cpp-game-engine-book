@@ -327,7 +327,7 @@ void RenderTaskProducer::ProduceRenderTaskFBOAttachTexture(int fbo_handle,int rb
     RenderTaskQueue::Push(task);
 }
 
-void ProduceRenderTaskBlitFrameBuffer(uint src_fbo_handle,uint dst_fbo_handle,int src_x,int src_y,int src_width,
+void RenderTaskProducer::ProduceRenderTaskBlitFrameBuffer(uint src_fbo_handle,uint dst_fbo_handle,int src_x,int src_y,int src_width,
                                       int src_height,int dst_x,int dst_y,int dst_width,int dst_height,uint mask,uint filter){
     RenderTaskBlitFrameBuffer* task=new RenderTaskBlitFrameBuffer();
     task->src_fbo_handle_=src_fbo_handle;

@@ -5,7 +5,7 @@
 
 int main(void){
     //设置lua搜索目录
-    LuaBinding::Init(";../example/?.lua;../source_lua/?.lua;../source_lua/utils/?.lua;../source_lua/component/?.lua");
+    LuaBinding::Init(";../example/?.lua;../source_lua/?.lua;../source_lua/utils/?.lua;../source_lua/component/?.lua;../source_lua/renderer/?.lua");
     //绑定引擎所有类到Lua
     LuaBinding::BindLua();
     //执行lua
