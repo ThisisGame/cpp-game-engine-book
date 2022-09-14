@@ -29,7 +29,7 @@ function LoginScene:ctor()
     self.go_camera_ = nil
     ---@field camera_ Camera @场景相机
     self.camera_ = nil
-    ---@field render_texture_ RenderTexture
+    ---@field render_buffer_ RenderBuffer
     self.render_buffer_ = nil
     self.go_skeleton_ = nil --骨骼蒙皮动画物体
     self.animation_ = nil--骨骼动画
@@ -53,7 +53,7 @@ function LoginScene:Awake()
     self:CreatePointLight2()
     self:CreateMainCamera()
     self:CreateModel()
-    --self:CreateUI()
+    self:CreateUI()
 end
 
 --- 创建环境
@@ -123,8 +123,6 @@ function LoginScene:CreateMainCamera()
     --挂上 Camera 组件
     self.camera_=self.go_camera_:AddComponent(Camera)
     self.camera_:set_view_port_size(960,640)
-    --设置为黑色背景
-    self.camera_:set_clear_color(0,0,0,1)
     self.camera_:set_depth(0)
     self.camera_:set_culling_mask(1)
     self.camera_:SetView(glm.vec3(0.0,0.0,0.0), glm.vec3(0.0,1.0,0.0))
@@ -171,6 +169,7 @@ function LoginScene:CreateUI()
     local camera_ui=self.go_camera_ui_:AddComponent(UICamera)
     camera_ui:set_view_port_size(1400,900)
     camera_ui:set_culling_mask(2)
+    camera_ui:set_clear_flag(Cpp.BufferClearFlag.CLEAR_DEPTH_BUFFER | Cpp.BufferClearFlag.CLEAR_STENCIL_BUFFER)
     -- 设置正交相机
     camera_ui:SetView(glm.vec3(0, 0, 0), glm.vec3(0, 1, 0))
     camera_ui:SetOrthographic(-Screen.width()/2,Screen.width()/2,-Screen.height()/2,Screen.height()/2,-100,100)
@@ -183,7 +182,7 @@ function LoginScene:CreateUI()
     rect_transform:set_rect(glm.vec2(480,320))
     -- 挂上 UIImage 组件
     local ui_image_mod_bag=self.go_ui_image_:AddComponent(UIImage)
-    ui_image_mod_bag:set_texture(self.render_texture_:color_texture_2d())
+    ui_image_mod_bag:set_texture(Texture2D.LoadFromFile("images/need_head_phone.cpt"))
 end
 
 function LoginScene:Update()

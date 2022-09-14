@@ -97,6 +97,17 @@ public:
     void set_view_port_size(unsigned short view_port_width,unsigned short view_port_height);
 
     void UpdateViewPortSize();
+
+    void SetRenderRectInWindow();
+
+    /// 限定在窗口的渲染区域
+    /// \param x
+    /// \param y
+    /// \param width
+    /// \param height
+    void set_render_rect_in_window(int x,int y,int width,int height){
+        render_rect_in_window_={x,y,width,height};
+    }
 protected:
     glm::mat4 view_mat4_;//指定相机坐标和朝向
     glm::mat4 projection_mat4_;//指定相机范围
@@ -114,6 +125,8 @@ protected:
 
     unsigned short view_port_width_;
     unsigned short view_port_height_;
+
+    glm::ivec4 render_rect_in_window_;//限定在窗口的渲染区域
 public:
     /// 遍历所有Camera
     /// \param func

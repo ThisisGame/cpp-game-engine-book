@@ -33,6 +33,6 @@ void RenderBuffer::UnBind(){
 }
 
 void RenderBuffer::BlitFrameBuffer(int src_x,int src_y,int src_width,int src_height,int dst_x,int dst_y,int dst_width,int dst_height){
-    RenderTaskProducer::ProduceRenderTaskBlitFrameBuffer(frame_buffer_object_handle_,render_buffer_object_handle_,src_x,
+    RenderTaskProducer::ProduceRenderTaskBlitFrameBuffer(frame_buffer_object_handle_,0,src_x,
                                                          src_y,src_width,src_height,dst_x,dst_y,dst_width,dst_height,GL_COLOR_BUFFER_BIT,GL_NEAREST);
 }

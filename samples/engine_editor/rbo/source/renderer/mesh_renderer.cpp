@@ -123,6 +123,7 @@ void MeshRenderer::Render() {
         }else{
             RenderTaskProducer::ProduceRenderTaskSetEnableState(GL_DEPTH_TEST,false);
         }
+        RenderTaskProducer::ProduceRenderTaskSetEnableState(GL_SCISSOR_TEST,true);//启用剪裁测试
         RenderTaskProducer::ProduceRenderTaskSetEnableState(GL_CULL_FACE,true);
         RenderTaskProducer::ProduceRenderTaskSetEnableState(GL_BLEND,true);
         RenderTaskProducer::ProduceRenderTaskSetBlenderFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

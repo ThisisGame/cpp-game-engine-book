@@ -46,6 +46,20 @@ public:
     unsigned short view_port_height_;
 };
 
+/// 限定在窗口的渲染区域任务
+class RenderTaskSetRenderRectInWindow:public RenderTaskBase{
+public:
+    RenderTaskSetRenderRectInWindow(){
+        render_command_=RenderCommand::SET_RENDER_RECT_IN_WINDOW;
+    }
+    ~RenderTaskSetRenderRectInWindow(){}
+public:
+    unsigned short x_;
+    unsigned short y_;
+    unsigned short width_;
+    unsigned short height_;
+};
+
 /// 编译着色器任务
 class RenderTaskCompileShader: public RenderTaskBase{
 public:

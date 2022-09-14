@@ -45,6 +45,13 @@ void RenderTaskConsumer::UpdateScreenSize(RenderTaskBase* task_base) {
     glViewport(0, 0, task->view_port_width_, task->view_port_height_);
 }
 
+/// 限定在窗口的渲染区域
+/// \param task_base
+void RenderTaskConsumer::SetRenderRectInWindow(RenderTaskBase* task_base) {
+    RenderTaskSetRenderRectInWindow* task= dynamic_cast<RenderTaskSetRenderRectInWindow*>(task_base);
+    glScissor(task->x_,task->y_,task->width_,task->height_);
+}
+
 /// 编译、链接Shader
 /// \param task_base
 void RenderTaskConsumer::CompileShader(RenderTaskBase* task_base){
@@ -531,8 +538,8 @@ void RenderTaskConsumer::BlitFrameBuffer(RenderTaskBase* task_base){
     }
 
     //指定缓存操作的源和目的
-    glBindFramebuffer(GL_READ_FRAMEBUFFER,task->src_fbo_handle_);__CHECK_GL_ERROR__
-    glBindFramebuffer(GL_DRAW_FRAMEBUFFER,task->dst_fbo_handle_);__CHECK_GL_ERROR__
+    glBindFramebuffer(GL_READ_FRAMEBUFFER,src_frame_buffer_object_id);__CHECK_GL_ERROR__
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER,dst_frame_buffer_object_id);__CHECK_GL_ERROR__
 
     //拷贝
     glBlitFramebuffer(task->src_x_,task->src_y_,task->src_width_,task->src_height_,task->dst_x_,task->dst_y_,task->dst_width_,task->dst_height_,task->mask_,task->filter_);
@@ -574,6 +581,10 @@ void RenderTaskConsumer::ProcessTask() {
                 case RenderCommand::NONE:break;
                 case RenderCommand::UPDATE_SCREEN_SIZE:{
                     UpdateScreenSize(render_task);
+                    break;
+                }
+                case RenderCommand::SET_RENDER_RECT_IN_WINDOW:{
+                    SetRenderRectInWindow(render_task);
                     break;
                 }
                 case RenderCommand::COMPILE_SHADER:{

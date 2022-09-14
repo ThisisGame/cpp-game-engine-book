@@ -24,6 +24,10 @@ private:
     /// \param task_base
     static void UpdateScreenSize(RenderTaskBase* task_base);
 
+    /// 限定在窗口的渲染区域
+    /// \param task_base
+    static void SetRenderRectInWindow(RenderTaskBase* task_base);
+
     /// 编译、链接Shader
     /// \param task_base
     static void CompileShader(RenderTaskBase *task_base);

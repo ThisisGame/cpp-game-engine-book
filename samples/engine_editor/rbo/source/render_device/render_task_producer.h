@@ -17,6 +17,9 @@ public:
     /// 发出任务：更新游戏窗口尺寸
     static void ProduceRenderTaskUpdateScreenSize(ushort view_port_width,ushort view_port_height);
 
+    /// 发出任务：限定在窗口的渲染区域
+    static void ProduceRenderTaskSetRenderRectInWindow(ushort x,ushort y,ushort width,ushort height);
+
     /// 发出任务：编译Shader
     /// \param vertex_shader_source 顶点shader源码
     /// \param fragment_shader_source 片段shader源码
