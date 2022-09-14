@@ -132,8 +132,14 @@ void Camera::UpdateViewPortSize(){
     RenderTaskProducer::ProduceRenderTaskUpdateScreenSize(view_port_width_,view_port_height_);
 }
 
-void Camera::SetRenderRectInWindow(){
-    RenderTaskProducer::ProduceRenderTaskSetRenderRectInWindow(render_rect_in_window_.x,render_rect_in_window_.y,render_rect_in_window_.z,render_rect_in_window_.w);
+void Camera::SetRenderRectInRenderTarget(){
+    if(render_rect_in_render_target_.z == 0 || render_rect_in_render_target_.w == 0){//没有设置范围
+        return;
+    }
+    RenderTaskProducer::ProduceRenderTaskSetRenderRectInRenderTarget(render_rect_in_render_target_.x,
+                                                                     render_rect_in_render_target_.y,
+                                                                     render_rect_in_render_target_.z,
+                                                                     render_rect_in_render_target_.w);
 }
 
 void Camera::Sort() {
@@ -145,7 +151,7 @@ void Camera::Sort() {
 void Camera::Foreach(std::function<void()> func) {
     for (auto iter=all_camera_.begin();iter!=all_camera_.end();iter++){
         current_camera_=*iter;
-        current_camera_->SetRenderRectInWindow();
+        current_camera_->SetRenderRectInRenderTarget();
         current_camera_->UpdateViewPortSize();//更新ViewPort尺寸
         current_camera_->CheckRenderTarget();//检查是否渲染到FBO
         current_camera_->Clear();

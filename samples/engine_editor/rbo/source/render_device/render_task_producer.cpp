@@ -15,10 +15,9 @@ void RenderTaskProducer::ProduceRenderTaskUpdateScreenSize(ushort view_port_widt
     RenderTaskQueue::Push(task);
 }
 
-/// 发出任务：限定在窗口的渲染区域
-void RenderTaskProducer::ProduceRenderTaskSetRenderRectInWindow(ushort x,ushort y,ushort width,ushort height) {
+void RenderTaskProducer::ProduceRenderTaskSetRenderRectInRenderTarget(ushort x, ushort y, ushort width, ushort height) {
     EASY_FUNCTION();
-    RenderTaskSetRenderRectInWindow* task=new RenderTaskSetRenderRectInWindow();
+    RenderTaskSetRenderRectInRenderTarget* task=new RenderTaskSetRenderRectInRenderTarget();
     task->x_=x;
     task->y_=y;
     task->width_=width;

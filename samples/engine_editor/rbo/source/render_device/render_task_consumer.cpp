@@ -48,7 +48,7 @@ void RenderTaskConsumer::UpdateScreenSize(RenderTaskBase* task_base) {
 /// 限定在窗口的渲染区域
 /// \param task_base
 void RenderTaskConsumer::SetRenderRectInWindow(RenderTaskBase* task_base) {
-    RenderTaskSetRenderRectInWindow* task= dynamic_cast<RenderTaskSetRenderRectInWindow*>(task_base);
+    RenderTaskSetRenderRectInRenderTarget* task= dynamic_cast<RenderTaskSetRenderRectInRenderTarget*>(task_base);
     glScissor(task->x_,task->y_,task->width_,task->height_);
 }
 
@@ -583,7 +583,7 @@ void RenderTaskConsumer::ProcessTask() {
                     UpdateScreenSize(render_task);
                     break;
                 }
-                case RenderCommand::SET_RENDER_RECT_IN_WINDOW:{
+                case RenderCommand::SET_RENDER_RECT_IN_RENDER_TARGET:{
                     SetRenderRectInWindow(render_task);
                     break;
                 }

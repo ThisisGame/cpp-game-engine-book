@@ -45,6 +45,10 @@ Texture2D* Texture2D::LoadFromFile(std::string image_file_path)
 
     //读取 cpt 压缩纹理文件
     ifstream input_file_stream(Application::data_path()+ image_file_path,ios::in | ios::binary);
+    if(input_file_stream.is_open()==false){
+        DEBUG_LOG_ERROR("Texture2D::LoadFromFile Not Exist:{}",image_file_path);
+        return texture2d;
+    }
     CptFileHead cpt_file_head;
     input_file_stream.read((char*)&cpt_file_head, sizeof(CptFileHead));
 

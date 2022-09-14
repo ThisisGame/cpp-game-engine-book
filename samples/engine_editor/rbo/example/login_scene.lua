@@ -1,4 +1,4 @@
-require("lua_extension")
+﻿require("lua_extension")
 require("lua_extension_math")
 require("renderer/camera")
 require("renderer/mesh_filter")
@@ -16,9 +16,10 @@ require("utils/time")
 require("lighting/environment")
 require("lighting/point_light")
 require("lighting/directional_light")
-require("ui/rect_transform")
+require("ui/rect_Transform")
 require("ui/ui_camera")
 require("ui/ui_image")
+require("ui/ui_button")
 
 LoginScene=class("LoginScene",Component)
 
@@ -46,6 +47,7 @@ function LoginScene:Awake()
     print("LoginScene Awake")
     LoginScene.super.Awake(self)
 
+    self:CreateUI()
     self:CreateEnvironment()
     self:CreateDirectionalLight1()
     self:CreateDirectionalLight2()
@@ -53,8 +55,85 @@ function LoginScene:Awake()
     self:CreatePointLight2()
     self:CreateMainCamera()
     self:CreateModel()
-    self:CreateUI()
 end
+
+
+function LoginScene:CreateUI()
+    -- 创建UI相机 GameObject
+    self.go_camera_ui_=GameObject.new("ui_camera")
+    -- 挂上 Transform 组件
+    local transform_camera_ui=self.go_camera_ui_:AddComponent(Transform)
+    transform_camera_ui:set_position(glm.vec3(0, 0, 10))
+    -- 挂上 Camera 组件
+    local camera_ui=self.go_camera_ui_:AddComponent(UICamera)
+    camera_ui:set_depth(0)
+    camera_ui:set_view_port_size(1400,900)
+    --camera_ui:set_render_rect_in_window(0,0,1400,900)
+    camera_ui:set_culling_mask(2)
+    camera_ui:set_clear_color(242,242,242,255)
+
+    -- 设置正交相机
+    camera_ui:SetView(glm.vec3(0, 0, 0), glm.vec3(0, 1, 0))
+    camera_ui:SetOrthographic(-Screen.width()/2,Screen.width()/2,-Screen.height()/2,Screen.height()/2,-100,100)
+
+    -- 创建 UIImage
+    self.go_ui_image_=GameObject.new("image")
+    self.go_ui_image_:set_layer(2)
+    -- 设置尺寸
+    local rect_transform=self.go_ui_image_:AddComponent(RectTransform)
+    rect_transform:set_position(glm.vec3(-500,400,0))
+    rect_transform:set_rect(glm.vec2(480,320))
+    -- 挂上 UIImage 组件
+    local ui_image_mod_bag=self.go_ui_image_:AddComponent(UIImage)
+    ui_image_mod_bag:set_texture(Texture2D.LoadFromFile("images/need_head_phone.cpt"))
+
+    --创建按钮普通状态图片
+    local go_button_image_normal=GameObject.new("btn_power")
+    go_button_image_normal:set_layer(2)
+    go_button_image_normal:AddComponent(Transform)
+    local ui_image_button_image_normal=go_button_image_normal:AddComponent(UIImage)
+    ui_image_button_image_normal:set_texture(Texture2D.LoadFromFile("images/btn_power.cpt"))
+    --创建按钮按下状态图片
+    local go_button_image_normal_press=GameObject.new("btn_power_press")
+    go_button_image_normal_press:set_layer(2)
+    go_button_image_normal_press:AddComponent(Transform)
+    local ui_image_button_image_normal_press=go_button_image_normal_press:AddComponent(UIImage)
+    ui_image_button_image_normal_press:set_texture(Texture2D.LoadFromFile("images/btn_power_press.cpt"))
+    --创建按钮
+    local go_ui_button=GameObject.new("button")
+    go_ui_button:set_layer(2)
+    local transform_ui_button =go_ui_button:AddComponent(Transform)
+    transform_ui_button:set_position(glm.vec3(-500,400,0))
+    local ui_button=go_ui_button:AddComponent(UIButton)
+    ui_button:set_image_normal(ui_image_button_image_normal)
+    ui_button:set_image_press(ui_image_button_image_normal_press)
+    ui_button:set_click_callback(function ()
+        print("click button.")
+    end)
+end
+
+
+--- 创建主相机
+function LoginScene:CreateMainCamera()
+    --创建相机1 GameObject
+    self.go_camera_= GameObject.new("main_camera")
+    --挂上 Transform 组件
+    self.go_camera_:AddComponent(Transform):set_position(glm.vec3(0, 0, 10))
+    self.go_camera_:GetComponent(Transform):set_rotation(glm.vec3(0, 0, 0))
+    --挂上 Camera 组件
+    self.camera_=self.go_camera_:AddComponent(Camera)
+    self.camera_:set_view_port_size(960,640)
+    --self.camera_:set_render_rect_in_window(100,100,960,640)
+    self.camera_:set_depth(1)
+    self.camera_:set_culling_mask(1)
+    self.camera_:SetView(glm.vec3(0.0,0.0,0.0), glm.vec3(0.0,1.0,0.0))
+    self.camera_:SetPerspective(60, Screen:aspect_ratio(), 1, 1000)
+    --设置RenderTarget
+    self.render_buffer_ = RenderBuffer.new()
+    self.render_buffer_:Init(960,640)
+    self.camera_:set_render_target(self.render_buffer_)
+end
+
 
 --- 创建环境
 function LoginScene:CreateEnvironment()
@@ -113,26 +192,6 @@ function LoginScene:CreatePointLight2()
     light:set_attenuation_quadratic( 0.44)
 end
 
---- 创建主相机
-function LoginScene:CreateMainCamera()
-    --创建相机1 GameObject
-    self.go_camera_= GameObject.new("main_camera")
-    --挂上 Transform 组件
-    self.go_camera_:AddComponent(Transform):set_position(glm.vec3(0, 0, 10))
-    self.go_camera_:GetComponent(Transform):set_rotation(glm.vec3(0, 0, 0))
-    --挂上 Camera 组件
-    self.camera_=self.go_camera_:AddComponent(Camera)
-    self.camera_:set_view_port_size(960,640)
-    self.camera_:set_depth(0)
-    self.camera_:set_culling_mask(1)
-    self.camera_:SetView(glm.vec3(0.0,0.0,0.0), glm.vec3(0.0,1.0,0.0))
-    self.camera_:SetPerspective(60, Screen:aspect_ratio(), 1, 1000)
-    --设置RenderTarget
-    self.render_buffer_ = RenderBuffer.new()
-    self.render_buffer_:Init(960,640)
-    self.camera_:set_render_target(self.render_buffer_)
-end
-
 --- 创建模型
 function LoginScene:CreateModel()
     --创建骨骼蒙皮动画
@@ -157,32 +216,6 @@ function LoginScene:CreateModel()
 
     --播放动画
     self.go_skeleton_:GetComponent(Animation):Play("idle")
-end
-
-function LoginScene:CreateUI()
-    -- 创建UI相机 GameObject
-    self.go_camera_ui_=GameObject.new("ui_camera")
-    -- 挂上 Transform 组件
-    local transform_camera_ui=self.go_camera_ui_:AddComponent(Transform)
-    transform_camera_ui:set_position(glm.vec3(0, 0, 10))
-    -- 挂上 Camera 组件
-    local camera_ui=self.go_camera_ui_:AddComponent(UICamera)
-    camera_ui:set_view_port_size(1400,900)
-    camera_ui:set_culling_mask(2)
-    camera_ui:set_clear_flag(Cpp.BufferClearFlag.CLEAR_DEPTH_BUFFER | Cpp.BufferClearFlag.CLEAR_STENCIL_BUFFER)
-    -- 设置正交相机
-    camera_ui:SetView(glm.vec3(0, 0, 0), glm.vec3(0, 1, 0))
-    camera_ui:SetOrthographic(-Screen.width()/2,Screen.width()/2,-Screen.height()/2,Screen.height()/2,-100,100)
-
-    -- 创建 UIImage
-    self.go_ui_image_=GameObject.new("image")
-    self.go_ui_image_:set_layer(2)
-    -- 设置尺寸
-    local rect_transform=self.go_ui_image_:AddComponent(RectTransform)
-    rect_transform:set_rect(glm.vec2(480,320))
-    -- 挂上 UIImage 组件
-    local ui_image_mod_bag=self.go_ui_image_:AddComponent(UIImage)
-    ui_image_mod_bag:set_texture(Texture2D.LoadFromFile("images/need_head_phone.cpt"))
 end
 
 function LoginScene:Update()

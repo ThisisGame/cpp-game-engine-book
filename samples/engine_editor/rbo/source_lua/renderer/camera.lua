@@ -118,3 +118,12 @@ end
 function Camera:set_view_port_size(view_port_width,view_port_height)
     return self.cpp_component_instance_:set_view_port_size(view_port_width,view_port_height)
 end
+
+--- 限定在窗口的渲染区域
+--- @param x number
+--- @param y number
+--- @param width number
+--- @param height number
+function Camera:set_render_rect_in_window(x,y,width,height)
+    return self.cpp_component_instance_:set_render_rect_in_window(x,y,width,height)
+end

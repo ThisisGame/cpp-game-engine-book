@@ -98,15 +98,15 @@ public:
 
     void UpdateViewPortSize();
 
-    void SetRenderRectInWindow();
+    void SetRenderRectInRenderTarget();
 
-    /// 限定在窗口的渲染区域
+    /// 限定在渲染目标的渲染区域，如果指定了FBO，那么就是在FBO的区域，如果没有指定，就是在默认窗口的区域。
     /// \param x
     /// \param y
     /// \param width
     /// \param height
-    void set_render_rect_in_window(int x,int y,int width,int height){
-        render_rect_in_window_={x,y,width,height};
+    void set_render_rect_in_render_target(int x, int y, int width, int height){
+        render_rect_in_render_target_={x, y, width, height};
     }
 protected:
     glm::mat4 view_mat4_;//指定相机坐标和朝向
@@ -126,7 +126,7 @@ protected:
     unsigned short view_port_width_;
     unsigned short view_port_height_;
 
-    glm::ivec4 render_rect_in_window_;//限定在窗口的渲染区域
+    glm::ivec4 render_rect_in_render_target_;//限定在渲染目标的渲染区域，如果指定了FBO，那么就是在FBO的区域，如果没有指定，就是在默认窗口的区域。
 public:
     /// 遍历所有Camera
     /// \param func

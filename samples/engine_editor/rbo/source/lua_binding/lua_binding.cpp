@@ -526,7 +526,8 @@ void LuaBinding::BindLua() {
                                         "set_render_target",&Camera::set_render_target,
                                         "clear_render_target",&Camera::clear_render_target,
                                         "set_view_port_size",&Camera::set_view_port_size,
-                                        "UpdateViewPortSize",&Camera::UpdateViewPortSize
+                                        "UpdateViewPortSize",&Camera::UpdateViewPortSize,
+                                        "set_render_rect_in_render_target", &Camera::set_render_rect_in_render_target
         );
 
         cpp_ns_table.new_enum<BufferClearFlag,true>("BufferClearFlag",{
@@ -642,6 +643,12 @@ void LuaBinding::BindLua() {
                                            "texture2D", &UIImage::texture2D,
                                            "set_texture",&UIImage::set_texture,
                                            "LoadTexture2D",&UIImage::LoadTexture2D
+        );
+        cpp_ns_table.new_usertype<UIButton>("UIButton",sol::call_constructor,sol::constructors<UIButton()>(),
+                                           sol::base_classes,sol::bases<Component>(),
+                                           "set_image_normal", &UIButton::set_image_normal,
+                                           "set_click_callback",&UIButton::set_click_callback,
+                                           "set_image_press",&UIButton::set_image_press
         );
     }
 

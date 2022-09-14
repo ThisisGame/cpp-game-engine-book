@@ -9,7 +9,7 @@
 enum RenderCommand {
     NONE,
     UPDATE_SCREEN_SIZE,//更新游戏画面尺寸
-    SET_RENDER_RECT_IN_WINDOW,//glScissor限定在窗口的渲染区域
+    SET_RENDER_RECT_IN_RENDER_TARGET,//glScissor限定在渲染目标的渲染区域，如果指定了FBO，那么就是在FBO的区域，如果没有指定，就是在默认窗口的区域。
     COMPILE_SHADER,//编译着色器
     CONNECT_UNIFORM_BLOCK_INSTANCE_AND_BINDING_POINT,//串联uniform block实例与binding point。
     USE_SHADER_PROGRAM,//使用着色器程序

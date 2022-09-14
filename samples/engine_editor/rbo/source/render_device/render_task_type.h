@@ -46,13 +46,13 @@ public:
     unsigned short view_port_height_;
 };
 
-/// 限定在窗口的渲染区域任务
-class RenderTaskSetRenderRectInWindow:public RenderTaskBase{
+/// 限定在渲染目标的渲染区域，如果指定了FBO，那么就是在FBO的区域，如果没有指定，就是在默认窗口的区域。
+class RenderTaskSetRenderRectInRenderTarget: public RenderTaskBase{
 public:
-    RenderTaskSetRenderRectInWindow(){
-        render_command_=RenderCommand::SET_RENDER_RECT_IN_WINDOW;
+    RenderTaskSetRenderRectInRenderTarget(){
+        render_command_=RenderCommand::SET_RENDER_RECT_IN_RENDER_TARGET;
     }
-    ~RenderTaskSetRenderRectInWindow(){}
+    ~RenderTaskSetRenderRectInRenderTarget(){}
 public:
     unsigned short x_;
     unsigned short y_;

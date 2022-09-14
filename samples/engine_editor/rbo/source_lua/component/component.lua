@@ -35,6 +35,10 @@ function Component:set_game_object(game_object)
     self.cpp_component_instance_:Awake()
 end
 
+function Component:cpp_component_instance()
+    return self.cpp_component_instance_
+end
+
 function Component:OnEnable()
 
 end
