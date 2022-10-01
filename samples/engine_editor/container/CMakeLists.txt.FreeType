@@ -1,0 +1,80 @@
+﻿#拷贝depends目录
+file(COPY "../../template/depends/freetype-2.11.0/" DESTINATION "../depends/freetype/")
+
+add_definitions(-D FT2_BUILD_LIBRARY)
+#add_definitions(-D FT_DEBUG_LEVEL_TRACE)
+
+if (WIN32)
+    add_compile_options(/wd4312)#忽略类型转换错误警告
+elseif (UNIX)
+    add_definitions(-D HAVE_UNISTD_H)
+    add_definitions(-D HAVE_FCNTL_H)
+endif ()
+
+include_directories("depends/freetype")
+include_directories("depends/freetype/include")
+
+
+file(GLOB freetype_public_header "depends/freetype/include/ft2build.h" "depends/freetype/include/freetype/*.h")
+file(GLOB freetype_public_config_header "include/freetype/config/*.h")
+file(GLOB freetype_private_header "include/freetype/internal/*.h")
+set(freetype_base_src depends/freetype/src/autofit/autofit.c
+        depends/freetype/src/base/ftbase.c
+        depends/freetype/src/base/ftbbox.c
+        depends/freetype/src/base/ftbdf.c
+        depends/freetype/src/base/ftbitmap.c
+        depends/freetype/src/base/ftcid.c
+        depends/freetype/src/base/ftfstype.c
+        depends/freetype/src/base/ftgasp.c
+        depends/freetype/src/base/ftglyph.c
+        depends/freetype/src/base/ftgxval.c
+        depends/freetype/src/base/ftinit.c
+        depends/freetype/src/base/ftmm.c
+        depends/freetype/src/base/ftotval.c
+        depends/freetype/src/base/ftpatent.c
+        depends/freetype/src/base/ftpfr.c
+        depends/freetype/src/base/ftstroke.c
+        depends/freetype/src/base/ftsynth.c
+        depends/freetype/src/base/fttype1.c
+        depends/freetype/src/base/ftwinfnt.c
+        depends/freetype/src/bdf/bdf.c
+        depends/freetype/src/bzip2/ftbzip2.c
+        depends/freetype/src/cache/ftcache.c
+        depends/freetype/src/cff/cff.c
+        depends/freetype/src/cid/type1cid.c
+        depends/freetype/src/gzip/ftgzip.c
+        depends/freetype/src/lzw/ftlzw.c
+        depends/freetype/src/pcf/pcf.c
+        depends/freetype/src/pfr/pfr.c
+        depends/freetype/src/psaux/psaux.c
+        depends/freetype/src/pshinter/pshinter.c
+        depends/freetype/src/psnames/psnames.c
+        depends/freetype/src/raster/raster.c
+        depends/freetype/src/sdf/sdf.c
+        depends/freetype/src/sfnt/sfnt.c
+        depends/freetype/src/smooth/smooth.c
+        depends/freetype/src/truetype/truetype.c
+        depends/freetype/src/type1/type1.c
+        depends/freetype/src/type42/type42.c
+        depends/freetype/src/winfonts/winfnt.c)
+
+if (UNIX)
+    list(APPEND freetype_base_src "depends/freetype/builds/unix/ftsystem.c")
+elseif (WIN32)
+    list(APPEND freetype_base_src "depends/freetype/builds/windows/ftsystem.c")
+else ()
+    list(APPEND freetype_base_src "depends/freetype/src/base/ftsystem.c")
+endif ()
+
+
+if (WIN32)
+    enable_language(RC)
+    list(APPEND freetype_base_src depends/freetype/builds/windows/ftdebug.c
+            depends/freetype/src/base/ftver.rc)
+elseif (WINCE)
+    list(APPEND freetype_base_src depends/freetype/builds/wince/ftdebug.c)
+else ()
+    list(APPEND freetype_base_src depends/freetype/src/base/ftdebug.c)
+endif ()
+
+set(freetype_src ${freetype_base_src} ${freetype_public_header} ${freetype_public_config_header} ${freetype_private_header})

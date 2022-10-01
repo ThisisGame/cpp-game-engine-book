@@ -2,7 +2,7 @@
 // Created by captainchen on 2021/5/14.
 //
 
-#include "application.h"
+#include "application_standalone.h"
 #include <memory>
 #include <iostream>
 #include "rttr/registration"
@@ -26,14 +26,11 @@
 #include "control/input.h"
 #include "utils/screen.h"
 #include "render_device/render_task_consumer.h"
+#include "render_device/render_task_consumer_standalone.h"
 #include "audio/audio.h"
 #include "utils/time.h"
 #include "render_device/render_task_producer.h"
 #include "physics/physics.h"
-
-std::string Application::title_;
-std::string Application::data_path_;
-GLFWwindow* Application::glfw_window_;
 
 static void error_callback(int error, const char* description)
 {
@@ -79,13 +76,7 @@ static void mouse_scroll_callback(GLFWwindow* window, double x, double y)
 //    std::cout<<"mouse_scroll_callback:"<<x<<","<<y<<std::endl;
 }
 
-void Application::Init() {
-    EASY_MAIN_THREAD;
-    profiler::startListen();// 启动profiler服务器，等待gui连接。
-
-    Debug::Init();
-    DEBUG_LOG_INFO("game start");
-    Time::Init();
+void ApplicationStandalone::InitGraphicsLibraryFramework() {
     glfwSetErrorCallback(error_callback);
     if (!glfwInit())
     {
@@ -114,83 +105,17 @@ void Application::Init() {
     glfwSetCursorPosCallback(glfw_window_,mouse_move_callback);
 
     //初始化渲染任务消费者(单独渲染线程)
-    RenderTaskConsumer::Init(glfw_window_);
-
-    UpdateScreenSize();
-
-    //初始化 fmod
-    Audio::Init();
-    Physics::Init();
+    RenderTaskConsumer::Init(new RenderTaskConsumerStandalone(glfw_window_));
 }
 
-
-void Application::Update(){
-    EASY_FUNCTION(profiler::colors::Magenta); // 标记函数
-    Time::Update();
-    UpdateScreenSize();
-
-    GameObject::Foreach([](GameObject* game_object){
-        if(game_object->active()){
-            game_object->ForeachComponent([](Component* component){
-                component->Update();
-            });
-        }
-    });
-
-    Input::Update();
-    Audio::Update();
-//    std::cout<<"Application::Update"<<std::endl;
-}
-
-
-void Application::Render(){
-    EASY_FUNCTION(profiler::colors::Magenta); // 标记函数
-    //遍历所有相机，每个相机的View Projection，都用来做一次渲染。
-    Camera::Foreach([&](){
-        GameObject::Foreach([](GameObject* game_object){
-            if(game_object->active()==false){
-                return;
-            }
-            MeshRenderer* mesh_renderer=game_object->GetComponent<MeshRenderer>();
-            if(mesh_renderer== nullptr){
-                return;
-            }
-            mesh_renderer->Render();
-        });
-    });
-}
-
-void Application::FixedUpdate(){
-    EASY_FUNCTION(profiler::colors::Magenta); // 标记函数
-    Physics::FixedUpdate();
-
-    GameObject::Foreach([](GameObject* game_object){
-        if(game_object->active()){
-            game_object->ForeachComponent([](Component* component){
-                component->FixedUpdate();
-            });
-        }
-    });
-}
-
-void Application::Run() {
+void ApplicationStandalone::Run() {
     while (true) {
         EASY_BLOCK("Frame"){
             if(glfwWindowShouldClose(glfw_window_)){
                 break;
             }
-            Update();
-            // 如果一帧卡了很久，就多执行几次FixedUpdate
-            float cost_time=Time::delta_time();
-            while(cost_time>=Time::fixed_update_time()){
-                FixedUpdate();
-                cost_time-=Time::fixed_update_time();
-            }
 
-            Render();
-
-            //发出特殊任务：渲染结束
-            RenderTaskProducer::ProduceRenderTaskEndFrame();
+            OneFrame();
 
             EASY_BLOCK("glfwPollEvents"){
                 glfwPollEvents();
@@ -199,14 +124,12 @@ void Application::Run() {
         }EASY_END_BLOCK;
     }
 
-    RenderTaskConsumer::Exit();
-
-    glfwDestroyWindow(glfw_window_);
-
-    glfwTerminate();
-    exit(EXIT_SUCCESS);
+    Exit();
 }
 
-void Application::UpdateScreenSize() {
-    RenderTaskProducer::ProduceRenderTaskUpdateScreenSize();
+void ApplicationStandalone::Exit() {
+    ApplicationBase::Exit();
+
+    glfwDestroyWindow(glfw_window_);
+    glfwTerminate();
 }

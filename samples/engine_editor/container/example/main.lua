@@ -1,0 +1,25 @@
+require("utils/debug")
+require("utils/application")
+require("component/game_object")
+require("component/transform")
+require("login_scene")
+
+function main()
+    Debug.ConnectDebugServer()
+
+    Application:set_title("[ubo]")
+    Application:set_data_path("../data/")--设置资源目录
+
+    local application_instance=Cpp.ApplicationStandalone()
+    Application:Init(application_instance)--初始化Application为游戏程序
+
+    local go=GameObject.new("LoginSceneGo")
+    local transform=go:AddComponent(Transform)
+    print("transform:" .. tostring(transform))
+    local pos=transform:position()
+    print("pos:" .. tostring(pos))
+
+    go:AddComponent(LoginScene)
+
+    Application:Run()--开始引擎主循环
+end

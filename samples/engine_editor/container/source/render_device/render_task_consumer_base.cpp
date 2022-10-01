@@ -2,18 +2,8 @@
 // Created by captainchen on 2022/2/7.
 //
 
-#include "render_task_consumer.h"
+#include "render_task_consumer_base.h"
 #include <iostream>
-#ifdef WIN32
-// 避免出现APIENTRY重定义警告。
-// freetype引用了windows.h，里面定义了APIENTRY。
-// glfw3.h会判断是否APIENTRY已经定义然后再定义一次。
-// 但是从编译顺序来看glfw3.h在freetype之前被引用了，判断不到 Windows.h中的定义，所以会出现重定义。
-// 所以在 glfw3.h之前必须引用  Windows.h。
-#include <Windows.h>
-#endif
-#define GLFW_INCLUDE_NONE
-#include <GLFW/glfw3.h>
 #include <glm/gtc/matrix_transform.hpp>
 #include "timetool/stopwatch.h"
 #include "utils/debug.h"
@@ -24,33 +14,42 @@
 #include "utils/screen.h"
 #include "render_device/uniform_buffer_object_manager.h"
 
-GLFWwindow* RenderTaskConsumer::window_;
-std::thread RenderTaskConsumer::render_thread_;
-
-void RenderTaskConsumer::Init(GLFWwindow *window) {
-    window_ = window;
-    render_thread_ = std::thread(&RenderTaskConsumer::ProcessTask);
+void RenderTaskConsumerBase::Init() {
+    render_thread_ = std::thread(&RenderTaskConsumerBase::ProcessTask,this);
     render_thread_.detach();
 }
 
-void RenderTaskConsumer::Exit() {
+void RenderTaskConsumerBase::InitGraphicsLibraryFramework() {
+    
+}
+
+void RenderTaskConsumerBase::Exit() {
+    exit_=true;
     if (render_thread_.joinable()) {
         render_thread_.join();//等待渲染线程结束
     }
 }
 
+void RenderTaskConsumerBase::GetFramebufferSize(int& width,int& height) {
+    
+}
+
+void RenderTaskConsumerBase::SwapBuffer() {
+    
+}
+
 /// 更新游戏画面尺寸
-void RenderTaskConsumer::UpdateScreenSize(RenderTaskBase* task_base) {
+void RenderTaskConsumerBase::UpdateScreenSize(RenderTaskBase* task_base) {
     RenderTaskUpdateScreenSize* task= dynamic_cast<RenderTaskUpdateScreenSize*>(task_base);
     int width, height;
-    glfwGetFramebufferSize(window_, &width, &height);
+    GetFramebufferSize(width, height);
     glViewport(0, 0, width, height);
     Screen::set_width_height(width,height);
 }
 
 /// 编译、链接Shader
 /// \param task_base
-void RenderTaskConsumer::CompileShader(RenderTaskBase* task_base){
+void RenderTaskConsumerBase::CompileShader(RenderTaskBase* task_base){
     RenderTaskCompileShader* task= dynamic_cast<RenderTaskCompileShader*>(task_base);
     const char* vertex_shader_text=task->vertex_shader_source_;
     const char* fragment_shader_text=task->fragment_shader_source_;
@@ -110,7 +109,7 @@ void RenderTaskConsumer::CompileShader(RenderTaskBase* task_base){
     GPUResourceMapper::MapShaderProgram(task->shader_program_handle_, shader_program);
 }
 
-void RenderTaskConsumer::ConnectUniformBlockInstanceAndBindingPoint(RenderTaskBase *task_base) {
+void RenderTaskConsumerBase::ConnectUniformBlockInstanceAndBindingPoint(RenderTaskBase *task_base) {
     RenderTaskConnectUniformBlockInstanceAndBindingPoint* task= dynamic_cast<RenderTaskConnectUniformBlockInstanceAndBindingPoint*>(task_base);
     GLuint shader_program = GPUResourceMapper::GetShaderProgram(task->shader_program_handle_);
 
@@ -128,13 +127,13 @@ void RenderTaskConsumer::ConnectUniformBlockInstanceAndBindingPoint(RenderTaskBa
     }
 }
 
-void RenderTaskConsumer::UseShaderProgram(RenderTaskBase *task_base) {
+void RenderTaskConsumerBase::UseShaderProgram(RenderTaskBase *task_base) {
     RenderTaskUseShaderProgram* task= dynamic_cast<RenderTaskUseShaderProgram*>(task_base);
     GLuint shader_program = GPUResourceMapper::GetShaderProgram(task->shader_program_handle_);
     glUseProgram(shader_program);__CHECK_GL_ERROR__
 }
 
-void RenderTaskConsumer::CreateCompressedTexImage2D(RenderTaskBase *task_base) {
+void RenderTaskConsumerBase::CreateCompressedTexImage2D(RenderTaskBase *task_base) {
     RenderTaskCreateCompressedTexImage2D* task= dynamic_cast<RenderTaskCreateCompressedTexImage2D*>(task_base);
 
     GLuint texture_id;
@@ -157,7 +156,7 @@ void RenderTaskConsumer::CreateCompressedTexImage2D(RenderTaskBase *task_base) {
     GPUResourceMapper::MapTexture(task->texture_handle_, texture_id);
 }
 
-void RenderTaskConsumer::CreateTexImage2D(RenderTaskBase *task_base) {
+void RenderTaskConsumerBase::CreateTexImage2D(RenderTaskBase *task_base) {
     RenderTaskCreateTexImage2D* task= dynamic_cast<RenderTaskCreateTexImage2D*>(task_base);
 
     GLuint texture_id;
@@ -181,7 +180,7 @@ void RenderTaskConsumer::CreateTexImage2D(RenderTaskBase *task_base) {
 
 /// 删除Textures
 /// \param task_base
-void RenderTaskConsumer::DeleteTextures(RenderTaskBase *task_base) {
+void RenderTaskConsumerBase::DeleteTextures(RenderTaskBase *task_base) {
     RenderTaskDeleteTextures* task= dynamic_cast<RenderTaskDeleteTextures*>(task_base);
     //从句柄转换到纹理对象
     GLuint* texture_id_array=new GLuint[task->texture_count_];
@@ -194,7 +193,7 @@ void RenderTaskConsumer::DeleteTextures(RenderTaskBase *task_base) {
 
 /// 局部更新纹理
 /// \param task_base
-void RenderTaskConsumer::UpdateTextureSubImage2D(RenderTaskBase *task_base) {
+void RenderTaskConsumerBase::UpdateTextureSubImage2D(RenderTaskBase *task_base) {
     RenderTaskUpdateTextureSubImage2D* task= dynamic_cast<RenderTaskUpdateTextureSubImage2D*>(task_base);
     GLuint texture=GPUResourceMapper::GetTexture(task->texture_handle_);
     glBindTexture(GL_TEXTURE_2D, texture);__CHECK_GL_ERROR__
@@ -202,7 +201,7 @@ void RenderTaskConsumer::UpdateTextureSubImage2D(RenderTaskBase *task_base) {
     glTexSubImage2D(GL_TEXTURE_2D,0,task->x_,task->y_,task->width_,task->height_,task->client_format_,task->data_type_,task->data_);__CHECK_GL_ERROR__
 }
 
-void RenderTaskConsumer::CreateVAO(RenderTaskBase *task_base) {
+void RenderTaskConsumerBase::CreateVAO(RenderTaskBase *task_base) {
     RenderTaskCreateVAO* task=dynamic_cast<RenderTaskCreateVAO*>(task_base);
     GLuint shader_program=GPUResourceMapper::GetShaderProgram(task->shader_program_handle_);
     GLint attribute_pos_location = glGetAttribLocation(shader_program, "a_pos");__CHECK_GL_ERROR__
@@ -263,7 +262,7 @@ void RenderTaskConsumer::CreateVAO(RenderTaskBase *task_base) {
     GPUResourceMapper::MapVAO(task->vao_handle_, vertex_array_object);
 }
 
-void RenderTaskConsumer::UpdateVBOSubData(RenderTaskBase *task_base) {
+void RenderTaskConsumerBase::UpdateVBOSubData(RenderTaskBase *task_base) {
     RenderTaskUpdateVBOSubData* task=dynamic_cast<RenderTaskUpdateVBOSubData*>(task_base);
     GLuint vbo=GPUResourceMapper::GetVBO(task->vbo_handle_);
     glBindBuffer(GL_ARRAY_BUFFER, vbo);__CHECK_GL_ERROR__
@@ -275,7 +274,7 @@ void RenderTaskConsumer::UpdateVBOSubData(RenderTaskBase *task_base) {
 //    DEBUG_LOG_INFO("glBufferSubData cost {}",stopwatch.microseconds());
 }
 
-void RenderTaskConsumer::CreateUBO(RenderTaskBase *task_base) {
+void RenderTaskConsumerBase::CreateUBO(RenderTaskBase *task_base) {
     RenderTaskCreateUBO* task=dynamic_cast<RenderTaskCreateUBO*>(task_base);
     GLuint shader_program=GPUResourceMapper::GetShaderProgram(task->shader_program_handle_);
 
@@ -300,7 +299,7 @@ void RenderTaskConsumer::CreateUBO(RenderTaskBase *task_base) {
 
 /// 更新UBO
 /// \param task_base
-void RenderTaskConsumer::UpdateUBOSubData(RenderTaskBase* task_base){
+void RenderTaskConsumerBase::UpdateUBOSubData(RenderTaskBase* task_base){
     RenderTaskUpdateUBOSubData* task=dynamic_cast<RenderTaskUpdateUBOSubData*>(task_base);
 
     std::vector<UniformBlockInstanceBindingInfo>& uniform_block_instance_binding_info_array= UniformBufferObjectManager::UniformBlockInstanceBindingInfoArray();
@@ -331,7 +330,7 @@ void RenderTaskConsumer::UpdateUBOSubData(RenderTaskBase* task_base){
     }
 }
 
-void RenderTaskConsumer::SetEnableState(RenderTaskBase *task_base) {
+void RenderTaskConsumerBase::SetEnableState(RenderTaskBase *task_base) {
     RenderTaskSetEnableState* task= dynamic_cast<RenderTaskSetEnableState*>(task_base);
     if(task->enable_){
         glEnable(task->state_);__CHECK_GL_ERROR__
@@ -340,12 +339,12 @@ void RenderTaskConsumer::SetEnableState(RenderTaskBase *task_base) {
     }
 }
 
-void RenderTaskConsumer::SetBlendFunc(RenderTaskBase *task_base) {
+void RenderTaskConsumerBase::SetBlendFunc(RenderTaskBase *task_base) {
     RenderTaskSetBlenderFunc* task= dynamic_cast<RenderTaskSetBlenderFunc*>(task_base);
     glBlendFunc(task->source_blending_factor_, task->destination_blending_factor_);__CHECK_GL_ERROR__
 }
 
-void RenderTaskConsumer::SetUniformMatrix4fv(RenderTaskBase *task_base) {
+void RenderTaskConsumerBase::SetUniformMatrix4fv(RenderTaskBase *task_base) {
     RenderTaskSetUniformMatrix4fv* task=dynamic_cast<RenderTaskSetUniformMatrix4fv*>(task_base);
     //上传mvp矩阵
     GLuint shader_program=GPUResourceMapper::GetShaderProgram(task->shader_program_handle_);
@@ -353,7 +352,7 @@ void RenderTaskConsumer::SetUniformMatrix4fv(RenderTaskBase *task_base) {
     glUniformMatrix4fv(uniform_location, 1, task->transpose_?GL_TRUE:GL_FALSE, &task->matrix_[0][0]);__CHECK_GL_ERROR__
 }
 
-void RenderTaskConsumer::ActiveAndBindTexture(RenderTaskBase *task_base) {
+void RenderTaskConsumerBase::ActiveAndBindTexture(RenderTaskBase *task_base) {
     RenderTaskActiveAndBindTexture* task=dynamic_cast<RenderTaskActiveAndBindTexture*>(task_base);
     //激活纹理单元
     glActiveTexture(task->texture_uint_);__CHECK_GL_ERROR__
@@ -362,28 +361,28 @@ void RenderTaskConsumer::ActiveAndBindTexture(RenderTaskBase *task_base) {
     glBindTexture(GL_TEXTURE_2D, texture);__CHECK_GL_ERROR__
 }
 
-void RenderTaskConsumer::SetUniform1i(RenderTaskBase *task_base) {
+void RenderTaskConsumerBase::SetUniform1i(RenderTaskBase *task_base) {
     RenderTaskSetUniform1i* task=dynamic_cast<RenderTaskSetUniform1i*>(task_base);
     GLuint shader_program=GPUResourceMapper::GetShaderProgram(task->shader_program_handle_);
     GLint uniform_location= glGetUniformLocation(shader_program, task->uniform_name_);__CHECK_GL_ERROR__
     glUniform1i(uniform_location, task->value_);__CHECK_GL_ERROR__
 }
 
-void RenderTaskConsumer::SetUniform1f(RenderTaskBase *task_base) {
+void RenderTaskConsumerBase::SetUniform1f(RenderTaskBase *task_base) {
     RenderTaskSetUniform1f* task=dynamic_cast<RenderTaskSetUniform1f*>(task_base);
     GLuint shader_program=GPUResourceMapper::GetShaderProgram(task->shader_program_handle_);
     GLint uniform_location= glGetUniformLocation(shader_program, task->uniform_name_);__CHECK_GL_ERROR__
     glUniform1f(uniform_location, task->value_);__CHECK_GL_ERROR__
 }
 
-void RenderTaskConsumer::SetUniform3f(RenderTaskBase *task_base) {
+void RenderTaskConsumerBase::SetUniform3f(RenderTaskBase *task_base) {
     RenderTaskSetUniform3f* task=dynamic_cast<RenderTaskSetUniform3f*>(task_base);
     GLuint shader_program=GPUResourceMapper::GetShaderProgram(task->shader_program_handle_);
     GLint uniform_location= glGetUniformLocation(shader_program, task->uniform_name_);__CHECK_GL_ERROR__
     glUniform3f(uniform_location, task->value_.x,task->value_.y,task->value_.z);__CHECK_GL_ERROR__
 }
 
-void RenderTaskConsumer::BindVAOAndDrawElements(RenderTaskBase *task_base) {
+void RenderTaskConsumerBase::BindVAOAndDrawElements(RenderTaskBase *task_base) {
     RenderTaskBindVAOAndDrawElements* task=dynamic_cast<RenderTaskBindVAOAndDrawElements*>(task_base);
     GLuint vao=GPUResourceMapper::GetVAO(task->vao_handle_);
     glBindVertexArray(vao);__CHECK_GL_ERROR__
@@ -395,48 +394,46 @@ void RenderTaskConsumer::BindVAOAndDrawElements(RenderTaskBase *task_base) {
 
 /// 清除
 /// \param task_base
-void RenderTaskConsumer::SetClearFlagAndClearColorBuffer(RenderTaskBase* task_base){
+void RenderTaskConsumerBase::SetClearFlagAndClearColorBuffer(RenderTaskBase* task_base){
     RenderTaskClear* task=dynamic_cast<RenderTaskClear*>(task_base);
     glClear(task->clear_flag_);__CHECK_GL_ERROR__
     glClearColor(task->clear_color_r_,task->clear_color_g_,task->clear_color_b_,task->clear_color_a_);__CHECK_GL_ERROR__
 }
 
 /// 设置模板测试函数
-void RenderTaskConsumer::SetStencilFunc(RenderTaskBase* task_base){
+void RenderTaskConsumerBase::SetStencilFunc(RenderTaskBase* task_base){
     RenderTaskSetStencilFunc* task=dynamic_cast<RenderTaskSetStencilFunc*>(task_base);
     glStencilFunc(task->stencil_func_, task->stencil_ref_, task->stencil_mask_);__CHECK_GL_ERROR__
 }
 
 /// 设置模板操作
-void RenderTaskConsumer::SetStencilOp(RenderTaskBase* task_base){
+void RenderTaskConsumerBase::SetStencilOp(RenderTaskBase* task_base){
     RenderTaskSetStencilOp* task=dynamic_cast<RenderTaskSetStencilOp*>(task_base);
     glStencilOp(task->fail_op_, task->z_test_fail_op_, task->z_test_pass_op_);__CHECK_GL_ERROR__
 }
 
-void RenderTaskConsumer::SetStencilBufferClearValue(RenderTaskBase* task_base){
+void RenderTaskConsumerBase::SetStencilBufferClearValue(RenderTaskBase* task_base){
     RenderTaskSetStencilBufferClearValue* task=dynamic_cast<RenderTaskSetStencilBufferClearValue*>(task_base);
     glClearStencil(task->clear_value_);__CHECK_GL_ERROR__
 }
 
 /// 结束一帧
 /// \param task_base
-void RenderTaskConsumer::EndFrame(RenderTaskBase* task_base) {
+void RenderTaskConsumerBase::EndFrame(RenderTaskBase* task_base) {
     RenderTaskEndFrame *task = dynamic_cast<RenderTaskEndFrame *>(task_base);
-    glfwSwapBuffers(window_);
+    SwapBuffer();
     task->return_result_set_=true;
 }
 
-void RenderTaskConsumer::ProcessTask() {
+void RenderTaskConsumerBase::ProcessTask() {
     //渲染相关的API调用需要放到渲染线程中。
-    glfwMakeContextCurrent(window_);
-    gladLoadGL(glfwGetProcAddress);
-    glfwSwapInterval(1);
+    InitGraphicsLibraryFramework();
 
     //初始化UBO
     UniformBufferObjectManager::Init();
     UniformBufferObjectManager::CreateUniformBufferObject();
 
-    while (!glfwWindowShouldClose(window_))
+    while (!exit_)
     {
         while(true){
             if(RenderTaskQueue::Empty()){//渲染线程一直等待主线程发出任务。
