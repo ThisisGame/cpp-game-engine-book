@@ -30,6 +30,7 @@ void ApplicationBase::Init() {
     DEBUG_LOG_INFO("game start");
 
     InitLuaBinding();
+    LoadConfig();
 
     Time::Init();
 
@@ -57,6 +58,12 @@ void ApplicationBase::InitLuaBinding() {
     LuaBinding::BindLua();
     //执行lua
     LuaBinding::RunLuaFile("../example/config.lua");
+}
+
+void ApplicationBase::LoadConfig() {
+    sol::state& sol_state=LuaBinding::sol_state();
+    title_=sol_state["Config"]["title"];
+    data_path_=sol_state["Config"]["data_path"];
 }
 
 void ApplicationBase::Run() {

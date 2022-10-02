@@ -662,8 +662,7 @@ void LuaBinding::BindLua() {
         );
 
         cpp_ns_table.new_usertype<Application>("Application",
-                                             "set_title",&Application::set_title,
-                                             "set_data_path",&Application::set_data_path,
+                                             "data_path",&Application::data_path,
                                              "Init",&Application::Init,
                                              "Run",&Application::Run
         );

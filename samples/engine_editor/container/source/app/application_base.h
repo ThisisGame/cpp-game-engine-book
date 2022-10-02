@@ -26,6 +26,8 @@ public:
     ///
     virtual void InitLuaBinding();
 
+    virtual void LoadConfig();
+
     virtual void Run();
 
     /// 一帧
