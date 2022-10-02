@@ -23,6 +23,9 @@ public:
     /// 初始化图形库，例如glfw
     virtual void InitGraphicsLibraryFramework();
 
+    ///
+    virtual void InitLuaBinding();
+
     virtual void Run();
 
     /// 一帧

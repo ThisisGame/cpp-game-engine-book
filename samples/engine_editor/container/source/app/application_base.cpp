@@ -19,6 +19,7 @@
 #include "utils/time.h"
 #include "render_device/render_task_producer.h"
 #include "physics/physics.h"
+#include "lua_binding/lua_binding.h"
 
 
 void ApplicationBase::Init() {
@@ -27,6 +28,9 @@ void ApplicationBase::Init() {
 
     Debug::Init();
     DEBUG_LOG_INFO("game start");
+
+    InitLuaBinding();
+
     Time::Init();
 
     //初始化图形库，例如glfw
@@ -46,8 +50,19 @@ void ApplicationBase::InitGraphicsLibraryFramework() {
 
 }
 
-void ApplicationBase::Run() {
+void ApplicationBase::InitLuaBinding() {
+    //设置lua搜索目录
+    LuaBinding::Init(";../example/?.lua;../source_lua/?.lua;../source_lua/utils/?.lua;../source_lua/component/?.lua");
+    //绑定引擎所有类到Lua
+    LuaBinding::BindLua();
+    //执行lua
+    LuaBinding::RunLuaFile("../example/config.lua");
+}
 
+void ApplicationBase::Run() {
+    LuaBinding::RunLuaFile("../example/main.lua");
+    //调用lua main()
+    LuaBinding::CallLuaFunction("main");
 }
 
 void ApplicationBase::Update(){

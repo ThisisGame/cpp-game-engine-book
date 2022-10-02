@@ -109,6 +109,8 @@ void ApplicationStandalone::InitGraphicsLibraryFramework() {
 }
 
 void ApplicationStandalone::Run() {
+    ApplicationBase::Run();
+
     while (true) {
         EASY_BLOCK("Frame"){
             if(glfwWindowShouldClose(glfw_window_)){
