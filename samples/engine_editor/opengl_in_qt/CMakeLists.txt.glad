@@ -1,0 +1,7 @@
+﻿file(COPY "../../template/depends/glad/" DESTINATION "../depends/glad/")
+
+#头文件目录
+include_directories("depends/glad/include")
+
+#源文件
+file(GLOB_RECURSE glad_src depends/glad/src/*.c)
