@@ -8,7 +8,7 @@
 #include <string>
 #include "application_base.h"
 
-class GLFWwindow;
+struct GLFWwindow;
 class ApplicationEditor : public ApplicationBase{
 public:
     ApplicationEditor():ApplicationBase(){}

@@ -7,10 +7,9 @@
 #include <iostream>
 #include "rttr/registration"
 #include "easy/profiler.h"
-#include "imgui.h"
-#include "imgui_impl_glfw.h"
-#include "imgui_impl_opengl3.h"
+
 #include "glad/gl.h"
+
 #ifdef WIN32
 // 避免出现APIENTRY重定义警告。
 // freetype引用了windows.h，里面定义了APIENTRY。
@@ -19,8 +18,13 @@
 // 所以在 glfw3.h之前必须引用  Windows.h。
 #include <Windows.h>
 #endif
+
 #define GLFW_INCLUDE_NONE
-#include "GLFW/glfw3.h"
+#include <GLFW/glfw3.h>
+#include "imgui.h"
+#include "imgui_impl_glfw.h"
+#include "imgui_impl_opengl3.h"
+
 #include "utils/debug.h"
 #include "component/game_object.h"
 #include "renderer/camera.h"
@@ -80,7 +84,7 @@ void ApplicationEditor::InitGraphicsLibraryFramework() {
 }
 
 void ApplicationEditor::Run() {
-    ApplicationBase::Run();
+//    ApplicationBase::Run();
 
     bool show_demo_window = true;
     bool show_another_window = false;

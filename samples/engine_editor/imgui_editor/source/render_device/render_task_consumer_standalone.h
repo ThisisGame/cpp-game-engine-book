@@ -8,7 +8,7 @@
 #include <thread>
 #include "render_task_consumer_base.h"
 
-class GLFWwindow;
+struct GLFWwindow;
 class RenderTaskBase;
 
 /// 渲染任务消费端(PC系统游戏程序)
