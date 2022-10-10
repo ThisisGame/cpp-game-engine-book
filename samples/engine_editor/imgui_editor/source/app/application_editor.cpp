@@ -54,8 +54,13 @@ void ApplicationEditor::InitGraphicsLibraryFramework() {
     }
 
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+#ifdef __APPLE__
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+#endif
 
+    //创建编辑器窗口
     editor_glfw_window_ = glfwCreateWindow(1280, 720, "Dear ImGui GLFW+OpenGL3 example", NULL, NULL);
     if (!editor_glfw_window_)
     {
@@ -65,6 +70,8 @@ void ApplicationEditor::InitGraphicsLibraryFramework() {
     }
 
     glfwMakeContextCurrent(editor_glfw_window_);
+    gladLoadGL(glfwGetProcAddress);
+
     glfwSwapInterval(1); // Enable vsync
 
     // Setup Dear ImGui context
@@ -80,11 +87,23 @@ void ApplicationEditor::InitGraphicsLibraryFramework() {
 
     // Setup Platform/Renderer backends
     ImGui_ImplGlfw_InitForOpenGL(editor_glfw_window_, true);
-    ImGui_ImplOpenGL3_Init("#version 130");
+    const char* glsl_version = "#version 330";
+    ImGui_ImplOpenGL3_Init(glsl_version);
+
+    //创建游戏窗口
+    game_glfw_window_ = glfwCreateWindow(960, 640, title_.c_str(), NULL, NULL);
+    if (!game_glfw_window_)
+    {
+        DEBUG_LOG_ERROR("glfwCreateWindow error!");
+        glfwTerminate();
+        exit(EXIT_FAILURE);
+    }
+    //初始化渲染任务消费者(单独渲染线程)
+    RenderTaskConsumer::Init(new RenderTaskConsumerStandalone(game_glfw_window_));
 }
 
 void ApplicationEditor::Run() {
-//    ApplicationBase::Run();
+    ApplicationBase::Run();
 
     bool show_demo_window = true;
     bool show_another_window = false;
@@ -151,6 +170,11 @@ void ApplicationEditor::Run() {
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
         glfwSwapBuffers(editor_glfw_window_);
+
+        //渲染游戏
+        EASY_BLOCK("Frame"){
+            OneFrame();
+        }EASY_END_BLOCK;
     }
 
     Exit();
@@ -164,5 +188,6 @@ void ApplicationEditor::Exit() {
     ImGui::DestroyContext();
 
     glfwDestroyWindow(editor_glfw_window_);
+    glfwDestroyWindow(game_glfw_window_);
     glfwTerminate();
 }

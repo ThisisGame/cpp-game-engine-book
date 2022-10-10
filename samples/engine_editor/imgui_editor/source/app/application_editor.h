@@ -22,7 +22,8 @@ public:
 
     virtual void Exit() override;
 private:
-    GLFWwindow* editor_glfw_window_;
+    GLFWwindow* editor_glfw_window_;//编辑器窗口
+    GLFWwindow* game_glfw_window_;//游戏窗口
 };
 
 
