@@ -34,6 +34,7 @@ void RenderTaskConsumerEditor::InitGraphicsLibraryFramework() {
     glfwMakeContextCurrent(window_);
     gladLoadGL(glfwGetProcAddress);
     glfwSwapInterval(1);
+    //创建全局FBO，将整个游戏渲染到FBO，提供给编辑器，作为Game视图显示
 }
 
 void RenderTaskConsumerEditor::GetFramebufferSize(int& width,int& height) {
