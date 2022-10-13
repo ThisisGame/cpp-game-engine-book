@@ -15,12 +15,11 @@
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 #include "render_task_type.h"
+#include "render_task_producer.h"
 #include "render_command.h"
 #include "gpu_resource_mapper.h"
 #include "utils/screen.h"
-#include "read_pixels_queue.h"
-#define STB_IMAGE_WRITE_IMPLEMENTATION
-#include "glfw-3.3-3.4/deps/stb_image_write.h"
+#include "utils/debug.h"
 
 RenderTaskConsumerEditor::RenderTaskConsumerEditor(GLFWwindow* window):RenderTaskConsumerBase(),window_(window) {
 
@@ -34,7 +33,36 @@ void RenderTaskConsumerEditor::InitGraphicsLibraryFramework() {
     glfwMakeContextCurrent(window_);
     gladLoadGL(glfwGetProcAddress);
     glfwSwapInterval(1);
+
     //创建全局FBO，将整个游戏渲染到FBO，提供给编辑器，作为Game视图显示
+    GLuint frame_buffer_object_id=0;
+    glGenFramebuffers(1, &frame_buffer_object_id);__CHECK_GL_ERROR__
+    if(frame_buffer_object_id==0){
+        DEBUG_LOG_ERROR("CreateFBO FBO Error!");
+        return;
+    }
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER,frame_buffer_object_id);__CHECK_GL_ERROR__
+
+    //创建全局RBO
+    GLuint renderer_buffer_object_id=0;
+    glGenRenderbuffers(1,&renderer_buffer_object_id);
+    glBindRenderbuffer(GL_RENDERBUFFER,renderer_buffer_object_id);
+    glRenderbufferStorage(GL_RENDERBUFFER,GL_RGBA,960,640);
+
+    if(renderer_buffer_object_id==0){
+        DEBUG_LOG_ERROR("CreateFBO RBO Error!");
+        return;
+    }
+
+    //将RBO附加到FBO上
+    glFramebufferRenderbuffer(GL_DRAW_FRAMEBUFFER,GL_COLOR_ATTACHMENT0,GL_RENDERBUFFER,renderer_buffer_object_id);
+
+    //检测帧缓冲区完整性，如果完整的话就开始进行绘制
+    GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);__CHECK_GL_ERROR__
+    if (status != GL_FRAMEBUFFER_COMPLETE) {
+        DEBUG_LOG_ERROR("BindFBO FBO Error,Status:{} !",status);//36055 = 0x8CD7 GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT 附着点没有东西 可以绑一个RBO。
+        return;
+    }
 }
 
 void RenderTaskConsumerEditor::GetFramebufferSize(int& width,int& height) {
@@ -43,15 +71,4 @@ void RenderTaskConsumerEditor::GetFramebufferSize(int& width,int& height) {
 
 void RenderTaskConsumerEditor::SwapBuffer() {
     glfwSwapBuffers(window_);
-
-    //复制前缓冲区
-    char* buffer;
-    int width=Screen::width();
-    int height=Screen::height();
-    buffer = (char*)calloc(4, width * height);
-    glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
-    //存储到队列
-    ReadPixelsBuffer* read_pixels_buffer=new ReadPixelsBuffer(buffer);
-    ReadPixelsQueue::Push(read_pixels_buffer);
-//    stbi_write_png("offscreen.png",width, height, 4,buffer + (width * 4 * (height - 1)),-width * 4);
 }
