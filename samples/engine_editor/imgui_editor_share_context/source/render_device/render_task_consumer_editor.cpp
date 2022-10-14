@@ -21,6 +21,9 @@
 #include "utils/screen.h"
 #include "utils/debug.h"
 
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#include "glfw-3.3-3.4/deps/stb_image_write.h"
+
 RenderTaskConsumerEditor::RenderTaskConsumerEditor(GLFWwindow* window):RenderTaskConsumerBase(),window_(window) {
 
 }
@@ -43,19 +46,26 @@ void RenderTaskConsumerEditor::InitGraphicsLibraryFramework() {
     }
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER,frame_buffer_object_id);__CHECK_GL_ERROR__
 
-    //创建全局RBO
-    GLuint renderer_buffer_object_id=0;
-    glGenRenderbuffers(1,&renderer_buffer_object_id);
-    glBindRenderbuffer(GL_RENDERBUFFER,renderer_buffer_object_id);
-    glRenderbufferStorage(GL_RENDERBUFFER,GL_RGBA,960,640);
+    static GLuint texture_id=0;
+    glGenTextures(1, &texture_id);
+    glBindTexture(GL_TEXTURE_2D, texture_id);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 960, 640, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);__CHECK_GL_ERROR__
 
-    if(renderer_buffer_object_id==0){
-        DEBUG_LOG_ERROR("CreateFBO RBO Error!");
-        return;
-    }
+    static GLuint depth_texture_id=0;
+    glGenTextures(1, &depth_texture_id);
+    glBindTexture(GL_TEXTURE_2D, depth_texture_id);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, 960, 640, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, nullptr);__CHECK_GL_ERROR__
 
-    //将RBO附加到FBO上
-    glFramebufferRenderbuffer(GL_DRAW_FRAMEBUFFER,GL_COLOR_ATTACHMENT0,GL_RENDERBUFFER,renderer_buffer_object_id);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture_id, 0);__CHECK_GL_ERROR__
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depth_texture_id, 0);__CHECK_GL_ERROR__
 
     //检测帧缓冲区完整性，如果完整的话就开始进行绘制
     GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);__CHECK_GL_ERROR__
