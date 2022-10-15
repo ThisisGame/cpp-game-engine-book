@@ -164,39 +164,33 @@ void ApplicationEditor::Run() {
         // 4. 游戏渲染画面
         {
             ImGui::Begin("Game");
-            static GLuint texture_id=1;
-//            if(ReadPixelsQueue::Size()>0)
-            {
-//                ReadPixelsBuffer* read_pixels_buffer=ReadPixelsQueue::Front();
-//
-//                static GLuint texture_id=0;
-//                if(texture_id==0){
-//                    glGenTextures(1, &texture_id);
-//                    glBindTexture(GL_TEXTURE_2D, texture_id);
-//                    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-//                    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-//                    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-//                    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-//
-//                    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 960, 640, 0, GL_RGBA, GL_UNSIGNED_BYTE, read_pixels_buffer->buffer_);
-//                }else{
-//                    glBindTexture(GL_TEXTURE_2D, texture_id);
-//                    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);__CHECK_GL_ERROR__
-//                    glTexSubImage2D(GL_TEXTURE_2D,0,0,0,960,640,GL_RGBA,GL_UNSIGNED_BYTE,read_pixels_buffer->buffer_);__CHECK_GL_ERROR__
-//                }
-//
-                ImTextureID image_id = (GLuint *)texture_id;
 
-                // 第一个参数：生成的纹理的id
-                // 第2个参数：Image的大小
-                // 第3，4个参数：UV的起点坐标和终点坐标，UV是被规范化到（0，1）之间的坐标
-                // 第5个参数：图片的色调
-                // 第6个参数：图片边框的颜色
-                ImGui::Image(image_id, ImVec2(480,320), ImVec2(0.0, 1.0), ImVec2(1.0, 0.0), ImVec4(255, 255, 255, 1), ImVec4(0, 255, 0, 1));
-//
-//                delete read_pixels_buffer;
-//                ReadPixelsQueue::Pop();
-            }
+            RenderTaskConsumerEditor* render_task_consumer_editor= dynamic_cast<RenderTaskConsumerEditor *>(RenderTaskConsumer::Instance());
+
+            GLuint texture_id=render_task_consumer_editor->color_texture_id();
+            ImTextureID image_id = (void*)(intptr_t)texture_id;
+
+            // 第一个参数：生成的纹理的id
+            // 第2个参数：Image的大小
+            // 第3，4个参数：UV的起点坐标和终点坐标，UV是被规范化到（0，1）之间的坐标
+            // 第5个参数：图片的色调
+            // 第6个参数：图片边框的颜色
+            ImGui::Image(image_id, ImVec2(480,320), ImVec2(0.0, 1.0), ImVec2(1.0, 0.0), ImVec4(255, 255, 255, 1), ImVec4(0, 255, 0, 1));
+
+            ImGui::End();
+        }
+
+        // 5. 游戏渲染深度图
+        {
+            ImGui::Begin("Depth");
+
+            RenderTaskConsumerEditor* render_task_consumer_editor= dynamic_cast<RenderTaskConsumerEditor *>(RenderTaskConsumer::Instance());
+
+            GLuint texture_id=render_task_consumer_editor->depth_texture_id();
+            ImTextureID image_id = (void*)(intptr_t)texture_id;
+
+            ImGui::Image(image_id, ImVec2(480,320), ImVec2(0.0, 1.0), ImVec2(1.0, 0.0), ImVec4(255, 255, 255, 1), ImVec4(0, 255, 0, 1));
+
             ImGui::End();
         }
 
