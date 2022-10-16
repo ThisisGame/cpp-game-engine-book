@@ -430,6 +430,7 @@ void RenderTaskConsumer::CreateFBO(RenderTaskBase* task_base){
         DEBUG_LOG_ERROR("CreateFBO FBO Size Too Large!Not Support!");
         return;
     }
+    //创建FBO
     GLuint frame_buffer_object_id=0;
     glGenFramebuffers(1, &frame_buffer_object_id);__CHECK_GL_ERROR__
     if(frame_buffer_object_id==0){
@@ -439,12 +440,14 @@ void RenderTaskConsumer::CreateFBO(RenderTaskBase* task_base){
     GPUResourceMapper::MapFBO(task->fbo_handle_, frame_buffer_object_id);
 
     glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer_object_id);__CHECK_GL_ERROR__
-    //颜色纹理并绑定到FBO颜色附着点
+    //将颜色纹理绑定到FBO颜色附着点
     GLuint color_texture=GPUResourceMapper::GetTexture(task->color_texture_handle_);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, color_texture, 0);__CHECK_GL_ERROR__
-    //深度纹理并绑定到FBO深度附着点
+    //将深度纹理绑定到FBO深度附着点
     GLuint depth_texture=GPUResourceMapper::GetTexture(task->depth_texture_handle_);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depth_texture, 0);__CHECK_GL_ERROR__
+
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);__CHECK_GL_ERROR__
 }
 
 /// 绑定使用FBO任务
