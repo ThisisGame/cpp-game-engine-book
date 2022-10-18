@@ -127,10 +127,10 @@ function LoginScene:CreateMainCamera()
     self.camera_:set_depth(0)
     self.camera_:set_culling_mask(1)
     self.camera_:SetView(glm.vec3(0.0,0.0,0.0), glm.vec3(0.0,1.0,0.0))
-    self.camera_:SetPerspective(60, Screen.aspect_ratio(), 1, 1000)
+    self.camera_:SetPerspective(60, Screen:aspect_ratio(), 1, 1000)
     --设置RenderTexture
     self.render_texture_ = RenderTexture.new()
-    self.render_texture_:Init(960,640)
+    self.render_texture_:Init(480,320)
     self.camera_:set_target_render_texture(self.render_texture_)
 end
 

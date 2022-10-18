@@ -82,6 +82,7 @@ public:
     /// 检查target_render_texture_是否设置，是则使用FBO，渲染到RenderTexture。
     void CheckRenderToTexture();
 
+    /// 检查是否要取消使用RenderTexture.
     void CheckCancelRenderToTexture();
 
     /// 设置渲染目标RenderTexture
