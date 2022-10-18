@@ -16,6 +16,9 @@ public:
     /// 发出任务：更新游戏窗口尺寸
     static void ProduceRenderTaskUpdateScreenSize();
 
+    /// 发出任务：设置视口大小
+    static void ProduceRenderTaskSetViewportSize(int width, int height);
+
     /// 发出任务：编译Shader
     /// \param vertex_shader_source 顶点shader源码
     /// \param fragment_shader_source 片段shader源码

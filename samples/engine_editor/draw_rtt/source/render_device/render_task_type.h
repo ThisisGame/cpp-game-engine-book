@@ -43,6 +43,18 @@ public:
     ~RenderTaskUpdateScreenSize(){}
 };
 
+/// 设置视口大小
+class RenderTaskSetViewportSize:public RenderTaskBase{
+public:
+    RenderTaskSetViewportSize(){
+        render_command_=RenderCommand::SET_VIEW_PORT_SIZE;
+    }
+    ~RenderTaskSetViewportSize(){}
+public:
+    int width_;
+    int height_;
+};
+
 /// 编译着色器任务
 class RenderTaskCompileShader: public RenderTaskBase{
 public:

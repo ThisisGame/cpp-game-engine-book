@@ -130,7 +130,7 @@ function LoginScene:CreateMainCamera()
     self.camera_:SetPerspective(60, Screen:aspect_ratio(), 1, 1000)
     --设置RenderTexture
     self.render_texture_ = RenderTexture.new()
-    self.render_texture_:Init(480,320)
+    self.render_texture_:Init(960,640)
     self.camera_:set_target_render_texture(self.render_texture_)
 end
 
@@ -173,15 +173,27 @@ function LoginScene:CreateUI()
     camera_ui:SetView(glm.vec3(0, 0, 0), glm.vec3(0, 1, 0))
     camera_ui:SetOrthographic(-Screen.width()/2,Screen.width()/2,-Screen.height()/2,Screen.height()/2,-100,100)
 
+    -- 将240x160的RenderTexture放大到960x640
     -- 创建 UIImage
-    self.go_ui_image_=GameObject.new("image")
+    self.go_ui_image_rtt_=GameObject.new("draw render texture")
+    self.go_ui_image_rtt_:set_layer(2)
+    -- 设置尺寸
+    local rect_transform=self.go_ui_image_rtt_:AddComponent(RectTransform)
+    rect_transform:set_rect(glm.vec2(960,640))
+    -- 挂上 UIImage 组件，将RenderTexture绘制出来
+    local ui_image_mod_bag=self.go_ui_image_rtt_:AddComponent(UIImage)
+    ui_image_mod_bag:set_texture(self.render_texture_:color_texture_2d())
+
+    -- 创建一个UI，UI不缩放，使用原生分辨率渲染
+    self.go_ui_image_=GameObject.new("native draw image")
     self.go_ui_image_:set_layer(2)
     -- 设置尺寸
     local rect_transform=self.go_ui_image_:AddComponent(RectTransform)
-    rect_transform:set_rect(glm.vec2(480,320))
+    rect_transform:set_position(glm.vec3(0,-200,0))
+    rect_transform:set_rect(glm.vec2(128,128))
     -- 挂上 UIImage 组件
-    local ui_image_mod_bag=self.go_ui_image_:AddComponent(UIImage)
-    ui_image_mod_bag:set_texture(self.render_texture_:color_texture_2d())
+    local ui_image_btn=self.go_ui_image_:AddComponent(UIImage)
+    ui_image_btn:set_texture(Texture2D.LoadFromFile("images/btn_power.cpt"))
 end
 
 function LoginScene:Update()

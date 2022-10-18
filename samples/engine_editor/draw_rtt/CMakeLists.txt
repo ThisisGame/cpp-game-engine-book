@@ -37,7 +37,7 @@ file(COPY "../../template/depends/SPSCQueue-1.1/" DESTINATION "../depends/spscqu
 
 #拷贝data文件
 file(COPY "../../template/data/audio/integrate_physx/" DESTINATION "../data/audio/")
-file(COPY "../../template/data/images/need_head_phone.cpt" DESTINATION "../data/images/")
+file(COPY "../../template/data/images/btn_power.cpt" DESTINATION "../data/images/")
 file(COPY "../../template/data/images/plane_albedo.cpt" DESTINATION "../data/images/")
 file(COPY "../../template/data/images/plane_metal.cpt" DESTINATION "../data/images/")
 file(COPY "../../template/data/model/basic_plane_model_basic_plane.mesh" DESTINATION "../data/model/")

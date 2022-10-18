@@ -24,6 +24,10 @@ private:
     /// \param task_base
     static void UpdateScreenSize(RenderTaskBase* task_base);
 
+    /// 设置视口大小
+    /// \param task_base
+    static void SetViewportSize(RenderTaskBase* task_base);
+
     /// 编译、链接Shader
     /// \param task_base
     static void CompileShader(RenderTaskBase *task_base);

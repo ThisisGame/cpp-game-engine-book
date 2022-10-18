@@ -13,6 +13,14 @@ void RenderTaskProducer::ProduceRenderTaskUpdateScreenSize() {
     RenderTaskQueue::Push(task);
 }
 
+void RenderTaskProducer::ProduceRenderTaskSetViewportSize(int width, int height) {
+    EASY_FUNCTION();
+    RenderTaskSetViewportSize* task=new RenderTaskSetViewportSize();
+    task->width_=width;
+    task->height_=height;
+    RenderTaskQueue::Push(task);
+}
+
 /// 发出任务：编译Shader
 /// \param vertex_shader_source 顶点shader源码
 /// \param fragment_shader_source 片段shader源码

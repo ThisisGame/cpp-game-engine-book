@@ -13,6 +13,7 @@
 #include "component/transform.h"
 #include "render_device/render_task_producer.h"
 #include "render_device/gpu_resource_mapper.h"
+#include "utils/screen.h"
 
 
 using namespace rttr;
@@ -77,6 +78,7 @@ void Camera::CheckRenderToTexture(){
     if(target_render_texture_->frame_buffer_object_handle() == 0){//还没有初始化，没有生成FBO。
         return;
     }
+    RenderTaskProducer::ProduceRenderTaskSetViewportSize(target_render_texture_->width(),target_render_texture_->height());
     RenderTaskProducer::ProduceRenderTaskBindFBO(target_render_texture_->frame_buffer_object_handle());
     target_render_texture_->set_in_use(true);
 }
@@ -91,6 +93,7 @@ void Camera::CheckCancelRenderToTexture(){
     if(target_render_texture_->frame_buffer_object_handle() == 0){//还没有初始化，没有生成FBO。
         return;
     }
+    RenderTaskProducer::ProduceRenderTaskSetViewportSize(Screen::width(),Screen::height());
     RenderTaskProducer::ProduceRenderTaskUnBindFBO(target_render_texture_->frame_buffer_object_handle());
     target_render_texture_->set_in_use(false);
 }

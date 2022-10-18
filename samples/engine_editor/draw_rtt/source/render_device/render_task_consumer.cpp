@@ -44,8 +44,14 @@ void RenderTaskConsumer::UpdateScreenSize(RenderTaskBase* task_base) {
     RenderTaskUpdateScreenSize* task= dynamic_cast<RenderTaskUpdateScreenSize*>(task_base);
     int width, height;
     glfwGetFramebufferSize(window_, &width, &height);
-    glViewport(0, 0, width, height);
+    glViewport(0, 0, 480, 320);
     Screen::set_width_height(width,height);
+}
+
+/// 设置视口大小
+void RenderTaskConsumer::SetViewportSize(RenderTaskBase* task_base) {
+    RenderTaskSetViewportSize* task= dynamic_cast<RenderTaskSetViewportSize*>(task_base);
+    glViewport(0, 0, task->width_, task->height_);
 }
 
 /// 编译、链接Shader
@@ -509,6 +515,10 @@ void RenderTaskConsumer::ProcessTask() {
                 case RenderCommand::NONE:break;
                 case RenderCommand::UPDATE_SCREEN_SIZE:{
                     UpdateScreenSize(render_task);
+                    break;
+                }
+                case RenderCommand::SET_VIEW_PORT_SIZE:{
+                    SetViewportSize(render_task);
                     break;
                 }
                 case RenderCommand::COMPILE_SHADER:{
