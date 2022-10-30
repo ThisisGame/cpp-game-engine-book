@@ -183,17 +183,6 @@ function LoginScene:CreateUI()
     -- 挂上 UIImage 组件，将RenderTexture绘制出来
     local ui_image_mod_bag=self.go_ui_image_rtt_:AddComponent(UIImage)
     ui_image_mod_bag:set_texture(self.render_texture_:color_texture_2d())
-
-    -- 创建一个UI，UI不缩放，使用原生分辨率渲染
-    self.go_ui_image_=GameObject.new("native draw image")
-    self.go_ui_image_:set_layer(2)
-    -- 设置尺寸
-    local rect_transform=self.go_ui_image_:AddComponent(RectTransform)
-    rect_transform:set_position(glm.vec3(0,-200,0))
-    rect_transform:set_rect(glm.vec2(128,128))
-    -- 挂上 UIImage 组件
-    local ui_image_btn=self.go_ui_image_:AddComponent(UIImage)
-    ui_image_btn:set_texture(Texture2D.LoadFromFile("images/btn_power.cpt"))
 end
 
 function LoginScene:Update()

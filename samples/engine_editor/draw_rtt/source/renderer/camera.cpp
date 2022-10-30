@@ -93,6 +93,7 @@ void Camera::CheckCancelRenderToTexture(){
     if(target_render_texture_->frame_buffer_object_handle() == 0){//还没有初始化，没有生成FBO。
         return;
     }
+    //更新ViewPort的尺寸
     RenderTaskProducer::ProduceRenderTaskSetViewportSize(Screen::width(),Screen::height());
     RenderTaskProducer::ProduceRenderTaskUnBindFBO(target_render_texture_->frame_buffer_object_handle());
     target_render_texture_->set_in_use(false);
