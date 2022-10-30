@@ -130,7 +130,7 @@ function LoginScene:CreateMainCamera()
     self.camera_:SetPerspective(60, Screen:aspect_ratio(), 1, 1000)
     --设置RenderTexture
     self.render_texture_ = RenderTexture.new()
-    self.render_texture_:Init(240,160)
+    self.render_texture_:Init(480,320)
     self.camera_:set_target_render_texture(self.render_texture_)
 end
 
