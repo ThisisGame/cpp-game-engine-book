@@ -7,8 +7,10 @@
 
 #include <string>
 #include "application_base.h"
+#include "data_structs/tree.h"
 
 struct GLFWwindow;
+class GameObject;
 class ApplicationEditor : public ApplicationBase{
 public:
     ApplicationEditor():ApplicationBase(){}
@@ -16,6 +18,7 @@ public:
 
     void Run();
 
+    void DrawHierarchy(Tree::Node* node,const char* label,int base_flags);
 public:
     /// 初始化图形库，例如glfw
     virtual void InitGraphicsLibraryFramework() override;

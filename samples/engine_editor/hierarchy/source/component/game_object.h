@@ -95,6 +95,10 @@ public:
     /// 遍历GameObject
     /// \param func
     static void Foreach(std::function<void(GameObject* game_object)> func);
+
+    /// 返回GameObject树结构
+    /// \return
+    static Tree& game_object_tree(){return game_object_tree_;}
 private:
     const char * name_;
 

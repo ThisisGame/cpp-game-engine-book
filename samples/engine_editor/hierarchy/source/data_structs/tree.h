@@ -16,8 +16,21 @@ public:
 
         Node* parent(){return parent_;}
 
-
         std::list<Node*>& children(){return children_;}
+
+        /// 逐级向上查找root节点
+        /// \return
+        Node* root(){
+            Node* parent=this;
+            while (true) {
+                if(parent->parent()== nullptr)
+                {
+                    break;
+                }
+                parent=parent->parent();
+            }
+            return parent;
+        }
 
         void AddChild(Node* child){
             //先从之前的父节点移除

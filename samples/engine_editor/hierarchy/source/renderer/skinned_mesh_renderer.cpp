@@ -78,10 +78,15 @@ void SkinnedMeshRenderer::Update() {
 
     EASY_BLOCK("CalculateVertexByBone");
     //计算当前帧顶点位置
+    glm::vec4 vertex_position(1.0f);
     for(int i=0;i<skinned_mesh->vertex_num_;i++){
         auto& vertex=mesh->vertex_data_[i];
-        glm::vec4 vertex_position=glm::vec4(vertex.position_,1.0f);
-        glm::vec3 vertex_normal=vertex.normal_;
+
+        vertex_position.x=vertex.position_.x;
+        vertex_position.y=vertex.position_.y;
+        vertex_position.z=vertex.position_.z;
+
+        glm::vec3& vertex_normal=vertex.normal_;
 
         glm::vec4 pos_by_bones;//对每个Bone计算一次位置，然后乘以权重，最后求和
         glm::vec3 normal_by_bones;

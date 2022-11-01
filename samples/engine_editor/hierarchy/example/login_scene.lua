@@ -99,6 +99,8 @@ function LoginScene:CreatePointLight1()
     light:set_attenuation_constant(1.0)
     light:set_attenuation_linear( 0.35)
     light:set_attenuation_quadratic( 0.44)
+
+    self.go_light_:AddChild(self.go_point_light_1_)
 end
 
 --- 创建点光源2
@@ -113,6 +115,8 @@ function LoginScene:CreatePointLight2()
     light:set_attenuation_constant(1.0)
     light:set_attenuation_linear( 0.35)
     light:set_attenuation_quadratic( 0.44)
+
+    self.go_light_:AddChild(self.go_point_light_2_)
 end
 
 --- 创建主相机

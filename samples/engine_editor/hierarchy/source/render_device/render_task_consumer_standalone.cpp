@@ -35,7 +35,7 @@ void RenderTaskConsumerStandalone::InitGraphicsLibraryFramework() {
     //渲染相关的API调用需要放到渲染线程中。
     glfwMakeContextCurrent(window_);
     gladLoadGL(glfwGetProcAddress);
-    glfwSwapInterval(1);
+//    glfwSwapInterval(1);
 }
 
 void RenderTaskConsumerStandalone::GetFramebufferSize(int& width,int& height) {

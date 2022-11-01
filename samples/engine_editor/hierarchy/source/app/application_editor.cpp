@@ -81,7 +81,7 @@ void ApplicationEditor::InitGraphicsLibraryFramework() {
 
     glfwMakeContextCurrent(editor_glfw_window_);
 
-    glfwSwapInterval(1); // Enable vsync
+//    glfwSwapInterval(1); // Enable vsync
 
     // Setup Dear ImGui context
     IMGUI_CHECKVERSION();
@@ -133,7 +133,7 @@ void ApplicationEditor::Run() {
             static float f = 0.0f;
             static int counter = 0;
 
-            ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
+            ImGui::Begin("Status");
 
             ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
             ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our window open/close state
@@ -195,9 +195,14 @@ void ApplicationEditor::Run() {
         }
 
         // 6. Hierarchy
-        GameObject::Foreach([](GameObject* game_object){
-            DEBUG_LOG_INFO("game object:{} depth:{}",game_object->name(),game_object->depth());
-        });
+        {
+            ImGui::Begin("Hierarchy");
+            ImGuiTreeNodeFlags base_flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick | ImGuiTreeNodeFlags_SpanAvailWidth;
+            Tree::Node* root_node=GameObject::game_object_tree().root_node();
+            DrawHierarchy(root_node, "scene",base_flags);
+            ImGui::End();
+        }
+
 
         // Rendering
         ImGui::Render();
@@ -217,6 +222,37 @@ void ApplicationEditor::Run() {
     }
 
     Exit();
+}
+
+void ApplicationEditor::DrawHierarchy(Tree::Node* node,const char* label,int base_flags) {
+    int flags=base_flags;
+
+    //记录当前选中的Node
+    static Tree::Node* selected_node=nullptr;
+    if(selected_node==node){
+        flags |= ImGuiTreeNodeFlags_Selected;
+    }
+
+    std::list<Tree::Node*>& children=node->children();
+    if(children.size()>0){
+        if(ImGui::TreeNodeEx(label, flags)){//如果被点击，就展开子节点。
+            if(ImGui::IsItemClicked()){
+                selected_node=node;
+            }
+            for(auto* child:children){
+                GameObject* game_object= dynamic_cast<GameObject *>(child);
+                DEBUG_LOG_INFO("game object:{} depth:{}",game_object->name(),game_object->depth());
+                DrawHierarchy(child, game_object->name(), base_flags);
+            }
+            ImGui::TreePop();
+        }
+    }else{//没有子节点，不显示展开按钮
+        flags |= ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen;
+        ImGui::TreeNodeEx(label, flags);
+        if(ImGui::IsItemClicked()){
+            selected_node=node;
+        }
+    }
 }
 
 void ApplicationEditor::Exit() {

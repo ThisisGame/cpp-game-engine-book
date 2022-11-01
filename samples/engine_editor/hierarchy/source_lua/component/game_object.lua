@@ -89,3 +89,9 @@ function GameObject:GetComponents(component_type)
     end
     return return_components
 end
+
+--- 添加到父节点
+--- @param game_object GameObject @子GameObject
+function GameObject:AddChild(game_object)
+    self.cpp_class_instance_:AddChild(game_object:cpp_class_instance())
+end

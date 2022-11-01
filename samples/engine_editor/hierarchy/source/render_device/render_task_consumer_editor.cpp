@@ -35,7 +35,7 @@ void RenderTaskConsumerEditor::InitGraphicsLibraryFramework() {
     //渲染相关的API调用需要放到渲染线程中。
     glfwMakeContextCurrent(window_);
     gladLoadGL(glfwGetProcAddress);
-    glfwSwapInterval(1);
+//    glfwSwapInterval(1);
 
     //创建全局FBO，将整个游戏渲染到FBO，提供给编辑器，作为Game视图显示
     GLuint frame_buffer_object_id=0;
