@@ -107,8 +107,6 @@ void ApplicationEditor::InitGraphicsLibraryFramework() {
 void ApplicationEditor::Run() {
     ApplicationBase::Run();
 
-    bool show_demo_window = true;
-    bool show_another_window = false;
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
     while (!glfwWindowShouldClose(editor_glfw_window_))
@@ -125,59 +123,51 @@ void ApplicationEditor::Run() {
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        // 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
-        if (show_demo_window)
-            ImGui::ShowDemoWindow(&show_demo_window);
-
-        // 2. 状态
+        // 1. 状态
         {
             ImGui::Begin("Status");
             ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
             ImGui::End();
         }
 
-        // 3. Show another simple window.
-        if (show_another_window)
+        // 2. 游戏渲染画面
         {
-            ImGui::Begin("Another Window", &show_another_window);   // Pass a pointer to our bool variable (the window will have a closing button that will clear the bool when clicked)
-            ImGui::Text("Hello from another window!");
-            if (ImGui::Button("Close Me"))
-                show_another_window = false;
+            ImGui::Begin("ViewPort");
+            if (ImGui::BeginTabBar("ViewPortTabBar", ImGuiTabBarFlags_None)){
+                // 4.1 Color图
+                if (ImGui::BeginTabItem("Game")) {
+                    RenderTaskConsumerEditor* render_task_consumer_editor= dynamic_cast<RenderTaskConsumerEditor *>(RenderTaskConsumer::Instance());
+
+                    GLuint texture_id=render_task_consumer_editor->color_texture_id();
+                    ImTextureID image_id = (void*)(intptr_t)texture_id;
+
+                    // 第一个参数：生成的纹理的id
+                    // 第2个参数：Image的大小
+                    // 第3，4个参数：UV的起点坐标和终点坐标，UV是被规范化到（0，1）之间的坐标
+                    // 第5个参数：图片的色调
+                    // 第6个参数：图片边框的颜色
+                    ImGui::Image(image_id, ImVec2(480,320), ImVec2(0.0, 1.0), ImVec2(1.0, 0.0), ImVec4(255, 255, 255, 1), ImVec4(0, 255, 0, 1));
+
+                    ImGui::EndTabItem();
+                }
+                // 4.2 深度图
+                if (ImGui::BeginTabItem("Depth")) {
+                    RenderTaskConsumerEditor* render_task_consumer_editor= dynamic_cast<RenderTaskConsumerEditor *>(RenderTaskConsumer::Instance());
+
+                    GLuint texture_id=render_task_consumer_editor->depth_texture_id();
+                    ImTextureID image_id = (void*)(intptr_t)texture_id;
+
+                    ImGui::Image(image_id, ImVec2(480,320), ImVec2(0.0, 1.0), ImVec2(1.0, 0.0), ImVec4(255, 255, 255, 1), ImVec4(0, 255, 0, 1));
+
+                    ImGui::EndTabItem();
+                }
+                ImGui::EndTabBar();
+            }
             ImGui::End();
         }
 
-        if (ImGui::BeginTabBar("MyTabBar", ImGuiTabBarFlags_None)){
-            // 4. 游戏渲染画面
-            if (ImGui::BeginTabItem("Game")) {
-                RenderTaskConsumerEditor* render_task_consumer_editor= dynamic_cast<RenderTaskConsumerEditor *>(RenderTaskConsumer::Instance());
 
-                GLuint texture_id=render_task_consumer_editor->color_texture_id();
-                ImTextureID image_id = (void*)(intptr_t)texture_id;
-
-                // 第一个参数：生成的纹理的id
-                // 第2个参数：Image的大小
-                // 第3，4个参数：UV的起点坐标和终点坐标，UV是被规范化到（0，1）之间的坐标
-                // 第5个参数：图片的色调
-                // 第6个参数：图片边框的颜色
-                ImGui::Image(image_id, ImVec2(480,320), ImVec2(0.0, 1.0), ImVec2(1.0, 0.0), ImVec4(255, 255, 255, 1), ImVec4(0, 255, 0, 1));
-
-                ImGui::EndTabItem();
-            }
-            // 5. 游戏渲染深度图
-            if (ImGui::BeginTabItem("Depth")) {
-                RenderTaskConsumerEditor* render_task_consumer_editor= dynamic_cast<RenderTaskConsumerEditor *>(RenderTaskConsumer::Instance());
-
-                GLuint texture_id=render_task_consumer_editor->depth_texture_id();
-                ImTextureID image_id = (void*)(intptr_t)texture_id;
-
-                ImGui::Image(image_id, ImVec2(480,320), ImVec2(0.0, 1.0), ImVec2(1.0, 0.0), ImVec4(255, 255, 255, 1), ImVec4(0, 255, 0, 1));
-
-                ImGui::EndTabItem();
-            }
-            ImGui::EndTabBar();
-        }
-
-        // 6. Hierarchy
+        // 3. Hierarchy
         {
             ImGui::Begin("Hierarchy");
             ImGuiTreeNodeFlags base_flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick | ImGuiTreeNodeFlags_SpanAvailWidth;
@@ -186,7 +176,7 @@ void ApplicationEditor::Run() {
             ImGui::End();
         }
 
-        //7. Property
+        //4. Property
         {
             ImGui::Begin("Property");
 
@@ -249,7 +239,7 @@ void ApplicationEditor::DrawHierarchy(Tree::Node* node,const char* label,int bas
             }
             for(auto* child:children){
                 GameObject* game_object= dynamic_cast<GameObject *>(child);
-                DEBUG_LOG_INFO("game object:{} depth:{}",game_object->name(),game_object->depth());
+//                DEBUG_LOG_INFO("game object:{} depth:{}",game_object->name(),game_object->depth());
                 DrawHierarchy(child, game_object->name(), base_flags);
             }
             ImGui::TreePop();//可以点击展开的TreeNode，需要加上TreePop()。
