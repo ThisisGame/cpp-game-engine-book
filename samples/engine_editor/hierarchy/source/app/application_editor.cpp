@@ -180,24 +180,48 @@ void ApplicationEditor::Run() {
         {
             ImGui::Begin("Property");
 
+            //4.1 GameObject属性
+            GameObject* game_object=nullptr;
+            if(selected_node_!= nullptr){
+                game_object=dynamic_cast<GameObject*>(selected_node_);
+            }
+            if(game_object!=nullptr){
+                bool active = game_object->active();
+                if(ImGui::Checkbox("active", &active)){
+                    game_object->set_active(active);
+                }
+            }else{
+                ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "no valid GameObject");
+            }
+
+            //4.2 Transform属性
+            Transform* transform=nullptr;
             glm::vec3 position,rotation,scale;
 
-            if(selected_node_!= nullptr){
-                GameObject* game_object=dynamic_cast<GameObject*>(selected_node_);
-                if(game_object!= nullptr){
-                    Transform* transform=game_object->GetComponent<Transform>();
-                    if(transform!= nullptr){
-                        position=transform->position();
-                        rotation=transform->rotation();
-                        scale=transform->scale();
-                    }
-                }
+            if(game_object!= nullptr){
+                transform=game_object->GetComponent<Transform>();
             }
-            if(ImGui::TreeNode("Transform")){
-                ImGui::InputFloat3("position",(float*)&position);
-                ImGui::InputFloat3("rotation",(float*)&rotation);
-                ImGui::InputFloat3("scale",(float*)&scale);
-                ImGui::TreePop();
+
+            if(transform!= nullptr){
+                position=transform->position();
+                rotation=transform->rotation();
+                scale=transform->scale();
+
+                if(ImGui::TreeNode("Transform")){
+                    // 显示属性，如果数值改变，将数据写回Transform
+                    if(ImGui::InputFloat3("position",(float*)&position)){
+                        transform->set_position(position);
+                    }
+                    if(ImGui::InputFloat3("rotation",(float*)&rotation)){
+                        transform->set_rotation(rotation);
+                    }
+                    if(ImGui::InputFloat3("scale",(float*)&scale)){
+                        transform->set_scale(scale);
+                    }
+                    ImGui::TreePop();
+                }
+            }else{
+                ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "not found Transform");
             }
 
             ImGui::End();
