@@ -69,6 +69,6 @@ void UIButton::Update() {
         pressed_=false;
     }
     //当press为true 关闭普通状态图片，激活按下状态图片.否则反转。
-    transform_image_normal->game_object()->set_active(!pressed_);
-    transform_image_press->game_object()->set_active(pressed_);
+    transform_image_normal->game_object()->set_active_self(!pressed_);
+    transform_image_press->game_object()->set_active_self(pressed_);
 }

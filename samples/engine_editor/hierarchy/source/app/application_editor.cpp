@@ -186,10 +186,17 @@ void ApplicationEditor::Run() {
                 game_object=dynamic_cast<GameObject*>(selected_node_);
             }
             if(game_object!=nullptr){
-                bool active = game_object->active();
-                if(ImGui::Checkbox("active", &active)){
-                    game_object->set_active(active);
+                //是否Active
+                bool active_self = game_object->active_self();
+                if(ImGui::Checkbox("active", &active_self)){
+                    game_object->set_active_self(active_self);
                 }
+                //Layer
+                int layer=game_object->layer();
+                if(ImGui::InputInt("Layer",&layer)){
+                    game_object->set_layer(layer);
+                }
+
             }else{
                 ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "no valid GameObject");
             }

@@ -73,10 +73,10 @@ void GameObject::ForeachComponent(std::function<void(Component*)> func) {
 
 /// 遍历GameObject
 /// \param func
-void GameObject::Foreach(std::function<void(GameObject* game_object)> func) {
-    game_object_tree_.Post(game_object_tree_.root_node(),[&func](Tree::Node* node){
+void GameObject::Foreach(std::function<bool(GameObject* game_object)> func) {
+    game_object_tree_.PreOrder(game_object_tree_.root_node(),[&func](Tree::Node* node)->bool {
         auto n=node;
         GameObject* game_object= dynamic_cast<GameObject *>(n);
-        func(game_object);
+        return func(game_object);
     });
 }

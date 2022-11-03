@@ -18,6 +18,18 @@ void Tree::Post(Node* node,std::function<void(Node * )> func) {
     }
 }
 
+void Tree::PreOrder(Node* node,std::function<bool(Node * )> func) {
+    if(node!=root_node_){
+        bool go_deep=func(node);//匿名函数返回结果，来决定是否继续往下递归子节点。
+        if(go_deep==false){
+            return;
+        }
+    }
+    for (auto child:node->children()) {
+        Post(child,func);
+    }
+}
+
 Tree::~Tree()=default;
 
 void Tree::Find(Node* node_parent,std::function<bool(Node *)> function_check,Node** node_result= nullptr) {

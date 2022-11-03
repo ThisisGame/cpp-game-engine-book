@@ -26,8 +26,29 @@ public:
     unsigned char layer(){return layer_;}
     void set_layer(unsigned char layer){layer_=layer;}
 
-    bool active(){return active_;}
-    void set_active(bool active){active_=active;}
+    /// 是否激活，受到父节点影响
+    /// \return
+    bool active(){
+        if(active_self_==false){//自己本身没有激活，直接返回false。
+            return false;
+        }
+        //向上检查父节点是否没有激活
+        Node* node=this;
+        while (true) {
+            node=node->parent();
+            if(node == nullptr) {
+                break;
+            }
+            GameObject* game_object=dynamic_cast<GameObject*>(node);
+            if(game_object->active_self()==false){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    bool active_self(){return active_self_;}
+    void set_active_self(bool active_self){active_self_=active_self;}
 
     /// 设置父节点
     /// \param parent
@@ -94,7 +115,7 @@ public:
 
     /// 遍历GameObject
     /// \param func
-    static void Foreach(std::function<void(GameObject* game_object)> func);
+    static void Foreach(std::function<bool(GameObject* game_object)> func);
 
     /// 返回GameObject树结构
     /// \return
@@ -104,7 +125,7 @@ private:
 
     unsigned char layer_;//将物体分不同的层，用于相机分层、物理碰撞分层等。
 
-    bool active_=true;//是否激活
+    bool active_self_=true;//自身是否激活
 
     std::unordered_map<std::string,std::vector<Component*>> components_map_;
 

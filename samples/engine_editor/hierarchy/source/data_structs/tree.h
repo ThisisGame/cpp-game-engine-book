@@ -64,7 +64,15 @@ public:
 
     Node* root_node(){return root_node_;}
 
+    /// 后序遍历
+    /// \param node
+    /// \param func
     void Post(Node* node,std::function<void(Node *)> func);
+
+    /// 先序遍历
+    /// \param node
+    /// \param func 匿名函数返回结果，来决定是否继续往下递归子节点。
+    void PreOrder(Node* node,std::function<bool(Node *)> func);
 
     void Find(Node* node_parent,std::function<bool(Node *)> function_check,Node** node_result);
 private:

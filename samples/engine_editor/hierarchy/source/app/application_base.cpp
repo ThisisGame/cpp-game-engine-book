@@ -77,12 +77,14 @@ void ApplicationBase::Update(){
     Time::Update();
     UpdateScreenSize();
 
-    GameObject::Foreach([](GameObject* game_object){
-        if(game_object->active()){
-            game_object->ForeachComponent([](Component* component){
-                component->Update();
-            });
+    GameObject::Foreach([](GameObject* game_object)->bool {
+        if(!game_object->active_self()){//当自身没有激活，返回false，打断遍历子节点。
+            return false;
         }
+        game_object->ForeachComponent([](Component* component){
+            component->Update();
+        });
+        return true;
     });
 
     Input::Update();
@@ -95,15 +97,15 @@ void ApplicationBase::Render(){
     EASY_FUNCTION(profiler::colors::Magenta); // 标记函数
     //遍历所有相机，每个相机的View Projection，都用来做一次渲染。
     Camera::Foreach([&](){
-        GameObject::Foreach([](GameObject* game_object){
-            if(game_object->active()==false){
-                return;
+        GameObject::Foreach([](GameObject* game_object)->bool {
+            if(!game_object->active_self()){//当自身没有激活，返回false，打断遍历子节点。
+                return false;
             }
             MeshRenderer* mesh_renderer=game_object->GetComponent<MeshRenderer>();
-            if(mesh_renderer== nullptr){
-                return;
+            if(mesh_renderer!= nullptr){
+                mesh_renderer->Render();
             }
-            mesh_renderer->Render();
+            return true;
         });
     });
 }
@@ -112,12 +114,14 @@ void ApplicationBase::FixedUpdate(){
     EASY_FUNCTION(profiler::colors::Magenta) // 标记函数
     Physics::FixedUpdate();
 
-    GameObject::Foreach([](GameObject* game_object){
-        if(game_object->active()){
-            game_object->ForeachComponent([](Component* component){
-                component->FixedUpdate();
-            });
+    GameObject::Foreach([](GameObject* game_object)->bool {
+        if(!game_object->active_self()){//当自身没有激活，返回false，打断遍历子节点。
+            return false;
         }
+        game_object->ForeachComponent([](Component* component){
+            component->FixedUpdate();
+        });
+        return true;
     });
 }
 

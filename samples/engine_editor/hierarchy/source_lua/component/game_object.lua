@@ -48,9 +48,14 @@ function GameObject:active()
     return self.cpp_class_instance_:active()
 end
 
+--- @return boolean
+function GameObject:active_self()
+    return self.cpp_class_instance_:active_self()
+end
+
 --- @param active boolean
-function GameObject:set_active(active)
-    self.cpp_class_instance_:set_active(active)
+function GameObject:set_active_self(active)
+    self.cpp_class_instance_:set_active_self(active)
 end
 
 ---@param component_type table @组件类型

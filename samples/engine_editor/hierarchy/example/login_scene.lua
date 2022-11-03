@@ -41,10 +41,6 @@ function LoginScene:Awake()
 
     self:CreateEnvironment()
     self:CreateLight()
-    self:CreateDirectionalLight1()
-    self:CreateDirectionalLight2()
-    self:CreatePointLight1()
-    self:CreatePointLight2()
     self:CreateMainCamera()
     self:CreateModel()
 end
@@ -59,6 +55,11 @@ end
 function LoginScene:CreateLight()
     self.go_light_=GameObject.new("light")
     self.go_light_:AddComponent(Transform)
+
+    self:CreateDirectionalLight1()
+    self:CreateDirectionalLight2()
+    self:CreatePointLight1()
+    self:CreatePointLight2()
 end
 
 --- 创建方向光1
