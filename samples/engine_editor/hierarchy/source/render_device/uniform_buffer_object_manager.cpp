@@ -35,6 +35,7 @@ void UniformBufferObjectManager::Init(){
         std::vector<UniformBlockMember>& uniform_block_member_vec=kUniformBlockMap["DirectionalLightBlock"].uniform_block_member_vec_;
         for(int i=0;i<POINT_LIGHT_MAX_NUM;i++){
             uniform_block_member_vec.push_back({fmt::format("data[{}].dir",i),32*i+0,sizeof(glm::vec3)});
+            uniform_block_member_vec.push_back({fmt::format("data[{}].active",i),32*i+12,sizeof(float)});
             uniform_block_member_vec.push_back({fmt::format("data[{}].color",i),32*i+16,sizeof(glm::vec3)});
             uniform_block_member_vec.push_back({fmt::format("data[{}].intensity",i),32*i+28,sizeof(float)});
         }
@@ -47,6 +48,7 @@ void UniformBufferObjectManager::Init(){
         std::vector<UniformBlockMember>& uniform_block_member_vec=kUniformBlockMap["PointLightBlock"].uniform_block_member_vec_;
         for(int i=0;i<POINT_LIGHT_MAX_NUM;i++){
             uniform_block_member_vec.push_back({fmt::format("data[{}].pos",i),48*i+0,sizeof(glm::vec3)});
+            uniform_block_member_vec.push_back({fmt::format("data[{}].active",i),48*i+12,sizeof(float)});
             uniform_block_member_vec.push_back({fmt::format("data[{}].color",i),48*i+16,sizeof(glm::vec3)});
             uniform_block_member_vec.push_back({fmt::format("data[{}].intensity",i),48*i+28,sizeof(float)});
             uniform_block_member_vec.push_back({fmt::format("data[{}].constant",i),48*i+32,sizeof(float)});
