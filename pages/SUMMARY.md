@@ -124,6 +124,7 @@
 * [24. 引擎编辑器的实现](24. engine_editor/24. engine_editor.md)
     * [24.1 分析Godot引擎编辑器](24. engine_editor/24.1 analyze_godot.md)
     * [24.2 FBO RenderTexture GameTurbo DLSS](24. engine_editor/24.2 fbo.md)
+    * [24.3 imgui介绍与使用](24. engine_editor/24.3 imgui.md)
 * [88. VSCode扩展开发与定制](88. vscode_extension_dev/88. vscode_extension_dev.md)
     * [88.1 第一个VSCode扩展程序](88. vscode_extension_dev/88.1 first_extension.md)
     * [88.2 从源码编译VSCode](88. vscode_extension_dev/88.2 vscode_opensource.md)
