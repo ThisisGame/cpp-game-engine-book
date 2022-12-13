@@ -1,4 +1,4 @@
-﻿cmake_minimum_required(VERSION 3.17)
+﻿cmake_minimum_required(VERSION 3.16)
 project(container)
 
 set(CMAKE_CXX_STANDARD 17)
@@ -49,6 +49,7 @@ file(COPY "../../template/data/material/basic_plane_multi_light.mat" DESTINATION
 #头文件目录
 include_directories("depends")
 include_directories("source")
+include_directories("source/core")
 
 file(GLOB_RECURSE engine_cpp source/*.cpp)
 file(GLOB_RECURSE rttr_cpp "depends/rttr/*.cpp")
