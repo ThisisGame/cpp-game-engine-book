@@ -70,7 +70,7 @@ void ApplicationEditor::InitGraphicsLibraryFramework() {
         exit(EXIT_FAILURE);
     }
 
-    //创建编辑器窗口
+    //创建编辑器窗口，并将游戏Context共享。
     editor_glfw_window_ = glfwCreateWindow(1280, 720, "Dear ImGui GLFW+OpenGL3 example", NULL, game_glfw_window_);
     if (!editor_glfw_window_)
     {
@@ -79,22 +79,24 @@ void ApplicationEditor::InitGraphicsLibraryFramework() {
         exit(EXIT_FAILURE);
     }
 
+    //设置编辑器主线程使用的是 Editor Context
     glfwMakeContextCurrent(editor_glfw_window_);
 
+    //开启垂直同步
     glfwSwapInterval(1); // Enable vsync
 
-    // Setup Dear ImGui context
+    //ImGui初始化
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO(); (void)io;
     //io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
     //io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
 
-    // Setup Dear ImGui style
+    //设置主题
     ImGui::StyleColorsDark();
     //ImGui::StyleColorsLight();
 
-    // Setup Platform/Renderer backends
+    //配置后端
     ImGui_ImplGlfw_InitForOpenGL(editor_glfw_window_, true);
     const char* glsl_version = "#version 330";
     ImGui_ImplOpenGL3_Init(glsl_version);
@@ -112,75 +114,35 @@ void ApplicationEditor::Run() {
 
     while (!glfwWindowShouldClose(editor_glfw_window_))
     {
-        // Poll and handle events (inputs, window resize, etc.)
-        // You can read the io.WantCaptureMouse, io.WantCaptureKeyboard flags to tell if dear imgui wants to use your inputs.
-        // - When io.WantCaptureMouse is true, do not dispatch mouse input data to your main application, or clear/overwrite your copy of the mouse data.
-        // - When io.WantCaptureKeyboard is true, do not dispatch keyboard input data to your main application, or clear/overwrite your copy of the keyboard data.
-        // Generally you may always pass all inputs to dear imgui, and hide them from your application based on those two flags.
         glfwPollEvents();
 
-        // Start the Dear ImGui frame
+        //ImGui刷帧
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        // 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
-        if (show_demo_window)
-            ImGui::ShowDemoWindow(&show_demo_window);
-
-        // 2. Show a simple window that we create ourselves. We use a Begin/End pair to create a named window.
-        {
-            static float f = 0.0f;
-            static int counter = 0;
-
-            ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
-
-            ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
-            ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our window open/close state
-            ImGui::Checkbox("Another Window", &show_another_window);
-
-            ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
-            ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
-
-            if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
-                counter++;
-            ImGui::SameLine();
-            ImGui::Text("counter = %d", counter);
-
-            ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-            ImGui::End();
-        }
-
-        // 3. Show another simple window.
-        if (show_another_window)
-        {
-            ImGui::Begin("Another Window", &show_another_window);   // Pass a pointer to our bool variable (the window will have a closing button that will clear the bool when clicked)
-            ImGui::Text("Hello from another window!");
-            if (ImGui::Button("Close Me"))
-                show_another_window = false;
-            ImGui::End();
-        }
-
-        // 4. 游戏渲染画面
+        //1.游戏渲染画面 窗口
         {
             ImGui::Begin("Game");
 
             RenderTaskConsumerEditor* render_task_consumer_editor= dynamic_cast<RenderTaskConsumerEditor *>(RenderTaskConsumer::Instance());
 
+            //从游戏渲染线程拿到FBO Attach Texture id
             GLuint texture_id=render_task_consumer_editor->color_texture_id();
             ImTextureID image_id = (void*)(intptr_t)texture_id;
 
+            // ImGui绘制Image，使用FBO Attach Texture id
             // 第一个参数：生成的纹理的id
             // 第2个参数：Image的大小
             // 第3，4个参数：UV的起点坐标和终点坐标，UV是被规范化到（0，1）之间的坐标
             // 第5个参数：图片的色调
             // 第6个参数：图片边框的颜色
-            ImGui::Image(image_id, ImVec2(480,320), ImVec2(0.0, 1.0), ImVec2(1.0, 0.0), ImVec4(255, 255, 255, 1), ImVec4(0, 255, 0, 1));
+            ImGui::Image(image_id, ImVec2(480,320), ImVec2(0.0, 1.0), ImVec2(1.0, 0.0), ImVec4(1, 1, 1, 1), ImVec4(0, 1, 0, 1));
 
             ImGui::End();
         }
 
-        // 5. 游戏渲染深度图
+        //2.游戏渲染深度图 窗口
         {
             ImGui::Begin("Depth");
 
@@ -189,12 +151,12 @@ void ApplicationEditor::Run() {
             GLuint texture_id=render_task_consumer_editor->depth_texture_id();
             ImTextureID image_id = (void*)(intptr_t)texture_id;
 
-            ImGui::Image(image_id, ImVec2(480,320), ImVec2(0.0, 1.0), ImVec2(1.0, 0.0), ImVec4(255, 255, 255, 1), ImVec4(0, 255, 0, 1));
+            ImGui::Image(image_id, ImVec2(480,320), ImVec2(0.0, 1.0), ImVec2(1.0, 0.0), ImVec4(1, 1, 1, 1), ImVec4(0, 1, 0, 1));
 
             ImGui::End();
         }
 
-        // Rendering
+        //绘制
         ImGui::Render();
         int display_w, display_h;
         glfwGetFramebufferSize(editor_glfw_window_, &display_w, &display_h);

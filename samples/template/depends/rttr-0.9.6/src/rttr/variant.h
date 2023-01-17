@@ -38,6 +38,7 @@
 #include <cstddef>
 #include <cstdint>
 #include <algorithm>
+#include <string>
 
 namespace rttr
 {
