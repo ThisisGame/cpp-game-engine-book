@@ -18,6 +18,10 @@ public:
 
     void Run();
 
+    /// 绘制节点结构
+    /// \param node
+    /// \param label
+    /// \param base_flags
     void DrawHierarchy(Tree::Node* node,const char* label,int base_flags);
 public:
     /// 初始化图形库，例如glfw

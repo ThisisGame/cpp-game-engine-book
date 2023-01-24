@@ -127,6 +127,7 @@
     * [24.3 ImGui介绍与使用](24. engine_editor/24.3 imgui.md)
     * [24.4 分离引擎核心层和应用层](24. engine_editor/24.4 engine_core_and_app.md)
     * [24.5 使用ImGui实现引擎编辑器](24. engine_editor/24.5 draw_in_imgui.md)
+    * [24.6 Hierarchy与Inspector面板](24. engine_editor/24.6 hierarchy_and_inspector.md)
 * [88. VSCode扩展开发与定制](88. vscode_extension_dev/88. vscode_extension_dev.md)
     * [88.1 第一个VSCode扩展程序](88. vscode_extension_dev/88.1 first_extension.md)
     * [88.2 从源码编译VSCode](88. vscode_extension_dev/88.2 vscode_opensource.md)

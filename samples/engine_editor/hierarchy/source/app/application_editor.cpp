@@ -71,7 +71,7 @@ void ApplicationEditor::InitGraphicsLibraryFramework() {
         exit(EXIT_FAILURE);
     }
 
-    //创建编辑器窗口
+    //创建编辑器窗口，并将游戏Context共享。
     editor_glfw_window_ = glfwCreateWindow(1280, 720, "Dear ImGui GLFW+OpenGL3 example", NULL, game_glfw_window_);
     if (!editor_glfw_window_)
     {
@@ -80,22 +80,24 @@ void ApplicationEditor::InitGraphicsLibraryFramework() {
         exit(EXIT_FAILURE);
     }
 
+    //设置编辑器主线程使用的是 Editor Context
     glfwMakeContextCurrent(editor_glfw_window_);
 
-//    glfwSwapInterval(1); // Enable vsync
+    //开启垂直同步
+    glfwSwapInterval(1); // Enable vsync
 
-    // Setup Dear ImGui context
+    //ImGui初始化
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO(); (void)io;
     //io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
     //io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
 
-    // Setup Dear ImGui style
+    //设置主题
     ImGui::StyleColorsDark();
     //ImGui::StyleColorsLight();
 
-    // Setup Platform/Renderer backends
+    //配置后端
     ImGui_ImplGlfw_InitForOpenGL(editor_glfw_window_, true);
     const char* glsl_version = "#version 330";
     ImGui_ImplOpenGL3_Init(glsl_version);
@@ -111,14 +113,9 @@ void ApplicationEditor::Run() {
 
     while (!glfwWindowShouldClose(editor_glfw_window_))
     {
-        // Poll and handle events (inputs, window resize, etc.)
-        // You can read the io.WantCaptureMouse, io.WantCaptureKeyboard flags to tell if dear imgui wants to use your inputs.
-        // - When io.WantCaptureMouse is true, do not dispatch mouse input data to your main application, or clear/overwrite your copy of the mouse data.
-        // - When io.WantCaptureKeyboard is true, do not dispatch keyboard input data to your main application, or clear/overwrite your copy of the keyboard data.
-        // Generally you may always pass all inputs to dear imgui, and hide them from your application based on those two flags.
         glfwPollEvents();
 
-        // Start the Dear ImGui frame
+        //ImGui刷帧
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
@@ -134,10 +131,11 @@ void ApplicationEditor::Run() {
         {
             ImGui::Begin("ViewPort");
             if (ImGui::BeginTabBar("ViewPortTabBar", ImGuiTabBarFlags_None)){
-                // 4.1 Color图
+                // 2.1 Game视图
                 if (ImGui::BeginTabItem("Game")) {
                     RenderTaskConsumerEditor* render_task_consumer_editor= dynamic_cast<RenderTaskConsumerEditor *>(RenderTaskConsumer::Instance());
 
+                    //从游戏渲染线程拿到FBO Attach Texture id
                     GLuint texture_id=render_task_consumer_editor->color_texture_id();
                     ImTextureID image_id = (void*)(intptr_t)texture_id;
 
@@ -150,7 +148,7 @@ void ApplicationEditor::Run() {
 
                     ImGui::EndTabItem();
                 }
-                // 4.2 深度图
+                // 2.2 深度视图
                 if (ImGui::BeginTabItem("Depth")) {
                     RenderTaskConsumerEditor* render_task_consumer_editor= dynamic_cast<RenderTaskConsumerEditor *>(RenderTaskConsumer::Instance());
 
@@ -235,7 +233,7 @@ void ApplicationEditor::Run() {
         }
 
 
-        // Rendering
+        //绘制
         ImGui::Render();
         int display_w, display_h;
         glfwGetFramebufferSize(editor_glfw_window_, &display_w, &display_h);
