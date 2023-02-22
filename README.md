@@ -118,13 +118,7 @@ Blender建模、FMOD、WWise音频制作，我都录制了视频。
 
 在线阅读：`http://www.thisisgame.com.cn/tutorial?book=cpp-game-engine-book&lang=zh&md=Introduction.md`
 
-本地阅读，按照下面步骤：
-
-1. 安装`GitBook`
-
-2. 克隆项目:`git clone https://github.com/ThisisGame/cpp-game-engine-book.git`
-
-3. 双击`gitbook_serve.bat`启动本地GitBook服务器，成功后，打开浏览器访问`http://localhost:4000`，即可阅读。
+本地搭建：`https://github.com/ThisisGame/thisisgame-web-openresty`
 
 #### 随书项目调试
 
