@@ -1,0 +1,149 @@
+﻿//
+// Created by captainchen on 2021/5/14.
+//
+
+#include "application_base.h"
+#include <memory>
+#include <iostream>
+#include "rttr/registration"
+#include "easy/profiler.h"
+#include "utils/debug.h"
+#include "component/game_object.h"
+#include "renderer/camera.h"
+#include "renderer/mesh_renderer.h"
+#include "renderer/shader.h"
+#include "control/input.h"
+#include "utils/screen.h"
+#include "render_device/render_task_consumer.h"
+#include "audio/audio.h"
+#include "utils/time.h"
+#include "render_device/render_task_producer.h"
+#include "physics/physics.h"
+#include "lua_binding/lua_binding.h"
+
+
+void ApplicationBase::Init() {
+    EASY_MAIN_THREAD;
+    profiler::startListen();// 启动profiler服务器，等待gui连接。
+
+    Debug::Init();
+    DEBUG_LOG_INFO("game start");
+
+    InitLuaBinding();
+    LoadConfig();
+
+    Time::Init();
+
+    //初始化图形库，例如glfw
+    InitGraphicsLibraryFramework();
+
+    UpdateScreenSize();
+
+    //初始化 fmod
+    Audio::Init();
+
+    //初始化物理引擎
+    Physics::Init();
+}
+
+/// 初始化图形库，例如glfw
+void ApplicationBase::InitGraphicsLibraryFramework() {
+
+}
+
+void ApplicationBase::InitLuaBinding() {
+    //设置lua搜索目录
+    LuaBinding::Init(";../example/?.lua;../source_lua/?.lua;../source_lua/utils/?.lua;../source_lua/component/?.lua");
+    //绑定引擎所有类到Lua
+    LuaBinding::BindLua();
+    //执行lua
+    LuaBinding::RunLuaFile("../example/config.lua");
+}
+
+void ApplicationBase::LoadConfig() {
+    sol::state& sol_state=LuaBinding::sol_state();
+    title_=sol_state["Config"]["title"];
+    data_path_=sol_state["Config"]["data_path"];
+}
+
+void ApplicationBase::Run() {
+    LuaBinding::RunLuaFile("../example/main.lua");
+    //调用lua main()
+    LuaBinding::CallLuaFunction("main");
+}
+
+void ApplicationBase::Update(){
+    EASY_FUNCTION(profiler::colors::Magenta) // 标记函数
+    Time::Update();
+    UpdateScreenSize();
+
+    GameObject::Foreach([](GameObject* game_object)->bool {
+        if(!game_object->active_self()){//当自身没有激活，返回false，打断遍历子节点。
+            return false;
+        }
+        game_object->ForeachComponent([](Component* component){
+            component->Update();
+        });
+        return true;
+    });
+
+    Input::Update();
+    Audio::Update();
+//    std::cout<<"ApplicationBase::Update"<<std::endl;
+}
+
+
+void ApplicationBase::Render(){
+    EASY_FUNCTION(profiler::colors::Magenta); // 标记函数
+    //遍历所有相机，每个相机的View Projection，都用来做一次渲染。
+    Camera::Foreach([&](){
+        GameObject::Foreach([](GameObject* game_object)->bool {
+            if(!game_object->active_self()){//当自身没有激活，返回false，打断遍历子节点。
+                return false;
+            }
+            MeshRenderer* mesh_renderer=game_object->GetComponent<MeshRenderer>();
+            if(mesh_renderer!= nullptr){
+                mesh_renderer->Render();
+            }
+            return true;
+        });
+    });
+}
+
+void ApplicationBase::FixedUpdate(){
+    EASY_FUNCTION(profiler::colors::Magenta) // 标记函数
+    Physics::FixedUpdate();
+
+    GameObject::Foreach([](GameObject* game_object)->bool {
+        if(!game_object->active_self()){//当自身没有激活，返回false，打断遍历子节点。
+            return false;
+        }
+        game_object->ForeachComponent([](Component* component){
+            component->FixedUpdate();
+        });
+        return true;
+    });
+}
+
+void ApplicationBase::OneFrame() {
+    Update();
+    // 如果一帧卡了很久，就多执行几次FixedUpdate
+    float cost_time=Time::delta_time();
+    while(cost_time>=Time::fixed_update_time()){
+        FixedUpdate();
+        cost_time-=Time::fixed_update_time();
+    }
+
+    Render();
+
+    //发出特殊任务：渲染结束
+    RenderTaskProducer::ProduceRenderTaskEndFrame();
+}
+
+void ApplicationBase::UpdateScreenSize() {
+    RenderTaskProducer::ProduceRenderTaskUpdateScreenSize();
+}
+
+void ApplicationBase::Exit() {
+    RenderTaskConsumer::Exit();
+}
