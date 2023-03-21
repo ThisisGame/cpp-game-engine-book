@@ -87,6 +87,7 @@
 | ![](imgs/opengl_draw_polygon/draw_triangle/draw_triangle.png)  |  ![](imgs/texture_make_beautiful/draw_cube_texture/draw_cube_urban.gif) |  ![](imgs/ieg_open_source/draw_blender_mesh.jpg) |
 |---|---|---|
 |![](imgs/ieg_open_source/draw_ttf_font_freetype_color.jpg)|![](imgs/ieg_open_source/gui.gif)|![](imgs/ieg_open_source/fbx_skinned_mesh.gif)|
+|![](imgs/ieg_open_source/draw_color_depth_texture.jpg)|![](imgs/engine_editor/hierarchy_and_inspector/inspector.gif)|![](imgs/profiler/integration/close_v_sync.gif)|
 
 
 #### 引擎生态
