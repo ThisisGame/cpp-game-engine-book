@@ -33,8 +33,6 @@ private:
     GLFWwindow* editor_glfw_window_;//编辑器窗口
     GLFWwindow* game_glfw_window_;//游戏窗口
 
-    unsigned int depth_texture_custom_shader_program_id_=0;//绘制DepthTexture自定义Shader
-
     Tree::Node* selected_node_=nullptr;//记录Hierarchy当前选中的Node
 };
 
