@@ -8,6 +8,7 @@
 #include <string>
 #include "application_base.h"
 #include "data_structs/tree.h"
+#include "imgui.h"
 
 struct GLFWwindow;
 class GameObject;

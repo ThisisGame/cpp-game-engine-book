@@ -28,11 +28,13 @@ function LoginScene:ctor()
     self.go_skeleton_ = nil --骨骼蒙皮动画物体
     self.animation_ = nil--骨骼动画
     self.animation_clip_ = nil --- 骨骼动画片段
-    self.material_ = nil --材质
+    self.material_plane_ = nil --材质
     self.environment_=nil --环境
     self.go_light_=nil --灯光父节点
     self.go_point_light_1_=nil --灯光
     self.go_point_light_2_=nil --灯光
+    self.go_wall_=nil--墙壁
+    self.material_wall_=nil
 end
 
 function LoginScene:Awake()
@@ -40,9 +42,10 @@ function LoginScene:Awake()
     LoginScene.super.Awake(self)
 
     self:CreateEnvironment()
-    self:CreateLight()
+    --self:CreateLight()
     self:CreateMainCamera()
-    self:CreateModel()
+    --self:CreatePlane()
+    self:CreateWall()
 end
 
 --- 创建环境
@@ -137,7 +140,7 @@ function LoginScene:CreateMainCamera()
 end
 
 --- 创建模型
-function LoginScene:CreateModel()
+function LoginScene:CreatePlane()
     --创建骨骼蒙皮动画
     self.go_skeleton_=GameObject.new("skeleton")
     self.go_skeleton_:AddComponent(Transform):set_position(glm.vec3(0, 0, 0))
@@ -150,12 +153,12 @@ function LoginScene:CreateModel()
     mesh_filter:LoadWeight("model/fbx_extra_basic_plane.weight")--加载权重文件
 
     --手动创建Material
-    self.material_ = Material.new()--设置材质
-    self.material_:Parse("material/basic_plane_multi_light.mat")
+    self.material_plane_ = Material.new()--设置材质
+    self.material_plane_:Parse("material/basic_plane_multi_light.mat")
 
     --挂上 MeshRenderer 组件
     local skinned_mesh_renderer= self.go_skeleton_:AddComponent(SkinnedMeshRenderer)
-    skinned_mesh_renderer:SetMaterial(self.material_)
+    skinned_mesh_renderer:SetMaterial(self.material_plane_)
 
     --播放动画
     self.go_skeleton_:GetComponent(Animation):Play("idle")
@@ -165,26 +168,30 @@ end
 ---@return void
 function LoginScene:CreateWall()
     local vertex_data={
-        -1,-1,0,  1.0,1.0,1.0,1.0, 0,0,
-         1,-1,0,  1.0,1.0,1.0,1.0, 1,0,
-         1, 1,0,  1.0,1.0,1.0,1.0, 1,1,
-        -1, 1,0,  1.0,1.0,1.0,1.0, 0,1,
+        -1,-1,0,  1.0,1.0,1.0,1.0, 0,0, -1,-1,1,
+         1,-1,0,  1.0,1.0,1.0,1.0, 1,0, 1,-1,1,
+         1, 1,0,  1.0,1.0,1.0,1.0, 1,1, 1, 1,1,
+        -1, 1,0,  1.0,1.0,1.0,1.0, 0,1, -1, 1,1,
     }
     local vertex_index_data={
         0,1,2,
         0,2,3,
     }
 
-    local mesh_filter=self.go_skeleton_:AddComponent(MeshFilter)
-    mesh_filter:CreateMesh(vertex_data,vertex_index_data)--手动构建Mesh
+    self.go_wall_=GameObject.new("wall")
+    self.go_wall_:AddComponent(Transform):set_position(glm.vec3(0, 0, 0))
+    self.go_wall_:GetComponent(Transform):set_rotation(glm.vec3(0, 0, 0))
+
+    local mesh_filter=self.go_wall_:AddComponent(MeshFilter)
+    mesh_filter:CreateMesh(sol2.convert_sequence_float(vertex_data),sol2.convert_sequence_ushort(vertex_index_data))--手动构建Mesh
 
     --手动创建Material
-    local material_ = Material.new()--设置材质
-    material_:Parse("material/cube.mat")
+    self.material_wall_ = Material.new()--设置材质
+    self.material_wall_:Parse("material/wall.mat")
 
     --挂上 MeshRenderer 组件
-    local mesh_renderer= self.go_skeleton_:AddComponent(MeshRenderer)
-    mesh_renderer:SetMaterial(material_)
+    local mesh_renderer= self.go_wall_:AddComponent(MeshRenderer)
+    mesh_renderer:SetMaterial(self.material_wall_)
 end
 
 function LoginScene:Update()
@@ -192,10 +199,10 @@ function LoginScene:Update()
     LoginScene.super.Update(self)
 
     --设置观察者世界坐标(即相机位置)
-    local camera_position=self.go_camera_:GetComponent(Transform):position()
-    self.material_:SetUniform3f("u_view_pos",camera_position)
-    --设置物体反射度、高光强度
-    self.material_:SetUniform1f("u_specular_highlight_shininess",32.0)
+    --local camera_position=self.go_camera_:GetComponent(Transform):position()
+    --self.material_plane_:SetUniform3f("u_view_pos",camera_position)
+    ----设置物体反射度、高光强度
+    --self.material_plane_:SetUniform1f("u_specular_highlight_shininess",32.0)
 
     --鼠标滚轮控制相机远近
     self.go_camera_:GetComponent(Transform):set_position(self.go_camera_:GetComponent(Transform):position() *(10 - Input.mouse_scroll())/10)

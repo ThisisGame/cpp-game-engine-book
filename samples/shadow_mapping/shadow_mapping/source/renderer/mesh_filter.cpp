@@ -69,7 +69,7 @@ void MeshFilter::CreateMesh(std::vector<float>& vertex_data,std::vector<unsigned
         mesh_=nullptr;
     }
     mesh_=new Mesh();
-    mesh_->vertex_num_=vertex_data.size()/9;//一个vertex由9个float组成。
+    mesh_->vertex_num_=vertex_data.size()/12;//一个vertex由12个float组成。
     mesh_->vertex_index_num_=vertex_index_data.size();
 
     unsigned short vertex_data_size= mesh_->vertex_num_ * sizeof(Vertex);

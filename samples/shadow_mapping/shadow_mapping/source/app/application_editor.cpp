@@ -41,6 +41,7 @@
 #include "render_device/render_task_producer.h"
 #include "render_device/read_pixels_queue.h"
 #include "physics/physics.h"
+#include "imgui_internal.h"
 
 static void glfw_error_callback(int error, const char* description)
 {
@@ -109,6 +110,121 @@ void ApplicationEditor::InitGraphicsLibraryFramework() {
     RenderTaskConsumer::Init(new RenderTaskConsumerEditor(game_glfw_window_));
 }
 
+/// 绘制DepthTexture回调，更换自定义Shader。
+void DrawDepthTextureCallbackUseCustomShader(const ImDrawList*, const ImDrawCmd*) {
+    static GLuint depth_texture_custom_shader_program_id_=0;
+    if(depth_texture_custom_shader_program_id_==0)
+    {
+        //注意Shader代码是从imgui_impl_opengl3.cpp的 bool ImGui_ImplOpenGL3_CreateDeviceObjects()函数中复制。
+        //只能修改逻辑，只能修改非资源相关的变量如ProjMtx，需要手动设置非资源相关的变量值如ProjMtx。
+        //不能修改资源相关的变量名例如Position UV Color Texture,如果修改需要手动设置值。
+
+        //顶点着色器代码
+        const char* vertex_shader_text =R"(
+            #version 330 core
+            precision mediump float;
+            layout (location = 0) in vec2 Position;
+            layout (location = 1) in vec2 UV;
+            layout (location = 2) in vec4 Color;
+
+            uniform mat4 ProjMtx;
+            out vec2 Frag_UV;
+            out vec4 Frag_Color;
+
+            void main()
+            {
+                Frag_UV = UV;
+                Frag_Color = Color;
+                gl_Position = ProjMtx * vec4(Position.xy,0,1);
+            }
+        )";
+        //片段着色器代码
+        const char* fragment_shader_text =R"(
+            #version 330 core
+            precision mediump float;
+
+            in vec2 Frag_UV;
+            in vec4 Frag_Color;
+            uniform sampler2D Texture;
+            layout (location = 0) out vec4 Out_Color;
+
+            void main()
+            {
+                float gray = texture(Texture, Frag_UV.st).r;// 从Texture中采样单通道像素值
+                Out_Color = Frag_Color * vec4(gray, gray, gray, 1.0);// 将像素值复制到RGB三通道上
+            }
+        )";
+
+        //创建顶点Shader
+        GLuint vertex_shader = glCreateShader(GL_VERTEX_SHADER);
+        //指定Shader源码
+        glShaderSource(vertex_shader, 1, &vertex_shader_text, NULL);
+        //编译Shader
+        glCompileShader(vertex_shader);
+        //获取编译结果
+        GLint compile_status=GL_FALSE;
+        glGetShaderiv(vertex_shader, GL_COMPILE_STATUS, &compile_status);
+        if (compile_status == GL_FALSE)
+        {
+            GLchar message[256];
+            glGetShaderInfoLog(vertex_shader, sizeof(message), 0, message);
+            DEBUG_LOG_ERROR("compile vs error:{}",message);
+        }
+
+        //创建片段Shader
+        GLuint fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
+        //指定Shader源码
+        glShaderSource(fragment_shader, 1, &fragment_shader_text, NULL);
+        //编译Shader
+        glCompileShader(fragment_shader);
+        //获取编译结果
+        compile_status=GL_FALSE;
+        glGetShaderiv(fragment_shader, GL_COMPILE_STATUS, &compile_status);
+        if (compile_status == GL_FALSE)
+        {
+            GLchar message[256];
+            glGetShaderInfoLog(fragment_shader, sizeof(message), 0, message);
+            DEBUG_LOG_ERROR("compile fs error:{}",message);
+        }
+
+        //创建GPU程序
+        GLuint program = glCreateProgram();
+        //附加Shader
+        glAttachShader(program, vertex_shader);
+        glAttachShader(program, fragment_shader);
+        //Link
+        glLinkProgram(program);
+        //获取编译结果
+        GLint link_status=GL_FALSE;
+        glGetProgramiv(program, GL_LINK_STATUS, &link_status);
+        if (link_status == GL_FALSE)
+        {
+            GLchar message[256];
+            glGetProgramInfoLog(program, sizeof(message), 0, message);
+            DEBUG_LOG_ERROR("link error:{}",message);
+        }
+        depth_texture_custom_shader_program_id_=program;
+    }
+
+    //从imgui_impl_opengl3.cpp的ImGui_ImplOpenGL3_SetupRenderState函数中复制出来正交投影矩阵计算代码。
+    ImDrawData* draw_data = ImGui::GetDrawData();
+    float L = draw_data->DisplayPos.x;
+    float R = draw_data->DisplayPos.x + draw_data->DisplaySize.x;
+    float T = draw_data->DisplayPos.y;
+    float B = draw_data->DisplayPos.y + draw_data->DisplaySize.y;
+
+    const float ortho_projection[4][4] =
+            {
+                    { 2.0f/(R-L),   0.0f,         0.0f,   0.0f },
+                    { 0.0f,         2.0f/(T-B),   0.0f,   0.0f },
+                    { 0.0f,         0.0f,        -1.0f,   0.0f },
+                    { (R+L)/(L-R),  (T+B)/(B-T),  0.0f,   1.0f },
+            };
+
+    glUseProgram(depth_texture_custom_shader_program_id_);
+    glUniformMatrix4fv(glGetUniformLocation(depth_texture_custom_shader_program_id_, "ProjMtx"), 1, GL_FALSE, &ortho_projection[0][0]);
+};
+
 void ApplicationEditor::Run() {
     ApplicationBase::Run();
 
@@ -158,7 +274,14 @@ void ApplicationEditor::Run() {
                     GLuint texture_id=render_task_consumer_editor->depth_texture_id();
                     ImTextureID image_id = (void*)(intptr_t)texture_id;
 
+                    //设置自定义Shader渲染深度图
+                    ImDrawList* drawList = ImGui::GetWindowDrawList();
+                    drawList->AddCallback(&DrawDepthTextureCallbackUseCustomShader, nullptr);
+
                     ImGui::Image(image_id, ImVec2(480,320), ImVec2(0.0, 1.0), ImVec2(1.0, 0.0), ImVec4(255, 255, 255, 1), ImVec4(0, 255, 0, 1));
+
+                    //还原
+                    drawList->AddCallback(ImDrawCallback_ResetRenderState, nullptr);
 
                     ImGui::EndTabItem();
                 }
