@@ -35,6 +35,7 @@ function LoginScene:ctor()
     self.go_point_light_2_=nil --灯光
     self.go_wall_=nil--墙壁
     self.material_wall_=nil
+    self.last_frame_mouse_position_=nil--上一帧的鼠标位置
 end
 
 function LoginScene:Awake()
@@ -42,9 +43,9 @@ function LoginScene:Awake()
     LoginScene.super.Awake(self)
 
     self:CreateEnvironment()
-    --self:CreateLight()
+    self:CreateLight()
     self:CreateMainCamera()
-    --self:CreatePlane()
+    self:CreatePlane()
     self:CreateWall()
 end
 
@@ -168,10 +169,10 @@ end
 ---@return void
 function LoginScene:CreateWall()
     local vertex_data={
-        -1,-1,0,  1.0,1.0,1.0,1.0, 0,0, -1,-1,1,
-         1,-1,0,  1.0,1.0,1.0,1.0, 1,0, 1,-1,1,
-         1, 1,0,  1.0,1.0,1.0,1.0, 1,1, 1, 1,1,
-        -1, 1,0,  1.0,1.0,1.0,1.0, 0,1, -1, 1,1,
+        -10,-10,0,  1.0,1.0,1.0,1.0, 0,0, -10,-10,1,
+         10,-10,0,  1.0,1.0,1.0,1.0, 1,0, 10,-10,1,
+         10, 10,0,  1.0,1.0,1.0,1.0, 1,1, 10, 10,1,
+        -10, 10,0,  1.0,1.0,1.0,1.0, 0,1, -10, 10,1,
     }
     local vertex_index_data={
         0,1,2,
@@ -179,7 +180,7 @@ function LoginScene:CreateWall()
     }
 
     self.go_wall_=GameObject.new("wall")
-    self.go_wall_:AddComponent(Transform):set_position(glm.vec3(0, 0, 0))
+    self.go_wall_:AddComponent(Transform):set_position(glm.vec3(0, 0, -10))
     self.go_wall_:GetComponent(Transform):set_rotation(glm.vec3(0, 0, 0))
 
     local mesh_filter=self.go_wall_:AddComponent(MeshFilter)
@@ -199,11 +200,28 @@ function LoginScene:Update()
     LoginScene.super.Update(self)
 
     --设置观察者世界坐标(即相机位置)
-    --local camera_position=self.go_camera_:GetComponent(Transform):position()
-    --self.material_plane_:SetUniform3f("u_view_pos",camera_position)
-    ----设置物体反射度、高光强度
-    --self.material_plane_:SetUniform1f("u_specular_highlight_shininess",32.0)
+    local camera_position=self.go_camera_:GetComponent(Transform):position()
+    self.material_plane_:SetUniform3f("u_view_pos",camera_position)
+    --设置物体反射度、高光强度
+    self.material_plane_:SetUniform1f("u_specular_highlight_shininess",32.0)
 
     --鼠标滚轮控制相机远近
     self.go_camera_:GetComponent(Transform):set_position(self.go_camera_:GetComponent(Transform):position() *(10 - Input.mouse_scroll())/10)
+
+    --旋转相机
+    if Input.GetKeyDown(Cpp.KeyCode.KEY_CODE_LEFT_ALT) and Input.GetMouseButtonDown(Cpp.KeyCode.MOUSE_BUTTON_LEFT) and self.last_frame_mouse_position_ then
+        --print(Input.mousePosition(),self.last_frame_mouse_position_)
+        local degrees= Input.mousePosition().x - self.last_frame_mouse_position_.x
+        self.last_frame_mouse_position_=Input.mousePosition()
+
+        local old_mat4=glm.mat4(1.0)
+        local rotate_mat4=glm.rotate(old_mat4,glm.radians(degrees),glm.vec3(0.0,1.0,0.0))--以相机所在坐标系位置，计算用于旋转的矩阵，这里是零点，所以直接用方阵。
+
+        local camera_pos=self.go_camera_:GetComponent(Transform):position()
+        local old_pos=glm.vec4(camera_pos.x,camera_pos.y,camera_pos.z,1.0)
+        local new_pos=rotate_mat4*old_pos--旋转矩阵 * 原来的坐标 = 相机以零点做旋转。
+        --print(new_pos)
+        self.go_camera_:GetComponent(Transform):set_position(glm.vec3(new_pos.x,new_pos.y,new_pos.z))
+    end
+    self.last_frame_mouse_position_=Input.mousePosition()
 end

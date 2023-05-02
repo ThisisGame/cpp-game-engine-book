@@ -86,6 +86,26 @@ void LuaBinding::BindLua() {
         sol2_ns_table["convert_sequence_uchar"]=&sol2::convert_sequence<unsigned char>;
         sol2_ns_table["convert_sequence_int"]=&sol2::convert_sequence<int>;
     }
+    //绑定glm::vec2
+    {
+        auto glm_ns_table = sol_state_["glm"].get_or_create<sol::table>();
+        glm_ns_table.new_usertype<glm::vec2>("vec2",sol::call_constructor,sol::constructors<glm::vec2(const float&, const float&)>(),
+                                             "x", &glm::vec2::x,
+                                             "y", &glm::vec2::y,
+                                             "r", &glm::vec2::r,
+                                             "g", &glm::vec2::g,
+                                             sol::meta_function::to_string,[] (const glm::vec2* vec) -> std::string {return glm::to_string(*vec);},
+                                             sol::meta_function::addition,[] (const glm::vec2* vec_a,const  glm::vec2* vec_b) {return (*vec_a)+(*vec_b);},
+                                             sol::meta_function::subtraction,[] (const glm::vec2* vec_a,const  glm::vec2* vec_b) {return (*vec_a)-(*vec_b);},
+                                             sol::meta_function::multiplication,sol::overload(
+                                                    [] (const glm::vec2* vec,const float a) {return (*vec)*a;},
+                                                    [] (const glm::vec2* a,const glm::vec2* b) {return (*a)*(*b);}
+                                            ),
+                                             sol::meta_function::division,[] (const glm::vec2* vec,const float a) {return (*vec)/a;},
+                                             sol::meta_function::unary_minus,[] (const glm::vec2* vec) {return (*vec)*-1;},
+                                             sol::meta_function::equal_to,[] (const glm::vec2* vec_a,const  glm::vec2* vec_b) {return (*vec_a)==(*vec_b);}
+        );
+    }
     //绑定glm::vec3
     {
         auto glm_ns_table = sol_state_["glm"].get_or_create<sol::table>();
