@@ -52,3 +52,15 @@ void DirectionalLight::Update(){
     std::string uniform_block_member_name=fmt::format("data[{}].dir",light_id_);
     UniformBufferObjectManager::UpdateUniformBlockSubData3f("u_directional_light_array",uniform_block_member_name,light_rotation);
 }
+
+void DirectionalLight::OnEnable(){
+//    light_id_=light_count_;
+//    light_count_++;
+//    UniformBufferObjectManager::UpdateUniformBlockSubData1i("u_directional_light_array","actually_used_count",light_count_);
+}
+
+void DirectionalLight::OnDisable(){
+//    light_id_=light_count_;
+//    light_count_++;
+//    UniformBufferObjectManager::UpdateUniformBlockSubData1i("u_directional_light_array","actually_used_count",light_count_);
+}

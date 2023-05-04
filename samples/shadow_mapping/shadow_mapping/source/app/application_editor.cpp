@@ -57,6 +57,7 @@ static void glfw_error_callback(int error, const char* description)
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
     Input::RecordKey(key,action);
+
 }
 /// 鼠标按键回调
 /// \param window
@@ -65,11 +66,7 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 /// \param mods
 static void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 {
-    ImGuiIO& io = ImGui::GetIO();
-    bool imgui_capturing_mouse = io.WantCaptureMouse;
-    if(imgui_capturing_mouse==false){
-        Input::RecordKey(button,action);
-    }
+    Input::RecordKey(button,action);
 
 //    std::cout<<"mouse_button_callback:"<<button<<","<<action<<std::endl;
 }
@@ -81,7 +78,6 @@ static void mouse_button_callback(GLFWwindow* window, int button, int action, in
 static void mouse_move_callback(GLFWwindow* window, double x, double y)
 {
     Input::set_mousePosition(x,y);
-//    std::cout<<"mouse_move_callback:"<<x<<","<<y<<std::endl;
 }
 /// 鼠标滚轮回调
 /// \param window
@@ -90,7 +86,6 @@ static void mouse_move_callback(GLFWwindow* window, double x, double y)
 static void mouse_scroll_callback(GLFWwindow* window, double x, double y)
 {
     Input::RecordScroll(y);
-//    std::cout<<"mouse_scroll_callback:"<<x<<","<<y<<std::endl;
 }
 
 void ApplicationEditor::InitGraphicsLibraryFramework() {
@@ -143,7 +138,8 @@ void ApplicationEditor::InitGraphicsLibraryFramework() {
     //ImGui初始化
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
-    ImGuiIO& io = ImGui::GetIO(); (void)io;
+    ImGuiIO& io = ImGui::GetIO();
+    io.ConfigWindowsMoveFromTitleBarOnly=true;//设置仅在标题栏拖动窗口
     //io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
     //io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
 
@@ -298,7 +294,7 @@ void ApplicationEditor::Run() {
 
         // 2. 游戏渲染画面
         {
-            ImGui::Begin("ViewPort");
+            ImGui::Begin("ViewPort",NULL,ImGuiWindowFlags_None);
             if (ImGui::BeginTabBar("ViewPortTabBar", ImGuiTabBarFlags_None)){
                 // 2.1 Game视图
                 if (ImGui::BeginTabItem("Game")) {

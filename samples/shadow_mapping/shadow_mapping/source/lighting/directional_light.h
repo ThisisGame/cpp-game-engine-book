@@ -22,6 +22,10 @@ public:
 public:
     void Update() override;
 
+    void OnEnable() override;
+
+    void OnDisable() override;
+
 private:
     static unsigned int light_count_;//灯光数量
 

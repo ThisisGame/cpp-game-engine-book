@@ -61,67 +61,19 @@ function LoginScene:CreateLight()
     self.go_light_:AddComponent(Transform)
 
     self:CreateDirectionalLight1()
-    self:CreateDirectionalLight2()
-    self:CreatePointLight1()
-    self:CreatePointLight2()
 end
 
 --- 创建方向光1
 function LoginScene:CreateDirectionalLight1()
     self.go_directional_light_1_= GameObject.new("directional_light_1")
     self.go_directional_light_1_:AddComponent(Transform)
-    self.go_directional_light_1_:GetComponent(Transform):set_rotation(glm.vec3(0,60,0))
+    self.go_directional_light_1_:GetComponent(Transform):set_rotation(glm.vec3(0,0,20))
 
     local light=self.go_directional_light_1_:AddComponent(DirectionalLight)
     light:set_color(glm.vec3(1.0,1.0,1.0))
     light:set_intensity(1.0)
 
     self.go_light_:AddChild(self.go_directional_light_1_)
-end
-
---- 创建方向光2
-function LoginScene:CreateDirectionalLight2()
-    self.go_directional_light_2_= GameObject.new("directional_light_2")
-    self.go_directional_light_2_:AddComponent(Transform)
-    self.go_directional_light_2_:GetComponent(Transform):set_rotation(glm.vec3(240,0,0))
-
-    local light=self.go_directional_light_2_:AddComponent(DirectionalLight)
-    light:set_color(glm.vec3(1.0,1.0,1.0))
-    light:set_intensity(1.0)
-
-    self.go_light_:AddChild(self.go_directional_light_2_)
-end
-
---- 创建点光源1
-function LoginScene:CreatePointLight1()
-    self.go_point_light_1_= GameObject.new("point_light_1")
-    self.go_point_light_1_:AddComponent(Transform):set_position(glm.vec3(-2,0,5))
-    ---@type PointLight
-    local light=self.go_point_light_1_:AddComponent(PointLight)
-
-    light:set_color(glm.vec3(1.0,0.0,0.0))
-    light:set_intensity(1.0)
-    light:set_attenuation_constant(1.0)
-    light:set_attenuation_linear( 0.35)
-    light:set_attenuation_quadratic( 0.44)
-
-    self.go_light_:AddChild(self.go_point_light_1_)
-end
-
---- 创建点光源2
-function LoginScene:CreatePointLight2()
-    self.go_point_light_2_= GameObject.new("point_light_2")
-    self.go_point_light_2_:AddComponent(Transform):set_position(glm.vec3(2,0,5))
-    ---@type PointLight
-    local light=self.go_point_light_2_:AddComponent(PointLight)
-
-    light:set_color(glm.vec3(0.0,1.0,0.0))
-    light:set_intensity(1.0)
-    light:set_attenuation_constant(1.0)
-    light:set_attenuation_linear( 0.35)
-    light:set_attenuation_quadratic( 0.44)
-
-    self.go_light_:AddChild(self.go_point_light_2_)
 end
 
 --- 创建主相机

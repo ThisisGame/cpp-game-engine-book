@@ -46,8 +46,8 @@ file(COPY "../../template/data/model/fbx_extra_basic_plane.weight" DESTINATION "
 file(COPY "../../template/data/animation/fbx_extra_basic_plane_bones_basic_plane_bones_basic_plane_bones_armatureaction_basic_plane_.skeleton_anim" DESTINATION "../data/animation/")
 file(COPY "../../template/data/shader/multi_light.vert" DESTINATION "../data/shader/")
 file(COPY "../../template/data/shader/multi_light.frag" DESTINATION "../data/shader/")
-file(COPY "../../template/data/shader/unlit.vert" DESTINATION "../data/shader/")
-file(COPY "../../template/data/shader/unlit.frag" DESTINATION "../data/shader/")
+file(COPY "../../template/data/shader/unlit_receive_shadow.vert" DESTINATION "../data/shader/")
+file(COPY "../../template/data/shader/unlit_receive_shadow.frag" DESTINATION "../data/shader/")
 file(COPY "../../template/data/material/basic_plane_multi_light.mat" DESTINATION "../data/material/")
 file(COPY "../../template/data/material/wall.mat" DESTINATION "../data/material/")
 
