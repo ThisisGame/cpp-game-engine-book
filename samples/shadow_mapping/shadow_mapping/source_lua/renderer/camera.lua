@@ -5,6 +5,7 @@
 ---
 
 require("lua_extension")
+require("renderer/render_texture")
 
 --- 相机
 --- @class Camera : CppComponent
@@ -93,4 +94,20 @@ end
 
 function Camera:camera_use_for()
     self.cpp_component_instance_:camera_use_for()
+end
+
+--- 检查target_render_texture_是否设置，是则使用FBO，渲染到RenderTexture。
+function Camera:CheckRenderToTexture()
+    self.cpp_component_instance_:CheckRenderToTexture()
+end
+
+--- 设置渲染目标RenderTexture
+--- @param render_texture RenderTexture @目标RenderTexture
+function Camera:set_target_render_texture(render_texture)
+    self.cpp_component_instance_:set_target_render_texture(render_texture:cpp_class_instance())
+end
+
+--- 清空渲染目标RenderTexture
+function Camera:clear_target_render_texture()
+    self.cpp_component_instance_:clear_target_render_texture()
 end

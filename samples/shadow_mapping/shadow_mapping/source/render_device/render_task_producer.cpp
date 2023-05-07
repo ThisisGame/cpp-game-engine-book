@@ -13,6 +13,14 @@ void RenderTaskProducer::ProduceRenderTaskUpdateScreenSize() {
     RenderTaskQueue::Push(task);
 }
 
+void RenderTaskProducer::ProduceRenderTaskSetViewportSize(int width, int height) {
+    EASY_FUNCTION();
+    RenderTaskSetViewportSize* task=new RenderTaskSetViewportSize();
+    task->width_=width;
+    task->height_=height;
+    RenderTaskQueue::Push(task);
+}
+
 /// 发出任务：编译Shader
 /// \param vertex_shader_source 顶点shader源码
 /// \param fragment_shader_source 片段shader源码
@@ -76,8 +84,10 @@ void RenderTaskProducer::ProduceRenderTaskCreateTexImage2D(unsigned int texture_
     task->client_format_=client_format;
     task->data_type_=data_type;
     //拷贝数据
-    task->data_= static_cast<unsigned char *>(malloc(data_size));
-    memcpy(task->data_, data, data_size);
+    if(data_size>0){
+        task->data_= static_cast<unsigned char *>(malloc(data_size));
+        memcpy(task->data_, data, data_size);
+    }
     RenderTaskQueue::Push(task);
 }
 
@@ -264,6 +274,34 @@ void RenderTaskProducer::ProduceRenderTaskSetStencilBufferClearValue(int clear_v
     EASY_FUNCTION();
     RenderTaskSetStencilBufferClearValue* task=new RenderTaskSetStencilBufferClearValue();
     task->clear_value_=clear_value;
+    RenderTaskQueue::Push(task);
+}
+
+void RenderTaskProducer::ProduceRenderTaskCreateFBO(int fbo_handle,unsigned short width,unsigned short height,unsigned int color_texture_handle,unsigned int depth_texture_handle){
+    RenderTaskCreateFBO* task=new RenderTaskCreateFBO();
+    task->fbo_handle_=fbo_handle;
+    task->width_=width;
+    task->height_=height;
+    task->color_texture_handle_=color_texture_handle;
+    task->depth_texture_handle_=depth_texture_handle;
+    RenderTaskQueue::Push(task);
+}
+
+void RenderTaskProducer::ProduceRenderTaskBindFBO(int fbo_handle){
+    RenderTaskBindFBO* task=new RenderTaskBindFBO();
+    task->fbo_handle_=fbo_handle;
+    RenderTaskQueue::Push(task);
+}
+
+void RenderTaskProducer::ProduceRenderTaskUnBindFBO(int fbo_handle){
+    RenderTaskUnBindFBO* task=new RenderTaskUnBindFBO();
+    task->fbo_handle_=fbo_handle;
+    RenderTaskQueue::Push(task);
+}
+
+void RenderTaskProducer::ProduceRenderTaskDeleteFBO(int fbo_handle){
+    RenderTaskDeleteFBO* task=new RenderTaskDeleteFBO();
+    task->fbo_handle_=fbo_handle;
     RenderTaskQueue::Push(task);
 }
 

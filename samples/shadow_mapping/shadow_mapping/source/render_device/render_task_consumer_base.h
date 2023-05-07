@@ -123,6 +123,18 @@ private:
     /// 设置清除模板缓冲值
     void SetStencilBufferClearValue(RenderTaskBase* task_base);
 
+    /// 创建FBO任务
+    void CreateFBO(RenderTaskBase* task_base);
+
+    /// 绑定使用FBO任务
+    void BindFBO(RenderTaskBase* task_base);
+
+    /// 取消使用FBO任务
+    void UnBindFBO(RenderTaskBase* task_base);
+
+    /// 删除帧缓冲区对象(FBO)
+    void DeleteFBO(RenderTaskBase* task_base);
+
     /// 结束一帧
     /// \param task_base
     void EndFrame(RenderTaskBase *task_base);

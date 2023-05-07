@@ -24,6 +24,8 @@ extern "C"{
 #include "renderer/texture_2d.h"
 #include "renderer/animation_clip.h"
 #include "renderer/animation.h"
+#include "renderer/render_texture.h"
+#include "ui/rect_transform.h"
 #include "ui/ui_button.h"
 #include "ui/ui_camera.h"
 #include "ui/ui_image.h"
@@ -531,7 +533,10 @@ void LuaBinding::BindLua() {
                                         "set_culling_mask",&Camera::set_culling_mask,
                                         "Foreach",&Camera::Foreach,
                                         "current_camera",&Camera::current_camera,
-                                        "Sort",&Camera::Sort
+                                        "Sort",&Camera::Sort,
+                                        "CheckRenderToTexture",&Camera::CheckRenderToTexture,
+                                        "set_target_render_texture",&Camera::set_target_render_texture,
+                                        "clear_target_render_texture",&Camera::clear_target_render_texture
         );
 
         cpp_ns_table.new_enum<BufferClearFlag,true>("BufferClearFlag",{
@@ -606,11 +611,27 @@ void LuaBinding::BindLua() {
                                            "Play", &Animation::Play,
                                            "current_animation_clip", &Animation::current_animation_clip
         );
-
+        cpp_ns_table.new_usertype<RenderTexture>("RenderTexture",sol::call_constructor,sol::constructors<RenderTexture()>(),
+                                                 "Init", &RenderTexture::Init,
+                                                 "width", &RenderTexture::width,
+                                                 "height", &RenderTexture::height,
+                                                 "set_width", &RenderTexture::set_width,
+                                                 "set_height", &RenderTexture::set_height,
+                                                 "in_use", &RenderTexture::in_use,
+                                                 "set_in_use", &RenderTexture::set_in_use,
+                                                 "frame_buffer_object_handle", &RenderTexture::frame_buffer_object_handle,
+                                                 "color_texture_2d", &RenderTexture::color_texture_2d,
+                                                 "depth_texture_2d", &RenderTexture::depth_texture_2d
+        );
     }
 
     // ui
     {
+        cpp_ns_table.new_usertype<RectTransform>("RectTransform",sol::call_constructor,sol::constructors<RectTransform()>(),
+                sol::base_classes,sol::bases<Transform,Component>(),
+                        "rect", &RectTransform::rect,
+                        "set_rect", &RectTransform::set_rect
+        );
         cpp_ns_table.new_usertype<UIImage>("UIImage",sol::call_constructor,sol::constructors<UIImage()>(),
                                            sol::base_classes,sol::bases<Component>(),
                                            "texture2D", &UIImage::texture2D,

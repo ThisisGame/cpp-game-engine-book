@@ -16,6 +16,9 @@ public:
     /// 发出任务：更新游戏窗口尺寸
     static void ProduceRenderTaskUpdateScreenSize();
 
+    /// 发出任务：设置视口大小
+    static void ProduceRenderTaskSetViewportSize(int width, int height);
+
     /// 发出任务：编译Shader
     /// \param vertex_shader_source 顶点shader源码
     /// \param fragment_shader_source 片段shader源码
@@ -160,6 +163,20 @@ public:
     /// 设置清除模板缓冲值
     static void ProduceRenderTaskSetStencilBufferClearValue(int clear_value);
 
+    /// 创建帧缓冲区对象(FBO)
+    /// \param fbo_handle FBO句柄
+    /// \param width 帧缓冲区尺寸(宽)
+    /// \param height 帧缓冲区尺寸(高)
+    static void ProduceRenderTaskCreateFBO(int fbo_handle,unsigned short width,unsigned short height,unsigned int color_texture_handle,unsigned int depth_texture_handle);
+
+    /// 绑定使用帧缓冲区对象(FBO)
+    static void ProduceRenderTaskBindFBO(int fbo_handle);
+
+    /// 取消使用帧缓冲区对象(FBO)
+    static void ProduceRenderTaskUnBindFBO(int fbo_handle);
+
+    /// 删除帧缓冲区对象(FBO)
+    static void ProduceRenderTaskDeleteFBO(int fbo_handle);
 
     /// 发出特殊任务：渲染结束
     static void ProduceRenderTaskEndFrame();

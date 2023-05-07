@@ -417,6 +417,65 @@ void RenderTaskConsumerBase::SetStencilBufferClearValue(RenderTaskBase* task_bas
     glClearStencil(task->clear_value_);__CHECK_GL_ERROR__
 }
 
+
+/// 创建FBO任务
+void RenderTaskConsumerBase::CreateFBO(RenderTaskBase* task_base){
+    RenderTaskCreateFBO* task=dynamic_cast<RenderTaskCreateFBO*>(task_base);
+    //查询当前GL实现所支持的最大的RenderBufferSize,就是尺寸
+    GLint support_size=0;
+    glGetIntegerv(GL_MAX_RENDERBUFFER_SIZE, &support_size);
+    //如果我们设定的尺寸超过了所支持的尺寸，就抛出错误
+    if (support_size <= task->width_ || support_size <= task->height_) {
+        DEBUG_LOG_ERROR("CreateFBO FBO Size Too Large!Not Support!");
+        return;
+    }
+    //创建FBO
+    GLuint frame_buffer_object_id=0;
+    glGenFramebuffers(1, &frame_buffer_object_id);__CHECK_GL_ERROR__
+    if(frame_buffer_object_id==0){
+        DEBUG_LOG_ERROR("CreateFBO FBO Error!");
+        return;
+    }
+    GPUResourceMapper::MapFBO(task->fbo_handle_, frame_buffer_object_id);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer_object_id);__CHECK_GL_ERROR__
+    //将颜色纹理绑定到FBO颜色附着点
+    GLuint color_texture=GPUResourceMapper::GetTexture(task->color_texture_handle_);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, color_texture, 0);__CHECK_GL_ERROR__
+    //将深度纹理绑定到FBO深度附着点
+    GLuint depth_texture=GPUResourceMapper::GetTexture(task->depth_texture_handle_);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depth_texture, 0);__CHECK_GL_ERROR__
+
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);__CHECK_GL_ERROR__
+}
+
+/// 绑定使用FBO任务
+void RenderTaskConsumerBase::BindFBO(RenderTaskBase* task_base){
+    RenderTaskBindFBO* task=dynamic_cast<RenderTaskBindFBO*>(task_base);
+
+    GLuint frame_buffer_object_id = GPUResourceMapper::GetFBO(task->fbo_handle_);
+    glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer_object_id);__CHECK_GL_ERROR__
+    //检测帧缓冲区完整性，如果完整的话就开始进行绘制
+    GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);__CHECK_GL_ERROR__
+    if (status != GL_FRAMEBUFFER_COMPLETE) {
+        DEBUG_LOG_ERROR("BindFBO FBO Error,Status:{} !",status);
+        return;
+    }
+}
+
+/// 取消使用FBO任务
+void RenderTaskConsumerBase::UnBindFBO(RenderTaskBase* task_base){
+    RenderTaskBindFBO* task=dynamic_cast<RenderTaskBindFBO*>(task_base);
+    glBindFramebuffer(GL_FRAMEBUFFER, GL_NONE);__CHECK_GL_ERROR__
+}
+
+/// 删除帧缓冲区对象(FBO)
+void RenderTaskConsumerBase::DeleteFBO(RenderTaskBase* task_base){
+    RenderTaskBindFBO* task=dynamic_cast<RenderTaskBindFBO*>(task_base);
+    GLuint frame_buffer_object_id = GPUResourceMapper::GetFBO(task->fbo_handle_);
+    glDeleteFramebuffers(1,&frame_buffer_object_id);
+}
+
 /// 结束一帧
 /// \param task_base
 void RenderTaskConsumerBase::EndFrame(RenderTaskBase* task_base) {

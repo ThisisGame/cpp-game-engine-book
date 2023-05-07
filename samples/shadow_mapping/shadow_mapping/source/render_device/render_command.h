@@ -9,6 +9,7 @@
 enum RenderCommand {
     NONE,
     UPDATE_SCREEN_SIZE,//更新游戏画面尺寸
+    SET_VIEW_PORT_SIZE,//设置视口大小
     COMPILE_SHADER,//编译着色器
     CONNECT_UNIFORM_BLOCK_INSTANCE_AND_BINDING_POINT,//串联uniform block实例与binding point。
     USE_SHADER_PROGRAM,//使用着色器程序

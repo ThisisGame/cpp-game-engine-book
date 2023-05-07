@@ -8,9 +8,12 @@
 #include <glm/gtx/euler_angles.hpp>
 #include <glad/gl.h>
 #include <rttr/registration>
+#include "render_texture.h"
 #include "component/game_object.h"
 #include "component/transform.h"
 #include "render_device/render_task_producer.h"
+#include "render_device/gpu_resource_mapper.h"
+#include "utils/screen.h"
 
 
 using namespace rttr;
@@ -23,7 +26,9 @@ RTTR_REGISTRATION//注册反射
 std::vector<Camera*> Camera::all_camera_;
 Camera* Camera::current_camera_;
 
-Camera::Camera():Component(),clear_color_(49.f/255,77.f/255,121.f/255,1.f),clear_flag_(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT|GL_STENCIL_BUFFER_BIT),depth_(0),culling_mask_(0x01) {
+Camera::Camera():Component(),clear_color_(49.f/255,77.f/255,121.f/255,1.f),
+    clear_flag_(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT|GL_STENCIL_BUFFER_BIT),depth_(0),culling_mask_(0x01),
+    target_render_texture_(nullptr) {
     //默认获取现有Camera最大depth，设置当前Camera.depth +1
     if (all_camera_.size()>0){
         unsigned char max_depth=all_camera_.back()->depth();
@@ -68,7 +73,54 @@ void Camera::Clear() {
                                                                          clear_color_.b, clear_color_.a);
 }
 
+void Camera::CheckRenderToTexture(){
+    if(target_render_texture_== nullptr){//没有设置目标RenderTexture
+        return;
+    }
+    if(target_render_texture_->in_use()){
+        return;
+    }
+    if(target_render_texture_->frame_buffer_object_handle() == 0){//还没有初始化，没有生成FBO。
+        return;
+    }
+    RenderTaskProducer::ProduceRenderTaskSetViewportSize(target_render_texture_->width(),target_render_texture_->height());
+    RenderTaskProducer::ProduceRenderTaskBindFBO(target_render_texture_->frame_buffer_object_handle());
+    target_render_texture_->set_in_use(true);
+}
 
+void Camera::CheckCancelRenderToTexture(){
+    if(target_render_texture_== nullptr){//没有设置目标RenderTexture
+        return;
+    }
+    if(target_render_texture_->in_use()==false){
+        return;
+    }
+    if(target_render_texture_->frame_buffer_object_handle() == 0){//还没有初始化，没有生成FBO。
+        return;
+    }
+    //更新ViewPort的尺寸
+    RenderTaskProducer::ProduceRenderTaskSetViewportSize(Screen::width(),Screen::height());
+    RenderTaskProducer::ProduceRenderTaskUnBindFBO(target_render_texture_->frame_buffer_object_handle());
+    target_render_texture_->set_in_use(false);
+}
+
+void Camera::set_target_render_texture(RenderTexture* render_texture){
+    if(render_texture== nullptr){
+        clear_target_render_texture();
+    }
+    target_render_texture_=render_texture;
+}
+
+void Camera::clear_target_render_texture() {
+    if(target_render_texture_== nullptr){//没有设置目标RenderTexture
+        return;
+    }
+    if(target_render_texture_->in_use()== false){
+        return;
+    }
+    RenderTaskProducer::ProduceRenderTaskUnBindFBO(target_render_texture_->frame_buffer_object_handle());
+    target_render_texture_->set_in_use(false);
+}
 
 void Camera::set_depth(unsigned char depth) {
     if(depth_==depth){
@@ -87,8 +139,10 @@ void Camera::Sort() {
 void Camera::Foreach(std::function<void()> func) {
     for (auto iter=all_camera_.begin();iter!=all_camera_.end();iter++){
         current_camera_=*iter;
+        current_camera_->CheckRenderToTexture();
         current_camera_->Clear();
         func();
+        current_camera_->CheckCancelRenderToTexture();
     }
 }
 

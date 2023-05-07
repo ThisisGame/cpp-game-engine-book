@@ -104,18 +104,38 @@ public:
         return ubo_map_[ubo_handle];
     }
 
+    /// 生成FBO句柄
+    static unsigned int GenerateFBOHandle(){
+        return ++fbo_index_;
+    }
+
+    /// 映射FBO
+    /// \param fbo_handle
+    /// \param fbo_id
+    static void MapFBO(unsigned int fbo_handle, GLuint fbo_id){
+        fbo_map_[fbo_handle] = fbo_id;
+    }
+
+    /// 获取FBO
+    /// \param fbo_handle
+    /// \return
+    static GLuint GetFBO(unsigned int fbo_handle){
+        return fbo_map_[fbo_handle];
+    }
 private:
     static unsigned int shader_program_index_;//Shader程序索引
     static unsigned int vao_index_;//VAO索引
     static unsigned int vbo_index_;//VBO索引
     static unsigned int texture_index_;//Texture索引
     static unsigned int ubo_index_;//UBO索引
+    static unsigned int fbo_index_;//FBO索引
 
     static std::unordered_map<unsigned int, GLuint> shader_program_map_;//Shader程序映射表
     static std::unordered_map<unsigned int, GLuint> vao_map_;//VAO映射表
     static std::unordered_map<unsigned int, GLuint> vbo_map_;//VBO映射表
     static std::unordered_map<unsigned int, GLuint> texture_map_;//Texture映射表
     static std::unordered_map<unsigned int, GLuint> ubo_map_;//UBO映射表
+    static std::unordered_map<unsigned int, GLuint> fbo_map_;//FBO映射表
 };
 
 

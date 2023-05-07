@@ -47,6 +47,7 @@ public:
     int height(){return height_;}
     GLenum gl_texture_format(){return gl_texture_format_;}
     unsigned int texture_handle(){return texture_handle_;}
+    void set_texture_handle(unsigned int texture_handle){texture_handle_=texture_handle;}
 
 private:
     int mipmap_level_;
