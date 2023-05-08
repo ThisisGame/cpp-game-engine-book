@@ -8,6 +8,7 @@ require("renderer/animation")
 require("renderer/animation_clip")
 require("renderer/skinned_mesh_renderer")
 require("renderer/texture_2d")
+require("renderer/render_texture")
 require("control/input")
 require("control/key_code")
 require("utils/screen")
@@ -22,9 +23,17 @@ LoginScene=class("LoginScene",Component)
 ---@class LoginScene
 function LoginScene:ctor()
     LoginScene.super.ctor(self)
+
+    self.go_depth_camera_ = nil
+    ---@field depth_camera_ Camera @深度相机
+    self.depth_camera_ = nil
+    ---@field depth_render_texture_ RenderTexture  @深度RTT
+    self.depth_render_texture_ = nil
+
     self.go_camera_ = nil
     ---@field camera_ Camera @场景相机
     self.camera_ = nil
+
     self.go_skeleton_ = nil --骨骼蒙皮动画物体
     self.animation_ = nil--骨骼动画
     self.animation_clip_ = nil --- 骨骼动画片段
@@ -44,6 +53,7 @@ function LoginScene:Awake()
 
     self:CreateEnvironment()
     self:CreateLight()
+    self:CreateDepthCamera()
     self:CreateMainCamera()
     self:CreatePlane()
     self:CreateWall()
@@ -74,6 +84,26 @@ function LoginScene:CreateDirectionalLight1()
     light:set_intensity(1.0)
 
     self.go_light_:AddChild(self.go_directional_light_1_)
+end
+
+--- 创建深度相机
+function LoginScene:CreateDepthCamera()
+    --创建相机1 GameObject
+    self.go_depth_camera_= GameObject.new("depth_camera")
+    --挂上 Transform 组件
+    self.go_depth_camera_:AddComponent(Transform):set_position(glm.vec3(0, 0, 10))
+    self.go_depth_camera_:GetComponent(Transform):set_rotation(glm.vec3(0, 0, 0))
+    --挂上 Camera 组件
+    self.depth_camera_=self.go_depth_camera_:AddComponent(Camera)
+    --设置为黑色背景
+    self.depth_camera_:set_clear_color(0,0,0,1)
+    self.depth_camera_:set_depth(0)
+    self.depth_camera_:SetView(glm.vec3(0.0,0.0,0.0), glm.vec3(0.0,1.0,0.0))
+    self.depth_camera_:SetPerspective(60, Screen.aspect_ratio(), 1, 1000)
+    --设置RenderTexture
+    self.depth_render_texture_ = RenderTexture.new()
+    self.depth_render_texture_:Init(480,320)
+    self.depth_camera_:set_target_render_texture(self.depth_render_texture_)
 end
 
 --- 创建主相机

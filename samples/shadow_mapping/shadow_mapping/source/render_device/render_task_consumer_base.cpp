@@ -47,6 +47,12 @@ void RenderTaskConsumerBase::UpdateScreenSize(RenderTaskBase* task_base) {
     Screen::set_width_height(width,height);
 }
 
+/// 设置视口大小
+void RenderTaskConsumerBase::SetViewportSize(RenderTaskBase* task_base) {
+    RenderTaskSetViewportSize* task= dynamic_cast<RenderTaskSetViewportSize*>(task_base);
+    glViewport(0, 0, task->width_, task->height_);
+}
+
 /// 编译、链接Shader
 /// \param task_base
 void RenderTaskConsumerBase::CompileShader(RenderTaskBase* task_base){
@@ -508,6 +514,10 @@ void RenderTaskConsumerBase::ProcessTask() {
                     UpdateScreenSize(render_task);
                     break;
                 }
+                case RenderCommand::SET_VIEW_PORT_SIZE:{
+                    SetViewportSize(render_task);
+                    break;
+                }
                 case RenderCommand::COMPILE_SHADER:{
                     CompileShader(render_task);
                     break;
@@ -598,6 +608,22 @@ void RenderTaskConsumerBase::ProcessTask() {
                 }
                 case RenderCommand::SET_STENCIL_BUFFER_CLEAR_VALUE:{
                     SetStencilBufferClearValue(render_task);
+                    break;
+                }
+                case RenderCommand::CREATE_FBO:{
+                    CreateFBO(render_task);
+                    break;
+                }
+                case RenderCommand::BIND_FBO:{
+                    BindFBO(render_task);
+                    break;
+                }
+                case RenderCommand::UNBIND_FBO:{
+                    UnBindFBO(render_task);
+                    break;
+                }
+                case RenderCommand::DELETE_FBO:{
+                    DeleteFBO(render_task);
                     break;
                 }
                 case RenderCommand::END_FRAME:{
