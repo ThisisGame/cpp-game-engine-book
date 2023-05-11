@@ -467,12 +467,32 @@ void RenderTaskConsumerBase::BindFBO(RenderTaskBase* task_base){
         DEBUG_LOG_ERROR("BindFBO FBO Error,Status:{} !",status);
         return;
     }
+
+    //压入渲染目标栈
+    render_target_stack_.Push(task->fbo_handle_);
 }
 
 /// 取消使用FBO任务
 void RenderTaskConsumerBase::UnBindFBO(RenderTaskBase* task_base){
     RenderTaskBindFBO* task=dynamic_cast<RenderTaskBindFBO*>(task_base);
-    glBindFramebuffer(GL_FRAMEBUFFER, GL_NONE);__CHECK_GL_ERROR__
+    //弹出渲染目标栈
+    render_target_stack_.Pop();
+    //检查是否还有渲染目标
+    if(render_target_stack_.Empty()){
+        //如果没有渲染目标了，就使用默认的渲染目标
+        glBindFramebuffer(GL_FRAMEBUFFER, GL_NONE);__CHECK_GL_ERROR__
+    }else{
+        //如果还有渲染目标，就使用栈顶的渲染目标
+        unsigned int fbo_handle=render_target_stack_.Top();
+        GLuint frame_buffer_object_id = GPUResourceMapper::GetFBO(fbo_handle);
+        glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer_object_id);__CHECK_GL_ERROR__
+        //检测帧缓冲区完整性
+        GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);__CHECK_GL_ERROR__
+        if (status != GL_FRAMEBUFFER_COMPLETE) {
+            DEBUG_LOG_ERROR("UnBindFBO,BindFBO FBO Error,Status:{} !",status);
+            return;
+        }
+    }
 }
 
 /// 删除帧缓冲区对象(FBO)

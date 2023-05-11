@@ -6,6 +6,7 @@
 #define UNTITLED_RENDER_TASK_CONSUMER_BASE_H
 
 #include <thread>
+#include "render_target_stack.h"
 
 class RenderTaskBase;
 
@@ -146,6 +147,9 @@ private:
 private:
     std::thread render_thread_;//渲染线程
     bool exit_=false;
+
+private:
+    RenderTargetStack render_target_stack_;//渲染目标栈
 };
 
 
