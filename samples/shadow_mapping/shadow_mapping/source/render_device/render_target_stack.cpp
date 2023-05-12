@@ -13,9 +13,9 @@ RenderTargetStack::~RenderTargetStack() {
 }
 
 /// 压入渲染目标
-/// \param fbo_handle 帧缓冲句柄
-void RenderTargetStack::Push(GLuint fbo_handle) {
-    fbo_stack_.push(fbo_handle);
+/// \param frame_buffer_object_id 帧缓冲
+void RenderTargetStack::Push(GLuint frame_buffer_object_id) {
+    fbo_stack_.push(frame_buffer_object_id);
 }
 
 /// 弹出渲染目标

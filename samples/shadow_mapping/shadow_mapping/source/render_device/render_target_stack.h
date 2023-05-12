@@ -15,8 +15,8 @@ public:
     ~RenderTargetStack();
 
     /// 压入渲染目标
-    /// \param fbo_handle 帧缓冲句柄
-    void Push(GLuint fbo_handle);
+    /// \param frame_buffer_object_id 帧缓冲
+    void Push(GLuint frame_buffer_object_id);
 
     /// 弹出渲染目标
     void Pop();

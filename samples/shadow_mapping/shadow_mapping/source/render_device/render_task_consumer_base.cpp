@@ -469,7 +469,7 @@ void RenderTaskConsumerBase::BindFBO(RenderTaskBase* task_base){
     }
 
     //压入渲染目标栈
-    render_target_stack_.Push(task->fbo_handle_);
+    render_target_stack_.Push(frame_buffer_object_id);
 }
 
 /// 取消使用FBO任务
@@ -483,8 +483,7 @@ void RenderTaskConsumerBase::UnBindFBO(RenderTaskBase* task_base){
         glBindFramebuffer(GL_FRAMEBUFFER, GL_NONE);__CHECK_GL_ERROR__
     }else{
         //如果还有渲染目标，就使用栈顶的渲染目标
-        unsigned int fbo_handle=render_target_stack_.Top();
-        GLuint frame_buffer_object_id = GPUResourceMapper::GetFBO(fbo_handle);
+        GLuint frame_buffer_object_id = render_target_stack_.Top();
         glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer_object_id);__CHECK_GL_ERROR__
         //检测帧缓冲区完整性
         GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);__CHECK_GL_ERROR__

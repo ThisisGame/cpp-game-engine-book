@@ -72,6 +72,9 @@ void RenderTaskConsumerEditor::InitGraphicsLibraryFramework() {
         DEBUG_LOG_ERROR("BindFBO FBO Error,Status:{} !",status);//36055 = 0x8CD7 GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT 附着点没有东西
         return;
     }
+
+    //压入渲染目标栈
+    render_target_stack_.Push(frame_buffer_object_id);
 }
 
 void RenderTaskConsumerEditor::GetFramebufferSize(int& width,int& height) {

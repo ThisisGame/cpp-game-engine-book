@@ -148,7 +148,7 @@ private:
     std::thread render_thread_;//渲染线程
     bool exit_=false;
 
-private:
+protected:
     RenderTargetStack render_target_stack_;//渲染目标栈
 };
 
