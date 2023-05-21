@@ -45,6 +45,13 @@ function Material:SetUniform3f(shader_property_name,value)
     self.cpp_class_instance_:SetUniform3f(shader_property_name,value)
 end
 
+--- 上传Matrix4f值
+--- @param shader_property_name string @shader属性名
+--- @param value glm.mat4 @值
+function Material:SetUniformMatrix4f(shader_property_name,value)
+    self.cpp_class_instance_:SetUniformMatrix4f(shader_property_name,value)
+end
+
 --- 设置纹理
 --- @param property
 --- @param texture2D

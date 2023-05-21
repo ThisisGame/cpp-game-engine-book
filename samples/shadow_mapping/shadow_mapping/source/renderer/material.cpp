@@ -71,13 +71,20 @@ void Material::SetUniform3f(const std::string& shader_property_name,glm::vec3& v
     uniform_3f_map_[shader_property_name]= value;
 }
 
+void Material::SetUniformMatrix4f(const std::string& shader_property_name,glm::mat4& value){
+    uniform_matrix4f_map_[shader_property_name]= value;
+}
+
 void Material::SetTexture(const string& property, Texture2D *texture2D) {
     for (auto& pair : textures_){
         if(pair.first==property){
-            delete(pair.second);
+            if(pair.second!= nullptr){
+                delete(pair.second);
+                pair.second= nullptr;
+            }
             pair.second=texture2D;
             break;
-    }
+        }
     }
 }
 

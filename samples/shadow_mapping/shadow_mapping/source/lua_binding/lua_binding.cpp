@@ -554,6 +554,7 @@ void LuaBinding::BindLua() {
                                           "SetUniform1i",&Material::SetUniform1i,
                                           "SetUniform1f",&Material::SetUniform1f,
                                           "SetUniform3f",&Material::SetUniform3f,
+                                          "SetUniformMatrix4f",&Material::SetUniformMatrix4f,
                                           "SetTexture",&Material::SetTexture
         );
 

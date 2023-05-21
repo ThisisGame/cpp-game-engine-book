@@ -134,6 +134,10 @@ void MeshRenderer::Render() {
         //上传Texture
         std::vector<std::pair<std::string,Texture2D*>> textures=material_->textures();
         for (int texture_index = 0; texture_index < textures.size(); ++texture_index) {
+            Texture2D* texture_2d=textures[texture_index].second;
+            if(texture_2d==nullptr){
+                continue;
+            }
             //激活纹理单元,将加载的图片纹理句柄，绑定到纹理单元上。
             RenderTaskProducer::ProduceRenderTaskActiveAndBindTexture(GL_TEXTURE0+texture_index,textures[texture_index].second->texture_handle());
             //设置Shader程序从纹理单元读取颜色数据
@@ -150,6 +154,12 @@ void MeshRenderer::Render() {
         std::unordered_map<std::string,glm::vec3> uniform_3f_map= material_->uniform_3f_map();
         for (auto uniform_3f : uniform_3f_map) {
             RenderTaskProducer::ProduceRenderTaskSetUniform3f(shader_program_handle,uniform_3f.first.c_str(),uniform_3f.second);
+        }
+
+        //上传uniform_matrix4f
+        std::unordered_map<std::string,glm::mat4> uniform_matrix4f_map= material_->uniform_matrix4f_map();
+        for (auto uniform_matrix4f : uniform_matrix4f_map) {
+            RenderTaskProducer::ProduceRenderTaskSetUniformMatrix4fv(shader_program_handle,uniform_matrix4f.first.c_str(),false,uniform_matrix4f.second);
         }
 
         // 绑定VAO并绘制

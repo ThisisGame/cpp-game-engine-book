@@ -26,6 +26,7 @@ public:
     void SetUniform1i(const std::string& shader_property_name,int value);
     void SetUniform1f(const std::string& shader_property_name,float value);
     void SetUniform3f(const std::string& shader_property_name,glm::vec3& value);
+    void SetUniformMatrix4f(const std::string& shader_property_name,glm::mat4& value);
 
     /// 设置纹理
     /// \param property
@@ -36,6 +37,7 @@ public:
     std::unordered_map<std::string,int>& uniform_1i_map(){return uniform_1i_map_;}
     std::unordered_map<std::string,float>& uniform_1f_map(){return uniform_1f_map_;}
     std::unordered_map<std::string,glm::vec3>& uniform_3f_map(){return uniform_3f_map_;}
+    std::unordered_map<std::string,glm::mat4>& uniform_matrix4f_map(){return uniform_matrix4f_map_;}
 
 private:
     Shader* shader_{};
@@ -44,6 +46,8 @@ private:
     std::unordered_map<std::string,int> uniform_1i_map_;
     std::unordered_map<std::string,float> uniform_1f_map_;
     std::unordered_map<std::string,glm::vec3> uniform_3f_map_;
+
+    std::unordered_map<std::string,glm::mat4> uniform_matrix4f_map_;
 };
 
 

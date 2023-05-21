@@ -362,7 +362,7 @@ void RenderTaskConsumerBase::ActiveAndBindTexture(RenderTaskBase *task_base) {
     RenderTaskActiveAndBindTexture* task=dynamic_cast<RenderTaskActiveAndBindTexture*>(task_base);
     //激活纹理单元
     glActiveTexture(task->texture_uint_);__CHECK_GL_ERROR__
-    //将加载的图片纹理句柄，绑定到纹理单元0的Texture2D上。
+    //将加载的图片纹理句柄，绑定到当前激活纹理单元的Texture2D上。
     GLuint texture=GPUResourceMapper::GetTexture(task->texture_handle_);
     glBindTexture(GL_TEXTURE_2D, texture);__CHECK_GL_ERROR__
 }

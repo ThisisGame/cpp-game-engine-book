@@ -1,3 +1,4 @@
 <material shader="shader/unlit_receive_shadow">
     <texture name="u_diffuse_texture" image="images/urban.cpt"/>
+    <texture name="u_depth_texture" image=""/>
 </material>

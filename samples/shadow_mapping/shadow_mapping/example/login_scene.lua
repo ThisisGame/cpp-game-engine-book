@@ -171,6 +171,8 @@ function LoginScene:CreateWall()
     --手动创建Material
     self.material_wall_ = Material.new()--设置材质
     self.material_wall_:Parse("material/wall.mat")
+    --给Wall设置DepthTexture
+    self.material_wall_:SetTexture("u_depth_texture",self.depth_render_texture_:depth_texture_2d())
 
     --挂上 MeshRenderer 组件
     local mesh_renderer= self.go_wall_:AddComponent(MeshRenderer)
@@ -186,6 +188,10 @@ function LoginScene:Update()
     self.material_plane_:SetUniform3f("u_view_pos",camera_position)
     --设置物体反射度、高光强度
     self.material_plane_:SetUniform1f("u_specular_highlight_shininess",32.0)
+
+    --设置ShadowCamera的参数
+    self.material_wall_:SetUniformMatrix4f("u_shadow_camera_view",self.depth_camera_:view_mat4())
+    self.material_wall_:SetUniformMatrix4f("u_shadow_camera_projection",self.depth_camera_:projection_mat4())
 
     --鼠标滚轮控制相机远近
     self.go_camera_:GetComponent(Transform):set_position(self.go_camera_:GetComponent(Transform):position() *(10 - Input.mouse_scroll())/10)
