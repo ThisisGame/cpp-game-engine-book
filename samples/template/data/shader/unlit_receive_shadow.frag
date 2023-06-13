@@ -19,8 +19,10 @@ float ShadowCalculation(vec4 shadow_camera_gl_Position)
     float closest_depth = texture(u_depth_texture, proj_coords.xy).r;
     //获取当前像素的深度current_depth，即当前像素与光源之间的距离
     float current_depth = proj_coords.z;
+    //使用偏移
+    float bias = 0.005;
     //如果这个距离大于最近距离closest_depth，则说明当前像素在阴影之中，返回1.0，否则返回0.0，代表没有阴影。
-    float shadow = current_depth > closest_depth  ? 1.0 : 0.0;
+    float shadow = current_depth - bias > closest_depth  ? 1.0 : 0.0;
     return shadow;
 }
 
