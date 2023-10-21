@@ -48,14 +48,9 @@ Texture2D* Texture2D::LoadFromFile(std::string& image_file_path) {
     spdlog::info("stbi_load cost:{}",stopwatch.milliseconds());
 
 
-
-    // 创建一个YUV420图像
-    // 在YUV420格式中，Y通道的分辨率是全分辨率，而U和V通道的分辨率是Y通道的一半。
-    // 因此，Y通道的数据量是U和V通道的数据量的四倍。
-    // 所以，整个YUV420图像的数据量是原始图像的1.5倍，即width * frame_height * 1.5。
-    std::vector<unsigned char> imageYuv(texture2d->width_ * texture2d->height_ * 3 / 2);
-
     stopwatch.restart();
+
+    // 模拟UE4 PixelShader 转为YUV444图像
     for (int j = 0; j < texture2d->height_; ++j) {
         for (int i = 0; i < texture2d->width_; ++i) {
             int index = j * texture2d->width_ + i;
@@ -73,25 +68,45 @@ Texture2D* Texture2D::LoadFromFile(std::string& image_file_path) {
             u = std::max(0, std::min(255, u));
             v = std::max(0, std::min(255, v));
 
+            data[index * 3]=y;
+            data[index * 3 + 1]=u;
+            data[index * 3 + 2]=v;
+        }
+    }
+    stopwatch.stop();
+    spdlog::info("rgb to yuv444 cost:{}",stopwatch.milliseconds());
+
+    // 将YUV444数据写入文件
+    std::ofstream outFile("output.yuv444", std::ios::binary);
+    outFile.write((char *)data, texture2d->width_ * texture2d->height_ * 3);
+
+
+
+    // 将YUV444转YUV420
+    std::vector<unsigned char> imageYuv(texture2d->width_ * texture2d->height_ * 3 / 2);
+    stopwatch.restart();
+
+    for (int j = 0; j < texture2d->height_; ++j) {
+        for (int i = 0; i < texture2d->width_; ++i) {
+            int index = j * texture2d->width_ + i;
+            unsigned char y = data[index * 3];
+            unsigned char u = data[index * 3 + 1];
+            unsigned char v = data[index * 3 + 2];
+
             // Y通道
             imageYuv[j * texture2d->width_ + i] = y;
 
             // U和V通道，进行下采样
             if (j % 2 == 0 && i % 2 == 0) {
                 imageYuv[texture2d->width_ * texture2d->height_ + (j / 2) * (texture2d->width_ / 2) + i / 2] = u;
-                imageYuv[texture2d->width_ * texture2d->height_ + (texture2d->width_ / 2) * (texture2d->height_ / 2) + (j / 2) * (texture2d->width_ / 2) + i / 2] = v;
+                imageYuv[texture2d->width_ * texture2d->height_ + (texture2d->width_ / 2) * (texture2d->height_ / 2) +
+                         (j / 2) * (texture2d->width_ / 2) + i / 2] = v;
             }
         }
     }
+
     stopwatch.stop();
-    spdlog::info("rgb to yuv420 cost:{}",stopwatch.milliseconds());
-
-    // 将YUV数据写入文件
-    std::ofstream outFile("output.yuv", std::ios::binary);
-    outFile.write(reinterpret_cast<char*>(imageYuv.data()), imageYuv.size());
-
-    //释放图片文件内存
-    stbi_image_free(data);
+    spdlog::info("yuv444 to yuv420 cost:{}",stopwatch.milliseconds());
 
     // 输出H264编码文件
     std::ofstream outFi;
@@ -127,7 +142,7 @@ Texture2D* Texture2D::LoadFromFile(std::string& image_file_path) {
     for(int frame_index = 0; frame_index < frame_num; frame_index++){
         stopwatch.restart();
 
-        // 将YUV格式的图片数据传递给编码器进行编码
+        // 将YUV444格式的图片数据传递给编码器进行编码，openh264编码器只支持YUV420格式的图片数据，所以需要将YUV444格式的图片数据转换为YUV420格式的图片数据。
 
         //在录屏的时候想降低录制的帧率，跳过一些帧，那么方法是使用重复帧而不是空帧。
         //比如说游戏第10帧，第20帧，中间10帧要跳过，那么就一直使用第10帧的数据，而不是使用空帧。
@@ -179,6 +194,9 @@ Texture2D* Texture2D::LoadFromFile(std::string& image_file_path) {
     }
 
     outFi.close();
+
+    //释放图片文件内存
+    stbi_image_free(data);
 
     return texture2d;
 }
