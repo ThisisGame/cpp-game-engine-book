@@ -82,23 +82,33 @@ Texture2D* Texture2D::LoadFromFile(std::string& image_file_path) {
 
     // 将YUV444转YUV420
     std::vector<unsigned char> imageYuv(texture2d->width_ * texture2d->height_ * 3 / 2);
+
+    int pixel_num=texture2d->width_ * texture2d->height_;
+
     stopwatch.restart();
 
+    unsigned char* yuv444_data = data;
+
+    //YUV是单通道连续存放，Y是全尺寸，UV是1/4尺寸。
+    //Y通道的起点就是0
+    //U通道的起点就是Y通道的终点，然后U通道是1/4的Y尺寸
+    //V通道的起点就是U通道终点
+    int y_index=0;
+    int u_index=pixel_num;
+    int v_index=pixel_num*1.25;
     for (int j = 0; j < texture2d->height_; ++j) {
         for (int i = 0; i < texture2d->width_; ++i) {
-            int index = j * texture2d->width_ + i;
-            unsigned char y = data[index * 3];
-            unsigned char u = data[index * 3 + 1];
-            unsigned char v = data[index * 3 + 2];
-
-            // Y通道
-            imageYuv[j * texture2d->width_ + i] = y;
+            // Y通道是起点位置，连续存储。
+            imageYuv[y_index++] = *(yuv444_data++);
 
             // U和V通道，进行下采样
             if (j % 2 == 0 && i % 2 == 0) {
-                imageYuv[texture2d->width_ * texture2d->height_ + (j / 2) * (texture2d->width_ / 2) + i / 2] = u;
-                imageYuv[texture2d->width_ * texture2d->height_ + (texture2d->width_ / 2) * (texture2d->height_ / 2) +
-                         (j / 2) * (texture2d->width_ / 2) + i / 2] = v;
+                imageYuv[u_index++] = *(yuv444_data++);
+                imageYuv[v_index++] = *(yuv444_data++);
+            }
+            else
+            {
+                yuv444_data+=2;
             }
         }
     }

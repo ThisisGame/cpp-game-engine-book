@@ -1,5 +1,5 @@
 ﻿cmake_minimum_required(VERSION 3.17)
-project(jpg_yuv444_yuv420_h264)
+project(jpg_yuv444_yuv420_h264_opt)
 
 set(CMAKE_CXX_STANDARD 17)
 
