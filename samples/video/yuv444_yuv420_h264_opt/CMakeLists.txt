@@ -1,5 +1,5 @@
 ﻿cmake_minimum_required(VERSION 3.17)
-project(h264_yuv420_rgb)
+project(yuv444_yuv420_h264_opt)
 
 set(CMAKE_CXX_STANDARD 17)
 
@@ -18,12 +18,11 @@ file(COPY "../../template/depends/spdlog/include/spdlog/" DESTINATION "../depend
 file(COPY "../../template/depends/openh264/" DESTINATION "../depends/openh264/")
 
 #拷贝data文件
-file(COPY "../../template/data/video/man_1008x888.h264" DESTINATION "../data/video/")
+file(COPY "../../template/data/images/rgb_yuv444_1536_910.bmp" DESTINATION "../data/images/")
 
 #头文件目录
 include_directories("depends")
 include_directories("depends/openh264/codec/api/wels")
-include_directories("depends/openh264/codec/common/inc")
 
 if(WIN32)
     #链接目录
@@ -34,4 +33,4 @@ else()
 
 endif()
 
-add_executable(load_image ${glfw_sources} main.cpp texture2d.cpp d3d9_utils.cpp)
+add_executable(load_image ${glfw_sources} main.cpp texture2d.cpp)
