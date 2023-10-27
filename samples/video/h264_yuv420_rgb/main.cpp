@@ -48,9 +48,48 @@ void InitSpdLog() {
 #include "codec_app_def.h"
 #include "codec_api.h"
 #include "measure_time.h"
-#include "d3d9_utils.h"
 
 using namespace std;
+
+
+void Write2File (FILE* pFp, unsigned char* pData[3], int iStride[2], int iWidth, int iHeight) {
+    int   i;
+    unsigned char*  pPtr = NULL;
+
+    pPtr = pData[0];
+    for (i = 0; i < iHeight; i++) {
+        fwrite (pPtr, 1, iWidth, pFp);
+        pPtr += iStride[0];
+    }
+
+    iHeight = iHeight / 2;
+    iWidth = iWidth / 2;
+    pPtr = pData[1];
+    for (i = 0; i < iHeight; i++) {
+        fwrite (pPtr, 1, iWidth, pFp);
+        pPtr += iStride[1];
+    }
+
+    pPtr = pData[2];
+    for (i = 0; i < iHeight; i++) {
+        fwrite (pPtr, 1, iWidth, pFp);
+        pPtr += iStride[1];
+    }
+}
+
+int Process (void* pDst[3], SBufferInfo* pInfo, FILE* pFp) {
+    if (pFp && pDst[0] && pDst[1] && pDst[2] && pInfo) {
+        int iStride[2];
+        int iWidth = pInfo->UsrData.sSystemBuffer.iWidth;
+        int iHeight = pInfo->UsrData.sSystemBuffer.iHeight;
+        iStride[0] = pInfo->UsrData.sSystemBuffer.iStride[0];
+        iStride[1] = pInfo->UsrData.sSystemBuffer.iStride[1];
+
+        Write2File (pFp, (unsigned char**)pDst, iStride, iWidth, iHeight);
+    }
+
+    return 0;
+}
 
 /**
  * @brief 从给定的缓冲区中读取一个位，并更新当前位的位置。
@@ -243,8 +282,6 @@ void FlushFrames(ISVCDecoder *pDecoder, int64_t &iTotal, FILE *pYuvFile, FILE *p
     SBufferInfo sDstBufInfo;
     // 初始化缓冲区中的帧数
     int32_t num_of_frames_in_buffer = 0;
-    // 创建输出模块对象
-    CUtils cOutputModule;
     // 获取缓冲区中剩余的帧数
     pDecoder->GetOption(DECODER_OPTION_NUM_OF_FRAMES_REMAINING_IN_BUFFER, &num_of_frames_in_buffer);
     // 遍历缓冲区中的所有帧
@@ -273,7 +310,7 @@ void FlushFrames(ISVCDecoder *pDecoder, int64_t &iTotal, FILE *pYuvFile, FILE *p
         // 如果缓冲区状态为1，表示解码成功
         if (sDstBufInfo.iBufferStatus == 1) {
             // 处理解码后的数据
-            cOutputModule.Process((void **) pDst, &sDstBufInfo, pYuvFile);
+            Process((void **) pDst, &sDstBufInfo, pYuvFile);
             // 获取解码后的宽度和高度
             iWidth = sDstBufInfo.UsrData.sSystemBuffer.iWidth;
             iHeight = sDstBufInfo.UsrData.sSystemBuffer.iHeight;
@@ -316,8 +353,6 @@ void H264DecodeInstance(ISVCDecoder *pDecoder, const char *kpH264FileName, const
     // 设置解码器的错误掩盖方法
     pDecoder->SetOption(DECODER_OPTION_ERROR_CON_IDC, &iErrorConMethod);
 
-    // 初始化工具类
-    CUtils cOutputModule;
     double dElapsed = 0;
     uint8_t uLastSpsBuf[32];
     int32_t iLastSpsByteCount = 0;
@@ -426,7 +461,7 @@ void H264DecodeInstance(ISVCDecoder *pDecoder, const char *kpH264FileName, const
         iTotal += iEnd - iStart;
         // 如果解码成功，处理解码后的数据
         if (sDstBufInfo.iBufferStatus == 1) {
-            cOutputModule.Process((void **) pDst, &sDstBufInfo, pYuvFile);
+            Process((void **) pDst, &sDstBufInfo, pYuvFile);
             iWidth = sDstBufInfo.UsrData.sSystemBuffer.iWidth;
             iHeight = sDstBufInfo.UsrData.sSystemBuffer.iHeight;
 

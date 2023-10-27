@@ -34,4 +34,4 @@ else()
 
 endif()
 
-add_executable(load_image ${glfw_sources} main.cpp texture2d.cpp d3d9_utils.cpp)
+add_executable(load_image ${glfw_sources} main.cpp texture2d.cpp)
