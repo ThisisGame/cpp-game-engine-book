@@ -3,17 +3,26 @@
 #define GLFW_INCLUDE_NONE
 
 #include <GLFW/glfw3.h>
-
-#include <glm/glm.hpp>
-#include<glm/gtc/matrix_transform.hpp>
-#include<glm/gtx/transform2.hpp>
-#include<glm/gtx/euler_angles.hpp>
 #include "spdlog/spdlog.h"
 #include "spdlog/sinks/stdout_color_sinks.h"
 #include "spdlog/sinks/basic_file_sink.h"
-#include <stdlib.h>
 #include <stdio.h>
 #include <iostream>
+
+
+#define _CRT_SECURE_NO_WARNINGS
+
+#include <tchar.h>
+#include <filesystem>
+#include <fstream>
+
+#include "codec_def.h"
+#include "codec_app_def.h"
+#include "codec_api.h"
+#include "measure_time.h"
+
+using namespace std;
+
 
 void InitSpdLog() {
     try {
@@ -35,30 +44,19 @@ void InitSpdLog() {
     }
 }
 
-#define _CRT_SECURE_NO_WARNINGS
-
-#include <windows.h>
-#include <tchar.h>
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdarg.h>
-
-#include "codec_def.h"
-#include "codec_app_def.h"
-#include "codec_api.h"
-#include "measure_time.h"
-
-using namespace std;
-
-
-void Write2File (FILE* pFp, unsigned char* pData[3], int iStride[2], int iWidth, int iHeight) {
-    int   i;
-    unsigned char*  pPtr = NULL;
+/// 将YUV三个通道的数据写入到文件中
+/// \param ofs
+/// \param pData
+/// \param iStride
+/// \param iWidth
+/// \param iHeight
+void Write2File (std::ofstream& ofs, unsigned char* pData[3], int iStride[2], int iWidth, int iHeight) {
+    int i;
+    unsigned char* pPtr = NULL;
 
     pPtr = pData[0];
     for (i = 0; i < iHeight; i++) {
-        fwrite (pPtr, 1, iWidth, pFp);
+        ofs.write(reinterpret_cast<char*>(pPtr), iWidth);
         pPtr += iStride[0];
     }
 
@@ -66,29 +64,51 @@ void Write2File (FILE* pFp, unsigned char* pData[3], int iStride[2], int iWidth,
     iWidth = iWidth / 2;
     pPtr = pData[1];
     for (i = 0; i < iHeight; i++) {
-        fwrite (pPtr, 1, iWidth, pFp);
+        ofs.write(reinterpret_cast<char*>(pPtr), iWidth);
         pPtr += iStride[1];
     }
 
     pPtr = pData[2];
     for (i = 0; i < iHeight; i++) {
-        fwrite (pPtr, 1, iWidth, pFp);
+        ofs.write(reinterpret_cast<char*>(pPtr), iWidth);
         pPtr += iStride[1];
     }
 }
 
-int Process (void* pDst[3], SBufferInfo* pInfo, FILE* pFp) {
-    if (pFp && pDst[0] && pDst[1] && pDst[2] && pInfo) {
-        int iStride[2];
-        int iWidth = pInfo->UsrData.sSystemBuffer.iWidth;
-        int iHeight = pInfo->UsrData.sSystemBuffer.iHeight;
-        iStride[0] = pInfo->UsrData.sSystemBuffer.iStride[0];
-        iStride[1] = pInfo->UsrData.sSystemBuffer.iStride[1];
+/// 保存一帧的YUV数据为图片
+/// \param pDst
+/// \param pInfo
+/// \param FrameIndex
+void SaveOneFrame(void* pDst[3], SBufferInfo* pInfo, int FrameIndex)
+{
+//    spdlog::info("SaveOneFrame FrameIndex={}",FrameIndex);
 
-        Write2File (pFp, (unsigned char**)pDst, iStride, iWidth, iHeight);
+    // 检查并创建目录Frames，并以f_加上FrameIndex为文件名创建文件，调用Process函数，保存每一帧为图片
+    // 检查Frames目录是否存在
+    if (!std::filesystem::exists("Frames")) {
+        // 创建目录Frames
+        std::filesystem::create_directory("Frames");
     }
 
-    return 0;
+    // 以f_加上FrameIndex为文件名创建文件
+    std::string filename = "Frames/f_" + std::to_string(FrameIndex);
+    std::ofstream file(filename, std::ios::binary);
+
+    // 调用Process函数，保存每一帧为图片
+    if (file.is_open()) {
+
+        if (pDst[0] && pDst[1] && pDst[2] && pInfo) {
+            int iStride[2];
+            int iWidth = pInfo->UsrData.sSystemBuffer.iWidth;
+            int iHeight = pInfo->UsrData.sSystemBuffer.iHeight;
+            iStride[0] = pInfo->UsrData.sSystemBuffer.iStride[0];
+            iStride[1] = pInfo->UsrData.sSystemBuffer.iStride[1];
+
+            Write2File (file, (unsigned char**)pDst, iStride, iWidth, iHeight);
+        }
+
+        file.close();
+    }
 }
 
 /**
@@ -268,13 +288,11 @@ int32_t readPicture(uint8_t *pBuf, const int32_t &iFileSize, const int32_t &bufP
  * @param uiTimeStamp 时间戳。
  * @param iWidth 用于记录宽度的变量。
  * @param iHeight 用于记录高度的变量。
- * @param iLastWidth 用于记录上一帧的宽度的变量。
- * @param iLastHeight 用于记录上一帧的高度的变量。
  * @note 这个函数首先获取解码器中剩余的帧数，然后遍历这些帧，对每一帧进行解码，并将解码后的帧写入到YUV文件中。如果选项文件存在，且帧的宽度或高度发生变化，那么这个函数还会将帧数、宽度和高度写入到选项文件中。
  */
-void FlushFrames(ISVCDecoder *pDecoder, int64_t &iTotal, FILE *pYuvFile, FILE *pOptionFile, int32_t &iFrameCount,
-                 unsigned long long &uiTimeStamp, int32_t &iWidth, int32_t &iHeight, int32_t &iLastWidth,
-                 int32_t iLastHeight) {
+void FlushFrames(ISVCDecoder *pDecoder,int32_t &iFrameCount,unsigned long long &uiTimeStamp) {
+//    spdlog::info("FlushFrames");
+
     // 初始化数据和目标缓冲区
     uint8_t *pData[3] = {nullptr};
     uint8_t *pDst[3] = {nullptr};
@@ -286,8 +304,7 @@ void FlushFrames(ISVCDecoder *pDecoder, int64_t &iTotal, FILE *pYuvFile, FILE *p
     pDecoder->GetOption(DECODER_OPTION_NUM_OF_FRAMES_REMAINING_IN_BUFFER, &num_of_frames_in_buffer);
     // 遍历缓冲区中的所有帧
     for (int32_t i = 0; i < num_of_frames_in_buffer; ++i) {
-        // 记录开始时间
-        int64_t iStart = WelsTime();
+
         // 清空数据缓冲区和缓冲区信息
         pData[0] = nullptr;
         pData[1] = nullptr;
@@ -304,112 +321,70 @@ void FlushFrames(ISVCDecoder *pDecoder, int64_t &iTotal, FILE *pYuvFile, FILE *p
             pDst[1] = sDstBufInfo.pDst[1];
             pDst[2] = sDstBufInfo.pDst[2];
         }
-        // 记录结束时间，并累加总时间
-        int64_t iEnd = WelsTime();
-        iTotal += iEnd - iStart;
+
         // 如果缓冲区状态为1，表示解码成功
         if (sDstBufInfo.iBufferStatus == 1) {
             // 处理解码后的数据
-            Process((void **) pDst, &sDstBufInfo, pYuvFile);
-            // 获取解码后的宽度和高度
-            iWidth = sDstBufInfo.UsrData.sSystemBuffer.iWidth;
-            iHeight = sDstBufInfo.UsrData.sSystemBuffer.iHeight;
+            SaveOneFrame((void **) pDst, &sDstBufInfo, iFrameCount);
             // 增加帧数
             ++iFrameCount;
         }
     }
 }
 
-void H264DecodeInstance(ISVCDecoder *pDecoder, const char *kpH264FileName, const char *kpOuputFileName,
-                        int32_t &iWidth, int32_t &iHeight, const char *pOptionFileName, const char *pLengthFileName,
-                        int32_t iErrorConMethod,
-                        bool bLegacyCalling) {
-    // 初始化各种文件指针
-    FILE *pH264File = nullptr;
-    FILE *pYuvFile = nullptr;
-
+void H264DecodeInstance(ISVCDecoder *pDecoder, const char *kpH264FileName,int32_t iErrorConMethod,int iFileSize) {
     // 如果解码器为空，则直接返回
     if (pDecoder == nullptr) return;
 
     // 初始化各种参数和缓冲区
-    int32_t pInfo[4];
     unsigned long long uiTimeStamp = 0;
-    int64_t iStart = 0, iEnd = 0, iTotal = 0;
-    int32_t iSliceSize;
-    int32_t iSliceIndex = 0;
-    uint8_t *pBuf = nullptr;
-    uint8_t uiStartCode[4] = {0, 0, 0, 1};
 
-    uint8_t *pData[3] = {nullptr};
-    uint8_t *pDst[3] = {nullptr};
-    SBufferInfo sDstBufInfo;
-
-    int32_t iBufPos = 0;
-    int32_t iFileSize;
-    int32_t iLastWidth = 0, iLastHeight = 0;
     int32_t iFrameCount = 0;
-    int32_t iEndOfStreamFlag = 0;
 
     // 设置解码器的错误掩盖方法
     pDecoder->SetOption(DECODER_OPTION_ERROR_CON_IDC, &iErrorConMethod);
 
-    double dElapsed = 0;
-    uint8_t uLastSpsBuf[32];
-    int32_t iLastSpsByteCount = 0;
+
 
     // 获取解码器的线程数
     int32_t iThreadCount = 1;
     pDecoder->GetOption(DECODER_OPTION_NUM_OF_THREADS, &iThreadCount);
 
-    // 则打开文件
-    pH264File = fopen(kpH264FileName, "rb");
-
-    // 输出文件
-    pYuvFile = fopen(kpOuputFileName, "wb");
-
-    printf("------------------------------------------------------\n");
-
-    // 获取H264文件的大小
-    fseek(pH264File, 0L, SEEK_END);
-    iFileSize = (int32_t) ftell(pH264File);
-    if (iFileSize <= 4) {
-        fprintf(stderr, "Current Bit Stream File is too small, read error!!!!\n");
-        goto label_exit;
-    }
+    // 打开文件
+    FILE *pH264File = fopen(kpH264FileName, "rb");
     fseek(pH264File, 0L, SEEK_SET);
 
-    // 分配缓冲区
-    pBuf = new uint8_t[iFileSize + 4];
+    int iReadBytes = iFileSize;
+    // 分配缓冲区，多申请4个字节用来存结束标志。
+    uint8_t *pBuf = new uint8_t[iReadBytes + 4];
 
     // 读取H264文件到缓冲区，一次性读取整个文件了！
-    if (fread(pBuf, 1, iFileSize, pH264File) != (uint32_t) iFileSize) {
-        fprintf(stderr, "Unable to read whole file\n");
-        goto label_exit;
-    }
+    fread(pBuf, 1, iReadBytes, pH264File);
 
     // 设置缓冲区的结束标志
-    memcpy(pBuf + iFileSize, &uiStartCode[0], 4); //confirmed_safe_unsafe_usage
+    uint8_t uiStartCode[4] = {0, 0, 0, 1};
+    memcpy(pBuf + iReadBytes, &uiStartCode[0], 4); //confirmed_safe_unsafe_usage
+
+    uint8_t uLastSpsBuf[32];
+    int32_t iLastSpsByteCount = 0;
 
     // 开始解码过程
-    while (true) {
-        // 如果缓冲区位置大于等于文件大小，表示已经读取完所有数据
-        if (iBufPos >= iFileSize) {
-            pDecoder->SetOption(DECODER_OPTION_END_OF_STREAM, (void *) &iEndOfStreamFlag);
-            break;
-        }
+    int32_t iBufPos = 0;
+    while (iBufPos < iReadBytes) {
+        int32_t iSliceSize = 0;
+
         // 如果线程数大于等于1，读取图片
         if (iThreadCount >= 1) {
             uint8_t *uSpsPtr = nullptr;
             int32_t iSpsByteCount = 0;
-            iSliceSize = readPicture(pBuf, iFileSize, iBufPos, uSpsPtr, iSpsByteCount);
+            iSliceSize = readPicture(pBuf, iReadBytes, iBufPos, uSpsPtr, iSpsByteCount);
+//            spdlog::info("readPicture iSliceSize={}", iSliceSize);
 
             // 如果新序列与前序列不同，必须刷新所有待处理的帧，然后才能开始解码新序列
             if (iLastSpsByteCount > 0 && iSpsByteCount > 0) {
                 if (iSpsByteCount != iLastSpsByteCount || memcmp(uSpsPtr, uLastSpsBuf, iLastSpsByteCount) != 0) {
-                    //whenever new sequence is different from preceding sequence. All pending frames must be flushed out before the new sequence can start to decode.
-                    FlushFrames(pDecoder, iTotal, pYuvFile, nullptr, iFrameCount, uiTimeStamp, iWidth, iHeight,
-                                iLastWidth,
-                                iLastHeight);
+                    FlushFrames(pDecoder,iFrameCount, uiTimeStamp);
+//                    spdlog::info("FlushFrames");
                 }
             }
             // 如果SPS字节计数大于0，复制SPS缓冲区
@@ -419,12 +394,11 @@ void H264DecodeInstance(ISVCDecoder *pDecoder, const char *kpH264FileName, const
                 memcpy(uLastSpsBuf, uSpsPtr, iSpsByteCount);
             }
         } else {
-            // 如果线程数小于1，查找下一个NALU的开始位置
+            // 如果线程数小于1，寻找H.264视频流中的NAL单元。
+            // 在H.264视频流中，每个NAL单元的开始都会被一个起始码标记，起始码可以是0x000001（3字节）或者0x00000001（4字节）。
             int i = 0;
-            for (i = 0; i < iFileSize; i++) {
-                if ((pBuf[iBufPos + i] == 0 && pBuf[iBufPos + i + 1] == 0 && pBuf[iBufPos + i + 2] == 0 &&
-                     pBuf[iBufPos + i + 3] == 1
-                     && i > 0) ||
+            for (i = 0; i < iReadBytes; i++) {
+                if ((pBuf[iBufPos + i] == 0 && pBuf[iBufPos + i + 1] == 0 && pBuf[iBufPos + i + 2] == 0 && pBuf[iBufPos + i + 3] == 1 && i > 0) ||
                     (pBuf[iBufPos + i] == 0 && pBuf[iBufPos + i + 1] == 0 && pBuf[iBufPos + i + 2] == 1 && i > 0)) {
                     break;
                 }
@@ -437,58 +411,36 @@ void H264DecodeInstance(ISVCDecoder *pDecoder, const char *kpH264FileName, const
             continue;
         }
 
-        // 记录开始时间
-        iStart = WelsTime();
-        pData[0] = nullptr;
-        pData[1] = nullptr;
-        pData[2] = nullptr;
-        uiTimeStamp++;
+        SBufferInfo sDstBufInfo;
         memset(&sDstBufInfo, 0, sizeof(SBufferInfo));
-        sDstBufInfo.uiInBsTimeStamp = uiTimeStamp;
+        sDstBufInfo.uiInBsTimeStamp = ++uiTimeStamp;
 
         // 调用解码器的解码函数
+        uint8_t *pData[3] = {nullptr};
+//        spdlog::info("DecodeFrameNoDelay");
         pDecoder->DecodeFrameNoDelay(pBuf + iBufPos, iSliceSize, pData, &sDstBufInfo);
-
+//        spdlog::info("DecodeFrameNoDelay iSliceSize={}", iSliceSize);
 
         // 如果解码成功，处理解码后的数据
         if (sDstBufInfo.iBufferStatus == 1) {
-            pDst[0] = sDstBufInfo.pDst[0];
-            pDst[1] = sDstBufInfo.pDst[1];
-            pDst[2] = sDstBufInfo.pDst[2];
-        }
-        // 记录结束时间，并累加总时间
-        iEnd = WelsTime();
-        iTotal += iEnd - iStart;
-        // 如果解码成功，处理解码后的数据
-        if (sDstBufInfo.iBufferStatus == 1) {
-            Process((void **) pDst, &sDstBufInfo, pYuvFile);
-            iWidth = sDstBufInfo.UsrData.sSystemBuffer.iWidth;
-            iHeight = sDstBufInfo.UsrData.sSystemBuffer.iHeight;
-
+            SaveOneFrame((void **) sDstBufInfo.pDst, &sDstBufInfo, iFrameCount);
+//            spdlog::info("SaveOneFrame End");
             // 增加帧数
             ++iFrameCount;
         }
 
         // 更新缓冲区位置
         iBufPos += iSliceSize;
-        // 增加切片索引
-        ++iSliceIndex;
     }
 
+    int32_t iEndOfStreamFlag = 0;
+    pDecoder->SetOption(DECODER_OPTION_END_OF_STREAM, (void *) &iEndOfStreamFlag);
+
     // 刷新所有待处理的帧
-    FlushFrames(pDecoder, iTotal, pYuvFile, nullptr, iFrameCount, uiTimeStamp, iWidth, iHeight, iLastWidth,
-                iLastHeight);
+    FlushFrames(pDecoder,iFrameCount, uiTimeStamp);
 
-    // 计算解码所用的时间
-    dElapsed = iTotal / 1e6;
-    // 打印解码信息
-    fprintf(stderr, "-------------------------------------------------------\n");
-    fprintf(stderr, "iWidth:\t\t%d\nheight:\t\t%d\nFrames:\t\t%d\ndecode time:\t%f sec\nFPS:\t\t%f fps\n",
-            iWidth, iHeight, iFrameCount, dElapsed, (iFrameCount * 1.0) / dElapsed);
-    fprintf(stderr, "-------------------------------------------------------\n");
+//    spdlog::info("Decode End");
 
-    // 清理工作，释放内存，关闭文件
-    label_exit:
     // 如果缓冲区不为空，则删除缓冲区并将指针设为NULL
     if (pBuf) {
         delete[] pBuf;
@@ -499,28 +451,33 @@ void H264DecodeInstance(ISVCDecoder *pDecoder, const char *kpH264FileName, const
         fclose(pH264File);
         pH264File = NULL;
     }
-    // 如果YUV文件打开，则关闭文件并将指针设为NULL
-    if (pYuvFile) {
-        fclose(pYuvFile);
-        pYuvFile = NULL;
-    }
 }
 
 
 int32_t main(int32_t iArgC, char *pArgV[]) {
-    InitSpdLog();
+//    InitSpdLog();
 
+    //usage 2: h264dec.exe test.264 test.yuv
+    string strInputFile = "../data/video/man_1008x888.h264";
+
+    // 文件尺寸还不够4字节的文件头，直接返回
+    std::ifstream file(strInputFile, std::ios::binary | std::ios::ate);
+    std::streamsize size = file.tellg();
+    file.close();
+    if (size <= 4) {
+        fprintf(stderr, "Current Bit Stream File is too small, read error!!!!\n");
+        return 0;
+    }
+
+    // 创建解码器实例
     ISVCDecoder *pDecoder = nullptr;
 
     SDecodingParam sDecParam = {0};
-    string strInputFile, strOutputFile(""), strOptionFile(""), strLengthFile("");
 
     sDecParam.sVideoProperty.size = sizeof(sDecParam.sVideoProperty);
     sDecParam.eEcActiveIdc = ERROR_CON_SLICE_MV_COPY_CROSS_IDR_FREEZE_RES_CHANGE;
 
-    //usage 2: h264dec.exe test.264 test.yuv
-    strInputFile = "../data/video/man_1008x888.h264";
-    strOutputFile = "man_1008x888.yuv420";
+
     sDecParam.uiTargetDqLayer = (uint8_t) -1;
     sDecParam.eEcActiveIdc = ERROR_CON_SLICE_COPY;
     sDecParam.sVideoProperty.eVideoBsType = VIDEO_BITSTREAM_DEFAULT;
@@ -541,11 +498,7 @@ int32_t main(int32_t iArgC, char *pArgV[]) {
         return 1;
     }
 
-
-    int32_t iWidth = 0;
-    int32_t iHeight = 0;
-
-    H264DecodeInstance(pDecoder, strInputFile.c_str(), strOutputFile.c_str(), iWidth,iHeight,NULL,NULL,(int32_t) sDecParam.eEcActiveIdc,false);
+    H264DecodeInstance(pDecoder, strInputFile.c_str(),(int32_t) sDecParam.eEcActiveIdc,size);
 
     if (sDecParam.pFileNameRestructed != NULL) {
         delete[]sDecParam.pFileNameRestructed;
@@ -553,8 +506,12 @@ int32_t main(int32_t iArgC, char *pArgV[]) {
     }
 
     if (pDecoder) {
+//        spdlog::info("Uninitialize");
         pDecoder->Uninitialize();
+
+//        spdlog::info("WelsDestroyDecoder");
         WelsDestroyDecoder(pDecoder);
+//        spdlog::info("WelsDestroyDecoder End");
     }
 
     return 0;
