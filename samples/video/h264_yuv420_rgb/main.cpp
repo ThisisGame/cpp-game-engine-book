@@ -344,12 +344,6 @@ void H264DecodeInstance(ISVCDecoder *pDecoder, const char *kpH264FileName,int32_
     // 设置解码器的错误掩盖方法
     pDecoder->SetOption(DECODER_OPTION_ERROR_CON_IDC, &iErrorConMethod);
 
-
-
-    // 获取解码器的线程数
-    int32_t iThreadCount = 1;
-    pDecoder->GetOption(DECODER_OPTION_NUM_OF_THREADS, &iThreadCount);
-
     // 打开文件
     FILE *pH264File = fopen(kpH264FileName, "rb");
     fseek(pH264File, 0L, SEEK_SET);
@@ -373,38 +367,19 @@ void H264DecodeInstance(ISVCDecoder *pDecoder, const char *kpH264FileName,int32_
     while (iBufPos < iReadBytes) {
         int32_t iSliceSize = 0;
 
-        // 如果线程数大于等于1，读取图片
-        if (iThreadCount >= 1) {
-            uint8_t *uSpsPtr = nullptr;
-            int32_t iSpsByteCount = 0;
-            iSliceSize = readPicture(pBuf, iReadBytes, iBufPos, uSpsPtr, iSpsByteCount);
-//            spdlog::info("readPicture iSliceSize={}", iSliceSize);
-
-            // 如果新序列与前序列不同，必须刷新所有待处理的帧，然后才能开始解码新序列
-            if (iLastSpsByteCount > 0 && iSpsByteCount > 0) {
-                if (iSpsByteCount != iLastSpsByteCount || memcmp(uSpsPtr, uLastSpsBuf, iLastSpsByteCount) != 0) {
-                    FlushFrames(pDecoder,iFrameCount, uiTimeStamp);
-//                    spdlog::info("FlushFrames");
-                }
+        // 在H.264视频流中，每个NAL单元的开始都会被一个起始码标记，起始码可以是0x000001（3字节）或者0x00000001（4字节）。
+        int i = 0;
+        while(true)
+        {
+            if ((pBuf[iBufPos + i] == 0 && pBuf[iBufPos + i + 1] == 0 && pBuf[iBufPos + i + 2] == 0 && pBuf[iBufPos + i + 3] == 1 && i > 0) ||
+                (pBuf[iBufPos + i] == 0 && pBuf[iBufPos + i + 1] == 0 && pBuf[iBufPos + i + 2] == 1 && i > 0))
+            {
+                iSliceSize = i;
+                break;
             }
-            // 如果SPS字节计数大于0，复制SPS缓冲区
-            if (iSpsByteCount > 0 && uSpsPtr != nullptr) {
-                if (iSpsByteCount > 32) iSpsByteCount = 32;
-                iLastSpsByteCount = iSpsByteCount;
-                memcpy(uLastSpsBuf, uSpsPtr, iSpsByteCount);
-            }
-        } else {
-            // 如果线程数小于1，寻找H.264视频流中的NAL单元。
-            // 在H.264视频流中，每个NAL单元的开始都会被一个起始码标记，起始码可以是0x000001（3字节）或者0x00000001（4字节）。
-            int i = 0;
-            for (i = 0; i < iReadBytes; i++) {
-                if ((pBuf[iBufPos + i] == 0 && pBuf[iBufPos + i + 1] == 0 && pBuf[iBufPos + i + 2] == 0 && pBuf[iBufPos + i + 3] == 1 && i > 0) ||
-                    (pBuf[iBufPos + i] == 0 && pBuf[iBufPos + i + 1] == 0 && pBuf[iBufPos + i + 2] == 1 && i > 0)) {
-                    break;
-                }
-            }
-            iSliceSize = i;
+            i++;
         }
+
         // 如果NALU的大小小于4，表示没有有效数据，忽略
         if (iSliceSize < 4) { //too small size, no effective data, ignore
             iBufPos += iSliceSize;
