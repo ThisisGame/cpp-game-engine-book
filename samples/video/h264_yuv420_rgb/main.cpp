@@ -359,62 +359,107 @@ void H264DecodeInstance(ISVCDecoder *pDecoder, const char *kpH264FileName,int32_
     uint8_t uiStartCode[4] = {0, 0, 0, 1};
     memcpy(pBuf + iReadBytes, &uiStartCode[0], 4); //confirmed_safe_unsafe_usage
 
-    uint8_t uLastSpsBuf[32];
-    int32_t iLastSpsByteCount = 0;
 
-    // 开始解码过程
-    int32_t iBufPos = 0;
-    while (iBufPos < iReadBytes) {
-        int32_t iSliceSize = 0;
+    std::ifstream file(kpH264FileName, std::ios::binary);
 
-        // 在H.264视频流中，每个NAL单元的开始都会被一个起始码标记，起始码可以是0x000001（3字节）或者0x00000001（4字节）。
-        int i = 0;
-        while(true)
-        {
-            if ((pBuf[iBufPos + i] == 0 && pBuf[iBufPos + i + 1] == 0 && pBuf[iBufPos + i + 2] == 0 && pBuf[iBufPos + i + 3] == 1 && i > 0) ||
-                (pBuf[iBufPos + i] == 0 && pBuf[iBufPos + i + 1] == 0 && pBuf[iBufPos + i + 2] == 1 && i > 0))
-            {
-                iSliceSize = i;
-                break;
+    std::vector<char> packet;
+    int nal_deliminator = 0;
+    char byte;
+    while (true) {
+        if (file.read(&byte, 1)) {
+            packet.push_back(byte);
+
+            // 检查是否找到了数据包的起始码
+            if (byte == 1 && nal_deliminator == 3) {
+                // 如果找到了起始码，处理数据包（除去起始码）
+//                packet.resize(packet.size() - 4);  // 移除起始码
+
+                SBufferInfo sDstBufInfo;
+                memset(&sDstBufInfo, 0, sizeof(SBufferInfo));
+                sDstBufInfo.uiInBsTimeStamp = ++uiTimeStamp;
+
+                // 调用解码器的解码函数
+                uint8_t *pData[3] = {nullptr};
+                void* packet_data=malloc(packet.size());
+                memcpy(packet_data,packet.data(),packet.size());
+                pDecoder->DecodeFrameNoDelay(static_cast<const unsigned char *>(packet_data), packet.size(), pData, &sDstBufInfo);
+
+                // 如果解码成功，处理解码后的数据
+                if (sDstBufInfo.iBufferStatus == 1) {
+                    SaveOneFrame((void **) sDstBufInfo.pDst, &sDstBufInfo, iFrameCount);
+
+                    // 增加帧数
+                    ++iFrameCount;
+                }
+
+                // 清空数据包，准备读取下一个数据包
+                packet.clear();
+                nal_deliminator = 0;
+            } else {
+                if (byte == 0) {
+                    ++nal_deliminator;
+                } else {
+                    nal_deliminator = 0;
+                }
             }
-            i++;
+        } else {
+            // 如果无法读取更多数据，暂停一段时间，然后再次尝试读取
+            std::this_thread::sleep_for(std::chrono::milliseconds(100));
+            file.clear();  // 清除文件流的错误标志
         }
-
-        // 如果NALU的大小小于4，表示没有有效数据，忽略
-        if (iSliceSize < 4) { //too small size, no effective data, ignore
-            iBufPos += iSliceSize;
-            continue;
-        }
-
-        SBufferInfo sDstBufInfo;
-        memset(&sDstBufInfo, 0, sizeof(SBufferInfo));
-        sDstBufInfo.uiInBsTimeStamp = ++uiTimeStamp;
-
-        // 调用解码器的解码函数
-        uint8_t *pData[3] = {nullptr};
-//        spdlog::info("DecodeFrameNoDelay");
-        pDecoder->DecodeFrameNoDelay(pBuf + iBufPos, iSliceSize, pData, &sDstBufInfo);
-//        spdlog::info("DecodeFrameNoDelay iSliceSize={}", iSliceSize);
-
-        // 如果解码成功，处理解码后的数据
-        if (sDstBufInfo.iBufferStatus == 1) {
-            SaveOneFrame((void **) sDstBufInfo.pDst, &sDstBufInfo, iFrameCount);
-//            spdlog::info("SaveOneFrame End");
-            // 增加帧数
-            ++iFrameCount;
-        }
-
-        // 更新缓冲区位置
-        iBufPos += iSliceSize;
     }
 
-    int32_t iEndOfStreamFlag = 0;
-    pDecoder->SetOption(DECODER_OPTION_END_OF_STREAM, (void *) &iEndOfStreamFlag);
+    file.close();
 
-    // 刷新所有待处理的帧
-    FlushFrames(pDecoder,iFrameCount, uiTimeStamp);
+//    // 开始解码过程
+//    int32_t iBufPos = 0;
+//    while (iBufPos < iReadBytes) {
+//        int32_t iSliceSize = 0;
+//
+//        // 在H.264视频流中，每个NAL单元的开始都会被一个起始码标记，起始码可以是0x000001（3字节）或者0x00000001（4字节）。
+//        int i = 0;
+//        while(true)
+//        {
+//            if ((pBuf[iBufPos + i] == 0 && pBuf[iBufPos + i + 1] == 0 && pBuf[iBufPos + i + 2] == 0 && pBuf[iBufPos + i + 3] == 1 && i > 0) ||
+//                (pBuf[iBufPos + i] == 0 && pBuf[iBufPos + i + 1] == 0 && pBuf[iBufPos + i + 2] == 1 && i > 0))
+//            {
+//                iSliceSize = i;
+//                break;
+//            }
+//            i++;
+//        }
+//
+//        // 如果NALU的大小小于4，表示没有有效数据，忽略
+//        if (iSliceSize < 4) { //too small size, no effective data, ignore
+//            iBufPos += iSliceSize;
+//            continue;
+//        }
+//
+//        SBufferInfo sDstBufInfo;
+//        memset(&sDstBufInfo, 0, sizeof(SBufferInfo));
+//        sDstBufInfo.uiInBsTimeStamp = ++uiTimeStamp;
+//
+//        // 调用解码器的解码函数
+//        uint8_t *pData[3] = {nullptr};
+//        pDecoder->DecodeFrameNoDelay(pBuf + iBufPos, iSliceSize, pData, &sDstBufInfo);
+//
+//        // 如果解码成功，处理解码后的数据
+//        if (sDstBufInfo.iBufferStatus == 1) {
+//            SaveOneFrame((void **) sDstBufInfo.pDst, &sDstBufInfo, iFrameCount);
+//            // 增加帧数
+//            ++iFrameCount;
+//        }
+//
+//        // 更新缓冲区位置
+//        iBufPos += iSliceSize;
+//    }
+//
+//    int32_t iEndOfStreamFlag = 0;
+//    pDecoder->SetOption(DECODER_OPTION_END_OF_STREAM, (void *) &iEndOfStreamFlag);
+//
+//    // 刷新所有待处理的帧
+//    FlushFrames(pDecoder,iFrameCount, uiTimeStamp);
 
-//    spdlog::info("Decode End");
 
     // 如果缓冲区不为空，则删除缓冲区并将指针设为NULL
     if (pBuf) {
