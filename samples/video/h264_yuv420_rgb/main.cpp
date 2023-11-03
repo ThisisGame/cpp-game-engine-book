@@ -167,7 +167,7 @@ int32_t main(int32_t iArgC, char *pArgV[]) {
 //    InitSpdLog();
 
     //usage 2: h264dec.exe test.264 test.yuv
-    string strInputFile = "../data/video/man_1008x888.h264";
+    string strInputFile = "../data/video/ue4_1312x728.h264";
 
     // 创建解码器实例
     ISVCDecoder *pDecoder = nullptr;

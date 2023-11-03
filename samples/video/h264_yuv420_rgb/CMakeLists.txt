@@ -18,7 +18,7 @@ file(COPY "../../template/depends/spdlog/include/spdlog/" DESTINATION "../depend
 file(COPY "../../template/depends/openh264/" DESTINATION "../depends/openh264/")
 
 #拷贝data文件
-file(COPY "../../template/data/video/man_1008x888.h264" DESTINATION "../data/video/")
+file(COPY "../../template/data/video/ue4_1312x728.h264" DESTINATION "../data/video/")
 
 #头文件目录
 include_directories("depends")
