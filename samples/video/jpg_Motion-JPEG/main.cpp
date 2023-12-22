@@ -45,7 +45,8 @@ int main(void)
     InitSpdLog();
 
     std::string image_file_path="../data/images/fbi.jpg";
-    std::string video_file_path="output.avi";
+    std::string encode_video_file_path="output.avi";
+    std::string decode_video_file_path="Insights.mp4";
 
     //        cv::Mat frame = cv::imread(image_file_path);
 
@@ -79,7 +80,7 @@ int main(void)
     int codec = cv::VideoWriter::fourcc('M', 'J', 'P', 'G');  // Select codec
     double fps = 60.0;  // Frame rate
     cv::Size frameSize(width, height);  // Frame size
-    writer.open(video_file_path, codec, fps, frameSize, true);
+    writer.open(encode_video_file_path, codec, fps, frameSize, true);
 
     // Check if the writer is opened successfully
     if (!writer.isOpened()) {
@@ -116,7 +117,7 @@ int main(void)
         std::filesystem::create_directory("Frames");
     }
 
-    cv::VideoCapture cap(video_file_path);
+    cv::VideoCapture cap(decode_video_file_path);
 
     if (!cap.isOpened()) {
         std::cerr << "Error opening video file\n";
