@@ -1,4 +1,4 @@
-#ifndef TIMETOOL_STOPWATCH_H
+﻿#ifndef TIMETOOL_STOPWATCH_H
 #define TIMETOOL_STOPWATCH_H
 
 #include<chrono>
