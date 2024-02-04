@@ -76,7 +76,7 @@ end
 --- 创建方向光1
 function LoginScene:CreateDirectionalLight1()
     self.go_directional_light_1_= GameObject.new("directional_light_1")
-    local transform_=self.go_directional_light_1_:AddComponent(Transform):set_local_position(glm.vec3(0, 0, 10))
+    self.go_directional_light_1_:AddComponent(Transform):set_local_position(glm.vec3(0, 0, 10))
     local light=self.go_directional_light_1_:AddComponent(DirectionalLight)
     light:set_color(glm.vec3(1.0,1.0,1.0))
     light:set_intensity(1.0)
