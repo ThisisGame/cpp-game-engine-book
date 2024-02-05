@@ -96,8 +96,8 @@ function LoginScene:CreateDepthCamera()
     self.depth_camera_:set_clear_color(0,0,0,1)
     self.depth_camera_:set_depth(0)
     self.depth_camera_:SetView(glm.vec3(0.0,0.0,0.0), glm.vec3(0.0,1.0,0.0))
-    --self.depth_camera_:SetPerspective(60, Screen.aspect_ratio(), 1, 1000)
-    self.depth_camera_:SetOrthographic(-1.0, 1.0, -1.0, 1.0, -1.0, 1.0)
+    local camera_size_=1.0
+    self.depth_camera_:SetOrthographic(-1*camera_size_, 1*camera_size_, -Screen.aspect_ratio()*camera_size_, Screen.aspect_ratio()*camera_size_, 1.0, 1000.0)
     --设置RenderTexture
     self.depth_render_texture_ = RenderTexture.new()
     self.depth_render_texture_:Init(480,320)
@@ -119,8 +119,7 @@ function LoginScene:CreateMainCamera()
     self.camera_:set_clear_color(0,0,0,1)
     self.camera_:set_depth(0)
     self.camera_:SetView(glm.vec3(0.0,0.0,0.0), glm.vec3(0.0,1.0,0.0))
-    --self.camera_:SetPerspective(60, Screen.aspect_ratio(), 1, 1000)
-    self.camera_:SetOrthographic(-1, 1, -Screen.aspect_ratio(), Screen.aspect_ratio(), 1.0, 1000.0)
+    self.camera_:SetPerspective(60, Screen.aspect_ratio(), 1, 1000)
 end
 
 --- 创建模型
