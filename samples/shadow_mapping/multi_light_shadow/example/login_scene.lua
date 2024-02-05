@@ -110,7 +110,7 @@ function LoginScene:CreateMainCamera()
     --创建相机1 GameObject
     self.go_camera_= GameObject.new("main_camera")
     --挂上 Transform 组件
-    self.go_camera_:AddComponent(Transform):set_local_position(glm.vec3(0, 0, 10))
+    self.go_camera_:AddComponent(Transform):set_local_position(glm.vec3(0, 0, 50))
     self.go_camera_:GetComponent(Transform):set_local_rotation(glm.vec3(0, 0, 0))
     --挂上 Camera 组件
     self.camera_=self.go_camera_:AddComponent(Camera)
@@ -150,10 +150,10 @@ end
 ---@return void
 function LoginScene:CreateWall()
     local vertex_data={
-        -10,-10,0,  1.0,1.0,1.0,1.0, 0,0, -10,-10,1,
-         10,-10,0,  1.0,1.0,1.0,1.0, 1,0, 10,-10,1,
-         10, 10,0,  1.0,1.0,1.0,1.0, 1,1, 10, 10,1,
-        -10, 10,0,  1.0,1.0,1.0,1.0, 0,1, -10, 10,1,
+        -40,-20,0,  1.0,1.0,1.0,1.0, 0,0, -40,-20,1,
+         40,-20,0,  1.0,1.0,1.0,1.0, 1,0, 40,-20,1,
+         40, 20,0,  1.0,1.0,1.0,1.0, 1,1, 40, 20,1,
+        -40, 20,0,  1.0,1.0,1.0,1.0, 0,1, -40, 20,1,
     }
     local vertex_index_data={
         0,1,2,
