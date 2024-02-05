@@ -52,11 +52,11 @@ function LoginScene:Awake()
     LoginScene.super.Awake(self)
 
     self:CreateEnvironment()
-    self:CreateLight()
-    self:CreateDepthCamera()
+    --self:CreateLight()
+    --self:CreateDepthCamera()
     self:CreateMainCamera()
     self:CreatePlane()
-    self:CreateWall()
+    --self:CreateWall()
 end
 
 --- 创建环境
@@ -96,7 +96,8 @@ function LoginScene:CreateDepthCamera()
     self.depth_camera_:set_clear_color(0,0,0,1)
     self.depth_camera_:set_depth(0)
     self.depth_camera_:SetView(glm.vec3(0.0,0.0,0.0), glm.vec3(0.0,1.0,0.0))
-    self.depth_camera_:SetPerspective(60, Screen.aspect_ratio(), 1, 1000)
+    --self.depth_camera_:SetPerspective(60, Screen.aspect_ratio(), 1, 1000)
+    self.depth_camera_:SetOrthographic(-1.0, 1.0, -1.0, 1.0, -1.0, 1.0)
     --设置RenderTexture
     self.depth_render_texture_ = RenderTexture.new()
     self.depth_render_texture_:Init(480,320)
@@ -118,7 +119,8 @@ function LoginScene:CreateMainCamera()
     self.camera_:set_clear_color(0,0,0,1)
     self.camera_:set_depth(0)
     self.camera_:SetView(glm.vec3(0.0,0.0,0.0), glm.vec3(0.0,1.0,0.0))
-    self.camera_:SetPerspective(60, Screen.aspect_ratio(), 1, 1000)
+    --self.camera_:SetPerspective(60, Screen.aspect_ratio(), 1, 1000)
+    self.camera_:SetOrthographic(-1, 1, -Screen.aspect_ratio(), Screen.aspect_ratio(), 1.0, 1000.0)
 end
 
 --- 创建模型
@@ -189,8 +191,8 @@ function LoginScene:Update()
     self.material_plane_:SetUniform1f("u_specular_highlight_shininess",32.0)
 
     --设置ShadowCamera的参数
-    self.material_wall_:SetUniformMatrix4f("u_shadow_camera_view",self.depth_camera_:view_mat4())
-    self.material_wall_:SetUniformMatrix4f("u_shadow_camera_projection",self.depth_camera_:projection_mat4())
+    --self.material_wall_:SetUniformMatrix4f("u_shadow_camera_view",self.depth_camera_:view_mat4())
+    --self.material_wall_:SetUniformMatrix4f("u_shadow_camera_projection",self.depth_camera_:projection_mat4())
 
     --鼠标滚轮控制相机远近
     self.go_camera_:GetComponent(Transform):set_local_position(self.go_camera_:GetComponent(Transform):position() *(10 - Input.mouse_scroll())/10)
