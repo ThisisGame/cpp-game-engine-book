@@ -24,11 +24,11 @@ LoginScene=class("LoginScene",Component)
 function LoginScene:ctor()
     LoginScene.super.ctor(self)
 
-    self.go_depth_camera_ = nil
-    ---@field depth_camera_ Camera @深度相机
-    self.depth_camera_ = nil
-    ---@field depth_render_texture_ RenderTexture  @深度RTT
-    self.depth_render_texture_ = nil
+    self.go_directional_light_left_=nil
+    self.go_depth_camera_left_ = nil
+
+    self.go_directional_light_right_=nil
+    self.go_depth_camera_right_ = nil
 
     self.go_camera_ = nil
     ---@field camera_ Camera @场景相机
@@ -53,10 +53,10 @@ function LoginScene:Awake()
 
     self:CreateEnvironment()
     self:CreateLight()
-    --self:CreateDepthCamera()
+
     self:CreateMainCamera()
     self:CreatePlane()
-    --self:CreateWall()
+    self:CreateWall()
 end
 
 --- 创建环境
@@ -70,40 +70,65 @@ function LoginScene:CreateLight()
     self.go_light_=GameObject.new("light")
     self.go_light_:AddComponent(Transform)
 
-    self:CreateDirectionalLight1()
+    self:CreateDirectionalLightLeft()
+    self:CreateDirectionalLightRight()
 end
 
---- 创建方向光1
-function LoginScene:CreateDirectionalLight1()
-    self.go_directional_light_1_= GameObject.new("directional_light_1")
-    self.go_directional_light_1_:AddComponent(Transform):set_local_position(glm.vec3(0, 0, 10))
-    local light=self.go_directional_light_1_:AddComponent(DirectionalLight)
+--- 创建左边的方向光
+function LoginScene:CreateDirectionalLightLeft()
+    self.go_directional_light_left_= GameObject.new("directional_light_left")
+    local light_transform=self.go_directional_light_left_:AddComponent(Transform)
+    light_transform:set_local_position(glm.vec3(0, 0, 10))
+    light_transform:set_local_rotation(glm.vec3(0.0,-10.0,0.0))
+    local light=self.go_directional_light_left_:AddComponent(DirectionalLight)
     light:set_color(glm.vec3(1.0,1.0,1.0))
     light:set_intensity(1.0)
 
-    self.go_light_:AddChild(self.go_directional_light_1_)
+    self.go_light_:AddChild(self.go_directional_light_left_)
+
+    self.go_depth_camera_left_ = self:CreateDepthCamera("depth_camera_left")
+    self.go_directional_light_left_:AddChild(self.go_depth_camera_left_)
+end
+
+
+--- 创建右边的方向光
+function LoginScene:CreateDirectionalLightRight()
+    self.go_directional_light_right_= GameObject.new("directional_light_right")
+    local light_transform=self.go_directional_light_right_:AddComponent(Transform)
+    light_transform:set_local_position(glm.vec3(0, 0, 10))
+    light_transform:set_local_rotation(glm.vec3(0.0,10.0,0.0))
+    local light=self.go_directional_light_right_:AddComponent(DirectionalLight)
+    light:set_color(glm.vec3(1.0,1.0,1.0))
+    light:set_intensity(1.0)
+
+    self.go_light_:AddChild(self.go_directional_light_right_)
+
+    self.go_depth_camera_right_ = self:CreateDepthCamera("depth_camera_right")
+    self.go_directional_light_right_:AddChild(self.go_depth_camera_right_)
 end
 
 --- 创建深度相机
-function LoginScene:CreateDepthCamera()
+function LoginScene:CreateDepthCamera(go_name)
     --创建相机1 GameObject
-    self.go_depth_camera_= GameObject.new("depth_camera")
+   local go_depth_camera= GameObject.new(go_name)
     --挂上 Transform 组件
-    self.go_depth_camera_:AddComponent(Transform)
-    --挂上 Camera 组件
-    self.depth_camera_=self.go_depth_camera_:AddComponent(Camera)
-    --设置为黑色背景
-    self.depth_camera_:set_clear_color(0,0,0,1)
-    self.depth_camera_:set_depth(0)
-    self.depth_camera_:SetView(glm.vec3(0.0,0.0,0.0), glm.vec3(0.0,1.0,0.0))
-    local camera_size_=1.0
-    self.depth_camera_:SetOrthographic(-1*camera_size_, 1*camera_size_, -Screen.aspect_ratio()*camera_size_, Screen.aspect_ratio()*camera_size_, 1.0, 1000.0)
-    --设置RenderTexture
-    self.depth_render_texture_ = RenderTexture.new()
-    self.depth_render_texture_:Init(480,320)
-    self.depth_camera_:set_target_render_texture(self.depth_render_texture_)
+    go_depth_camera:AddComponent(Transform)
 
-    self.go_directional_light_1_:AddChild(self.go_depth_camera_)
+    --挂上 Camera 组件
+    local depth_camera=go_depth_camera:AddComponent(Camera)
+    --设置为黑色背景
+    depth_camera:set_clear_color(0,0,0,1)
+    depth_camera:set_depth(0)
+    depth_camera:SetView(glm.vec3(0.0,0.0,0.0), glm.vec3(0.0,1.0,0.0))
+    local camera_size_=10.0
+    depth_camera:SetOrthographic(-1*camera_size_, 1*camera_size_, -Screen.aspect_ratio()*camera_size_, Screen.aspect_ratio()*camera_size_, 1.0, 1000.0)
+
+    --设置RenderTexture
+    local depth_render_texture_left = RenderTexture.new()
+    depth_render_texture_left:Init(960,640)
+    depth_camera:set_target_render_texture(depth_render_texture_left)
+
+    return go_depth_camera
 end
 
 --- 创建主相机
@@ -172,7 +197,9 @@ function LoginScene:CreateWall()
     self.material_wall_ = Material.new()--设置材质
     self.material_wall_:Parse("material/wall.mat")
     --给Wall设置DepthTexture
-    self.material_wall_:SetTexture("u_depth_texture",self.depth_render_texture_:depth_texture_2d())
+    local camera=self.go_depth_camera_left_:GetComponent(Camera)
+    local render_texture=camera:target_render_texture()
+    self.material_wall_:SetTexture("u_depth_texture",render_texture:depth_texture_2d())
 
     --挂上 MeshRenderer 组件
     local mesh_renderer= self.go_wall_:AddComponent(MeshRenderer)
@@ -190,8 +217,9 @@ function LoginScene:Update()
     self.material_plane_:SetUniform1f("u_specular_highlight_shininess",32.0)
 
     --设置ShadowCamera的参数
-    --self.material_wall_:SetUniformMatrix4f("u_shadow_camera_view",self.depth_camera_:view_mat4())
-    --self.material_wall_:SetUniformMatrix4f("u_shadow_camera_projection",self.depth_camera_:projection_mat4())
+    local depth_camera_left=self.go_depth_camera_left_:GetComponent(Camera)
+    self.material_wall_:SetUniformMatrix4f("u_shadow_camera_view",depth_camera_left:view_mat4())
+    self.material_wall_:SetUniformMatrix4f("u_shadow_camera_projection",depth_camera_left:projection_mat4())
 
     --鼠标滚轮控制相机远近
     self.go_camera_:GetComponent(Transform):set_local_position(self.go_camera_:GetComponent(Transform):position() *(10 - Input.mouse_scroll())/10)

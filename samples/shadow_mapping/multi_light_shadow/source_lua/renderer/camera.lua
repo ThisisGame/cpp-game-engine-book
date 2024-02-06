@@ -13,6 +13,8 @@ Camera=class("Camera",Component)
 
 function Camera:ctor()
     Camera.super.ctor(self)
+
+    self.lua_target_render_texture_=nil
 end
 
 function Camera:InitCppComponent()
@@ -104,10 +106,16 @@ end
 --- 设置渲染目标RenderTexture
 --- @param render_texture RenderTexture @目标RenderTexture
 function Camera:set_target_render_texture(render_texture)
+    self.lua_target_render_texture_=render_texture
     self.cpp_component_instance_:set_target_render_texture(render_texture:cpp_class_instance())
 end
 
 --- 清空渲染目标RenderTexture
 function Camera:clear_target_render_texture()
+    self.lua_target_render_texture_=nil
     self.cpp_component_instance_:clear_target_render_texture()
+end
+
+function Camera:target_render_texture()
+    return self.lua_target_render_texture_
 end

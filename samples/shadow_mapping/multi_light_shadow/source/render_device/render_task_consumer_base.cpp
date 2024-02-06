@@ -519,7 +519,7 @@ void RenderTaskConsumerBase::ProcessTask() {
 
     while (!exit_)
     {
-        while(true){
+        while(!exit_){
             if(RenderTaskQueue::Empty()){//渲染线程一直等待主线程发出任务。
                 std::this_thread::sleep_for(std::chrono::nanoseconds(1));//没有任务休息一下。
                 continue;

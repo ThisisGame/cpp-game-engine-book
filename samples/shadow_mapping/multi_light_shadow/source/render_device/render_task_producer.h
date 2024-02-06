@@ -180,6 +180,10 @@ public:
 
     /// 发出特殊任务：渲染结束
     static void ProduceRenderTaskEndFrame();
+
+    static void Exit();
+public:
+    static bool exit_;
 };
 
 
