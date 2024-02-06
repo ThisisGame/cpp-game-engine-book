@@ -29,3 +29,7 @@ void Debug::Init() {
         std::cout << "Log initialization failed: " << ex.what() << std::endl;
     }
 }
+
+void Debug::ShutDown() {
+    spdlog::shutdown();
+}

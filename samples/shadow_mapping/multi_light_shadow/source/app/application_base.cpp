@@ -146,4 +146,9 @@ void ApplicationBase::UpdateScreenSize() {
 
 void ApplicationBase::Exit() {
     RenderTaskConsumer::Exit();
+
+    //调用lua exit()
+    LuaBinding::CallLuaFunction("exit");
+
+    Debug::ShutDown();
 }

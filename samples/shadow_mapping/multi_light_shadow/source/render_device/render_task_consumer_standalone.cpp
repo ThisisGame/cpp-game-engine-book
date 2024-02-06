@@ -38,6 +38,14 @@ void RenderTaskConsumerStandalone::InitGraphicsLibraryFramework() {
 //    glfwSwapInterval(1);
 }
 
+void RenderTaskConsumerStandalone::Exit() {
+    RenderTaskConsumerBase::Exit();
+
+    glfwMakeContextCurrent(nullptr);
+    glfwDestroyWindow(window_);
+    window_=nullptr;
+}
+
 void RenderTaskConsumerStandalone::GetFramebufferSize(int& width,int& height) {
     glfwGetFramebufferSize(window_, &width, &height);
 }

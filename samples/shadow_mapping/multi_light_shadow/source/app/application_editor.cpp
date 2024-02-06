@@ -99,7 +99,7 @@ void ApplicationEditor::InitGraphicsLibraryFramework() {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
+//    glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
 #ifdef __APPLE__
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 #endif
@@ -114,7 +114,7 @@ void ApplicationEditor::InitGraphicsLibraryFramework() {
     }
 
     //创建编辑器窗口，并将游戏Context共享。
-    editor_glfw_window_ = glfwCreateWindow(1280, 720, "Dear ImGui GLFW+OpenGL3 example", NULL, game_glfw_window_);
+    editor_glfw_window_ = glfwCreateWindow(1280, 720, "Editor", NULL, game_glfw_window_);
     if (!editor_glfw_window_)
     {
         DEBUG_LOG_ERROR("glfwCreateWindow error!");

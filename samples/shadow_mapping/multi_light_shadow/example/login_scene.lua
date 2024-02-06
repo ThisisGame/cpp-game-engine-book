@@ -52,7 +52,7 @@ function LoginScene:Awake()
     LoginScene.super.Awake(self)
 
     self:CreateEnvironment()
-    --self:CreateLight()
+    self:CreateLight()
     --self:CreateDepthCamera()
     self:CreateMainCamera()
     self:CreatePlane()

@@ -15,3 +15,7 @@ function main()
 
     go:AddComponent(LoginScene)
 end
+
+function exit()
+    print("exit")
+end

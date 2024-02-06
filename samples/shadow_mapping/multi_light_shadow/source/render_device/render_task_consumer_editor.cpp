@@ -77,6 +77,14 @@ void RenderTaskConsumerEditor::InitGraphicsLibraryFramework() {
     render_target_stack_.Push(frame_buffer_object_id);
 }
 
+void RenderTaskConsumerEditor::Exit() {
+    RenderTaskConsumerBase::Exit();
+
+    glfwMakeContextCurrent(nullptr);
+    glfwDestroyWindow(window_);
+    window_=nullptr;
+}
+
 void RenderTaskConsumerEditor::GetFramebufferSize(int& width,int& height) {
     glfwGetFramebufferSize(window_, &width, &height);
 }

@@ -21,6 +21,8 @@ public:
 
     virtual void InitGraphicsLibraryFramework() override;
 
+    virtual void Exit() override;
+
     virtual void GetFramebufferSize(int& width,int& height) override;
 
     virtual void SwapBuffer() override;
