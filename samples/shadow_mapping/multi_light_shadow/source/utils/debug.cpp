@@ -7,6 +7,8 @@
 #include "spdlog/sinks/stdout_color_sinks.h"
 #include "spdlog/sinks/basic_file_sink.h"
 
+bool Debug::bInited_=false;
+
 void Debug::Init() {
     try
     {
@@ -22,6 +24,7 @@ void Debug::Init() {
         spdlog::set_pattern("[source %s] [function %!] [line %#] [%^%l%$] %v");
         spdlog::flush_on(spdlog::level::trace);// flush on every log call.
 
+        bInited_=true;
         DEBUG_LOG_INFO("spdlog init success");
     }
     catch (const spdlog::spdlog_ex& ex)
@@ -32,4 +35,5 @@ void Debug::Init() {
 
 void Debug::ShutDown() {
     spdlog::shutdown();
+    bInited_=false;
 }

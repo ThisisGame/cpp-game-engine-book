@@ -9,7 +9,7 @@
 #include "spdlog/spdlog.h"
 
 /// 输出文件名
-#define DEBUG_LOG_INFO SPDLOG_INFO
+#define DEBUG_LOG_INFO(...) do { if(Debug::bInited_) { SPDLOG_INFO(__VA_ARGS__); } } while(0)
 #define DEBUG_LOG_WARN SPDLOG_WARN
 #define DEBUG_LOG_ERROR SPDLOG_ERROR
 
@@ -25,6 +25,9 @@ public:
     static void Init();
 
     static void ShutDown();
+
+public:
+    static bool bInited_;
 };
 
 
