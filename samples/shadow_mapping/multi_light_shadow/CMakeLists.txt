@@ -46,10 +46,10 @@ file(COPY "../../template/data/model/fbx_extra_basic_plane.weight" DESTINATION "
 file(COPY "../../template/data/animation/fbx_extra_basic_plane_bones_basic_plane_bones_basic_plane_bones_armatureaction_basic_plane_.skeleton_anim" DESTINATION "../data/animation/")
 file(COPY "../../template/data/shader/multi_light.vert" DESTINATION "../data/shader/")
 file(COPY "../../template/data/shader/multi_light.frag" DESTINATION "../data/shader/")
-file(COPY "../../template/data/shader/unlit_receive_shadow.vert" DESTINATION "../data/shader/")
-file(COPY "../../template/data/shader/unlit_receive_shadow.frag" DESTINATION "../data/shader/")
+file(COPY "../../template/data/shader/unlit_receive_two_shadow.vert" DESTINATION "../data/shader/")
+file(COPY "../../template/data/shader/unlit_receive_two_shadow.frag" DESTINATION "../data/shader/")
 file(COPY "../../template/data/material/basic_plane_multi_light.mat" DESTINATION "../data/material/")
-file(COPY "../../template/data/material/wall.mat" DESTINATION "../data/material/")
+file(COPY "../../template/data/material/wall_receive_two_shadow.mat" DESTINATION "../data/material/")
 
 #头文件目录
 include_directories("depends")

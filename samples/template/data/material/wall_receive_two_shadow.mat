@@ -1,0 +1,5 @@
+<material shader="shader/unlit_receive_two_shadow">
+    <texture name="u_diffuse_texture" image="images/urban.cpt"/>
+    <texture name="u_depth_texture_left" image=""/>
+    <texture name="u_depth_texture_right" image=""/>
+</material>

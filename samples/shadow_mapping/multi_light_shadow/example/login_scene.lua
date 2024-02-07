@@ -195,11 +195,15 @@ function LoginScene:CreateWall()
 
     --手动创建Material
     self.material_wall_ = Material.new()--设置材质
-    self.material_wall_:Parse("material/wall.mat")
+    self.material_wall_:Parse("material/wall_receive_two_shadow.mat")
     --给Wall设置DepthTexture
-    local camera=self.go_depth_camera_left_:GetComponent(Camera)
-    local render_texture=camera:target_render_texture()
-    self.material_wall_:SetTexture("u_depth_texture",render_texture:depth_texture_2d())
+    local camera_left=self.go_depth_camera_left_:GetComponent(Camera)
+    local render_texture_left=camera_left:target_render_texture()
+    self.material_wall_:SetTexture("u_depth_texture_left",render_texture_left:depth_texture_2d())
+
+    local camera_right=self.go_depth_camera_right_:GetComponent(Camera)
+    local render_texture_right=camera_right:target_render_texture()
+    self.material_wall_:SetTexture("u_depth_texture_right",render_texture_right:depth_texture_2d())
 
     --挂上 MeshRenderer 组件
     local mesh_renderer= self.go_wall_:AddComponent(MeshRenderer)
@@ -218,8 +222,12 @@ function LoginScene:Update()
 
     --设置ShadowCamera的参数
     local depth_camera_left=self.go_depth_camera_left_:GetComponent(Camera)
-    self.material_wall_:SetUniformMatrix4f("u_shadow_camera_view",depth_camera_left:view_mat4())
-    self.material_wall_:SetUniformMatrix4f("u_shadow_camera_projection",depth_camera_left:projection_mat4())
+    self.material_wall_:SetUniformMatrix4f("u_shadow_camera_view_left",depth_camera_left:view_mat4())
+    self.material_wall_:SetUniformMatrix4f("u_shadow_camera_projection_left",depth_camera_left:projection_mat4())
+
+    local depth_camera_right=self.go_depth_camera_right_:GetComponent(Camera)
+    self.material_wall_:SetUniformMatrix4f("u_shadow_camera_view_right",depth_camera_right:view_mat4())
+    self.material_wall_:SetUniformMatrix4f("u_shadow_camera_projection_right",depth_camera_right:projection_mat4())
 
     --鼠标滚轮控制相机远近
     self.go_camera_:GetComponent(Transform):set_local_position(self.go_camera_:GetComponent(Transform):position() *(10 - Input.mouse_scroll())/10)
