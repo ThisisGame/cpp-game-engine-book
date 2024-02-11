@@ -60,8 +60,8 @@ void main()
 {
     //ambient
     vec3 ambient_color = u_ambient.data.color * u_ambient.data.intensity * texture(u_diffuse_texture,v_uv).rgb;
-    vec3 total_diffuse_color;
-    vec3 total_specular_color;
+    vec3 total_diffuse_color=vec3(0.0,0.0,0.0);
+    vec3 total_specular_color=vec3(0.0,0.0,0.0);
 
     //directional light
     for(int i=0;i<u_directional_light_array.actually_used_count;i++){
