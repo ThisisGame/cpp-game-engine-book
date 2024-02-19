@@ -25,6 +25,7 @@ extern "C"{
 #include "renderer/animation_clip.h"
 #include "renderer/animation.h"
 #include "renderer/render_texture.h"
+#include "renderer/render_texture_geometry_buffer.h"
 #include "ui/rect_transform.h"
 #include "ui/ui_button.h"
 #include "ui/ui_camera.h"
@@ -609,6 +610,12 @@ void LuaBinding::BindLua() {
                                                  "frame_buffer_object_handle", &RenderTexture::frame_buffer_object_handle,
                                                  "color_texture_2d", &RenderTexture::color_texture_2d,
                                                  "depth_texture_2d", &RenderTexture::depth_texture_2d
+        );
+        cpp_ns_table.new_usertype<RenderTextureGeometryBuffer>("RenderTextureGeometryBuffer", sol::call_constructor, sol::constructors<RenderTextureGeometryBuffer()>(),
+                                                               sol::base_classes, sol::bases<RenderTexture>(),
+                                                               "vertex_position_texture_2d", &RenderTextureGeometryBuffer::vertex_position_texture_2d,
+                                                               "vertex_normal_texture_2d", &RenderTextureGeometryBuffer::vertex_normal_texture_2d,
+                                                               "vertex_color_texture_2d", &RenderTextureGeometryBuffer::vertex_color_texture_2d
         );
     }
 

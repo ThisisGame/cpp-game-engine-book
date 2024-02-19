@@ -456,9 +456,9 @@ public:
     unsigned int fbo_handle_=0;//FBO句柄
     unsigned short width_=128;//帧缓冲区尺寸(宽)
     unsigned short height_=128;//帧缓冲区尺寸(高)
-    unsigned int g_vertex_position_texture_handle_=0;//FBO颜色附着点0关联的颜色纹理,存储着顶点坐标数据。
-    unsigned int g_vertex_normal_texture_handle_=0;//FBO颜色附着点1关联的颜色纹理，存储着顶点法线数据。
-    unsigned int g_vertex_color_texture_handle_=0;//FBO颜色附着点2关联的颜色纹理，存储着顶点颜色数据。
+    unsigned int vertex_position_texture_handle_=0;//FBO颜色附着点0关联的颜色纹理,存储着顶点坐标数据。
+    unsigned int vertex_normal_texture_handle_=0;//FBO颜色附着点1关联的颜色纹理，存储着顶点法线数据。
+    unsigned int vertex_color_texture_handle_=0;//FBO颜色附着点2关联的颜色纹理，存储着顶点颜色数据。
 };
 
 /// 特殊任务：帧结束标志，渲染线程收到这个任务后，刷新缓冲区，设置帧结束。

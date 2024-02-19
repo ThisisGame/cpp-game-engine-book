@@ -46,7 +46,8 @@ public:
     Texture2D* depth_texture_2d(){
         return depth_texture_2d_;
     }
-private:
+
+protected:
     unsigned short width_;
     unsigned short height_;
     unsigned int frame_buffer_object_handle_;//关联的FBO Handle

@@ -305,6 +305,20 @@ void RenderTaskProducer::ProduceRenderTaskDeleteFBO(int fbo_handle){
     RenderTaskQueue::Push(task);
 }
 
+void RenderTaskProducer::ProduceRenderTaskCreateGBuffer(int fbo_handle, unsigned short width, unsigned short height,
+                                                        unsigned int vertex_position_texture_handle,
+                                                        unsigned int vertex_normal_texture_handle,
+                                                        unsigned int vertex_color_texture_handle) {
+    RenderTaskCreateGBuffer* task=new RenderTaskCreateGBuffer();
+    task->fbo_handle_=fbo_handle;
+    task->width_=width;
+    task->height_=height;
+    task->vertex_position_texture_handle_=vertex_position_texture_handle;
+    task->vertex_normal_texture_handle_=vertex_normal_texture_handle;
+    task->vertex_color_texture_handle_=vertex_color_texture_handle;
+    RenderTaskQueue::Push(task);
+}
+
 void RenderTaskProducer::ProduceRenderTaskEndFrame() {
     EASY_FUNCTION();
     RenderTaskEndFrame* render_task_frame_end=new RenderTaskEndFrame();
@@ -313,3 +327,5 @@ void RenderTaskProducer::ProduceRenderTaskEndFrame() {
     render_task_frame_end->Wait();
     delete render_task_frame_end;//需要等待结果的任务，需要在获取结果后删除。
 }
+
+

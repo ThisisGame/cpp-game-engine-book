@@ -505,13 +505,13 @@ void RenderTaskConsumer::CreateGBuffer(RenderTaskBase *task_base) {
 
     glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer_object_id);__CHECK_GL_ERROR__
     //将FBO颜色附着点0关联的颜色纹理,存储着顶点坐标数据,绑定到FBO颜色附着点0
-    GLuint vertex_position_texture=GPUResourceMapper::GetTexture(task->g_vertex_position_texture_handle_);
+    GLuint vertex_position_texture=GPUResourceMapper::GetTexture(task->vertex_position_texture_handle_);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, vertex_position_texture, 0);__CHECK_GL_ERROR__
     //将FBO颜色附着点1关联的颜色纹理，存储着顶点法线数据,绑定到FBO颜色附着点1
-    GLuint vertex_normal_texture=GPUResourceMapper::GetTexture(task->g_vertex_normal_texture_handle_);
+    GLuint vertex_normal_texture=GPUResourceMapper::GetTexture(task->vertex_normal_texture_handle_);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, vertex_normal_texture, 0);__CHECK_GL_ERROR__
     //将FBO颜色附着点2关联的颜色纹理，存储着顶点颜色数据，绑定到FBO颜色附着点2
-    GLuint vertex_color_texture=GPUResourceMapper::GetTexture(task->g_vertex_color_texture_handle_);
+    GLuint vertex_color_texture=GPUResourceMapper::GetTexture(task->vertex_color_texture_handle_);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, vertex_color_texture, 0);__CHECK_GL_ERROR__
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);__CHECK_GL_ERROR__

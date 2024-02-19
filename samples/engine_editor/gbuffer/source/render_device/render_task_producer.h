@@ -178,6 +178,12 @@ public:
     /// 删除帧缓冲区对象(FBO)
     static void ProduceRenderTaskDeleteFBO(int fbo_handle);
 
+    /// 创建几何缓冲区(GBuffer)，注意GBuffer就是用的FBO
+    /// \param fbo_handle FBO句柄
+    /// \param width 帧缓冲区尺寸(宽)
+    /// \param height 帧缓冲区尺寸(高)
+    static void ProduceRenderTaskCreateGBuffer(int fbo_handle,unsigned short width,unsigned short height,unsigned int vertex_position_texture_handle,unsigned int vertex_normal_texture_handle,unsigned int vertex_color_texture_handle);
+
     /// 发出特殊任务：渲染结束
     static void ProduceRenderTaskEndFrame();
 };
