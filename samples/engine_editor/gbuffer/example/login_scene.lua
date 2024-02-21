@@ -9,6 +9,7 @@ require("renderer/animation_clip")
 require("renderer/skinned_mesh_renderer")
 require("renderer/texture_2d")
 require("renderer/render_texture")
+require("renderer/render_texture_geometry_buffer")
 require("control/input")
 require("control/key_code")
 require("utils/screen")
@@ -29,8 +30,8 @@ function LoginScene:ctor()
     self.go_camera_ = nil
     ---@field camera_ Camera @场景相机
     self.camera_ = nil
-    ---@field render_texture_ RenderTexture
-    self.render_texture_ = nil
+    ---@field render_texture_geometry_buffer_ RenderTextureGeometryBuffer
+    self.render_texture_geometry_buffer_ = nil
     self.go_skeleton_ = nil --骨骼蒙皮动画物体
     self.animation_ = nil--骨骼动画
     self.animation_clip_ = nil --- 骨骼动画片段
@@ -38,8 +39,6 @@ function LoginScene:ctor()
     self.environment_=nil --环境
     self.go_point_light_1_=nil --灯光
     self.go_point_light_2_=nil --灯光
-    self.go_camera_ui_=nil --摄像机UI
-    self.go_ui_image_=nil --UI图片
 end
 
 function LoginScene:Awake()
@@ -53,7 +52,6 @@ function LoginScene:Awake()
     self:CreatePointLight2()
     self:CreateMainCamera()
     self:CreateModel()
-    self:CreateUI()
 end
 
 --- 创建环境
@@ -129,9 +127,9 @@ function LoginScene:CreateMainCamera()
     self.camera_:SetView(glm.vec3(0.0,0.0,0.0), glm.vec3(0.0,1.0,0.0))
     self.camera_:SetPerspective(60, Screen:aspect_ratio(), 1, 1000)
     --设置RenderTexture
-    self.render_texture_ = RenderTexture.new()
-    self.render_texture_:Init(480,320)
-    self.camera_:set_target_render_texture(self.render_texture_)
+    --self.render_texture_ = RenderTextureGeometryBuffer.new()
+    --self.render_texture_:Init(480,320)
+    --self.camera_:set_target_render_texture(self.render_texture_)
 end
 
 --- 创建模型
@@ -150,7 +148,7 @@ function LoginScene:CreateModel()
 
     --手动创建Material
     self.material_ = Material.new()--设置材质
-    self.material_:Parse("material/basic_plane_multi_light.mat")
+    self.material_:Parse("material/basic_plane_gbuffer.mat")
 
     --挂上 MeshRenderer 组件
     local skinned_mesh_renderer= self.go_skeleton_:AddComponent(SkinnedMeshRenderer)
@@ -158,42 +156,6 @@ function LoginScene:CreateModel()
 
     --播放动画
     self.go_skeleton_:GetComponent(Animation):Play("idle")
-end
-
-function LoginScene:CreateUI()
-    -- 创建UI相机 GameObject
-    self.go_camera_ui_=GameObject.new("ui_camera")
-    -- 挂上 Transform 组件
-    local transform_camera_ui=self.go_camera_ui_:AddComponent(Transform)
-    transform_camera_ui:set_position(glm.vec3(0, 0, 10))
-    -- 挂上 Camera 组件
-    local camera_ui=self.go_camera_ui_:AddComponent(UICamera)
-    camera_ui:set_culling_mask(2)
-    -- 设置正交相机
-    camera_ui:SetView(glm.vec3(0, 0, 0), glm.vec3(0, 1, 0))
-    camera_ui:SetOrthographic(-Screen.width()/2,Screen.width()/2,-Screen.height()/2,Screen.height()/2,-100,100)
-
-    -- 将240x160的RenderTexture放大到960x640
-    -- 创建 UIImage
-    self.go_ui_image_rtt_=GameObject.new("draw render texture")
-    self.go_ui_image_rtt_:set_layer(2)
-    -- 设置尺寸
-    local rect_transform=self.go_ui_image_rtt_:AddComponent(RectTransform)
-    rect_transform:set_rect(glm.vec2(960,640))
-    -- 挂上 UIImage 组件，将RenderTexture绘制出来
-    local ui_image_mod_bag=self.go_ui_image_rtt_:AddComponent(UIImage)
-    ui_image_mod_bag:set_texture(self.render_texture_:color_texture_2d())
-
-    -- 创建一个UI，UI不缩放，使用原生分辨率渲染
-    self.go_ui_image_=GameObject.new("native draw image")
-    self.go_ui_image_:set_layer(2)
-    -- 设置尺寸
-    local rect_transform=self.go_ui_image_:AddComponent(RectTransform)
-    rect_transform:set_position(glm.vec3(0,-200,0))
-    rect_transform:set_rect(glm.vec2(128,128))
-    -- 挂上 UIImage 组件
-    local ui_image_btn=self.go_ui_image_:AddComponent(UIImage)
-    ui_image_btn:set_texture(Texture2D.LoadFromFile("images/btn_power.cpt"))
 end
 
 function LoginScene:Update()
