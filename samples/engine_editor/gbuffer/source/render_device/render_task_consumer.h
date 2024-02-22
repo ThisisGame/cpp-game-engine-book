@@ -132,12 +132,16 @@ private:
     /// 创建GBuffer任务
     static void CreateGBuffer(RenderTaskBase* task_base);
 
+    /// 绑定使用FBO任务
+    static void BindGBuffer(RenderTaskBase* task_base);
+
     /// 结束一帧
     /// \param task_base
     static void EndFrame(RenderTaskBase *task_base);
 private:
     static GLFWwindow* window_;
     static std::thread render_thread_;//渲染线程
+    static bool exit_;
 };
 
 

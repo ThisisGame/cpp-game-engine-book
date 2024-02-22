@@ -37,7 +37,8 @@ enum RenderCommand {
     BIND_FBO,//绑定使用帧缓冲区对象(FBO)
     UNBIND_FBO,//取消使用帧缓冲区对象(FBO)
     DELETE_FBO,//删除帧缓冲区对象(FBO)
-    CREATE_G_BUFFER,//创建GBuffer
+    CREATE_GEOMETRY_BUFFER,//创建GBuffer
+    BIND_GEOMETRY_BUFFER,//绑定使用几何缓冲区(GBuffer)
     END_FRAME,//帧结束
 };
 

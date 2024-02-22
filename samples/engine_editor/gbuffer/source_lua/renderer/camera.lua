@@ -111,3 +111,8 @@ end
 function Camera:clear_target_render_texture()
     self.cpp_component_instance_:clear_target_render_texture()
 end
+
+--- 设置延迟渲染
+function Camera:set_deferred_shading(deferred_shading)
+    self.cpp_component_instance_:set_deferred_shading(deferred_shading)
+end

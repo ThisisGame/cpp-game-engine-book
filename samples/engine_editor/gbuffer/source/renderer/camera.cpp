@@ -79,7 +79,13 @@ void Camera::CheckRenderToTexture(){
         return;
     }
     RenderTaskProducer::ProduceRenderTaskSetViewportSize(target_render_texture_->width(),target_render_texture_->height());
-    RenderTaskProducer::ProduceRenderTaskBindFBO(target_render_texture_->frame_buffer_object_handle());
+
+    if(deferred_shading_ == false) {
+        RenderTaskProducer::ProduceRenderTaskBindFBO(target_render_texture_->frame_buffer_object_handle());
+    } else {
+        RenderTaskProducer::ProduceRenderTaskBindGBuffer(target_render_texture_->frame_buffer_object_handle());
+    }
+
     target_render_texture_->set_in_use(true);
 }
 

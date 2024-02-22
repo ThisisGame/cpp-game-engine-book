@@ -7,13 +7,19 @@
 #include "render_task_type.h"
 #include "render_task_queue.h"
 
+bool RenderTaskProducer::exit_=false;
+
+#define CHECK_EXIT_RETURN if(exit_){return;}
+
 void RenderTaskProducer::ProduceRenderTaskUpdateScreenSize() {
+    CHECK_EXIT_RETURN
     EASY_FUNCTION();
     RenderTaskUpdateScreenSize* task=new RenderTaskUpdateScreenSize();
     RenderTaskQueue::Push(task);
 }
 
 void RenderTaskProducer::ProduceRenderTaskSetViewportSize(int width, int height) {
+    CHECK_EXIT_RETURN
     EASY_FUNCTION();
     RenderTaskSetViewportSize* task=new RenderTaskSetViewportSize();
     task->width_=width;
@@ -26,6 +32,7 @@ void RenderTaskProducer::ProduceRenderTaskSetViewportSize(int width, int height)
 /// \param fragment_shader_source 片段shader源码
 /// \param shader_program_handle Shader程序句柄
 void RenderTaskProducer::ProduceRenderTaskCompileShader(const char* vertex_shader_source,const char* fragment_shader_source,unsigned int shader_program_handle){
+    CHECK_EXIT_RETURN
     EASY_FUNCTION();
     RenderTaskCompileShader* task=new RenderTaskCompileShader();
     task->vertex_shader_source_= static_cast<char *>(malloc(strlen(vertex_shader_source) + 1));
@@ -41,6 +48,7 @@ void RenderTaskProducer::ProduceRenderTaskCompileShader(const char* vertex_shade
 /// 发出任务：串联uniform block与binding point。
 /// \param shader_program_handle Shader程序句柄
 void RenderTaskProducer::ProduceRenderTaskConnectUniformBlockAndBindingPoint(unsigned int shader_program_handle){
+    CHECK_EXIT_RETURN
     EASY_FUNCTION();
     RenderTaskConnectUniformBlockInstanceAndBindingPoint* task=new RenderTaskConnectUniformBlockInstanceAndBindingPoint();
     task->shader_program_handle_=shader_program_handle;
@@ -48,6 +56,7 @@ void RenderTaskProducer::ProduceRenderTaskConnectUniformBlockAndBindingPoint(uns
 }
 
 void RenderTaskProducer::ProduceRenderTaskUseShaderProgram(unsigned int shader_program_handle) {
+    CHECK_EXIT_RETURN
     EASY_FUNCTION();
     RenderTaskUseShaderProgram* render_task_use_shader_program=new RenderTaskUseShaderProgram();
     render_task_use_shader_program->shader_program_handle_=shader_program_handle;
@@ -58,6 +67,7 @@ void RenderTaskProducer::ProduceRenderTaskCreateCompressedTexImage2D(unsigned in
                                                                      int height, unsigned int texture_format,
                                                                      unsigned int compress_size,
                                                                      unsigned char *data) {
+    CHECK_EXIT_RETURN
     EASY_FUNCTION();
     RenderTaskCreateCompressedTexImage2D* task=new RenderTaskCreateCompressedTexImage2D();
     task->texture_handle_=texture_handle;
@@ -75,6 +85,7 @@ void RenderTaskProducer::ProduceRenderTaskCreateTexImage2D(unsigned int texture_
                                                            unsigned int gl_texture_format, unsigned int client_format,
                                                            unsigned int data_type, unsigned int data_size,
                                                            unsigned char *data) {
+    CHECK_EXIT_RETURN
     EASY_FUNCTION();
     RenderTaskCreateTexImage2D* task=new RenderTaskCreateTexImage2D();
     task->texture_handle_=texture_handle;
@@ -92,6 +103,7 @@ void RenderTaskProducer::ProduceRenderTaskCreateTexImage2D(unsigned int texture_
 }
 
 void RenderTaskProducer::ProduceRenderTaskDeleteTextures(int size, unsigned int* texture_handle_array) {
+    CHECK_EXIT_RETURN
     EASY_FUNCTION();
     RenderTaskDeleteTextures* task=new RenderTaskDeleteTextures();
     //拷贝数据
@@ -104,6 +116,7 @@ void RenderTaskProducer::ProduceRenderTaskDeleteTextures(int size, unsigned int*
 void RenderTaskProducer::ProduceRenderTaskUpdateTextureSubImage2D(unsigned int texture_handle, int x, int y, int width, int height,
                                                                   unsigned int client_format, unsigned int data_type,
                                                                   unsigned char *data,unsigned int data_size) {
+    CHECK_EXIT_RETURN
     EASY_FUNCTION();
     RenderTaskUpdateTextureSubImage2D* task=new RenderTaskUpdateTextureSubImage2D();
     task->texture_handle_=texture_handle;
@@ -124,6 +137,7 @@ void RenderTaskProducer::ProduceRenderTaskCreateVAO(unsigned int shader_program_
                                                     unsigned int vertex_data_size, unsigned int vertex_data_stride,
                                                     void *vertex_data, unsigned int vertex_index_data_size,
                                                     void *vertex_index_data) {
+    CHECK_EXIT_RETURN
     EASY_FUNCTION();
     RenderTaskCreateVAO* task=new RenderTaskCreateVAO();
     task->shader_program_handle_=shader_program_handle;
@@ -143,6 +157,7 @@ void RenderTaskProducer::ProduceRenderTaskCreateVAO(unsigned int shader_program_
 
 void RenderTaskProducer::ProduceRenderTaskUpdateVBOSubData(unsigned int vbo_handle, unsigned int vertex_data_size,
                                                            void *vertex_data) {
+    CHECK_EXIT_RETURN
     EASY_FUNCTION();
     RenderTaskUpdateVBOSubData* task=new RenderTaskUpdateVBOSubData();
     task->vbo_handle_=vbo_handle;
@@ -155,6 +170,7 @@ void RenderTaskProducer::ProduceRenderTaskUpdateVBOSubData(unsigned int vbo_hand
 
 void RenderTaskProducer::ProduceRenderTaskUpdateUBOSubData(std::string uniform_block_instance_name,
                                                            std::string uniform_block_member_name, void* data){
+    CHECK_EXIT_RETURN
     EASY_FUNCTION();
     RenderTaskUpdateUBOSubData* task=new RenderTaskUpdateUBOSubData();
     task->uniform_block_instance_name_=uniform_block_instance_name;
@@ -164,6 +180,7 @@ void RenderTaskProducer::ProduceRenderTaskUpdateUBOSubData(std::string uniform_b
 }
 
 void RenderTaskProducer::ProduceRenderTaskSetEnableState(unsigned int state, bool enable) {
+    CHECK_EXIT_RETURN
     EASY_FUNCTION();
     RenderTaskSetEnableState* task=new RenderTaskSetEnableState();
     task->state_=state;
@@ -173,6 +190,7 @@ void RenderTaskProducer::ProduceRenderTaskSetEnableState(unsigned int state, boo
 
 void RenderTaskProducer::ProduceRenderTaskSetBlenderFunc(unsigned int source_blending_factor,
                                                          unsigned int destination_blending_factor) {
+    CHECK_EXIT_RETURN
     EASY_FUNCTION();
     RenderTaskSetBlenderFunc* task=new RenderTaskSetBlenderFunc();
     task->source_blending_factor_=source_blending_factor;
@@ -182,6 +200,7 @@ void RenderTaskProducer::ProduceRenderTaskSetBlenderFunc(unsigned int source_ble
 
 void RenderTaskProducer::ProduceRenderTaskSetUniformMatrix4fv(unsigned int shader_program_handle,
                                                               const char *uniform_name, bool transpose, glm::mat4& matrix) {
+    CHECK_EXIT_RETURN
     EASY_FUNCTION();
     RenderTaskSetUniformMatrix4fv* task=new RenderTaskSetUniformMatrix4fv();
     task->shader_program_handle_=shader_program_handle;
@@ -193,6 +212,7 @@ void RenderTaskProducer::ProduceRenderTaskSetUniformMatrix4fv(unsigned int shade
 }
 
 void RenderTaskProducer::ProduceRenderTaskActiveAndBindTexture(unsigned int texture_uint, unsigned int texture_handle) {
+    CHECK_EXIT_RETURN
     EASY_FUNCTION();
     RenderTaskActiveAndBindTexture* task=new RenderTaskActiveAndBindTexture();
     task->texture_uint_=texture_uint;
@@ -202,6 +222,7 @@ void RenderTaskProducer::ProduceRenderTaskActiveAndBindTexture(unsigned int text
 
 void RenderTaskProducer::ProduceRenderTaskSetUniform1i(unsigned int shader_program_handle, const char *uniform_name,
                                                        int value) {
+    CHECK_EXIT_RETURN
     EASY_FUNCTION();
     RenderTaskSetUniform1i* task=new RenderTaskSetUniform1i();
     task->shader_program_handle_=shader_program_handle;
@@ -213,6 +234,7 @@ void RenderTaskProducer::ProduceRenderTaskSetUniform1i(unsigned int shader_progr
 
 void RenderTaskProducer::ProduceRenderTaskSetUniform1f(unsigned int shader_program_handle, const char *uniform_name,
                                                        float value) {
+    CHECK_EXIT_RETURN
     EASY_FUNCTION();
     RenderTaskSetUniform1f* task=new RenderTaskSetUniform1f();
     task->shader_program_handle_=shader_program_handle;
@@ -224,6 +246,7 @@ void RenderTaskProducer::ProduceRenderTaskSetUniform1f(unsigned int shader_progr
 
 void RenderTaskProducer::ProduceRenderTaskSetUniform3f(unsigned int shader_program_handle, const char *uniform_name,
                                                        glm::vec3 value) {
+    CHECK_EXIT_RETURN
     EASY_FUNCTION();
     RenderTaskSetUniform3f* task=new RenderTaskSetUniform3f();
     task->shader_program_handle_=shader_program_handle;
@@ -234,6 +257,7 @@ void RenderTaskProducer::ProduceRenderTaskSetUniform3f(unsigned int shader_progr
 }
 
 void RenderTaskProducer::ProduceRenderTaskBindVAOAndDrawElements(unsigned int vao_handle, unsigned int vertex_index_num) {
+    CHECK_EXIT_RETURN
     EASY_FUNCTION();
     RenderTaskBindVAOAndDrawElements* task=new RenderTaskBindVAOAndDrawElements();
     task->vao_handle_=vao_handle;
@@ -242,6 +266,7 @@ void RenderTaskProducer::ProduceRenderTaskBindVAOAndDrawElements(unsigned int va
 }
 
 void RenderTaskProducer::ProduceRenderTaskSetClearFlagAndClearColorBuffer(unsigned int clear_flag, float clear_color_r, float clear_color_g, float clear_color_b, float clear_color_a){
+    CHECK_EXIT_RETURN
     EASY_FUNCTION();
     RenderTaskClear* task=new RenderTaskClear();
     task->clear_flag_=clear_flag;
@@ -253,6 +278,7 @@ void RenderTaskProducer::ProduceRenderTaskSetClearFlagAndClearColorBuffer(unsign
 }
 
 void RenderTaskProducer::ProduceRenderTaskSetStencilFunc(unsigned int stencil_func,int stencil_ref,unsigned int stencil_mask){
+    CHECK_EXIT_RETURN
     EASY_FUNCTION();
     RenderTaskSetStencilFunc* task=new RenderTaskSetStencilFunc();
     task->stencil_func_=stencil_func;
@@ -262,6 +288,7 @@ void RenderTaskProducer::ProduceRenderTaskSetStencilFunc(unsigned int stencil_fu
 }
 
 void RenderTaskProducer::ProduceRenderTaskSetStencilOp(unsigned int fail_op_,unsigned int z_test_fail_op_,unsigned int z_test_pass_op_){
+    CHECK_EXIT_RETURN
     EASY_FUNCTION();
     RenderTaskSetStencilOp* task=new RenderTaskSetStencilOp();
     task->fail_op_=fail_op_;
@@ -271,6 +298,7 @@ void RenderTaskProducer::ProduceRenderTaskSetStencilOp(unsigned int fail_op_,uns
 }
 
 void RenderTaskProducer::ProduceRenderTaskSetStencilBufferClearValue(int clear_value){
+    CHECK_EXIT_RETURN
     EASY_FUNCTION();
     RenderTaskSetStencilBufferClearValue* task=new RenderTaskSetStencilBufferClearValue();
     task->clear_value_=clear_value;
@@ -319,13 +347,24 @@ void RenderTaskProducer::ProduceRenderTaskCreateGBuffer(int fbo_handle, unsigned
     RenderTaskQueue::Push(task);
 }
 
+void RenderTaskProducer::ProduceRenderTaskBindGBuffer(int fbo_handle){
+    RenderTaskBindGBuffer* task=new RenderTaskBindGBuffer();
+    task->fbo_handle_=fbo_handle;
+    RenderTaskQueue::Push(task);
+}
+
 void RenderTaskProducer::ProduceRenderTaskEndFrame() {
+    CHECK_EXIT_RETURN
     EASY_FUNCTION();
     RenderTaskEndFrame* render_task_frame_end=new RenderTaskEndFrame();
     RenderTaskQueue::Push(render_task_frame_end);
     //等待渲染结束任务，说明渲染线程渲染完了这一帧所有的东西。
     render_task_frame_end->Wait();
     delete render_task_frame_end;//需要等待结果的任务，需要在获取结果后删除。
+}
+
+void RenderTaskProducer::Exit() {
+    exit_=true;
 }
 
 

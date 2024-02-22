@@ -18,7 +18,7 @@ GameObject::GameObject(const char *name): Tree::Node(), layer_(0x01) {
 }
 
 GameObject::~GameObject() {
-    DEBUG_LOG_INFO("GameObject::~GameObject");
+
 }
 
 

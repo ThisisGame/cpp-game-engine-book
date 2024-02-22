@@ -67,13 +67,20 @@ void SkinnedMeshRenderer::Update() {
     MeshFilter::Mesh* skinned_mesh=mesh_filter->skinned_mesh();
     if(skinned_mesh==nullptr){
         //拷贝Mesh整体
-        skinned_mesh= static_cast<MeshFilter::Mesh *>(malloc(mesh->size()));
-        memcpy(skinned_mesh,mesh, mesh->size());
-        mesh_filter->set_skinned_mesh(skinned_mesh);
+        skinned_mesh = new MeshFilter::Mesh();
+        skinned_mesh->name_=mesh->name_;
+        skinned_mesh->vertex_num_=mesh->vertex_num_;
+        skinned_mesh->vertex_index_num_=mesh->vertex_index_num_;
 
         //拷贝顶点数据 vertex_data_
         skinned_mesh->vertex_data_= static_cast<MeshFilter::Vertex *>(malloc(mesh->vertex_num_*sizeof(MeshFilter::Vertex)));
         memcpy(skinned_mesh->vertex_data_,mesh->vertex_data_, mesh->vertex_num_*sizeof(MeshFilter::Vertex));
+
+        //拷贝索引数据 vertex_index_data_
+        skinned_mesh->vertex_index_data_= static_cast<unsigned short *>(malloc(mesh->vertex_index_num_*sizeof(unsigned short)));
+        memcpy(skinned_mesh->vertex_index_data_,mesh->vertex_index_data_, mesh->vertex_index_num_*sizeof(unsigned short));
+
+        mesh_filter->set_skinned_mesh(skinned_mesh);
     }
 
     EASY_BLOCK("CalculateVertexByBone");

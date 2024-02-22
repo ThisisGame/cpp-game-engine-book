@@ -524,7 +524,9 @@ void LuaBinding::BindLua() {
                                         "Sort",&Camera::Sort,
                                         "CheckRenderToTexture",&Camera::CheckRenderToTexture,
                                         "set_target_render_texture",&Camera::set_target_render_texture,
-                                        "clear_target_render_texture",&Camera::clear_target_render_texture
+                                        "clear_target_render_texture",&Camera::clear_target_render_texture,
+                                        "deferred_shading",&Camera::deferred_shading,
+                                        "set_deferred_shading",&Camera::set_deferred_shading
         );
 
         cpp_ns_table.new_enum<BufferClearFlag,true>("BufferClearFlag",{

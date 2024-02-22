@@ -16,7 +16,7 @@ public:
     /// 初始化RenderTexture，在GPU生成帧缓冲区对象(FrameBufferObject)
     /// \param width
     /// \param height
-    void Init(unsigned short width,unsigned short height);
+    virtual void Init(unsigned short width,unsigned short height) override;
 
     Texture2D* vertex_position_texture_2d(){
         return vertex_position_texture_2d_;

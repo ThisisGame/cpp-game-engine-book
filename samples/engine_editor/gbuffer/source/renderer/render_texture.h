@@ -14,7 +14,7 @@ public:
     /// 初始化RenderTexture，在GPU生成帧缓冲区对象(FrameBufferObject)
     /// \param width
     /// \param height
-    void Init(unsigned short width,unsigned short height);
+    virtual void Init(unsigned short width,unsigned short height);
 
     unsigned short width(){
         return width_;

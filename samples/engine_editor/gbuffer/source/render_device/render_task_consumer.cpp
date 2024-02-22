@@ -26,6 +26,7 @@
 
 GLFWwindow* RenderTaskConsumer::window_;
 std::thread RenderTaskConsumer::render_thread_;
+bool RenderTaskConsumer::exit_=false;
 
 void RenderTaskConsumer::Init(GLFWwindow *window) {
     window_ = window;
@@ -34,9 +35,11 @@ void RenderTaskConsumer::Init(GLFWwindow *window) {
 }
 
 void RenderTaskConsumer::Exit() {
+    exit_=true;
     if (render_thread_.joinable()) {
         render_thread_.join();//等待渲染线程结束
     }
+    glfwDestroyWindow(window_);
 }
 
 /// 更新游戏画面尺寸
@@ -512,9 +515,26 @@ void RenderTaskConsumer::CreateGBuffer(RenderTaskBase *task_base) {
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, vertex_normal_texture, 0);__CHECK_GL_ERROR__
     //将FBO颜色附着点2关联的颜色纹理，存储着顶点颜色数据，绑定到FBO颜色附着点2
     GLuint vertex_color_texture=GPUResourceMapper::GetTexture(task->vertex_color_texture_handle_);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, vertex_color_texture, 0);__CHECK_GL_ERROR__
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, GL_TEXTURE_2D, vertex_color_texture, 0);__CHECK_GL_ERROR__
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);__CHECK_GL_ERROR__
+}
+
+/// 绑定使用FBO任务
+void RenderTaskConsumer::BindGBuffer(RenderTaskBase* task_base){
+    RenderTaskBindGBuffer* task=dynamic_cast<RenderTaskBindGBuffer*>(task_base);
+
+    GLuint frame_buffer_object_id = GPUResourceMapper::GetFBO(task->fbo_handle_);
+    glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer_object_id);__CHECK_GL_ERROR__
+    //检测帧缓冲区完整性，如果完整的话就开始进行绘制
+    GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);__CHECK_GL_ERROR__
+    if (status != GL_FRAMEBUFFER_COMPLETE) {
+        DEBUG_LOG_ERROR("BindGBuffer FBO Error,Status:{} !",status);
+        return;
+    }
+    // - 告诉OpenGL我们将要使用(帧缓冲的)哪种颜色附件来进行渲染
+    GLuint attachments[3] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2 };
+    glDrawBuffers(3, attachments);
 }
 
 /// 结束一帧
@@ -539,7 +559,7 @@ void RenderTaskConsumer::ProcessTask() {
 
     while (!glfwWindowShouldClose(window_))
     {
-        while(true){
+        while(!exit_){
             if(RenderTaskQueue::Empty()){//渲染线程一直等待主线程发出任务。
                 std::this_thread::sleep_for(std::chrono::nanoseconds(1));//没有任务休息一下。
                 continue;
@@ -663,6 +683,14 @@ void RenderTaskConsumer::ProcessTask() {
                 }
                 case RenderCommand::DELETE_FBO:{
                     DeleteFBO(render_task);
+                    break;
+                }
+                case RenderCommand::CREATE_GEOMETRY_BUFFER:{
+                    CreateGBuffer(render_task);
+                    break;
+                }
+                case RenderCommand::BIND_GEOMETRY_BUFFER:{
+                    BindGBuffer(render_task);
                     break;
                 }
                 case RenderCommand::END_FRAME:{

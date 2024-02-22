@@ -17,3 +17,10 @@ end
 function RenderTextureGeometryBuffer:InitCppClass()
     self.cpp_class_instance_=Cpp.RenderTextureGeometryBuffer()
 end
+
+--- 初始化RenderTextureGeometryBuffer，在GPU生成帧缓冲区对象(FrameBufferObject)
+--- @param width number @宽
+--- @param height number @高
+function RenderTextureGeometryBuffer:Init(width,height)
+    self.cpp_class_instance_:Init(width,height)
+end

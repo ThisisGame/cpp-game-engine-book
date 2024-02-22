@@ -448,7 +448,7 @@ public:
 class RenderTaskCreateGBuffer: public RenderTaskBase{
 public:
     RenderTaskCreateGBuffer(){
-        render_command_=RenderCommand::CREATE_G_BUFFER;
+        render_command_=RenderCommand::CREATE_GEOMETRY_BUFFER;
     }
     ~RenderTaskCreateGBuffer(){
     }
@@ -459,6 +459,18 @@ public:
     unsigned int vertex_position_texture_handle_=0;//FBO颜色附着点0关联的颜色纹理,存储着顶点坐标数据。
     unsigned int vertex_normal_texture_handle_=0;//FBO颜色附着点1关联的颜色纹理，存储着顶点法线数据。
     unsigned int vertex_color_texture_handle_=0;//FBO颜色附着点2关联的颜色纹理，存储着顶点颜色数据。
+};
+
+/// 绑定使用GBuffer任务
+class RenderTaskBindGBuffer: public RenderTaskBase{
+public:
+    RenderTaskBindGBuffer(){
+        render_command_=RenderCommand::BIND_GEOMETRY_BUFFER;
+    }
+    ~RenderTaskBindGBuffer(){
+    }
+public:
+    unsigned int fbo_handle_=0;//FBO句柄
 };
 
 /// 特殊任务：帧结束标志，渲染线程收到这个任务后，刷新缓冲区，设置帧结束。

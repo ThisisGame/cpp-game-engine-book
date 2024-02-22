@@ -199,9 +199,10 @@ void Application::Run() {
         }EASY_END_BLOCK;
     }
 
+    RenderTaskProducer::Exit();
     RenderTaskConsumer::Exit();
 
-    glfwDestroyWindow(glfw_window_);
+    // glfwWindow的销毁放在RenderTaskConsumer中，这里就不再调用。
 
     glfwTerminate();
     exit(EXIT_SUCCESS);

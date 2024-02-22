@@ -126,10 +126,12 @@ function LoginScene:CreateMainCamera()
     self.camera_:set_culling_mask(1)
     self.camera_:SetView(glm.vec3(0.0,0.0,0.0), glm.vec3(0.0,1.0,0.0))
     self.camera_:SetPerspective(60, Screen:aspect_ratio(), 1, 1000)
+    --设置延迟渲染
+    self.camera_:set_deferred_shading(true)
     --设置RenderTexture
-    --self.render_texture_ = RenderTextureGeometryBuffer.new()
-    --self.render_texture_:Init(480,320)
-    --self.camera_:set_target_render_texture(self.render_texture_)
+    self.render_texture_geometry_buffer_ = RenderTextureGeometryBuffer.new()
+    self.render_texture_geometry_buffer_:Init(480,320)
+    self.camera_:set_target_render_texture(self.render_texture_geometry_buffer_)
 end
 
 --- 创建模型
