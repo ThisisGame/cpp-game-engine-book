@@ -29,10 +29,10 @@ RenderTextureGeometryBuffer::~RenderTextureGeometryBuffer() {
 void RenderTextureGeometryBuffer::Init(unsigned short width, unsigned short height) {
     width_=width;
     height_=height;
-    vertex_position_texture_2d_=Texture2D::Create(width_,height_,GL_RGB16F,GL_RGB,GL_FLOAT, nullptr,0);
-    vertex_normal_texture_2d_=Texture2D::Create(width_,height_,GL_RGB16F,GL_RGB,GL_FLOAT, nullptr,0);
+    vertex_position_texture_2d_=Texture2D::Create(width_,height_,GL_RGBA,GL_RGB,GL_FLOAT, nullptr,0);
+    vertex_normal_texture_2d_=Texture2D::Create(width_,height_,GL_RGBA,GL_RGB,GL_FLOAT, nullptr,0);
     vertex_color_texture_2d_=Texture2D::Create(width_,height_,GL_RGBA,GL_RGB,GL_FLOAT, nullptr,0);
     //创建FBO任务
     frame_buffer_object_handle_ = GPUResourceMapper::GenerateFBOHandle();
-    RenderTaskProducer::ProduceRenderTaskCreateGBuffer(frame_buffer_object_handle_,width_,height_,vertex_position_texture_2d_->texture_handle(),vertex_color_texture_2d_->texture_handle(),vertex_normal_texture_2d_->texture_handle());
+    RenderTaskProducer::ProduceRenderTaskCreateGBuffer(frame_buffer_object_handle_,width_,height_,vertex_position_texture_2d_->texture_handle(),vertex_normal_texture_2d_->texture_handle(),vertex_color_texture_2d_->texture_handle());
 }

@@ -56,8 +56,8 @@ in vec3 v_normal;
 in vec3 v_frag_pos;
 
 //layout(location = 0) out vec4 o_fragColor;
-layout(location = 0) out vec3 o_vertex_position;
-layout(location = 1) out vec3 o_vertex_normal;
+layout(location = 0) out vec4 o_vertex_position;
+layout(location = 1) out vec4 o_vertex_normal;
 layout(location = 2) out vec4 o_vertex_color;
 void main()
 {
@@ -115,7 +115,8 @@ void main()
     }
 
     //o_fragColor = vec4(ambient_color + total_diffuse_color + total_specular_color,1.0);
-	o_vertex_position = v_frag_pos;
-	o_vertex_normal = v_normal;
+	o_vertex_position = vec4(v_frag_pos,1.0);
+	o_vertex_normal = vec4(v_normal,1.0);
 	o_vertex_color = v_color;
+	//o_vertex_color = vec4(v_frag_pos,1.0);
 }
