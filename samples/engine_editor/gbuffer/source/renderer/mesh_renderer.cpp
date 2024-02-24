@@ -135,7 +135,7 @@ void MeshRenderer::Render() {
         std::vector<std::pair<std::string,Texture2D*>> textures=material_->textures();
         for (int texture_index = 0; texture_index < textures.size(); ++texture_index) {
             //激活纹理单元,将加载的图片纹理句柄，绑定到纹理单元上。
-            RenderTaskProducer::ProduceRenderTaskActiveAndBindTexture(GL_TEXTURE0+texture_index,textures[texture_index].second->texture_handle());
+            RenderTaskProducer::ProduceRenderTaskActiveAndBindTexture(textures[texture_index].first,GL_TEXTURE0+texture_index,textures[texture_index].second->texture_handle());
             //设置Shader程序从纹理单元读取颜色数据
             RenderTaskProducer::ProduceRenderTaskSetUniform1i(shader_program_handle,textures[texture_index].first.c_str(),texture_index);
         }

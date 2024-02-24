@@ -113,9 +113,10 @@ public:
     static void ProduceRenderTaskSetUniformMatrix4fv(unsigned int shader_program_handle, const char* uniform_name, bool transpose, glm::mat4& matrix);
 
     /// 激活并绑定纹理
+    /// \param texture_name
     /// \param texture_uint
     /// \param texture_handle
-    static void ProduceRenderTaskActiveAndBindTexture(unsigned int texture_uint,unsigned int texture_handle);
+    static void ProduceRenderTaskActiveAndBindTexture(std::string texture_name,unsigned int texture_uint,unsigned int texture_handle);
 
     /// 上传1个int值
     /// \param shader_program_handle
@@ -182,7 +183,7 @@ public:
     /// \param fbo_handle FBO句柄
     /// \param width 帧缓冲区尺寸(宽)
     /// \param height 帧缓冲区尺寸(高)
-    static void ProduceRenderTaskCreateGBuffer(int fbo_handle,unsigned short width,unsigned short height,unsigned int vertex_position_texture_handle,unsigned int vertex_normal_texture_handle,unsigned int vertex_color_texture_handle);
+    static void ProduceRenderTaskCreateGBuffer(int fbo_handle, unsigned short width, unsigned short height, unsigned int frag_position_texture_handle, unsigned int frag_normal_texture_handle, unsigned int frag_color_texture_handle);
 
     /// 绑定使用几何缓冲区(GBuffer)
     static void ProduceRenderTaskBindGBuffer(int fbo_handle);

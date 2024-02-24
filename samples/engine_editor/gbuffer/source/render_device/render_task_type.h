@@ -281,6 +281,7 @@ public:
     }
     ~RenderTaskActiveAndBindTexture(){}
 public:
+    std::string texture_name_;//纹理名字
     unsigned int texture_uint_;//纹理单元
     unsigned int texture_handle_;//纹理句柄
 };
@@ -456,9 +457,9 @@ public:
     unsigned int fbo_handle_=0;//FBO句柄
     unsigned short width_=128;//帧缓冲区尺寸(宽)
     unsigned short height_=128;//帧缓冲区尺寸(高)
-    unsigned int vertex_position_texture_handle_=0;//FBO颜色附着点0关联的颜色纹理,存储着顶点坐标数据。
-    unsigned int vertex_normal_texture_handle_=0;//FBO颜色附着点1关联的颜色纹理，存储着顶点法线数据。
-    unsigned int vertex_color_texture_handle_=0;//FBO颜色附着点2关联的颜色纹理，存储着顶点颜色数据。
+    unsigned int frag_position_texture_handle_=0;//FBO颜色附着点0关联的颜色纹理,存储着顶点片段坐标数据。
+    unsigned int frag_normal_texture_handle_=0;//FBO颜色附着点1关联的颜色纹理，存储着顶点片段法线数据。
+    unsigned int frag_color_texture_handle_=0;//FBO颜色附着点2关联的颜色纹理，存储着顶点片段颜色数据。
 };
 
 /// 绑定使用GBuffer任务

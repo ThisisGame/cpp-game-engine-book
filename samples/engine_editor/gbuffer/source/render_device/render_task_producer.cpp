@@ -211,10 +211,11 @@ void RenderTaskProducer::ProduceRenderTaskSetUniformMatrix4fv(unsigned int shade
     RenderTaskQueue::Push(task);
 }
 
-void RenderTaskProducer::ProduceRenderTaskActiveAndBindTexture(unsigned int texture_uint, unsigned int texture_handle) {
+void RenderTaskProducer::ProduceRenderTaskActiveAndBindTexture(std::string texture_name,unsigned int texture_uint, unsigned int texture_handle) {
     CHECK_EXIT_RETURN
     EASY_FUNCTION();
     RenderTaskActiveAndBindTexture* task=new RenderTaskActiveAndBindTexture();
+    task->texture_name_ = texture_name;
     task->texture_uint_=texture_uint;
     task->texture_handle_=texture_handle;
     RenderTaskQueue::Push(task);
@@ -334,16 +335,16 @@ void RenderTaskProducer::ProduceRenderTaskDeleteFBO(int fbo_handle){
 }
 
 void RenderTaskProducer::ProduceRenderTaskCreateGBuffer(int fbo_handle, unsigned short width, unsigned short height,
-                                                        unsigned int vertex_position_texture_handle,
-                                                        unsigned int vertex_normal_texture_handle,
-                                                        unsigned int vertex_color_texture_handle) {
+                                                        unsigned int frag_position_texture_handle,
+                                                        unsigned int frag_normal_texture_handle,
+                                                        unsigned int frag_color_texture_handle) {
     RenderTaskCreateGBuffer* task=new RenderTaskCreateGBuffer();
     task->fbo_handle_=fbo_handle;
     task->width_=width;
     task->height_=height;
-    task->vertex_position_texture_handle_=vertex_position_texture_handle;
-    task->vertex_normal_texture_handle_=vertex_normal_texture_handle;
-    task->vertex_color_texture_handle_=vertex_color_texture_handle;
+    task->frag_position_texture_handle_=frag_position_texture_handle;
+    task->frag_normal_texture_handle_=frag_normal_texture_handle;
+    task->frag_color_texture_handle_=frag_color_texture_handle;
     RenderTaskQueue::Push(task);
 }
 

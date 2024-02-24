@@ -18,19 +18,19 @@ public:
     /// \param height
     virtual void Init(unsigned short width,unsigned short height) override;
 
-    Texture2D* vertex_position_texture_2d(){
-        return vertex_position_texture_2d_;
+    Texture2D* frag_position_texture_2d(){
+        return frag_position_texture_2d_;
     }
-    Texture2D* vertex_normal_texture_2d(){
-        return vertex_normal_texture_2d_;
+    Texture2D* frag_normal_texture_2d(){
+        return frag_normal_texture_2d_;
     }
-    Texture2D* vertex_color_texture_2d(){
-        return vertex_color_texture_2d_;
+    Texture2D* frag_color_texture_2d(){
+        return frag_color_texture_2d_;
     }
 private:
-    Texture2D* vertex_position_texture_2d_;//将FBO颜色附着点0关联的颜色纹理,存储着顶点坐标数据,绑定到FBO颜色附着点0
-    Texture2D* vertex_normal_texture_2d_;//将FBO颜色附着点1关联的颜色纹理，存储着顶点法线数据,绑定到FBO颜色附着点1
-    Texture2D* vertex_color_texture_2d_;//将FBO颜色附着点2关联的颜色纹理，存储着顶点颜色数据，绑定到FBO颜色附着点2
+    Texture2D* frag_position_texture_2d_;//将FBO颜色附着点0关联的颜色纹理,存储顶点片段坐标数据,绑定到FBO颜色附着点0
+    Texture2D* frag_normal_texture_2d_;//将FBO颜色附着点1关联的颜色纹理，存储顶点片段法线数据,绑定到FBO颜色附着点1
+    Texture2D* frag_color_texture_2d_;//将FBO颜色附着点2关联的颜色纹理，存储顶点片段颜色数据，绑定到FBO颜色附着点2
 };
 
 
