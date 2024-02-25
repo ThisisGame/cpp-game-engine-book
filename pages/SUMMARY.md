@@ -128,6 +128,7 @@
     * [24.4 分离引擎核心层和应用层](24. engine_editor/24.4 engine_core_and_app.md)
     * [24.5 使用ImGui实现引擎编辑器](24. engine_editor/24.5 draw_in_imgui.md)
     * [24.6 Hierarchy与Inspector面板](24. engine_editor/24.6 hierarchy_and_inspector.md)
+    * [24.7 Geometry Buffer](24. engine_editor/24.7 geometry_buffer.md)
 * [25. Shadow Mapping](25. shadow_mapping/25. shadow_mapping.md)
     * [25.1 深度图](25. shadow_mapping/25.1 depth_map.md)
     * [25.2 简单阴影](25. shadow_mapping/25.2 simple_shadow.md)

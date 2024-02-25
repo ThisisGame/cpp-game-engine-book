@@ -83,7 +83,7 @@ void Camera::CheckRenderToTexture(){
     if(deferred_shading_ == false) {
         RenderTaskProducer::ProduceRenderTaskBindFBO(target_render_texture_->frame_buffer_object_handle());
     } else {
-        RenderTaskProducer::ProduceRenderTaskBindGBuffer(target_render_texture_->frame_buffer_object_handle());
+        RenderTaskProducer::ProduceRenderTaskBindGBuffer(target_render_texture_->frame_buffer_object_handle());//使用延迟渲染，激活G-Buffer的FBO.
     }
 
     target_render_texture_->set_in_use(true);

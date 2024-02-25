@@ -528,7 +528,7 @@ void RenderTaskConsumer::CreateGBuffer(RenderTaskBase *task_base) {
     glObjectLabel(GL_TEXTURE, frag_color_texture, -1, "frag_color_texture");
 }
 
-/// 绑定使用FBO任务
+/// 绑定使用G-Buffer任务
 void RenderTaskConsumer::BindGBuffer(RenderTaskBase* task_base){
     RenderTaskBindGBuffer* task=dynamic_cast<RenderTaskBindGBuffer*>(task_base);
 
