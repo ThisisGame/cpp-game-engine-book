@@ -460,6 +460,7 @@ public:
     unsigned int frag_position_texture_handle_=0;//FBO颜色附着点0关联的颜色纹理,存储着顶点片段坐标数据。
     unsigned int frag_normal_texture_handle_=0;//FBO颜色附着点1关联的颜色纹理，存储着顶点片段法线数据。
     unsigned int frag_color_texture_handle_=0;//FBO颜色附着点2关联的颜色纹理，存储着顶点片段颜色数据。
+    unsigned int frag_uv_texture_handle_=0;//FBO颜色附着点3关联的颜色纹理，存储着顶点片段UV数据。
 };
 
 /// 绑定使用GBuffer任务

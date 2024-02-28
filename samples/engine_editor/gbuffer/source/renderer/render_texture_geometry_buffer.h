@@ -27,10 +27,14 @@ public:
     Texture2D* frag_color_texture_2d(){
         return frag_color_texture_2d_;
     }
+    Texture2D* frag_uv_texture_2d(){
+        return frag_uv_texture_2d_;
+    }
 private:
     Texture2D* frag_position_texture_2d_;//将FBO颜色附着点0关联的颜色纹理,存储顶点片段坐标数据,绑定到FBO颜色附着点0
     Texture2D* frag_normal_texture_2d_;//将FBO颜色附着点1关联的颜色纹理，存储顶点片段法线数据,绑定到FBO颜色附着点1
     Texture2D* frag_color_texture_2d_;//将FBO颜色附着点2关联的颜色纹理，存储顶点片段颜色数据，绑定到FBO颜色附着点2
+    Texture2D* frag_uv_texture_2d_;//将FBO颜色附着点3关联的颜色纹理，存储顶点片段UV数据，绑定到FBO颜色附着点3
 };
 
 

@@ -337,7 +337,8 @@ void RenderTaskProducer::ProduceRenderTaskDeleteFBO(int fbo_handle){
 void RenderTaskProducer::ProduceRenderTaskCreateGBuffer(int fbo_handle, unsigned short width, unsigned short height,
                                                         unsigned int frag_position_texture_handle,
                                                         unsigned int frag_normal_texture_handle,
-                                                        unsigned int frag_color_texture_handle) {
+                                                        unsigned int frag_color_texture_handle,
+                                                        unsigned int frag_uv_texture_handle) {
     RenderTaskCreateGBuffer* task=new RenderTaskCreateGBuffer();
     task->fbo_handle_=fbo_handle;
     task->width_=width;
@@ -345,6 +346,7 @@ void RenderTaskProducer::ProduceRenderTaskCreateGBuffer(int fbo_handle, unsigned
     task->frag_position_texture_handle_=frag_position_texture_handle;
     task->frag_normal_texture_handle_=frag_normal_texture_handle;
     task->frag_color_texture_handle_=frag_color_texture_handle;
+    task->frag_uv_texture_handle_=frag_uv_texture_handle;
     RenderTaskQueue::Push(task);
 }
 
