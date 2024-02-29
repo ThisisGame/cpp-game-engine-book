@@ -157,6 +157,9 @@ void Application::Render(){
             }
             mesh_renderer->Render();
         });
+
+        //在这里做延迟渲染
+        
     });
 }
 

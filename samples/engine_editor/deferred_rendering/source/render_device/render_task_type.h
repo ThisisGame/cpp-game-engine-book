@@ -459,7 +459,10 @@ public:
     unsigned short height_=128;//帧缓冲区尺寸(高)
     unsigned int frag_position_texture_handle_=0;//FBO颜色附着点0关联的颜色纹理,存储着顶点片段坐标数据。
     unsigned int frag_normal_texture_handle_=0;//FBO颜色附着点1关联的颜色纹理，存储着顶点片段法线数据。
-    unsigned int frag_color_texture_handle_=0;//FBO颜色附着点2关联的颜色纹理，存储着顶点片段颜色数据。
+    unsigned int frag_vertex_color_texture_handle_=0;//FBO颜色附着点2关联的颜色纹理，存储着顶点片段颜色数据。
+    unsigned int frag_diffuse_color_texture_handle_=0;//FBO颜色附着点3关联的颜色纹理，存储着顶点片段Diffuse数据。
+    unsigned int frag_specular_intensity_texture_handle_=0;//FBO颜色附着点4关联的颜色纹理，存储着顶点片段高光数据。
+    unsigned int frag_specular_highlight_shininess_texture_handle_=0;//FBO颜色附着点5关联的颜色纹理，存储着顶点片段反光度数据。
 };
 
 /// 绑定使用GBuffer任务
