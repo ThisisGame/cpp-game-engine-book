@@ -7,7 +7,9 @@
 #include "render_device/gpu_resource_mapper.h"
 #include "render_device/render_task_producer.h"
 
-RenderTextureGeometryBuffer::RenderTextureGeometryBuffer(): RenderTexture(), frag_position_texture_2d_(nullptr), frag_normal_texture_2d_(nullptr), frag_color_texture_2d_(nullptr) {
+RenderTextureGeometryBuffer::RenderTextureGeometryBuffer(): RenderTexture(), frag_position_texture_2d_(nullptr),
+frag_normal_texture_2d_(nullptr),frag_vertex_color_texture_2d_(nullptr),frag_diffuse_color_texture_2d_(nullptr),
+frag_specular_intensity_texture_2d_(nullptr),frag_specular_highlight_shininess_texture_2d_(nullptr) {
 }
 
 RenderTextureGeometryBuffer::~RenderTextureGeometryBuffer() {
@@ -21,11 +23,17 @@ RenderTextureGeometryBuffer::~RenderTextureGeometryBuffer() {
     if(frag_normal_texture_2d_ != nullptr){
         delete frag_normal_texture_2d_;
     }
-    if(frag_color_texture_2d_ != nullptr){
-        delete frag_color_texture_2d_;
+    if(frag_vertex_color_texture_2d_ != nullptr){
+        delete frag_vertex_color_texture_2d_;
     }
-    if(frag_uv_texture_2d_ != nullptr){
-        delete frag_uv_texture_2d_;
+    if(frag_diffuse_color_texture_2d_ != nullptr){
+        delete frag_diffuse_color_texture_2d_;
+    }
+    if(frag_specular_intensity_texture_2d_ != nullptr){
+        delete frag_specular_intensity_texture_2d_;
+    }
+    if(frag_specular_highlight_shininess_texture_2d_ != nullptr){
+        delete frag_specular_highlight_shininess_texture_2d_;
     }
 }
 
@@ -34,13 +42,17 @@ void RenderTextureGeometryBuffer::Init(unsigned short width, unsigned short heig
     height_=height;
     frag_position_texture_2d_=Texture2D::Create(width_, height_, GL_RGBA, GL_RGB, GL_FLOAT, nullptr, 0);
     frag_normal_texture_2d_=Texture2D::Create(width_, height_, GL_RGBA, GL_RGB, GL_FLOAT, nullptr, 0);
-    frag_color_texture_2d_=Texture2D::Create(width_, height_, GL_RGBA, GL_RGB, GL_FLOAT, nullptr, 0);
-    frag_uv_texture_2d_=Texture2D::Create(width_, height_, GL_RGBA, GL_RGB, GL_FLOAT, nullptr, 0);
+    frag_vertex_color_texture_2d_=Texture2D::Create(width_, height_, GL_RGBA, GL_RGB, GL_FLOAT, nullptr, 0);
+    frag_diffuse_color_texture_2d_=Texture2D::Create(width_, height_, GL_RGBA, GL_RGB, GL_FLOAT, nullptr, 0);
+    frag_specular_intensity_texture_2d_=Texture2D::Create(width_, height_, GL_RGBA, GL_RGB, GL_FLOAT, nullptr, 0);
+    frag_specular_highlight_shininess_texture_2d_=Texture2D::Create(width_, height_, GL_RGBA, GL_RGB, GL_FLOAT, nullptr, 0);
     //创建FBO任务
     frame_buffer_object_handle_ = GPUResourceMapper::GenerateFBOHandle();
     RenderTaskProducer::ProduceRenderTaskCreateGBuffer(frame_buffer_object_handle_, width_, height_,
                                                        frag_position_texture_2d_->texture_handle(),
                                                        frag_normal_texture_2d_->texture_handle(),
-                                                       frag_color_texture_2d_->texture_handle(),
-                                                       frag_uv_texture_2d_->texture_handle());
+                                                       frag_vertex_color_texture_2d_->texture_handle(),
+                                                       frag_diffuse_color_texture_2d_->texture_handle(),
+                                                       frag_specular_intensity_texture_2d_->texture_handle(),
+                                                       frag_specular_highlight_shininess_texture_2d_->texture_handle());
 }

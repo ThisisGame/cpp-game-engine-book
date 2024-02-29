@@ -516,20 +516,28 @@ void RenderTaskConsumer::CreateGBuffer(RenderTaskBase *task_base) {
     //将FBO颜色附着点1关联的颜色纹理，存储着顶点片段法线数据,绑定到FBO颜色附着点1
     GLuint frag_normal_texture=GPUResourceMapper::GetTexture(task->frag_normal_texture_handle_);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, frag_normal_texture, 0);__CHECK_GL_ERROR__
-    //将FBO颜色附着点2关联的颜色纹理，存储着顶点片段颜色数据，绑定到FBO颜色附着点2
-    GLuint frag_color_texture=GPUResourceMapper::GetTexture(task->frag_color_texture_handle_);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, GL_TEXTURE_2D, frag_color_texture, 0);__CHECK_GL_ERROR__
-    //将FBO颜色附着点3关联的颜色纹理，存储着顶点片段UV数据，绑定到FBO颜色附着点3
-    GLuint frag_uv_texture=GPUResourceMapper::GetTexture(task->frag_uv_texture_handle_);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT3, GL_TEXTURE_2D, frag_uv_texture, 0);__CHECK_GL_ERROR__
+    //将FBO颜色附着点2关联的颜色纹理，存储着顶点片段顶点颜色数据，绑定到FBO颜色附着点2
+    GLuint frag_vertex_color_texture=GPUResourceMapper::GetTexture(task->frag_vertex_color_texture_handle_);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, GL_TEXTURE_2D, frag_vertex_color_texture, 0);__CHECK_GL_ERROR__
+    //将FBO颜色附着点3关联的颜色纹理，存储着顶点片段Diffuse数据，绑定到FBO颜色附着点3
+    GLuint frag_diffuse_color_texture=GPUResourceMapper::GetTexture(task->frag_diffuse_color_texture_handle_);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT3, GL_TEXTURE_2D, frag_diffuse_color_texture, 0);__CHECK_GL_ERROR__
+    //将FBO颜色附着点4关联的颜色纹理，存储着顶点片段Specular数据，绑定到FBO颜色附着点4
+    GLuint frag_specular_intensity_texture=GPUResourceMapper::GetTexture(task->frag_specular_intensity_texture_handle_);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT4, GL_TEXTURE_2D, frag_specular_intensity_texture, 0);__CHECK_GL_ERROR__
+    //将FBO颜色附着点5关联的颜色纹理，存储着顶点片段反光度数据，绑定到FBO颜色附着点5
+    GLuint frag_specular_highlight_shininess_texture=GPUResourceMapper::GetTexture(task->frag_specular_highlight_shininess_texture_handle_);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT5, GL_TEXTURE_2D, frag_specular_highlight_shininess_texture, 0);__CHECK_GL_ERROR__
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);__CHECK_GL_ERROR__
 
     //自定义Texture名
     glObjectLabel(GL_TEXTURE, frag_position_texture, -1, "frag_position_texture");
     glObjectLabel(GL_TEXTURE, frag_normal_texture, -1, "frag_normal_texture");
-    glObjectLabel(GL_TEXTURE, frag_color_texture, -1, "frag_color_texture");
-    glObjectLabel(GL_TEXTURE, frag_uv_texture, -1, "frag_uv_texture");
+    glObjectLabel(GL_TEXTURE, frag_vertex_color_texture, -1, "frag_vertex_color_texture");
+    glObjectLabel(GL_TEXTURE, frag_diffuse_color_texture, -1, "frag_diffuse_color_texture");
+    glObjectLabel(GL_TEXTURE, frag_specular_intensity_texture, -1, "frag_specular_intensity_texture");
+    glObjectLabel(GL_TEXTURE, frag_specular_highlight_shininess_texture, -1, "frag_specular_highlight_shininess_texture");
 }
 
 /// 绑定使用G-Buffer任务
@@ -545,8 +553,8 @@ void RenderTaskConsumer::BindGBuffer(RenderTaskBase* task_base){
         return;
     }
     // - 告诉OpenGL我们将要使用(帧缓冲的)哪种颜色附件来进行渲染
-    GLuint attachments[4] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2 ,GL_COLOR_ATTACHMENT3 };
-    glDrawBuffers(4, attachments);
+    GLuint attachments[6] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2 ,GL_COLOR_ATTACHMENT3,GL_COLOR_ATTACHMENT4,GL_COLOR_ATTACHMENT5 };
+    glDrawBuffers(6, attachments);
 }
 
 /// 结束一帧

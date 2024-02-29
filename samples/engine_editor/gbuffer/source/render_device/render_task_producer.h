@@ -186,8 +186,10 @@ public:
     static void ProduceRenderTaskCreateGBuffer(int fbo_handle, unsigned short width, unsigned short height,
                                                unsigned int frag_position_texture_handle,
                                                unsigned int frag_normal_texture_handle,
-                                               unsigned int frag_color_texture_handle,
-                                               unsigned int frag_uv_texture_handle);
+                                               unsigned int frag_vertex_color_texture_handle,
+                                               unsigned int frag_diffuse_color_texture_handle,
+                                               unsigned int frag_specular_intensity_texture_handle,
+                                               unsigned int frag_specular_highlight_shininess_texture_handle);
 
     /// 绑定使用几何缓冲区(GBuffer)
     static void ProduceRenderTaskBindGBuffer(int fbo_handle);
