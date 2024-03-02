@@ -76,14 +76,14 @@ void main()
         DirectionalLight directional_light=u_directional_light_array.data[i];
 
         //diffuse 计算漫反射光照
-        vec3 normal=normalize(v_normal);
+        vec3 normal=normalize(frag_normal);
         vec3 light_dir=normalize(-directional_light.dir);
         float diffuse_intensity = max(dot(normal,light_dir),0.0);
         vec3 diffuse_color = directional_light.color * diffuse_intensity * directional_light.intensity * frag_diffuse_color;
 
         //specular 计算高光
-        vec3 reflect_dir=reflect(-light_dir,v_normal);
-        vec3 view_dir=normalize(u_view_pos-v_frag_pos);
+        vec3 reflect_dir=reflect(-light_dir,frag_normal);
+        vec3 view_dir=normalize(u_view_pos-frag_position);
         float spec=pow(max(dot(view_dir,reflect_dir),0.0),frag_specular_highlight_shininess);
         float specular_highlight_intensity = frag_specular_intensity;//从纹理中获取高光强度
         vec3 specular_color = directional_light.color * spec * directional_light.intensity * frag_diffuse_color;
@@ -98,20 +98,20 @@ void main()
         PointLight point_light=u_point_light_array.data[i];
 
         //diffuse 计算漫反射光照
-        vec3 normal=normalize(v_normal);
-        vec3 light_dir=normalize(point_light.pos - v_frag_pos);
+        vec3 normal=normalize(frag_normal);
+        vec3 light_dir=normalize(point_light.pos - frag_position);
         float diffuse_intensity = max(dot(normal,light_dir),0.0);
         vec3 diffuse_color = point_light.color * diffuse_intensity * point_light.intensity * frag_diffuse_color;
 
         //specular 计算高光
-        vec3 reflect_dir=reflect(-light_dir,v_normal);
-        vec3 view_dir=normalize(u_view_pos-v_frag_pos);
+        vec3 reflect_dir=reflect(-light_dir,frag_normal);
+        vec3 view_dir=normalize(u_view_pos-frag_position);
         float spec=pow(max(dot(view_dir,reflect_dir),0.0),frag_specular_highlight_shininess);
         float specular_highlight_intensity = frag_specular_intensity;//从纹理中获取高光强度
         vec3 specular_color = point_light.color * spec * specular_highlight_intensity * frag_diffuse_color.rgb;
 
         //attenuation 计算点光源衰减值
-        float distance=length(point_light.pos - v_frag_pos);
+        float distance=length(point_light.pos - frag_position);
         float attenuation = 1.0 / (point_light.constant + point_light.linear * distance + point_light.quadratic * (distance * distance));
 
         //将每一个点光源的计算结果叠加
@@ -120,4 +120,5 @@ void main()
     }
 
     o_fragColor = vec4(ambient_color + total_diffuse_color + total_specular_color,1.0);
+//    o_fragColor = vec4(frag_diffuse_color,1.0);
 }
