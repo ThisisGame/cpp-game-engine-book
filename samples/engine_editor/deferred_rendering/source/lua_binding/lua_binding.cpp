@@ -614,7 +614,13 @@ void LuaBinding::BindLua() {
                                                  "depth_texture_2d", &RenderTexture::depth_texture_2d
         );
         cpp_ns_table.new_usertype<RenderTextureGeometryBuffer>("RenderTextureGeometryBuffer", sol::call_constructor, sol::constructors<RenderTextureGeometryBuffer()>(),
-                                                               sol::base_classes, sol::bases<RenderTexture>()
+                                                               sol::base_classes, sol::bases<RenderTexture>(),
+                                                               "frag_position_texture_2d", &RenderTextureGeometryBuffer::frag_position_texture_2d,
+                                                               "frag_normal_texture_2d", &RenderTextureGeometryBuffer::frag_normal_texture_2d,
+                                                               "frag_vertex_color_texture_2d", &RenderTextureGeometryBuffer::frag_vertex_color_texture_2d,
+                                                               "frag_diffuse_color_texture_2d", &RenderTextureGeometryBuffer::frag_diffuse_color_texture_2d,
+                                                               "frag_specular_intensity_texture_2d", &RenderTextureGeometryBuffer::frag_specular_intensity_texture_2d,
+                                                               "frag_specular_highlight_shininess_texture_2d", &RenderTextureGeometryBuffer::frag_specular_highlight_shininess_texture_2d
         );
     }
 

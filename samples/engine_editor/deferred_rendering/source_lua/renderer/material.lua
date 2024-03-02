@@ -12,6 +12,8 @@ Material=class("Material",CppClass)
 
 function Material:ctor()
     Material.super.ctor(self)
+
+    self.textures_={}
 end
 
 --- 实例化C++ Class
@@ -49,7 +51,8 @@ end
 --- @param property
 --- @param texture2D
 function Material:SetTexture(property,texture2D)
-    self.cpp_class_instance_:SetTexture(property,texture2D)
+    self.textures_[property]=texture2D
+    self.cpp_class_instance_:SetTexture(property,texture2D:cpp_class_instance())
 end
 
 function Material:shader()

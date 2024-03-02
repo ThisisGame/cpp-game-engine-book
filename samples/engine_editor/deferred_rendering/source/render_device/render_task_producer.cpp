@@ -329,6 +329,7 @@ void RenderTaskProducer::ProduceRenderTaskUnBindFBO(int fbo_handle){
 }
 
 void RenderTaskProducer::ProduceRenderTaskDeleteFBO(int fbo_handle){
+    CHECK_EXIT_RETURN
     RenderTaskDeleteFBO* task=new RenderTaskDeleteFBO();
     task->fbo_handle_=fbo_handle;
     RenderTaskQueue::Push(task);

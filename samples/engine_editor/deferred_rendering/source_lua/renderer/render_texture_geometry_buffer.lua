@@ -11,6 +11,13 @@ RenderTextureGeometryBuffer=class("RenderTextureGeometryBuffer",RenderTexture)
 
 function RenderTextureGeometryBuffer:ctor()
     RenderTextureGeometryBuffer.super.ctor(self)
+
+    self.frag_position_texture_2d_=nil
+    self.frag_normal_texture_2d_=nil
+    self.frag_vertex_color_texture_2d_=nil
+    self.frag_diffuse_color_texture_2d_=nil
+    self.frag_specular_intensity_texture_2d_=nil
+    self.frag_specular_highlight_shininess_texture_2d_=nil
 end
 
 --- 实例化C++ Class
@@ -23,4 +30,52 @@ end
 --- @param height number @高
 function RenderTextureGeometryBuffer:Init(width,height)
     self.cpp_class_instance_:Init(width,height)
+end
+
+function RenderTextureGeometryBuffer:frag_position_texture_2d()
+    if self.frag_position_texture_2d_==nil then
+        local cpp_frag_position_texture_2d=self.cpp_class_instance_:frag_position_texture_2d()
+        self.frag_position_texture_2d_=Texture2D.new_with(cpp_frag_position_texture_2d)
+    end
+    return self.frag_position_texture_2d_
+end
+
+function RenderTextureGeometryBuffer:frag_normal_texture_2d()
+    if self.frag_normal_texture_2d_==nil then
+        local cpp_frag_normal_texture_2d=self.cpp_class_instance_:frag_normal_texture_2d()
+        self.frag_normal_texture_2d_=Texture2D.new_with(cpp_frag_normal_texture_2d)
+    end
+    return self.frag_normal_texture_2d_
+end
+
+function RenderTextureGeometryBuffer:frag_vertex_color_texture_2d()
+    if self.frag_vertex_color_texture_2d_==nil then
+        local cpp_frag_vertex_color_texture_2d=self.cpp_class_instance_:frag_vertex_color_texture_2d()
+        self.frag_vertex_color_texture_2d_=Texture2D.new_with(cpp_frag_vertex_color_texture_2d)
+    end
+    return self.frag_vertex_color_texture_2d_
+end
+
+function RenderTextureGeometryBuffer:frag_diffuse_color_texture_2d()
+    if self.frag_diffuse_color_texture_2d_==nil then
+        local cpp_frag_diffuse_color_texture_2d=self.cpp_class_instance_:frag_diffuse_color_texture_2d()
+        self.frag_diffuse_color_texture_2d_=Texture2D.new_with(cpp_frag_diffuse_color_texture_2d)
+    end
+    return self.frag_diffuse_color_texture_2d_
+end
+
+function RenderTextureGeometryBuffer:frag_specular_intensity_texture_2d()
+    if self.frag_specular_intensity_texture_2d_==nil then
+        local cpp_frag_specular_intensity_texture_2d=self.cpp_class_instance_:frag_specular_intensity_texture_2d()
+        self.frag_specular_intensity_texture_2d_=Texture2D.new_with(cpp_frag_specular_intensity_texture_2d)
+    end
+    return self.frag_specular_intensity_texture_2d_
+end
+
+function RenderTextureGeometryBuffer:frag_specular_highlight_shininess_texture_2d()
+    if self.frag_specular_highlight_shininess_texture_2d_==nil then
+        local cpp_frag_specular_highlight_shininess_texture_2d=self.cpp_class_instance_:frag_specular_highlight_shininess_texture_2d()
+        self.frag_specular_highlight_shininess_texture_2d_=Texture2D.new_with(cpp_frag_specular_highlight_shininess_texture_2d)
+    end
+    return self.frag_specular_highlight_shininess_texture_2d_
 end
