@@ -85,7 +85,6 @@ void main()
         vec3 reflect_dir=reflect(-light_dir,frag_normal);
         vec3 view_dir=normalize(u_view_pos-frag_position);
         float spec=pow(max(dot(view_dir,reflect_dir),0.0),frag_specular_highlight_shininess);
-        float specular_highlight_intensity = frag_specular_intensity;//从纹理中获取高光强度
         vec3 specular_color = directional_light.color * spec * directional_light.intensity * frag_diffuse_color;
 
         //将每一个方向光的计算结果叠加
@@ -120,5 +119,4 @@ void main()
     }
 
     o_fragColor = vec4(ambient_color + total_diffuse_color + total_specular_color,1.0);
-//    o_fragColor = vec4(frag_diffuse_color,1.0);
 }

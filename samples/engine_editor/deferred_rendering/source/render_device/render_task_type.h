@@ -463,6 +463,7 @@ public:
     unsigned int frag_diffuse_color_texture_handle_=0;//FBO颜色附着点3关联的颜色纹理，存储着顶点片段Diffuse数据。
     unsigned int frag_specular_intensity_texture_handle_=0;//FBO颜色附着点4关联的颜色纹理，存储着顶点片段高光数据。
     unsigned int frag_specular_highlight_shininess_texture_handle_=0;//FBO颜色附着点5关联的颜色纹理，存储着顶点片段反光度数据。
+    unsigned int frag_depth_texture_handle_=0;//FBO深度附着点关联的深度纹理
 };
 
 /// 绑定使用GBuffer任务

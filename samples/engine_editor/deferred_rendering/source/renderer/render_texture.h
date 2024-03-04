@@ -9,7 +9,7 @@ class Texture2D;
 class RenderTexture {
 public:
     RenderTexture();
-    ~RenderTexture();
+    virtual ~RenderTexture();
 
     /// 初始化RenderTexture，在GPU生成帧缓冲区对象(FrameBufferObject)
     /// \param width

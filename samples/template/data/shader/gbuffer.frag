@@ -24,5 +24,5 @@ void main()
 	o_frag_vertex_color = v_color;
 	o_frag_diffuse_color = texture(u_diffuse_texture,v_uv);
 	o_frag_specular_intensity = texture(u_specular_texture,v_uv);
-	o_frag_specular_highlight_shininess = vec4(vec3(u_specular_highlight_shininess/100.0),1.0);
+	o_frag_specular_highlight_shininess = vec4(vec3(u_specular_highlight_shininess),1.0);
 }

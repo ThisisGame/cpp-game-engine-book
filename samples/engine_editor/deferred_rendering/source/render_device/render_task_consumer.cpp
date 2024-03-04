@@ -528,6 +528,9 @@ void RenderTaskConsumer::CreateGBuffer(RenderTaskBase *task_base) {
     //将FBO颜色附着点5关联的颜色纹理，存储着顶点片段反光度数据，绑定到FBO颜色附着点5
     GLuint frag_specular_highlight_shininess_texture=GPUResourceMapper::GetTexture(task->frag_specular_highlight_shininess_texture_handle_);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT5, GL_TEXTURE_2D, frag_specular_highlight_shininess_texture, 0);__CHECK_GL_ERROR__
+    //将深度纹理绑定到FBO深度附着点
+    GLuint frag_depth_texture=GPUResourceMapper::GetTexture(task->frag_depth_texture_handle_);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, frag_depth_texture, 0);__CHECK_GL_ERROR__
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);__CHECK_GL_ERROR__
 
@@ -538,6 +541,7 @@ void RenderTaskConsumer::CreateGBuffer(RenderTaskBase *task_base) {
     glObjectLabel(GL_TEXTURE, frag_diffuse_color_texture, -1, "frag_diffuse_color_texture");
     glObjectLabel(GL_TEXTURE, frag_specular_intensity_texture, -1, "frag_specular_intensity_texture");
     glObjectLabel(GL_TEXTURE, frag_specular_highlight_shininess_texture, -1, "frag_specular_highlight_shininess_texture");
+    glObjectLabel(GL_TEXTURE, frag_depth_texture, -1, "frag_depth_texture");
 }
 
 /// 绑定使用G-Buffer任务
