@@ -77,7 +77,7 @@ void Material::SetTexture(const string& property, Texture2D *texture2D) {
             delete(pair.second);
             pair.second=texture2D;
             break;
-    }
+        }
     }
 }
 
