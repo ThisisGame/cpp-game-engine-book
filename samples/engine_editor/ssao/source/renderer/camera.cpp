@@ -45,14 +45,19 @@ Camera::~Camera() {
     }
 }
 
-void Camera::SetView(const glm::vec3 &cameraForward,const glm::vec3 &cameraUp) {
+void Camera::Update(){
     auto transform=game_object()->GetComponent<Transform>();
-    view_mat4_=glm::lookAt(transform->position(), cameraForward, cameraUp);
+    view_mat4_=glm::lookAt(transform->position(), camera_forward_, camera_up);
 
     glm::vec3 rotation=transform->rotation();
     glm::mat4 eulerAngleYXZ = glm::eulerAngleYXZ(glm::radians(rotation.y), glm::radians(rotation.x), glm::radians(rotation.z));
 
     view_mat4_=eulerAngleYXZ*view_mat4_;
+}
+
+void Camera::SetView(const glm::vec3 &cameraForward,const glm::vec3 &cameraUp) {
+    camera_forward_=cameraForward;
+    camera_up=cameraUp;
 }
 
 void Camera::SetPerspective(float fovDegrees, float aspectRatio, float nearClip, float farClip) {

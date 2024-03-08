@@ -171,12 +171,12 @@ end
 --- 创建延迟渲染相机
 function LoginScene:CreateDeferredRenderingCamera()
     --创建相机1 GameObject
-    self.go_camera_= GameObject.new("deferred_rendering_camera")
+    self.go_camera_deferred_rendering_= GameObject.new("deferred_rendering_camera")
     --挂上 Transform 组件
-    self.go_camera_:AddComponent(Transform):set_position(glm.vec3(0, 0, 10))
-    self.go_camera_:GetComponent(Transform):set_rotation(glm.vec3(0, 0, 0))
+    self.go_camera_deferred_rendering_:AddComponent(Transform):set_position(glm.vec3(0, 0, 10))
+    self.go_camera_deferred_rendering_:GetComponent(Transform):set_rotation(glm.vec3(0, 0, 0))
     --挂上 Camera 组件
-    self.camera_=self.go_camera_:AddComponent(Camera)
+    self.camera_=self.go_camera_deferred_rendering_:AddComponent(Camera)
     --设置为黑色背景
     self.camera_:set_clear_color(0,0,0,1)
     self.camera_:set_depth(1)
@@ -237,4 +237,21 @@ function LoginScene:Update()
 
     --鼠标滚轮控制相机远近
     self.go_camera_:GetComponent(Transform):set_position(self.go_camera_:GetComponent(Transform):position() *(10 - Input.mouse_scroll())/10)
+
+    --旋转相机
+    if Input.GetKeyDown(Cpp.KeyCode.KEY_CODE_LEFT_ALT) and Input.GetMouseButtonDown(Cpp.KeyCode.MOUSE_BUTTON_LEFT) and self.last_frame_mouse_position_ then
+        --print(Input.mousePosition(),self.last_frame_mouse_position_)
+        local degrees= Input.mousePosition().x - self.last_frame_mouse_position_.x
+        self.last_frame_mouse_position_=Input.mousePosition()
+
+        local old_mat4=glm.mat4(1.0)
+        local rotate_mat4=glm.rotate(old_mat4,glm.radians(degrees),glm.vec3(0.0,1.0,0.0))--以相机所在坐标系位置，计算用于旋转的矩阵，这里是零点，所以直接用方阵。
+
+        local camera_pos=self.go_camera_:GetComponent(Transform):position()
+        local old_pos=glm.vec4(camera_pos.x,camera_pos.y,camera_pos.z,1.0)
+        local new_pos=rotate_mat4*old_pos--旋转矩阵 * 原来的坐标 = 相机以零点做旋转。
+        --print(new_pos)
+        self.go_camera_:GetComponent(Transform):set_position(glm.vec3(new_pos.x,new_pos.y,new_pos.z))
+    end
+    self.last_frame_mouse_position_=Input.mousePosition()
 end

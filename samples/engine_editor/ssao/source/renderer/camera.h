@@ -96,7 +96,12 @@ public:
     bool deferred_shading(){return deferred_shading_;}
     /// 设置是否延迟渲染
     void set_deferred_shading(bool deferred_shading){deferred_shading_=deferred_shading;}
+public:
+    virtual void Update();
 protected:
+    glm::vec3 camera_forward_;
+    glm::vec3 camera_up;
+
     glm::mat4 view_mat4_;//指定相机坐标和朝向
     glm::mat4 projection_mat4_;//指定相机范围
 
