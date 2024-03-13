@@ -180,6 +180,9 @@ void LuaBinding::BindLua() {
                 [] (const glm::mat4* m) {return glm::to_string((*m));},
                 [] (const glm::vec3* v) {return glm::to_string((*v));}
         ));
+        glm_ns_table.set_function("normalize",sol::overload(
+                [] (const glm::vec3* v) {return glm::normalize((*v));}
+        ));
     }
 
     auto cpp_ns_table = sol_state_["Cpp"].get_or_create<sol::table>();

@@ -52,7 +52,6 @@ function LoginScene:Awake()
 
     self:CreateEnvironment()
     self:CreateDirectionalLight1()
-    self:CreateDirectionalLight2()
     self:CreatePointLight1()
     self:CreatePointLight2()
     self:CreateMainCamera()
@@ -73,20 +72,9 @@ end
 function LoginScene:CreateDirectionalLight1()
     self.go_directional_light_1_= GameObject.new("directional_light_1")
     self.go_directional_light_1_:AddComponent(Transform)
-    self.go_directional_light_1_:GetComponent(Transform):set_rotation(glm.vec3(0,60,0))
+    self.go_directional_light_1_:GetComponent(Transform):set_rotation(glm.vec3(0,0,0))
 
     local light=self.go_directional_light_1_:AddComponent(DirectionalLight)
-    light:set_color(glm.vec3(1.0,1.0,1.0))
-    light:set_intensity(1.0)
-end
-
---- 创建方向光2
-function LoginScene:CreateDirectionalLight2()
-    self.go_directional_light_2_= GameObject.new("directional_light_2")
-    self.go_directional_light_2_:AddComponent(Transform)
-    self.go_directional_light_2_:GetComponent(Transform):set_rotation(glm.vec3(240,0,0))
-
-    local light=self.go_directional_light_2_:AddComponent(DirectionalLight)
     light:set_color(glm.vec3(1.0,1.0,1.0))
     light:set_intensity(1.0)
 end
@@ -225,6 +213,39 @@ function LoginScene:CreateDeferredRenderingNearPlane()
     mesh_renderer:SetMaterial(self.material_deferred_rendering_near_plane_)
 end
 
+function GenerateSSAOKernel()
+    local lerp = function(a, b, f)
+        return a + f * (b - a)
+    end
+
+    local randomFloats = function(min, max)
+        return min + math.random() * (max - min)
+    end
+
+    local ssaoKernel = {}
+    math.randomseed(os.time())
+
+    for i = 1, 64 do
+        local sample = glm.vec3(
+                randomFloats(-1.0, 1.0),
+                randomFloats(-1.0, 1.0),
+                randomFloats(0.0, 1.0)
+        )
+        sample = glm.normalize(sample)
+        sample = sample * randomFloats(0.0, 1.0)
+
+        local scale = i / 64.0
+        scale = lerp(0.1, 1.0, scale * scale)
+        sample = sample * scale
+
+        table.insert(ssaoKernel, sample)
+
+        print("ssaoKernel[" .. i .. "]:" .. tostring(sample))
+    end
+
+    return ssaoKernel
+end
+
 function LoginScene:Update()
     --print("LoginScene:Update")
     LoginScene.super.Update(self)
@@ -234,6 +255,9 @@ function LoginScene:Update()
     self.material_:SetUniform3f("u_view_pos",camera_position)
     --设置物体反射度、高光强度
     self.material_:SetUniform1f("u_specular_highlight_shininess",32.0)
+    --设置远近平面
+    self.material_:SetUniform1f("near_plane",1.0)
+    self.material_:SetUniform1f("far_plane",1000.0)
 
     --鼠标滚轮控制相机远近
     self.go_camera_:GetComponent(Transform):set_position(self.go_camera_:GetComponent(Transform):position() *(10 - Input.mouse_scroll())/10)
@@ -245,7 +269,7 @@ function LoginScene:Update()
         self.last_frame_mouse_position_=Input.mousePosition()
 
         local old_mat4=glm.mat4(1.0)
-        local rotate_mat4=glm.rotate(old_mat4,glm.radians(degrees),glm.vec3(0.0,1.0,0.0))--以相机所在坐标系位置，计算用于旋转的矩阵，这里是零点，所以直接用方阵。
+        local rotate_mat4=glm.rotate(old_mat4,glm.radians(-degrees),glm.vec3(0.0,1.0,0.0))--以相机所在坐标系位置，计算用于旋转的矩阵，这里是零点，所以直接用方阵。
 
         local camera_pos=self.go_camera_:GetComponent(Transform):position()
         local old_pos=glm.vec4(camera_pos.x,camera_pos.y,camera_pos.z,1.0)

@@ -184,6 +184,9 @@ void RenderTaskConsumer::CreateTexImage2D(RenderTaskBase *task_base) {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);__CHECK_GL_ERROR__
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);__CHECK_GL_ERROR__
 
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
     //将主线程中产生的纹理句柄 映射到 纹理
     GPUResourceMapper::MapTexture(task->texture_handle_, texture_id);
 }
