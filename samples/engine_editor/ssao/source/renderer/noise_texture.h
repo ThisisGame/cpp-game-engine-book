@@ -30,9 +30,6 @@ public:
         height_=height;
     }
 
-    unsigned int frame_buffer_object_handle(){
-        return frame_buffer_object_handle_;
-    }
     /// 是否正在被使用
     bool in_use(){
         return in_use_;
@@ -40,19 +37,14 @@ public:
     void set_in_use(bool in_use){
         in_use_=in_use;
     }
-    Texture2D* color_texture_2d(){
-        return color_texture_2d_;
-    }
-    Texture2D* depth_texture_2d(){
-        return depth_texture_2d_;
+    Texture2D* noise_texture_2d(){
+        return noise_texture_2d_;
     }
 
 protected:
     unsigned short width_;
     unsigned short height_;
-    unsigned int frame_buffer_object_handle_;//关联的FBO Handle
-    Texture2D* color_texture_2d_;//FBO颜色附着点关联的颜色纹理
-    Texture2D* depth_texture_2d_;//FBO深度附着点关联的深度纹理
+    Texture2D* noise_texture_2d_;
     bool in_use_;//正在被使用
 };
 

@@ -43,12 +43,12 @@ file(COPY "../../template/data/images/plane_metal.cpt" DESTINATION "../data/imag
 file(COPY "../../template/data/model/basic_plane_model_basic_plane.mesh" DESTINATION "../data/model/")
 file(COPY "../../template/data/model/fbx_extra_basic_plane.weight" DESTINATION "../data/model/")
 file(COPY "../../template/data/animation/fbx_extra_basic_plane_bones_basic_plane_bones_basic_plane_bones_armatureaction_basic_plane_.skeleton_anim" DESTINATION "../data/animation/")
-file(COPY "../../template/data/shader/gbuffer.vert" DESTINATION "../data/shader/")
-file(COPY "../../template/data/shader/gbuffer.frag" DESTINATION "../data/shader/")
-file(COPY "../../template/data/material/basic_plane_gbuffer.mat" DESTINATION "../data/material/")
-file(COPY "../../template/data/shader/deferred_rendering.vert" DESTINATION "../data/shader/")
-file(COPY "../../template/data/shader/deferred_rendering.frag" DESTINATION "../data/shader/")
-file(COPY "../../template/data/material/deferred_rendering.mat" DESTINATION "../data/material/")
+file(COPY "../../template/data/shader/ssao_gbuffer.vert" DESTINATION "../data/shader/")
+file(COPY "../../template/data/shader/ssao_gbuffer.frag" DESTINATION "../data/shader/")
+file(COPY "../../template/data/material/basic_plane_ssao_gbuffer.mat" DESTINATION "../data/material/")
+file(COPY "../../template/data/shader/ssao_rendering.vert" DESTINATION "../data/shader/")
+file(COPY "../../template/data/shader/ssao_rendering.frag" DESTINATION "../data/shader/")
+file(COPY "../../template/data/material/ssao_rendering.mat" DESTINATION "../data/material/")
 
 #头文件目录
 include_directories("depends")

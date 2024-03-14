@@ -146,7 +146,7 @@ function LoginScene:CreateModel()
 
     --手动创建Material
     self.material_ = Material.new()--设置材质
-    self.material_:Parse("material/basic_plane_gbuffer.mat")
+    self.material_:Parse("material/basic_plane_ssao_gbuffer.mat")
 
     --挂上 MeshRenderer 组件
     local skinned_mesh_renderer= self.go_skeleton_:AddComponent(SkinnedMeshRenderer)
@@ -199,7 +199,7 @@ function LoginScene:CreateDeferredRenderingNearPlane()
 
     --手动创建Material
     self.material_deferred_rendering_near_plane_ = Material.new()--设置材质
-    self.material_deferred_rendering_near_plane_:Parse("material/deferred_rendering.mat")
+    self.material_deferred_rendering_near_plane_:Parse("material/ssao_rendering.mat")
     --设置材质纹理
     self.material_deferred_rendering_near_plane_:SetTexture("u_frag_position_texture",self.render_texture_geometry_buffer_:frag_position_texture_2d())
     self.material_deferred_rendering_near_plane_:SetTexture("u_frag_normal_texture",self.render_texture_geometry_buffer_:frag_normal_texture_2d())
