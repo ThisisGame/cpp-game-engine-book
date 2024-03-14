@@ -65,6 +65,7 @@ for poly in mesh_selected.polygons:#遍历多边形
     # 遍历一个多边形的3个顶点，注意这里的loop_index是包含重复顶点的顶点数组的index，是以三角形为单位*3作为顶点总数，并不是实际顶点的index。
     # 例如第一个三角形就是0 1 2，第二个三角形就是 3 4 5。是包含重复顶点的。
     for loop_index in range(poly.loop_start, poly.loop_start + poly.loop_total):
+        print("loop_index: %d" % (loop_index))
         vertex_index=mesh_selected.loops[loop_index].vertex_index#顶点在Blender中的索引
         v=mesh_selected.vertices[vertex_index]
         uv=uv_layer[loop_index].uv

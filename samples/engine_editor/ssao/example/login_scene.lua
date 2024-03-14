@@ -213,7 +213,9 @@ function LoginScene:CreateDeferredRenderingNearPlane()
     mesh_renderer:SetMaterial(self.material_deferred_rendering_near_plane_)
 end
 
-function GenerateSSAOKernel()
+---创建SSAOKernel即对片段周围随机采样点，对于每个片段，会再叠加一个随机值。在Shader中有个64位长度的数组，需要一个一个将数值上传到Shader中。
+---@return table<number,glm.vec3>
+function LoginScene:GenerateSSAOKernel()
     local lerp = function(a, b, f)
         return a + f * (b - a)
     end
