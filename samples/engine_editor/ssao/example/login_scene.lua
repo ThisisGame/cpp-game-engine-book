@@ -10,6 +10,7 @@ require("renderer/skinned_mesh_renderer")
 require("renderer/texture_2d")
 require("renderer/render_texture")
 require("renderer/render_texture_geometry_buffer")
+require("renderer/noise_texture")
 require("control/input")
 require("control/key_code")
 require("utils/screen")
@@ -35,6 +36,7 @@ function LoginScene:ctor()
     self.camera_deferred_rendering_ = nil
     ---@field render_texture_geometry_buffer_ RenderTextureGeometryBuffer
     self.render_texture_geometry_buffer_ = nil
+    self.noise_texture_ = nil
     self.go_skeleton_ = nil --骨骼蒙皮动画物体
     self.animation_ = nil--骨骼动画
     self.animation_clip_ = nil --- 骨骼动画片段
@@ -220,21 +222,17 @@ function LoginScene:GenerateSSAOKernel()
         return a + f * (b - a)
     end
 
-    local randomFloats = function(min, max)
-        return min + math.random() * (max - min)
-    end
-
     local ssaoKernel = {}
     math.randomseed(os.time())
 
     for i = 1, 64 do
         local sample = glm.vec3(
-                randomFloats(-1.0, 1.0),
-                randomFloats(-1.0, 1.0),
-                randomFloats(0.0, 1.0)
+                math.random_floats(-1.0, 1.0),
+                math.random_floats(-1.0, 1.0),
+                math.random_floats(0.0, 1.0)
         )
         sample = glm.normalize(sample)
-        sample = sample * randomFloats(0.0, 1.0)
+        sample = sample * math.random_floats(0.0, 1.0)
 
         local scale = i / 64.0
         scale = lerp(0.1, 1.0, scale * scale)
@@ -246,6 +244,26 @@ function LoginScene:GenerateSSAOKernel()
     end
 
     return ssaoKernel
+end
+
+---创建16个随机向量，用于噪声纹理
+function LoginScene:CreateNoise()
+    local ssaoNoise = {}
+    for i = 1, 16 do
+        local noise = glm.vec3(
+            randomFloats() * 2.0 - 1.0,
+            randomFloats() * 2.0 - 1.0,
+            0.0)
+        table.insert(ssaoNoise, noise)
+    end
+    return ssaoNoise
+end
+
+---创建SSAONoiseTexture
+function LoginScene:CreateSSAONoiseTexture()
+    local noise = self:CreateNoise()
+    self.noise_texture_ = NoiseTexture.new()
+    self.noise_texture_:Init(4, 4, sol2.convert_sequence_float(noise))
 end
 
 function LoginScene:Update()

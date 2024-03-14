@@ -118,6 +118,14 @@ function math.Random(n, m)
 	return math.random() * range + n
 end
 
+--- 生成随机浮点数
+--- @param min number @最小值
+--- @param max number @最大值
+--- @return number @随机浮点数
+function math.random_floats(min, max)
+	return min + math.random() * (max - min)
+end
+
 -- isnan
 function math.isnan(number)
 	return not (number == number)

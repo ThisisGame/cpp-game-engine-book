@@ -26,6 +26,7 @@ extern "C"{
 #include "renderer/animation.h"
 #include "renderer/render_texture.h"
 #include "renderer/render_texture_geometry_buffer.h"
+#include "renderer/noise_texture.h"
 #include "ui/rect_transform.h"
 #include "ui/ui_button.h"
 #include "ui/ui_camera.h"
@@ -624,6 +625,16 @@ void LuaBinding::BindLua() {
                                                                "frag_diffuse_color_texture_2d", &RenderTextureGeometryBuffer::frag_diffuse_color_texture_2d,
                                                                "frag_specular_intensity_texture_2d", &RenderTextureGeometryBuffer::frag_specular_intensity_texture_2d,
                                                                "frag_specular_highlight_shininess_texture_2d", &RenderTextureGeometryBuffer::frag_specular_highlight_shininess_texture_2d
+        );
+        cpp_ns_table.new_usertype<NoiseTexture>("NoiseTexture",sol::call_constructor,sol::constructors<NoiseTexture()>(),
+                                                 "Init", &NoiseTexture::Init,
+                                                 "width", &NoiseTexture::width,
+                                                 "height", &NoiseTexture::height,
+                                                 "set_width", &NoiseTexture::set_width,
+                                                 "set_height", &NoiseTexture::set_height,
+                                                 "in_use", &NoiseTexture::in_use,
+                                                 "set_in_use", &NoiseTexture::set_in_use,
+                                                 "noise_texture_2d", &NoiseTexture::noise_texture_2d
         );
     }
 

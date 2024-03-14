@@ -18,8 +18,8 @@ NoiseTexture::~NoiseTexture() {
     }
 }
 
-void NoiseTexture::Init(unsigned short width, unsigned short height) {
+void NoiseTexture::Init(unsigned short width, unsigned short height,std::vector<float> noise) {
     width_=width;
     height_=height;
-    noise_texture_2d_=Texture2D::Create(width_, height_, GL_RGB, GL_RGB, GL_UNSIGNED_SHORT_5_6_5, nullptr, 0);
+    noise_texture_2d_=Texture2D::Create(width_, height_, GL_RGBA16F, GL_RGB, GL_FLOAT, (unsigned char*)&noise[0],noise.size()*sizeof(float));
 }

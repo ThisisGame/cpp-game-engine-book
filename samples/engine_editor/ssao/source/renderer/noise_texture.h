@@ -2,8 +2,10 @@
 // Created by captainchen on 2022/8/19.
 //
 
-#ifndef RENDER_TEXTURE_H
-#define RENDER_TEXTURE_H
+#ifndef NOISE_TEXTURE_H
+#define NOISE_TEXTURE_H
+
+#include<vector>
 
 class Texture2D;
 class NoiseTexture {
@@ -14,7 +16,8 @@ public:
     /// 初始化NoiseTexture，在GPU生成帧缓冲区对象(FrameBufferObject)
     /// \param width
     /// \param height
-    virtual void Init(unsigned short width,unsigned short height);
+    /// \param noise 生成的噪声
+    virtual void Init(unsigned short width,unsigned short height,std::vector<float> noise);
 
     unsigned short width(){
         return width_;
@@ -49,4 +52,4 @@ protected:
 };
 
 
-#endif //RENDER_TEXTURE_H
+#endif //NOISE_TEXTURE_H
