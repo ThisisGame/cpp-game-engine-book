@@ -141,10 +141,10 @@ private:
     void DeleteFBO(RenderTaskBase* task_base);
 
     /// 创建GBuffer任务
-    static void CreateGBuffer(RenderTaskBase* task_base);
+    void CreateGBuffer(RenderTaskBase* task_base);
 
     /// 绑定使用FBO任务
-    static void BindGBuffer(RenderTaskBase* task_base);
+    void BindGBuffer(RenderTaskBase* task_base);
 
     /// 结束一帧
     /// \param task_base
