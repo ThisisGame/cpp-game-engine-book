@@ -25,7 +25,7 @@ end
 --- @param height number @高
 --- @param noise number @噪声
 function NoiseTexture:Init(width,height,noise)
-    self.cpp_class_instance_:Init(width,height,noise)
+    self.cpp_class_instance_:Init(width,height,sol2.convert_sequence_float(noise))
 end
 
 function NoiseTexture:width()

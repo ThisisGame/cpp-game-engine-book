@@ -177,12 +177,10 @@ function LoginScene:CreateSSAOCamera()
     ssao_camera:set_culling_mask(2)
     ssao_camera:SetView(glm.vec3(0.0,0.0,0.0), glm.vec3(0.0,1.0,0.0))
     ssao_camera:SetPerspective(60, Screen:aspect_ratio(), 1, 1000)
-    ----设置延迟渲染
-    --ssao_camera:set_deferred_shading(true)
     ----设置RenderTexture
-    --self.render_texture_ssao_ = RenderTexture.new()
-    --self.render_texture_ssao_:Init(960,640)
-    --ssao_camera:set_target_render_texture(self.render_texture_ssao_)
+    self.render_texture_ssao_ = RenderTexture.new()
+    self.render_texture_ssao_:Init(960,640)
+    ssao_camera:set_target_render_texture(self.render_texture_ssao_)
 end
 
 ---手动创建SSAO目标FBO需要的Plane
@@ -208,7 +206,7 @@ function LoginScene:CreateSSAOPlane()
     go_ssao_near_plane_:set_layer(2)
 
     local mesh_filter=go_ssao_near_plane_:AddComponent(MeshFilter)
-    mesh_filter:CreateMesh(sol2.convert_sequence_float(vertex_data),sol2.convert_sequence_ushort(vertex_index_data))--手动构建Mesh
+    mesh_filter:CreateMesh(vertex_data,vertex_index_data)--手动构建Mesh
 
     --手动创建Material
     self.material_ssao_near_plane_ = Material.new()
@@ -219,9 +217,9 @@ function LoginScene:CreateSSAOPlane()
     --创建SSAONoiseTexture，传入噪声纹理
     local noise = self:CreateNoise()
     local noise_texture = NoiseTexture.new()
-    noise_texture:Init(4, 4, sol2.convert_sequence_float(noise))
-    self.material_ssao_near_plane_:SetTexture("u_noise_texture",noise_texture:noise_texture_2d())
-    ObjectReferenceManager:Retain(noise_texture)
+    noise_texture:Init(4, 4, noise)
+    --self.material_ssao_near_plane_:SetTexture("u_noise_texture",noise_texture:noise_texture_2d())
+    --ObjectReferenceManager:Retain(noise_texture)
 
     --挂上 MeshRenderer 组件
     local mesh_renderer= go_ssao_near_plane_:AddComponent(MeshRenderer)
@@ -280,7 +278,7 @@ function LoginScene:CreateDeferredRenderingNearPlane()
     self.go_deferred_rendering_near_plane_:set_layer(2)
 
     local mesh_filter=self.go_deferred_rendering_near_plane_:AddComponent(MeshFilter)
-    mesh_filter:CreateMesh(sol2.convert_sequence_float(vertex_data),sol2.convert_sequence_ushort(vertex_index_data))--手动构建Mesh
+    mesh_filter:CreateMesh(vertex_data,vertex_index_data)--手动构建Mesh
 
     --手动创建Material
     self.material_deferred_rendering_near_plane_ = Material.new()--设置材质
