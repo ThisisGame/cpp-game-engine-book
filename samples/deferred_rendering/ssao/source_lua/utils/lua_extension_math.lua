@@ -113,12 +113,6 @@ math.deg2Rad = math.pi / 180
 math.rad2Deg = 180 / math.pi
 math.epsilon = 1.401298e-45
 
-function math.Random(n, m)
-	local range = m - n	
-	return math.random() * range + n
-end
-
-
 --- 生成随机浮点数
 --- @param min number @最小值
 --- @param max number @最大值

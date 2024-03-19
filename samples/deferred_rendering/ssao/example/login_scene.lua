@@ -177,12 +177,12 @@ function LoginScene:CreateSSAOCamera()
     ssao_camera:set_culling_mask(2)
     ssao_camera:SetView(glm.vec3(0.0,0.0,0.0), glm.vec3(0.0,1.0,0.0))
     ssao_camera:SetPerspective(60, Screen:aspect_ratio(), 1, 1000)
-    --设置延迟渲染
-    ssao_camera:set_deferred_shading(true)
-    --设置RenderTexture
-    self.render_texture_ssao_ = RenderTexture.new()
-    self.render_texture_ssao_:Init(960,640)
-    ssao_camera:set_target_render_texture(self.render_texture_ssao_)
+    ----设置延迟渲染
+    --ssao_camera:set_deferred_shading(true)
+    ----设置RenderTexture
+    --self.render_texture_ssao_ = RenderTexture.new()
+    --self.render_texture_ssao_:Init(960,640)
+    --ssao_camera:set_target_render_texture(self.render_texture_ssao_)
 end
 
 ---手动创建SSAO目标FBO需要的Plane
@@ -211,19 +211,34 @@ function LoginScene:CreateSSAOPlane()
     mesh_filter:CreateMesh(sol2.convert_sequence_float(vertex_data),sol2.convert_sequence_ushort(vertex_index_data))--手动构建Mesh
 
     --手动创建Material
-    local material_ssao_near_plane = Material.new()
-    material_ssao_near_plane:Parse("material/renderer_to_ssao_buffer.mat")
-    --设置材质纹理
-    material_ssao_near_plane:SetTexture("u_frag_position_texture",self.render_texture_geometry_buffer_:frag_position_texture_2d())
-    material_ssao_near_plane:SetTexture("u_frag_normal_texture",self.render_texture_geometry_buffer_:frag_normal_texture_2d())
-    material_ssao_near_plane:SetTexture("u_frag_vertex_color_texture",self.render_texture_geometry_buffer_:frag_vertex_color_texture_2d())
-    material_ssao_near_plane:SetTexture("u_frag_diffuse_color_texture",self.render_texture_geometry_buffer_:frag_diffuse_color_texture_2d())
-    material_ssao_near_plane:SetTexture("u_frag_specular_intensity_texture",self.render_texture_geometry_buffer_:frag_specular_intensity_texture_2d())
-    material_ssao_near_plane:SetTexture("u_frag_specular_highlight_shininess_texture",self.render_texture_geometry_buffer_:frag_specular_highlight_shininess_texture_2d())
+    self.material_ssao_near_plane_ = Material.new()
+    self.material_ssao_near_plane_:Parse("material/renderer_to_ssao_buffer.mat")
+    --传入GBuffer的纹理
+    self.material_ssao_near_plane_:SetTexture("u_frag_position_texture",self.render_texture_geometry_buffer_:frag_position_texture_2d())
+    self.material_ssao_near_plane_:SetTexture("u_frag_normal_texture",self.render_texture_geometry_buffer_:frag_normal_texture_2d())
+    --创建SSAONoiseTexture，传入噪声纹理
+    local noise = self:CreateNoise()
+    local noise_texture = NoiseTexture.new()
+    noise_texture:Init(4, 4, sol2.convert_sequence_float(noise))
+    self.material_ssao_near_plane_:SetTexture("u_noise_texture",noise_texture:noise_texture_2d())
+    ObjectReferenceManager:Retain(noise_texture)
 
     --挂上 MeshRenderer 组件
     local mesh_renderer= go_ssao_near_plane_:AddComponent(MeshRenderer)
-    mesh_renderer:SetMaterial(material_ssao_near_plane)
+    mesh_renderer:SetMaterial(self.material_ssao_near_plane_)
+end
+
+---创建16个随机向量，用于噪声纹理
+function LoginScene:CreateNoise()
+    local ssaoNoise = {}
+    for i = 1, 16 do
+        local noise = glm.vec3(
+                math.random_floats(0,1) * 2.0 - 1.0,
+                math.random_floats(0,1) * 2.0 - 1.0,
+                0.0)
+        table.insert(ssaoNoise, noise)
+    end
+    return ssaoNoise
 end
 
 
@@ -309,31 +324,13 @@ function LoginScene:GenerateSSAOKernel()
 
         table.insert(ssaoKernel, sample)
 
-        print("ssaoKernel[" .. i .. "]:" .. tostring(sample))
+        --print("ssaoKernel[" .. i .. "]:" .. tostring(sample))
     end
 
     return ssaoKernel
 end
 
----创建16个随机向量，用于噪声纹理
-function LoginScene:CreateNoise()
-    local ssaoNoise = {}
-    for i = 1, 16 do
-        local noise = glm.vec3(
-                randomFloats() * 2.0 - 1.0,
-                randomFloats() * 2.0 - 1.0,
-                0.0)
-        table.insert(ssaoNoise, noise)
-    end
-    return ssaoNoise
-end
 
----创建SSAONoiseTexture
-function LoginScene:CreateSSAONoiseTexture()
-    local noise = self:CreateNoise()
-    self.noise_texture_ = NoiseTexture.new()
-    self.noise_texture_:Init(4, 4, sol2.convert_sequence_float(noise))
-end
 
 
 function LoginScene:Update()
@@ -348,6 +345,12 @@ function LoginScene:Update()
     --设置远近平面
     self.material_fbx_model_:SetUniform1f("near_plane",1.0)
     self.material_fbx_model_:SetUniform1f("far_plane",1000.0)
+
+    --设置ssao_kernel
+    --local ssao_kernel=self:GenerateSSAOKernel()
+    --for i=1,#ssao_kernel do
+    --    self.material_fbx_model_:SetUniform3f("u_ssao_kernel["..(i-1).."]",ssao_kernel[i])
+    --end
 
     --鼠标滚轮控制相机远近
     self.go_camera_geometry_buffer_:GetComponent(Transform):set_local_position(self.go_camera_geometry_buffer_:GetComponent(Transform):position() *(10 - Input.mouse_scroll())/10)
