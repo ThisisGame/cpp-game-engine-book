@@ -1,0 +1,21 @@
+﻿file(COPY "../../template/depends/imgui/" DESTINATION "../depends/imgui/")
+
+#头文件目录
+include_directories("depends/imgui")
+include_directories("depends/imgui/backends")
+
+#源文件
+set(imgui_src depends/imgui/imgui.cpp
+        depends/imgui/imgui_demo.cpp
+        depends/imgui/imgui_draw.cpp
+        depends/imgui/imgui_tables.cpp
+        depends/imgui/imgui_widgets.cpp
+        )
+
+if (UNIX)
+
+elseif (WIN32)
+    list(APPEND imgui_src "depends/imgui/backends/imgui_impl_glfw.cpp" "depends/imgui/backends/imgui_impl_opengl3.cpp")
+else ()
+
+endif ()
