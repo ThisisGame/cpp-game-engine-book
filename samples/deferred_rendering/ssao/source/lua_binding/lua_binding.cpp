@@ -89,6 +89,7 @@ void LuaBinding::BindLua() {
         sol2_ns_table["convert_sequence_ushort"]=&sol2::convert_sequence<unsigned short>;
         sol2_ns_table["convert_sequence_uchar"]=&sol2::convert_sequence<unsigned char>;
         sol2_ns_table["convert_sequence_int"]=&sol2::convert_sequence<int>;
+        sol2_ns_table["convert_sequence_glm_vec3"]=&sol2::convert_sequence<glm::vec3>;
     }
     //绑定glm::vec2
     {

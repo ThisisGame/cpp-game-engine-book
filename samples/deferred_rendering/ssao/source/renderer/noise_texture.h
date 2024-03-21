@@ -6,6 +6,7 @@
 #define NOISE_TEXTURE_H
 
 #include<vector>
+#include <glm/glm.hpp>
 
 class Texture2D;
 class NoiseTexture {
@@ -17,7 +18,7 @@ public:
     /// \param width
     /// \param height
     /// \param noise 生成的噪声
-    virtual void Init(unsigned short width,unsigned short height,std::vector<float> noise);
+    virtual void Init(unsigned short width,unsigned short height,std::vector<glm::vec3> noise);
 
     unsigned short width(){
         return width_;

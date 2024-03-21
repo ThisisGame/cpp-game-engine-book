@@ -60,7 +60,17 @@ Font* Font::LoadFromFile(std::string font_file_path,unsigned short font_size){
     //创建空白的、仅Alpha通道纹理，用于生成文字。
     unsigned char * pixels = (unsigned char *)malloc(font->font_texture_size_ * font->font_texture_size_);
     memset(pixels, 0,font->font_texture_size_*font->font_texture_size_);
-    font->font_texture_=Texture2D::Create(font->font_texture_size_,font->font_texture_size_, GL_RED,GL_RED,GL_UNSIGNED_BYTE,pixels,font->font_texture_size_ * font->font_texture_size_);
+    font->font_texture_=Texture2D::Create(font->font_texture_size_,
+                                          font->font_texture_size_,
+                                          GL_RED,
+                                          GL_RED,
+                                          GL_LINEAR,
+                                          GL_LINEAR,
+                                            GL_CLAMP_TO_EDGE,
+                                            GL_CLAMP_TO_EDGE,
+                                          GL_UNSIGNED_BYTE,
+                                          pixels,
+                                          font->font_texture_size_ * font->font_texture_size_);
     free(pixels);
 
     return font;

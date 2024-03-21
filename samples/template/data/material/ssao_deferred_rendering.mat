@@ -1,0 +1,9 @@
+<material shader="shader/ssao_deferred_rendering">
+    <texture name="u_frag_position_texture" image=""/>
+	<texture name="u_frag_normal_texture" image=""/>
+	<texture name="u_frag_vertex_color_texture" image=""/>
+	<texture name="u_frag_diffuse_color_texture" image=""/>
+	<texture name="u_frag_specular_intensity_texture" image=""/>
+	<texture name="u_frag_specular_highlight_shininess_texture" image=""/>
+	<texture name="u_ssao_texture" image=""/>
+</material>

@@ -51,7 +51,18 @@ public:
     /// \param data_type
     /// \param data_size
     /// \param data
-    static void ProduceRenderTaskCreateTexImage2D(unsigned int texture_handle, int width, int height, unsigned int gl_texture_format, unsigned int client_format,unsigned int data_type, unsigned int data_size, unsigned char *data);
+    static void ProduceRenderTaskCreateTexImage2D(unsigned int texture_handle,
+                                                  int width,
+                                                  int height,
+                                                  unsigned int gl_texture_format,
+                                                  unsigned int client_format,
+                                                  unsigned int filter_mag_,//放大滤波
+                                                  unsigned int filter_min_,//缩小滤波
+                                                  unsigned int wrap_s_,//水平方向包裹方式
+                                                  unsigned int wrap_t_,//垂直方向包裹方式
+                                                  unsigned int data_type,
+                                                  unsigned int data_size,
+                                                  unsigned char *data);
 
     /// 发出任务：删除一个或多个Texture
     /// \param size

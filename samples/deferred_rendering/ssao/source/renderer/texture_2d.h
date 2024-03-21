@@ -71,7 +71,17 @@ public:
     /// \param data 上传的图像数据，函数里不会删除这份数据，需要自己管理。
     /// \param data_size 上传的图像数据大小
     /// \return
-    static Texture2D* Create(unsigned short width,unsigned short height,unsigned int server_format,unsigned int client_format,unsigned int data_type,unsigned char* data,unsigned int data_size);
+    static Texture2D* Create(unsigned short width,
+                             unsigned short height,
+                             unsigned int server_format,
+                             unsigned int client_format,
+                             unsigned int filter_mag_,//放大滤波
+                             unsigned int filter_min_,//缩小滤波
+                             unsigned int wrap_s_,//水平方向包裹方式
+                             unsigned int wrap_t_,//垂直方向包裹方式
+                             unsigned int data_type,
+                             unsigned char* data,
+                             unsigned int data_size);
 };
 
 #endif //UNTITLED_TEXTURE2D_H

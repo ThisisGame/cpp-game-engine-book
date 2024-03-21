@@ -27,8 +27,14 @@ RenderTexture::~RenderTexture() {
 void RenderTexture::Init(unsigned short width, unsigned short height) {
     width_=width;
     height_=height;
-    color_texture_2d_=Texture2D::Create(width_,height_,GL_RGB,GL_RGB,GL_UNSIGNED_SHORT_5_6_5, nullptr,0);
-    depth_texture_2d_=Texture2D::Create(width_,height_,GL_DEPTH_COMPONENT,GL_DEPTH_COMPONENT,GL_UNSIGNED_SHORT, nullptr,0);
+    color_texture_2d_=Texture2D::Create(width_,height_,GL_RGB,GL_RGB,GL_LINEAR,
+                                        GL_LINEAR,
+                                        GL_CLAMP_TO_EDGE,
+                                        GL_CLAMP_TO_EDGE,GL_UNSIGNED_SHORT_5_6_5, nullptr,0);
+    depth_texture_2d_=Texture2D::Create(width_,height_,GL_DEPTH_COMPONENT,GL_DEPTH_COMPONENT,GL_LINEAR,
+                                        GL_LINEAR,
+                                        GL_CLAMP_TO_EDGE,
+                                        GL_CLAMP_TO_EDGE,GL_UNSIGNED_SHORT, nullptr,0);
     //创建FBO任务
     frame_buffer_object_handle_ = GPUResourceMapper::GenerateFBOHandle();
     RenderTaskProducer::ProduceRenderTaskCreateFBO(frame_buffer_object_handle_,width_,height_,color_texture_2d_->texture_handle(),depth_texture_2d_->texture_handle());

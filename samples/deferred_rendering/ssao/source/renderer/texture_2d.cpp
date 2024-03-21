@@ -70,8 +70,17 @@ Texture2D* Texture2D::LoadFromFile(std::string image_file_path)
     return texture2d;
 }
 
-Texture2D *Texture2D::Create(unsigned short width, unsigned short height, unsigned int server_format,unsigned int client_format,
-                             unsigned int data_type,unsigned char* data,unsigned int data_size) {
+Texture2D *Texture2D::Create(unsigned short width,
+                             unsigned short height,
+                             unsigned int server_format,
+                             unsigned int client_format,
+                             unsigned int filter_mag_,//放大滤波
+                             unsigned int filter_min_,//缩小滤波
+                             unsigned int wrap_s_,//水平方向包裹方式
+                             unsigned int wrap_t_,//垂直方向包裹方式
+                             unsigned int data_type,
+                             unsigned char* data,
+                             unsigned int data_size) {
     Texture2D* texture2d=new Texture2D();
     texture2d->gl_texture_format_=server_format;
     texture2d->width_=width;
@@ -79,7 +88,18 @@ Texture2D *Texture2D::Create(unsigned short width, unsigned short height, unsign
     texture2d->texture_handle_=GPUResourceMapper::GenerateTextureHandle();
 
     // 发出任务：创建纹理
-    RenderTaskProducer::ProduceRenderTaskCreateTexImage2D(texture2d->texture_handle_,texture2d->width_, texture2d->height_,texture2d->gl_texture_format_,client_format, data_type,data_size,data);
+    RenderTaskProducer::ProduceRenderTaskCreateTexImage2D(texture2d->texture_handle_,
+                                                          texture2d->width_,
+                                                          texture2d->height_,
+                                                          texture2d->gl_texture_format_,
+                                                          client_format,
+                                                          filter_mag_,
+                                                          filter_min_,
+                                                          wrap_s_,
+                                                          wrap_t_,
+                                                          data_type,
+                                                          data_size,
+                                                          data);
 
     return texture2d;
 }

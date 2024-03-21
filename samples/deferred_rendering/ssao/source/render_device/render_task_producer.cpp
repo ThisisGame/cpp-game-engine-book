@@ -81,9 +81,17 @@ void RenderTaskProducer::ProduceRenderTaskCreateCompressedTexImage2D(unsigned in
     RenderTaskQueue::Push(task);
 }
 
-void RenderTaskProducer::ProduceRenderTaskCreateTexImage2D(unsigned int texture_handle, int width, int height,
-                                                           unsigned int gl_texture_format, unsigned int client_format,
-                                                           unsigned int data_type, unsigned int data_size,
+void RenderTaskProducer::ProduceRenderTaskCreateTexImage2D(unsigned int texture_handle,
+                                                           int width,
+                                                           int height,
+                                                           unsigned int gl_texture_format,
+                                                           unsigned int client_format,
+                                                           unsigned int filter_mag_,//放大滤波
+                                                           unsigned int filter_min_,//缩小滤波
+                                                           unsigned int wrap_s_,//水平方向包裹方式
+                                                           unsigned int wrap_t_,//垂直方向包裹方式
+                                                           unsigned int data_type,
+                                                           unsigned int data_size,
                                                            unsigned char *data) {
     EASY_FUNCTION();
     CHECK_EXIT_RETURN
@@ -93,6 +101,10 @@ void RenderTaskProducer::ProduceRenderTaskCreateTexImage2D(unsigned int texture_
     task->height_=height;
     task->gl_texture_format_=gl_texture_format;
     task->client_format_=client_format;
+    task->filter_mag_=filter_mag_;
+    task->filter_min_=filter_min_;
+    task->wrap_s_=wrap_s_;
+    task->wrap_t_=wrap_t_;
     task->data_type_=data_type;
     //拷贝数据
     if(data_size>0){

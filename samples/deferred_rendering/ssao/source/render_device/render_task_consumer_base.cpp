@@ -177,11 +177,11 @@ void RenderTaskConsumerBase::CreateTexImage2D(RenderTaskBase *task_base) {
     glTexImage2D(GL_TEXTURE_2D, 0, task->gl_texture_format_, task->width_, task->height_, 0, task->client_format_, task->data_type_, task->data_);__CHECK_GL_ERROR__
 
     //4. 指定放大，缩小滤波方式，线性滤波，即放大缩小的插值方式;
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);__CHECK_GL_ERROR__
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);__CHECK_GL_ERROR__
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, task->filter_mag_);__CHECK_GL_ERROR__
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, task->filter_min_);__CHECK_GL_ERROR__
 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, task->wrap_s_);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, task->wrap_t_);
 
     //将主线程中产生的纹理句柄 映射到 纹理
     GPUResourceMapper::MapTexture(task->texture_handle_, texture_id);

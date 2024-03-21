@@ -128,6 +128,10 @@ public:
     int height_;
     unsigned int gl_texture_format_;//GL内部纹理格式
     unsigned int client_format_;//客户端纹理格式
+    unsigned int filter_mag_;//放大滤波
+    unsigned int filter_min_;//缩小滤波
+    unsigned int wrap_s_;//水平方向包裹方式
+    unsigned int wrap_t_;//垂直方向包裹方式
     unsigned int data_type_;
     unsigned char* data_;
 };

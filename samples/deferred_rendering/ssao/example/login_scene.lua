@@ -45,8 +45,8 @@ function LoginScene:ctor()
     self.environment_=nil --环境
     self.go_point_light_1_=nil --灯光
     self.go_point_light_2_=nil --灯光
-    self.go_deferred_rendering_near_plane_=nil--墙壁
-    self.material_deferred_rendering_near_plane_=nil
+    self.go_ssao_deferred_rendering_plane_=nil--墙壁
+    self.material_ssao_deferred_rendering_plane_=nil
 end
 
 function LoginScene:Awake()
@@ -57,14 +57,15 @@ function LoginScene:Awake()
     self:CreateDirectionalLight1()
     self:CreatePointLight1()
     self:CreatePointLight2()
-    self:CreateGeometryBufferCamera()
     self:CreateModel()
 
-    self:CreateSSAOCamera()
-    self:CreateSSAOPlane()
+    self:CreateGeometryBufferCamera()
 
-    --self:CreateDeferredRenderingCamera()
-    --self:CreateDeferredRenderingNearPlane()
+    --self:CreateSSAOCamera()
+    --self:CreateSSAOPlane()
+
+    self:CreateSSAODeferredRenderingCamera()
+    self:CreateSSAODeferredRenderingPlane()
 end
 
 --- 创建环境
@@ -177,7 +178,7 @@ function LoginScene:CreateSSAOCamera()
     ssao_camera:set_culling_mask(2)
     ssao_camera:SetView(glm.vec3(0.0,0.0,0.0), glm.vec3(0.0,1.0,0.0))
     ssao_camera:SetPerspective(60, Screen:aspect_ratio(), 1, 1000)
-    ----设置RenderTexture
+    --设置RenderTexture
     self.render_texture_ssao_ = RenderTexture.new()
     self.render_texture_ssao_:Init(960,640)
     ssao_camera:set_target_render_texture(self.render_texture_ssao_)
@@ -218,8 +219,8 @@ function LoginScene:CreateSSAOPlane()
     local noise = self:CreateNoise()
     local noise_texture = NoiseTexture.new()
     noise_texture:Init(4, 4, noise)
-    --self.material_ssao_near_plane_:SetTexture("u_noise_texture",noise_texture:noise_texture_2d())
-    --ObjectReferenceManager:Retain(noise_texture)
+    self.material_ssao_near_plane_:SetTexture("u_noise_texture",noise_texture:noise_texture_2d())
+    ObjectReferenceManager:Retain(noise_texture)
 
     --挂上 MeshRenderer 组件
     local mesh_renderer= go_ssao_near_plane_:AddComponent(MeshRenderer)
@@ -227,6 +228,7 @@ function LoginScene:CreateSSAOPlane()
 end
 
 ---创建16个随机向量，用于噪声纹理
+---@return table<number,glm.vec3>
 function LoginScene:CreateNoise()
     local ssaoNoise = {}
     for i = 1, 16 do
@@ -241,25 +243,25 @@ end
 
 
 --- 创建延迟渲染相机
-function LoginScene:CreateDeferredRenderingCamera()
+function LoginScene:CreateSSAODeferredRenderingCamera()
     --创建相机1 GameObject
-    self.go_camera_deferred_rendering_= GameObject.new("deferred_rendering_camera")
+    self.go_camera_deferred_rendering_= GameObject.new("ssao_deferred_rendering_camera")
     --挂上 Transform 组件
     self.go_camera_deferred_rendering_:AddComponent(Transform):set_local_position(glm.vec3(0, 0, 10))
     self.go_camera_deferred_rendering_:GetComponent(Transform):set_local_rotation(glm.vec3(0, 0, 0))
     --挂上 Camera 组件
-    self.camera_=self.go_camera_deferred_rendering_:AddComponent(Camera)
+    local camera_deferred_rendering=self.go_camera_deferred_rendering_:AddComponent(Camera)
     --设置为黑色背景
-    self.camera_:set_clear_color(0,0,0,1)
-    self.camera_:set_depth(1)
-    self.camera_:set_culling_mask(2)
-    self.camera_:SetView(glm.vec3(0.0,0.0,0.0), glm.vec3(0.0,1.0,0.0))
-    self.camera_:SetPerspective(60, Screen:aspect_ratio(), 1, 1000)
+    camera_deferred_rendering:set_clear_color(0,0,0,1)
+    camera_deferred_rendering:set_depth(3)
+    camera_deferred_rendering:set_culling_mask(3)
+    camera_deferred_rendering:SetView(glm.vec3(0.0,0.0,0.0), glm.vec3(0.0,1.0,0.0))
+    camera_deferred_rendering:SetPerspective(60, Screen:aspect_ratio(), 1, 1000)
 end
 
 ---手动创建Mesh
 ---@return void
-function LoginScene:CreateDeferredRenderingNearPlane()
+function LoginScene:CreateSSAODeferredRenderingPlane()
     local vertex_data={
         -1,-1,0,  1.0,1.0,1.0,1.0, 0,0, -1,-1,1,
         1,-1,0,  1.0,1.0,1.0,1.0, 1,0, 1,-1,1,
@@ -271,29 +273,30 @@ function LoginScene:CreateDeferredRenderingNearPlane()
         0,2,3,
     }
 
-    self.go_deferred_rendering_near_plane_=GameObject.new("deferred_rendering_near_plane")
-    self.go_deferred_rendering_near_plane_:AddComponent(Transform):set_local_position(glm.vec3(0, 0, -10))
-    self.go_deferred_rendering_near_plane_:GetComponent(Transform):set_local_rotation(glm.vec3(0, 0, 0))
+    self.go_ssao_deferred_rendering_plane_=GameObject.new("ssao_deferred_rendering_plane")
+    self.go_ssao_deferred_rendering_plane_:AddComponent(Transform):set_local_position(glm.vec3(0, 0, -10))
+    self.go_ssao_deferred_rendering_plane_:GetComponent(Transform):set_local_rotation(glm.vec3(0, 0, 0))
 
-    self.go_deferred_rendering_near_plane_:set_layer(2)
+    self.go_ssao_deferred_rendering_plane_:set_layer(3)
 
-    local mesh_filter=self.go_deferred_rendering_near_plane_:AddComponent(MeshFilter)
+    local mesh_filter=self.go_ssao_deferred_rendering_plane_:AddComponent(MeshFilter)
     mesh_filter:CreateMesh(vertex_data,vertex_index_data)--手动构建Mesh
 
     --手动创建Material
-    self.material_deferred_rendering_near_plane_ = Material.new()--设置材质
-    self.material_deferred_rendering_near_plane_:Parse("material/ssao_rendering.mat")
+    self.material_ssao_deferred_rendering_plane_ = Material.new()--设置材质
+    self.material_ssao_deferred_rendering_plane_:Parse("material/ssao_deferred_rendering.mat")
     --设置材质纹理
-    self.material_deferred_rendering_near_plane_:SetTexture("u_frag_position_texture",self.render_texture_geometry_buffer_:frag_position_texture_2d())
-    self.material_deferred_rendering_near_plane_:SetTexture("u_frag_normal_texture",self.render_texture_geometry_buffer_:frag_normal_texture_2d())
-    self.material_deferred_rendering_near_plane_:SetTexture("u_frag_vertex_color_texture",self.render_texture_geometry_buffer_:frag_vertex_color_texture_2d())
-    self.material_deferred_rendering_near_plane_:SetTexture("u_frag_diffuse_color_texture",self.render_texture_geometry_buffer_:frag_diffuse_color_texture_2d())
-    self.material_deferred_rendering_near_plane_:SetTexture("u_frag_specular_intensity_texture",self.render_texture_geometry_buffer_:frag_specular_intensity_texture_2d())
-    self.material_deferred_rendering_near_plane_:SetTexture("u_frag_specular_highlight_shininess_texture",self.render_texture_geometry_buffer_:frag_specular_highlight_shininess_texture_2d())
+    self.material_ssao_deferred_rendering_plane_:SetTexture("u_frag_position_texture",self.render_texture_geometry_buffer_:frag_position_texture_2d())
+    self.material_ssao_deferred_rendering_plane_:SetTexture("u_frag_normal_texture",self.render_texture_geometry_buffer_:frag_normal_texture_2d())
+    self.material_ssao_deferred_rendering_plane_:SetTexture("u_frag_vertex_color_texture",self.render_texture_geometry_buffer_:frag_vertex_color_texture_2d())
+    self.material_ssao_deferred_rendering_plane_:SetTexture("u_frag_diffuse_color_texture",self.render_texture_geometry_buffer_:frag_diffuse_color_texture_2d())
+    self.material_ssao_deferred_rendering_plane_:SetTexture("u_frag_specular_intensity_texture",self.render_texture_geometry_buffer_:frag_specular_intensity_texture_2d())
+    self.material_ssao_deferred_rendering_plane_:SetTexture("u_frag_specular_highlight_shininess_texture",self.render_texture_geometry_buffer_:frag_specular_highlight_shininess_texture_2d())
+    --self.material_ssao_deferred_rendering_plane_:SetTexture("u_ssao_texture",self.render_texture_ssao_:color_texture_2d())
 
     --挂上 MeshRenderer 组件
-    local mesh_renderer= self.go_deferred_rendering_near_plane_:AddComponent(MeshRenderer)
-    mesh_renderer:SetMaterial(self.material_deferred_rendering_near_plane_)
+    local mesh_renderer= self.go_ssao_deferred_rendering_plane_:AddComponent(MeshRenderer)
+    mesh_renderer:SetMaterial(self.material_ssao_deferred_rendering_plane_)
 end
 
 
@@ -347,7 +350,7 @@ function LoginScene:Update()
     --设置ssao_kernel
     --local ssao_kernel=self:GenerateSSAOKernel()
     --for i=1,#ssao_kernel do
-    --    self.material_fbx_model_:SetUniform3f("u_ssao_kernel["..(i-1).."]",ssao_kernel[i])
+    --    self.material_ssao_near_plane_:SetUniform3f("u_ssao_kernel["..(i-1).."]",ssao_kernel[i])
     --end
 
     --鼠标滚轮控制相机远近

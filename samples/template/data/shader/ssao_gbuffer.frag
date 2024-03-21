@@ -30,7 +30,7 @@ void main()
 {
 	o_frag_position = vec4(v_frag_pos,1.0);
 	//存储线性深度到o_frag_position的.a分量
-//	o_frag_position.a = LinearizeDepth(gl_FragCoord.z);
+	o_frag_position.a = LinearizeDepth(gl_FragCoord.z);
 
 	o_frag_normal = vec4(v_normal,1.0);
 	o_frag_vertex_color = v_color;

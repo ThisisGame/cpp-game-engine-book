@@ -41,13 +41,13 @@ void RenderTextureGeometryBuffer::Init(unsigned short width, unsigned short heig
     width_=width;
     height_=height;
     //如果要在纹理中存储超过1的值，需要使用浮点纹理
-    frag_position_texture_2d_=Texture2D::Create(width_, height_, GL_RGBA16F, GL_RGB, GL_FLOAT, nullptr, 0);
-    frag_normal_texture_2d_=Texture2D::Create(width_, height_, GL_RGBA16F, GL_RGB, GL_FLOAT, nullptr, 0);
-    frag_vertex_color_texture_2d_=Texture2D::Create(width_, height_, GL_RGBA, GL_RGB, GL_FLOAT, nullptr, 0);
-    frag_diffuse_color_texture_2d_=Texture2D::Create(width_, height_, GL_RGBA, GL_RGB, GL_FLOAT, nullptr, 0);
-    frag_specular_intensity_texture_2d_=Texture2D::Create(width_, height_, GL_RGBA, GL_RGB, GL_FLOAT, nullptr, 0);
-    frag_specular_highlight_shininess_texture_2d_=Texture2D::Create(width_, height_, GL_RGBA16F, GL_RGB, GL_FLOAT, nullptr, 0);
-    depth_texture_2d_=Texture2D::Create(width_,height_,GL_DEPTH_COMPONENT,GL_DEPTH_COMPONENT,GL_UNSIGNED_SHORT, nullptr,0);
+    frag_position_texture_2d_=Texture2D::Create(width_, height_, GL_RGBA16F, GL_RGB,GL_LINEAR,GL_LINEAR,GL_CLAMP_TO_EDGE,GL_CLAMP_TO_EDGE, GL_FLOAT, nullptr, 0);
+    frag_normal_texture_2d_=Texture2D::Create(width_, height_, GL_RGBA16F, GL_RGB, GL_LINEAR,GL_LINEAR,GL_CLAMP_TO_EDGE,GL_CLAMP_TO_EDGE, GL_FLOAT, nullptr, 0);
+    frag_vertex_color_texture_2d_=Texture2D::Create(width_, height_, GL_RGBA, GL_RGB, GL_LINEAR,GL_LINEAR,GL_CLAMP_TO_EDGE,GL_CLAMP_TO_EDGE, GL_FLOAT, nullptr, 0);
+    frag_diffuse_color_texture_2d_=Texture2D::Create(width_, height_, GL_RGBA, GL_RGB, GL_LINEAR,GL_LINEAR,GL_CLAMP_TO_EDGE,GL_CLAMP_TO_EDGE, GL_FLOAT, nullptr, 0);
+    frag_specular_intensity_texture_2d_=Texture2D::Create(width_, height_, GL_RGBA, GL_RGB, GL_LINEAR,GL_LINEAR,GL_CLAMP_TO_EDGE,GL_CLAMP_TO_EDGE, GL_FLOAT, nullptr, 0);
+    frag_specular_highlight_shininess_texture_2d_=Texture2D::Create(width_, height_, GL_RGBA16F, GL_RGB, GL_LINEAR,GL_LINEAR,GL_CLAMP_TO_EDGE,GL_CLAMP_TO_EDGE, GL_FLOAT, nullptr, 0);
+    depth_texture_2d_=Texture2D::Create(width_,height_,GL_DEPTH_COMPONENT,GL_DEPTH_COMPONENT,GL_LINEAR,GL_LINEAR,GL_CLAMP_TO_EDGE,GL_CLAMP_TO_EDGE, GL_UNSIGNED_SHORT, nullptr,0);
     //创建FBO任务
     frame_buffer_object_handle_ = GPUResourceMapper::GenerateFBOHandle();
     RenderTaskProducer::ProduceRenderTaskCreateGBuffer(frame_buffer_object_handle_, width_, height_,
