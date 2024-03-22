@@ -344,8 +344,8 @@ function LoginScene:Update()
     --设置物体反射度、高光强度
     self.material_fbx_model_:SetUniform1f("u_specular_highlight_shininess",32.0)
     --设置远近平面
-    self.material_fbx_model_:SetUniform1f("near_plane",1.0)
-    self.material_fbx_model_:SetUniform1f("far_plane",1000.0)
+    --self.material_fbx_model_:SetUniform1f("near_plane",1.0)
+    --self.material_fbx_model_:SetUniform1f("far_plane",1000.0)
 
     --设置ssao_kernel
     --local ssao_kernel=self:GenerateSSAOKernel()
