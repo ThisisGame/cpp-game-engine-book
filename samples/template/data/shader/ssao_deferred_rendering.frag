@@ -51,7 +51,9 @@ uniform sampler2D u_frag_vertex_color_texture;//顶点片段顶点颜色纹理
 uniform sampler2D u_frag_diffuse_color_texture;//顶点片段Diffuse纹理
 uniform sampler2D u_frag_specular_intensity_texture;//顶点片段高光强度纹理
 uniform sampler2D u_frag_specular_highlight_shininess_texture;//顶点片段反光度纹理
-//uniform sampler2D u_ssao_texture;//SSAO纹理
+uniform sampler2D u_ssao_texture;//SSAO纹理
+
+uniform float u_use_ssao;//是否使用SSAO
 
 in vec2 v_uv;
 
@@ -65,10 +67,14 @@ void main()
 	vec3 frag_diffuse_color = texture(u_frag_diffuse_color_texture,v_uv).rgb;
 	float frag_specular_intensity = texture(u_frag_specular_intensity_texture,v_uv).r;
 	float frag_specular_highlight_shininess = texture(u_frag_specular_highlight_shininess_texture,v_uv).r;
-//    float ssao = texture(u_ssao_texture,v_uv).r;
+    float ssao = texture(u_ssao_texture,v_uv).r;
+
+    if(u_use_ssao<0.5) {
+        ssao = 1.0;
+    }
 	
     //ambient
-    vec3 ambient_color = u_ambient.data.color * u_ambient.data.intensity * frag_diffuse_color;
+    vec3 ambient_color = u_ambient.data.color * u_ambient.data.intensity * frag_diffuse_color * ssao;
 	
     vec3 total_diffuse_color=vec3(0.0,0.0,0.0);
     vec3 total_specular_color=vec3(0.0,0.0,0.0);

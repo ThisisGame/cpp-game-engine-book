@@ -114,7 +114,7 @@ function LoginScene:CreateMainCamera()
     --挂上 Camera 组件
     self.camera_=self.go_camera_:AddComponent(Camera)
     --设置为黑色背景
-    self.camera_:set_clear_color(0,0,0,1)
+    self.camera_:set_clear_color(1,1,1,1)
     self.camera_:set_depth(0)
     self.camera_:SetView(glm.vec3(0.0,0.0,0.0), glm.vec3(0.0,1.0,0.0))
     self.camera_:SetPerspective(60, Screen.aspect_ratio(), 1, 1000)

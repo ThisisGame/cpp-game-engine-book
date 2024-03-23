@@ -64,8 +64,8 @@ function LoginScene:Awake()
     self:CreateSSAOCamera()
     self:CreateSSAOPlane()
 
-    --self:CreateSSAODeferredRenderingCamera()
-    --self:CreateSSAODeferredRenderingPlane()
+    self:CreateSSAODeferredRenderingCamera()
+    self:CreateSSAODeferredRenderingPlane()
 end
 
 --- 创建环境
@@ -179,9 +179,9 @@ function LoginScene:CreateSSAOCamera()
     ssao_camera:SetView(glm.vec3(0.0,0.0,0.0), glm.vec3(0.0,1.0,0.0))
     ssao_camera:SetPerspective(60, Screen:aspect_ratio(), 1, 1000)
     --设置RenderTexture
-    --self.render_texture_ssao_ = RenderTexture.new()
-    --self.render_texture_ssao_:Init(960,640)
-    --ssao_camera:set_target_render_texture(self.render_texture_ssao_)
+    self.render_texture_ssao_ = RenderTexture.new()
+    self.render_texture_ssao_:Init(960,640)
+    ssao_camera:set_target_render_texture(self.render_texture_ssao_)
 end
 
 ---手动创建SSAO目标FBO需要的Plane
@@ -252,7 +252,7 @@ function LoginScene:CreateSSAODeferredRenderingCamera()
     --挂上 Camera 组件
     local camera_deferred_rendering=self.go_camera_deferred_rendering_:AddComponent(Camera)
     --设置为黑色背景
-    camera_deferred_rendering:set_clear_color(0,0,0,1)
+    camera_deferred_rendering:set_clear_color(1,1,1,1)
     camera_deferred_rendering:set_depth(3)
     camera_deferred_rendering:set_culling_mask(2<<3)
     camera_deferred_rendering:SetView(glm.vec3(0.0,0.0,0.0), glm.vec3(0.0,1.0,0.0))
@@ -292,7 +292,7 @@ function LoginScene:CreateSSAODeferredRenderingPlane()
     self.material_ssao_deferred_rendering_plane_:SetTexture("u_frag_diffuse_color_texture",self.render_texture_geometry_buffer_:frag_diffuse_color_texture_2d())
     self.material_ssao_deferred_rendering_plane_:SetTexture("u_frag_specular_intensity_texture",self.render_texture_geometry_buffer_:frag_specular_intensity_texture_2d())
     self.material_ssao_deferred_rendering_plane_:SetTexture("u_frag_specular_highlight_shininess_texture",self.render_texture_geometry_buffer_:frag_specular_highlight_shininess_texture_2d())
-    --self.material_ssao_deferred_rendering_plane_:SetTexture("u_ssao_texture",self.render_texture_ssao_:color_texture_2d())
+    self.material_ssao_deferred_rendering_plane_:SetTexture("u_ssao_texture",self.render_texture_ssao_:color_texture_2d())
 
     --挂上 MeshRenderer 组件
     local mesh_renderer= self.go_ssao_deferred_rendering_plane_:AddComponent(MeshRenderer)
@@ -372,4 +372,12 @@ function LoginScene:Update()
         self.go_camera_geometry_buffer_:GetComponent(Transform):set_local_position(glm.vec3(new_pos.x,new_pos.y,new_pos.z))
     end
     self.last_frame_mouse_position_=Input.mousePosition()
+
+    --按键盘O/P，启用/禁用SSAO
+    if Input.GetKeyDown(Cpp.KeyCode.KEY_CODE_O) then
+        self.material_ssao_deferred_rendering_plane_:SetUniform1f("u_use_ssao",1.0)
+    end
+    if Input.GetKeyDown(Cpp.KeyCode.KEY_CODE_P) then
+        self.material_ssao_deferred_rendering_plane_:SetUniform1f("u_use_ssao",0.0)
+    end
 end
