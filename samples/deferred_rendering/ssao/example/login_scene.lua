@@ -118,7 +118,7 @@ end
 function LoginScene:CreateModel()
     --创建骨骼蒙皮动画
     self.go_skeleton_=GameObject.new("skeleton")
-    self.go_skeleton_:set_layer(1)
+    self.go_skeleton_:set_layer(2<<1)
     self.go_skeleton_:AddComponent(Transform):set_local_position(glm.vec3(0, 0, 0))
     self.go_skeleton_:GetComponent(Transform):set_local_rotation(glm.vec3(0, 0, 0))
     local anim_clip_name="animation/fbx_extra_basic_plane_bones_basic_plane_bones_basic_plane_bones_armatureaction_basic_plane_.skeleton_anim"
@@ -152,7 +152,7 @@ function LoginScene:CreateGeometryBufferCamera()
     --设置为黑色背景
     geometry_buffer_camera:set_clear_color(0,0,0,1)
     geometry_buffer_camera:set_depth(1)
-    geometry_buffer_camera:set_culling_mask(1)
+    geometry_buffer_camera:set_culling_mask(2<<1)
     geometry_buffer_camera:SetView(glm.vec3(0.0,0.0,0.0), glm.vec3(0.0,1.0,0.0))
     geometry_buffer_camera:SetPerspective(60, Screen:aspect_ratio(), 1, 1000)
     --设置延迟渲染
@@ -175,7 +175,7 @@ function LoginScene:CreateSSAOCamera()
     --设置为黑色背景
     ssao_camera:set_clear_color(0,0,0,1)
     ssao_camera:set_depth(2)
-    ssao_camera:set_culling_mask(2)
+    ssao_camera:set_culling_mask(2<<2)
     ssao_camera:SetView(glm.vec3(0.0,0.0,0.0), glm.vec3(0.0,1.0,0.0))
     ssao_camera:SetPerspective(60, Screen:aspect_ratio(), 1, 1000)
     --设置RenderTexture
@@ -204,7 +204,7 @@ function LoginScene:CreateSSAOPlane()
     go_ssao_near_plane_:AddComponent(Transform):set_local_position(glm.vec3(0, 0, -10))
     go_ssao_near_plane_:GetComponent(Transform):set_local_rotation(glm.vec3(0, 0, 0))
 
-    go_ssao_near_plane_:set_layer(2)
+    go_ssao_near_plane_:set_layer(2<<2)
 
     local mesh_filter=go_ssao_near_plane_:AddComponent(MeshFilter)
     mesh_filter:CreateMesh(vertex_data,vertex_index_data)--手动构建Mesh
@@ -254,7 +254,7 @@ function LoginScene:CreateSSAODeferredRenderingCamera()
     --设置为黑色背景
     camera_deferred_rendering:set_clear_color(0,0,0,1)
     camera_deferred_rendering:set_depth(3)
-    camera_deferred_rendering:set_culling_mask(3)
+    camera_deferred_rendering:set_culling_mask(2<<3)
     camera_deferred_rendering:SetView(glm.vec3(0.0,0.0,0.0), glm.vec3(0.0,1.0,0.0))
     camera_deferred_rendering:SetPerspective(60, Screen:aspect_ratio(), 1, 1000)
 end
@@ -277,7 +277,7 @@ function LoginScene:CreateSSAODeferredRenderingPlane()
     self.go_ssao_deferred_rendering_plane_:AddComponent(Transform):set_local_position(glm.vec3(0, 0, -10))
     self.go_ssao_deferred_rendering_plane_:GetComponent(Transform):set_local_rotation(glm.vec3(0, 0, 0))
 
-    self.go_ssao_deferred_rendering_plane_:set_layer(3)
+    self.go_ssao_deferred_rendering_plane_:set_layer(2<<3)
 
     local mesh_filter=self.go_ssao_deferred_rendering_plane_:AddComponent(MeshFilter)
     mesh_filter:CreateMesh(vertex_data,vertex_index_data)--手动构建Mesh
@@ -344,8 +344,8 @@ function LoginScene:Update()
     --设置物体反射度、高光强度
     self.material_fbx_model_:SetUniform1f("u_specular_highlight_shininess",32.0)
     --设置远近平面
-    --self.material_fbx_model_:SetUniform1f("near_plane",1.0)
-    --self.material_fbx_model_:SetUniform1f("far_plane",1000.0)
+    self.material_fbx_model_:SetUniform1f("near_plane",1.0)
+    self.material_fbx_model_:SetUniform1f("far_plane",1000.0)
 
     --设置ssao_kernel
     --local ssao_kernel=self:GenerateSSAOKernel()

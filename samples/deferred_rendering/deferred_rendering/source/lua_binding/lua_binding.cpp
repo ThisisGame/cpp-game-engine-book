@@ -765,7 +765,7 @@ void LuaBinding::RunLuaFile(std::string script_file_path) {
 }
 
 sol::protected_function_result LuaBinding::CallLuaFunction(std::string function_name) {
-    sol::protected_function main_function=sol_state_["main"];
+    sol::protected_function main_function=sol_state_[function_name];
     sol::protected_function_result result=main_function();
     if(result.valid()== false){
         sol::error err = result;
