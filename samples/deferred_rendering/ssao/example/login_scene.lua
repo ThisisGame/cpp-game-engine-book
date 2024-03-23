@@ -61,11 +61,11 @@ function LoginScene:Awake()
 
     self:CreateGeometryBufferCamera()
 
-    --self:CreateSSAOCamera()
-    --self:CreateSSAOPlane()
+    self:CreateSSAOCamera()
+    self:CreateSSAOPlane()
 
-    self:CreateSSAODeferredRenderingCamera()
-    self:CreateSSAODeferredRenderingPlane()
+    --self:CreateSSAODeferredRenderingCamera()
+    --self:CreateSSAODeferredRenderingPlane()
 end
 
 --- 创建环境
@@ -179,9 +179,9 @@ function LoginScene:CreateSSAOCamera()
     ssao_camera:SetView(glm.vec3(0.0,0.0,0.0), glm.vec3(0.0,1.0,0.0))
     ssao_camera:SetPerspective(60, Screen:aspect_ratio(), 1, 1000)
     --设置RenderTexture
-    self.render_texture_ssao_ = RenderTexture.new()
-    self.render_texture_ssao_:Init(960,640)
-    ssao_camera:set_target_render_texture(self.render_texture_ssao_)
+    --self.render_texture_ssao_ = RenderTexture.new()
+    --self.render_texture_ssao_:Init(960,640)
+    --ssao_camera:set_target_render_texture(self.render_texture_ssao_)
 end
 
 ---手动创建SSAO目标FBO需要的Plane
@@ -348,10 +348,10 @@ function LoginScene:Update()
     self.material_fbx_model_:SetUniform1f("far_plane",1000.0)
 
     --设置ssao_kernel
-    --local ssao_kernel=self:GenerateSSAOKernel()
-    --for i=1,#ssao_kernel do
-    --    self.material_ssao_near_plane_:SetUniform3f("u_ssao_kernel["..(i-1).."]",ssao_kernel[i])
-    --end
+    local ssao_kernel=self:GenerateSSAOKernel()
+    for i=1,#ssao_kernel do
+        self.material_ssao_near_plane_:SetUniform3f("u_ssao_kernel["..(i-1).."]",ssao_kernel[i])
+    end
 
     --鼠标滚轮控制相机远近
     self.go_camera_geometry_buffer_:GetComponent(Transform):set_local_position(self.go_camera_geometry_buffer_:GetComponent(Transform):position() *(10 - Input.mouse_scroll())/10)
