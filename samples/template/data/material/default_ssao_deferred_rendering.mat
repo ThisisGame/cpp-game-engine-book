@@ -1,0 +1,5 @@
+<material shader="shader/default_ssao_deferred_rendering">
+    <texture name="u_frag_position_texture" image=""/>
+	<texture name="u_frag_normal_texture" image=""/>
+	<texture name="u_ssao_texture" image=""/>
+</material>
