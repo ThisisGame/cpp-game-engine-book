@@ -12,6 +12,7 @@ layout(std140) uniform AmbientBlock {
 
 uniform vec3 u_view_pos;
 
+uniform sampler2D u_frag_diffuse_color_texture;//顶点片段Diffuse纹理
 uniform sampler2D u_ssao_texture;//SSAO纹理
 
 uniform float u_use_ssao;//是否使用SSAO
@@ -22,7 +23,7 @@ layout(location = 0) out vec4 o_fragColor;
 
 void main()
 {
-	vec3 frag_diffuse_color = vec3(0.9,0.9,0.9);
+    vec3 frag_diffuse_color = texture(u_frag_diffuse_color_texture,v_uv).rgb;
     float ssao = texture(u_ssao_texture,v_uv).r;
 
     if(u_use_ssao<0.5) {

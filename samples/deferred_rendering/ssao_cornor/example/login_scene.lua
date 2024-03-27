@@ -69,7 +69,7 @@ end
 function LoginScene:CreateEnvironment()
     self.environment_=Environment.new()
     self.environment_:set_ambient_color(glm.vec3(1.0,1.0,1.0))
-    self.environment_:set_ambient_color_intensity(0.3)
+    self.environment_:set_ambient_color_intensity(0.0)
 end
 
 --- 创建模型
@@ -78,7 +78,7 @@ function LoginScene:CreateModel()
     self.go_skeleton_=GameObject.new("skeleton")
     self.go_skeleton_:set_layer(2<<1)
     self.go_skeleton_:AddComponent(Transform):set_local_position(glm.vec3(0, 0, 0))
-    self.go_skeleton_:GetComponent(Transform):set_local_rotation(glm.vec3(0, 0, 0))
+    self.go_skeleton_:GetComponent(Transform):set_local_rotation(glm.vec3(-30, 0, 0))
 
     local mesh_filter=self.go_skeleton_:AddComponent(MeshFilter)
     mesh_filter:LoadMesh("model/ssao_corner.mesh")--加载Mesh
@@ -102,7 +102,7 @@ function LoginScene:CreateGeometryBufferCamera()
     --挂上 Camera 组件
     local geometry_buffer_camera=self.go_camera_geometry_buffer_:AddComponent(Camera)
     --设置为黑色背景
-    geometry_buffer_camera:set_clear_color(0,0,0,1)
+    geometry_buffer_camera:set_clear_color(49/255,77/255,121/255,1)
     geometry_buffer_camera:set_depth(1)
     geometry_buffer_camera:set_culling_mask(2<<1)
     geometry_buffer_camera:SetView(glm.vec3(0.0,0.0,0.0), glm.vec3(0.0,1.0,0.0))
@@ -125,7 +125,7 @@ function LoginScene:CreateSSAOCamera()
     --挂上 Camera 组件
     local ssao_camera=self.go_camera_ssao_:AddComponent(Camera)
     --设置为黑色背景
-    ssao_camera:set_clear_color(0,0,0,1)
+    ssao_camera:set_clear_color(49/255,77/255,121/255,1)
     ssao_camera:set_depth(2)
     ssao_camera:set_culling_mask(2<<2)
     ssao_camera:SetView(glm.vec3(0.0,0.0,0.0), glm.vec3(0.0,1.0,0.0))
@@ -204,7 +204,7 @@ function LoginScene:CreateSSAODeferredRenderingCamera()
     --挂上 Camera 组件
     local camera_deferred_rendering=self.go_camera_deferred_rendering_:AddComponent(Camera)
     --设置为黑色背景
-    camera_deferred_rendering:set_clear_color(1,1,1,1)
+    camera_deferred_rendering:set_clear_color(49/255,77/255,121/255,1)
     camera_deferred_rendering:set_depth(3)
     camera_deferred_rendering:set_culling_mask(2<<3)
     camera_deferred_rendering:SetView(glm.vec3(0.0,0.0,0.0), glm.vec3(0.0,1.0,0.0))
@@ -238,8 +238,7 @@ function LoginScene:CreateSSAODeferredRenderingPlane()
     self.material_ssao_deferred_rendering_plane_ = Material.new()--设置材质
     self.material_ssao_deferred_rendering_plane_:Parse("material/default_ssao_deferred_rendering.mat")
     --设置材质纹理
-    self.material_ssao_deferred_rendering_plane_:SetTexture("u_frag_position_texture",self.render_texture_geometry_buffer_:frag_position_texture_2d())
-    self.material_ssao_deferred_rendering_plane_:SetTexture("u_frag_normal_texture",self.render_texture_geometry_buffer_:frag_normal_texture_2d())
+    self.material_ssao_deferred_rendering_plane_:SetTexture("u_frag_diffuse_color_texture",self.render_texture_geometry_buffer_:frag_diffuse_color_texture_2d())
     self.material_ssao_deferred_rendering_plane_:SetTexture("u_ssao_texture",self.render_texture_ssao_:color_texture_2d())
 
     --挂上 MeshRenderer 组件
@@ -317,10 +316,12 @@ function LoginScene:Update()
     self.last_frame_mouse_position_=Input.mousePosition()
 
     --按键盘O/P，启用/禁用SSAO
+    local u_use_ssao=1.0
     if Input.GetKeyDown(Cpp.KeyCode.KEY_CODE_O) then
-        self.material_ssao_deferred_rendering_plane_:SetUniform1f("u_use_ssao",1.0)
+        u_use_ssao=1.0
     end
     if Input.GetKeyDown(Cpp.KeyCode.KEY_CODE_P) then
-        self.material_ssao_deferred_rendering_plane_:SetUniform1f("u_use_ssao",0.0)
+        u_use_ssao=0.0
     end
+    self.material_ssao_deferred_rendering_plane_:SetUniform1f("u_use_ssao",u_use_ssao)
 end

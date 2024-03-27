@@ -57,10 +57,4 @@ void main()
     occlusion = 1.0 - (occlusion / kernelSize);
 
     o_fragColor = vec4(occlusion, occlusion, occlusion, 1.0);
-
-    //调试
-//    o_fragColor = vec4(random_noise,1.0);
-
-
-//    o_fragColor = vec4(ambient_color + total_diffuse_color + total_specular_color,1.0);
 }
