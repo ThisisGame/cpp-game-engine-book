@@ -2,6 +2,7 @@
 project(untitled)
 
 set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_OSX_ARCHITECTURES x86_64)
 
 if (MSVC)
     add_compile_options(/bigobj)
